@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Provider} from "react-redux";
 import store from "./store/store";
 import HomePage from "./pages/HomePage";
+import Employee from "./pages/Employee";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,6 +15,7 @@ root.render(
             <Routes>
                 <Route path={"/"} element={<Layout />}>
                     <Route index element={<HomePage />}/>
+                    <Route exact path={"employee"} element={<Employee />}/>
                 </Route>
             </Routes>
         </BrowserRouter>
