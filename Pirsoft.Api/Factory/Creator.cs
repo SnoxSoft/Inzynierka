@@ -4,5 +4,5 @@ namespace Pirsoft.Api.Factory;
 
 public abstract class Creator
 {
-    public abstract IModel GetModel();
+    public abstract IModel CreateModel(Guid Id, string FirstName);
 }
