@@ -30,4 +30,12 @@ public class EmployeeModelValidatorTests
     [Test]
     public void BankAccountIsInvalidWithDifferentCharactersThanNumbers() => EmployeeModelValidator
         .IsBankAccountNumberValid("123A567B901D234C67G90X23T5").Should().BeFalse();
+
+    [Test]
+    public void EmailAddressIsValidWithCorrectSyntax() =>
+        EmployeeModelValidator.IsEmailAddressValid("pjatk@edu.pl").Should().BeTrue();
+
+    [Test]
+    public void EmailAdressIsInvalidWithPlainText() =>
+        EmployeeModelValidator.IsEmailAddressValid("pjatkedupl").Should().BeFalse();
 }
