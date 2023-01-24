@@ -3,7 +3,7 @@ using Pirsoft.Api.Interfaces;
 
 namespace Pirsoft.Api.Models;
 
-public class EmployeeConcrete : IModel
+public class EmployeeModel : IModel
 {
     private Guid? Id { get; set; } 
     private string? FirstName { get; set; } 
