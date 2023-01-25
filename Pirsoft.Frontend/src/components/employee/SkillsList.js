@@ -2,11 +2,8 @@
 const SkillsList = ({noPerson}) => {
 
     let details = [];
-    console.log("ghghghg")
-    console.log(noPerson['skills'])
-    console.log("cvvvvvvvvv")
+
     for (const property in noPerson.skills) {
-        console.log(property)
         details.push(
             <li>
                 {property}
@@ -15,7 +12,6 @@ const SkillsList = ({noPerson}) => {
     }
 
     {noPerson.map(employee => {
-        console.log(employee.skills)
         {employee.skills.map(skill => {
             console.log(skill)
             details.push(
@@ -26,13 +22,11 @@ const SkillsList = ({noPerson}) => {
         }})
     }
 
-    console.log(details)
-
-    return <div>
+    return <div className={"text-center"}>
         <p>UMIEJĘTNOŚCI</p>
         <ul>
-        {details}
-    </ul>
+            {details}
+        </ul>
     </div>
 }
 

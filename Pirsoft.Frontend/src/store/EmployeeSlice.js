@@ -56,14 +56,14 @@ const loadFromSession = () => {
     return data;
 }
 
-const postSlice = createSlice({
-    name: 'userData',
+const employeeSlice = createSlice({
+    name: 'employeeData',
     initialState: loadFromSession()
 });
 
-const selectAll = () => (state) => state.userData;
-const selectId = (id) => (state) => state.userData.find(p => p.id.toString() === id?.toString());
+const selectAll = () => (state) => state.employeeData;
+const selectId = (id) => (state) => state.employeeData.find(p => p.id.toString() === id?.toString());
 
 export {selectAll, selectId};
 
-export default postSlice.reducer;
+export default employeeSlice.reducer;

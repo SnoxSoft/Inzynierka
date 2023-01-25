@@ -7,6 +7,7 @@ import {Provider} from "react-redux";
 import store from "./store/store";
 import HomePage from "./pages/HomePage";
 import Employee from "./pages/Employee";
+import Employees from "./pages/Employees";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,6 +16,7 @@ root.render(
             <Routes>
                 <Route path={"/"} element={<Layout />}>
                     <Route index element={<HomePage />}/>
+                    <Route path={"employees"} element={<Employees />}/>
                     <Route exact path={"employee/:id"} element={<Employee />}/>
                 </Route>
             </Routes>

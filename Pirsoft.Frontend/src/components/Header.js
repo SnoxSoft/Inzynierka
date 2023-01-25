@@ -1,15 +1,10 @@
 import {Link} from "react-router-dom";
 import {FiMenu, FiPlusCircle} from "react-icons/fi";
+import ReusableButton from "./ReusableButton";
 
 const Header = () => {
 
-    return <header>
-        <div className={"flex p-5"}>
-            <div className={"flex-1 text-center"}>
-                <Link to={"/"} className={"h-1"}>PIRSOFT</Link>
-            </div>
-        </div>
-    </header>
+    return <ReusableButton value={"PIRSOFT"} link={"/"} />
 }
 
 export default Header;

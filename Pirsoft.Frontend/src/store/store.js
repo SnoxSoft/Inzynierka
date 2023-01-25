@@ -1,7 +1,15 @@
 import {configureStore} from '@reduxjs/toolkit';
-import postsReducer from "./reducer";
+import employeeReducer from "./EmployeeSlice";
+import employeesListReducer from "./EmployeesListSlice";
 
 
-const store = configureStore({reducer: {userData: postsReducer}})
+const store = configureStore(
+{
+            reducer: {
+                employeeData: employeeReducer,
+                employeesListData: employeesListReducer
+            }
+        }
+    )
 
 export default store;

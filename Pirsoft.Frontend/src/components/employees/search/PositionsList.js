@@ -1,16 +1,20 @@
 import React from 'react'
 import Select from 'react-select'
 
-const TeamsList = () => {
+const PositionsList = ({onChange}) => {
 
-    const teams = [
-        { value: 'Zespół A', label: 'Zespół A' },
-        { value: 'Zespół B', label: 'Zespół B' },
-        { value: 'Zespół C', label: 'Zespół C' }
+    const positions = [
+        { value: '', label: 'Wybierz...' },
+        { value: 'KSIĘGOWA', label: 'KSIĘGOWA' },
+        { value: 'TESTER OPROGRAMOWANIA', label: 'TESTER OPROGRAMOWANIA' },
+        { value: 'PROGRAMISTA', label: 'PROGRAMISTA' }
     ]
 
-    return <Select options={teams} />
+    return <Select className={"w-96 text-black"}
+                   defaultValue={positions[0]}
+                   options={positions}
+                   onChange={(e) => onChange(e.value)}/>
 
 }
 
-export default TeamsList;
+export default PositionsList;
