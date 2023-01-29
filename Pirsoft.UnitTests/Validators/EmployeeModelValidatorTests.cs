@@ -9,7 +9,7 @@ public class EmployeeModelValidatorTests
     private EmployeeModelValidator _sut = null!;
     
     [SetUp]
-    public void SetUp() =>_sut = new EmployeeModelValidator();
+    public void SetUp() => _sut = new EmployeeModelValidator();
 
     [Test]
     public void PeselIsValidWithElevenNumbers() => _sut.IsPeselValid("12345678901").Should().BeTrue();
