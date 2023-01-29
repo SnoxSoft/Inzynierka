@@ -1,9 +1,10 @@
 ﻿using System.Net.Mail;
 using System.Text.RegularExpressions;
+using Pirsoft.Api.Interfaces.Validators;
 
 namespace Pirsoft.Api.Validators;
 
-public class EmployeeModelValidator
+public class EmployeeModelValidator : IEmployeeModelValidator
 {
     public bool IsPeselValid(string validatedExpression)
     {
