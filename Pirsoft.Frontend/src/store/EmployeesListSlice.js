@@ -162,10 +162,11 @@ const employeesListSlice = createSlice({
 
 const selectAll = () => (state) => state.employeesListData;
 
-const selectByTeamAndPosition = (team, position) => (state) => state.employeesListData.find(p => p.team.toString() === team?.toString());
+const selectByTeam = (team) =>
+    (state) => state.employeesListData.find(p => p.team.toString() === team?.toString());
 
 //const selectId = (id) => (state) => state.userData.find(p => p.id.toString() === id?.toString());
 
-export {selectAll, selectByTeamAndPosition};
+export {selectAll, selectByTeam};
 
 export default employeesListSlice.reducer;

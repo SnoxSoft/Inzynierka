@@ -1,46 +1,54 @@
-import FirstName from "../components/employee/FirstName";
-import LastName from "../components/employee/LastName";
-import Email from "../components/employee/Email";
-import Password from "../components/employee/Password";
-import BankAccountNumber from "../components/employee/BankAccountNumber";
-import DateOfBirth from "../components/employee/DateOfBirth";
-import Pesel from "../components/employee/Pesel";
-import GrossSalary from "../components/employee/GrossSalary";
-import PositionType from "../components/employee/PositionType";
-import EmploymentStartDate from "../components/employee/EmploymentStartDate";
-import ProfilePicture from "../components/employee/ProfilePicture";
-import {FiSettings} from "react-icons/fi";
+import ProfilePicture from "../components/employee/fields/ProfilePicture";
 import {useSelector} from "react-redux";
 import {selectId} from "../store/EmployeeSlice";
-import SkillsList from "../components/employee/SkillsList";
-import {useState} from "react";
+import SkillsList from "../components/employee/fields/SkillsList";
+import {useEffect, useState} from "react";
+import React from "react";
 import {useParams} from "react-router-dom";
-import ReusableButton from "../components/ReusableButton";
-import EmployeeData from "../components/EmployeeData";
+import ReusableButton from "../components/base/ReusableButton";
+import EmployeeData from "../components/employee/EmployeeData";
+import FunctionForResize from "../components/base/FunctionForResize";
 
 
 function Employee(){
 
     const {id} = useParams();
+
+    //endpoint zakomentowany do uzycia
+    // const[employee, setEmployee] = useState(Object);
+    // fetch("http://127.0.0.1:3001/employee/"+id)
+    //     .then((response) => response.json())
+    //     .then((response) => {
+    //         //console.log("fffffff "+ response)
+    //         setEmployee(response[0])
+    //     })
+    //     .catch((err) => {
+    //         console.log(err.message);
+    //     })
+
     const employee = useSelector(selectId(id))
 
-    const[avatar, setAvatar] = useState(employee?.avatar || '')
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+    useEffect(() => {
+        // Handler to call on window resize
+        FunctionForResize("employee-info", {setWantedHeightForList});
+    }, []);
 
     return(
-        <div className={"flex flex-col w-full m-4 bg-green-menu rounded-md border-2 border-b-workday text-workday"}>
-            <div className={"flex flex-row h-full"}>
-                <div className={"basis-4/6 grid grid-cols-2 gap-y-4 p-4 place-items-center "}>
-                    <EmployeeData employee={employee} />
-                </div>
-                <div className={"basis-2/6 grid place-items-center p-4"}>
-                    <div className={"rounded-md"}>
-                        <ProfilePicture value={avatar}/>
+        <div id={"employee-info"}
+             className={"flex flex-col bg-green-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto"}
+             style={{ height: wantedHeightsForList } }>
+            <div className={"grow flex flex-row"}>
+                <EmployeeData employee={employee} />
+                <div className={"flex flex-col p-4"}>
+                    <ProfilePicture value={employee}/>
+                    <SkillsList noPerson={employee}/>
+                    <div className={"flex justify-center"}>
+                        <ReusableButton value={"EDYTUJ"} link={""} />
                     </div>
-                    <SkillsList noPerson={[employee]}/>
-                    <ReusableButton value={"EDYTUJ"} link={""} />
                 </div>
             </div>
-            <div className={"p-4 grid grid-cols-3 place-items-center"}>
+            <div className={"grow-0 p-4 flex flex-row justify-around"}>
                 <ReusableButton value={"USUŃ KONTO"} link={""} />
                 <ReusableButton value={"ZAPISZ ZMIANY"} link={""} />
                 <ReusableButton value={"WYSTAW WNIOSEK"} link={""} />

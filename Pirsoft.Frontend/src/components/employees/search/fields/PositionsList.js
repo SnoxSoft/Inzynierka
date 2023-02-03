@@ -3,6 +3,7 @@ import Select from 'react-select'
 
 const PositionsList = ({onChange}) => {
 
+    // wartosci z endpointa - brak
     const positions = [
         { value: '', label: 'Wybierz...' },
         { value: 'KSIĘGOWA', label: 'KSIĘGOWA' },

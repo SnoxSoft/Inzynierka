@@ -1,10 +1,8 @@
 
 const Pesel = ({onChange, value}) => {
 
-    return <div>
-        <input className={"border"} type={"text"}
+    return <input className={"grow border text-black rounded-md text-left"} type={"text"}
                onChange={(e) => onChange(e.target.value)} value={value}></input>
-    </div>
 
 }
 

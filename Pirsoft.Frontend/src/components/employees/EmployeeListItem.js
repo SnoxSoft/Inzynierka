@@ -1,48 +1,40 @@
-import React, { useRef, useEffect } from "react";
-import EmployeeListItemDropdown from "./EmployeeListItemDropdown";
-
-/**
- * Hook that alerts clicks outside of the passed ref
- */
-function useOutsideAlerter(ref) {
-    useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
-        function handleClickOutside(event) {
-
-            console.log(ref);
-            if (ref.current && !ref.current.contains(event.target)) {
-                //alert("You clicked outside of me!");
-            }
-        }
-        // Bind the event listener
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            // Unbind the event listener on clean up
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref]);
-}
+import React, {useRef, useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import ReusableButton from "../base/ReusableButton";
 
 const EmployeeListItem = ({employee}) => {
-    const wrapperRef = useRef(null);
-    //useOutsideAlerter(wrapperRef);
+    const[showHideButtons, setShowHideButtons] = useState(false);
 
-    const onEmployeeClick = (post) => {
-        //console.log(post)
-        const el = document.getElementById(`li_${employee.id}`);
+    const showOptions = () => {
+        setShowHideButtons(true);
 
-        //el.addEventListener(onmouseout())
-        const menu = document.getElementById(`drop_menu_${employee.id}`);
-
-        if(menu != null){
-
-            console.log(el);
-        }
+    }
+    const hideOptions = () => {
+        setShowHideButtons(false);
     }
 
-    return <EmployeeListItemDropdown ref={wrapperRef} employee={employee} />
+    return <li className={"flex flex-row m-2 p-4 gap-2 hover:bg-dayoffmonth hover:cursor-pointer hover:bg-opacity-80 rounded-md bg-brown-menu border-b-workday border-2"}
+            onMouseOver={showOptions} onMouseLeave={hideOptions}>
+                <div className={"grow-0"}>
+                {employee.avatar ?
+                    <img src={"data:image/png;base64," + employee.avatar} alt="Avatar image cap" className={"w-12 rounded-2xl"}/>
+                    : null}
+                {/*<Link to={`/employee/${employee.id}`}>*/}
+                </div>
+                <div className={"grow-0"}>
+                    {employee.firstname} {employee.lastname}, {employee.team}, {employee.position}
+                </div>
+                <div className={"grow flex flex-row justify-end gap-2"}>
+                    {showHideButtons && (
+                        <>
+                            <ReusableButton value={"WNIOSEK"}></ReusableButton>
+                            <ReusableButton value={"POKAŻ PROFIL"} link={`/employee/${employee.id}`}></ReusableButton>
+                        </>
+                    )}
+
+                </div>
+                {/*</Link>*/}
+            </li>
 
 }
 

@@ -5,21 +5,10 @@ const SkillsList = ({noPerson}) => {
 
     for (const property in noPerson.skills) {
         details.push(
-            <li>
-                {property}
+            <li key={property}>
+                {noPerson.skills[property]}
             </li>
         );
-    }
-
-    {noPerson.map(employee => {
-        {employee.skills.map(skill => {
-            console.log(skill)
-            details.push(
-                <li>
-                    {skill}
-                </li>)
-        })
-        }})
     }
 
     return <div className={"text-center"}>

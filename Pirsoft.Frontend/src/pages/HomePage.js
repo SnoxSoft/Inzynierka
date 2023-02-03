@@ -1,9 +1,17 @@
-import {FiSmile} from "react-icons/fi";
+import {useEffect, useState} from "react";
+import FunctionForResize from "../components/base/FunctionForResize";
 
 function HomePage(){
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+    useEffect(() => {
+        // Handler to call on window resize
+        FunctionForResize("home", {setWantedHeightForList});
+    }, []);
 
     return(
-        <div className={"w-full m-4 bg-green-menu rounded-md border-2 border-b-workday"}>
+        <div id={"home"}
+             className={"bg-green-menu rounded-md border-2 border-b-workday"}
+             style={{ height: wantedHeightsForList } }>
             <div className={"text-workday m-4 text-center"}>
                 <p>To jest strona główna</p>
                 <br/>

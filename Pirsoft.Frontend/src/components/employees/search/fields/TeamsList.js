@@ -3,6 +3,7 @@ import Select from 'react-select'
 
 const TeamsList = ({onChange}) => {
 
+    // wartosci z endpointa - brak
     const teams = [
         { value: '', label: 'Wybierz...' },
         { value: 'Zespół A', label: 'zespół A' },
@@ -16,5 +17,4 @@ const TeamsList = ({onChange}) => {
                    onChange={(e) => onChange(e.value)}/>
 
 }
-
 export default TeamsList;
