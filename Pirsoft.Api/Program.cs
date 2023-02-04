@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using Pirsoft.Api.Interfaces;
+using Pirsoft.Api.Interfaces.Validators;
+using Pirsoft.Api.Models;
+using Pirsoft.Api.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +16,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IEmployeeModelValidator, EmployeeModelValidator>();
 
 var app = builder.Build();
 
