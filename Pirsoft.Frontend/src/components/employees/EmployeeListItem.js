@@ -19,7 +19,6 @@ const EmployeeListItem = ({employee}) => {
                 {employee.avatar ?
                     <img src={"data:image/png;base64," + employee.avatar} alt="Avatar image cap" className={"w-12 rounded-2xl"}/>
                     : null}
-                {/*<Link to={`/employee/${employee.id}`}>*/}
                 </div>
                 <div className={"grow-0"}>
                     {employee.firstname} {employee.lastname}, {employee.team}, {employee.position}
@@ -30,12 +29,10 @@ const EmployeeListItem = ({employee}) => {
                             <ReusableButton value={"WNIOSEK"}></ReusableButton>
                             <ReusableButton value={"POKAŻ PROFIL"} link={`/employee/${employee.id}`}></ReusableButton>
                         </>
-                    )}
-
+                    )
+                    }
                 </div>
-                {/*</Link>*/}
             </li>
-
 }
 
 export default EmployeeListItem;
