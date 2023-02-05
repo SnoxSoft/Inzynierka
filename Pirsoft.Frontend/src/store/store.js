@@ -7,7 +7,8 @@ const store = configureStore(
 {
             reducer: {
                 employeeData: employeeReducer,
-                employeesListData: employeesListReducer
+                employeesListData: employeesListReducer,
+                priviledge: 'UNAUTHORISED' // ta wartość zmieni się po zalogowaniu użytkownika
             }
         }
     )

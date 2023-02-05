@@ -9,63 +9,82 @@ import Pesel from "./fields/Pesel";
 import GrossSalary from "./fields/GrossSalary";
 import PositionType from "./fields/PositionType";
 import EmploymentStartDate from "./fields/EmploymentStartDate";
+import {useState} from "react";
+import {BiHide, BiShow} from "react-icons/bi";
 
-const EmployeeData = ({employee}) => {
+const EmployeeData = ({employee, pr}) => {
+
+        const[firstName, setFirstName] = useState(employee.firstname);
+        const[lastName, setLastName] = useState(employee.lastname);
+        const[email, setEmail] = useState(employee.email);
+        const[password, setPassword] = useState(employee.password);
+        const[bank, setBank] = useState(employee.bank);
+        const[birth, setBirth] = useState(employee.birth);
+        const[pesel, setPesel] = useState(employee.pesel);
+        const[salary, setSalary] = useState(employee.salary);
+        const[position, setPosition] = useState(employee.position);
+        const[start, setStart] = useState(employee.start);
+
+
         return <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>
 
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> IMIĘ </label>
-                        <FirstName value={employee.firstname}/>
+                        <FirstName value={firstName} onChange={setFirstName}/>
                 </div>
 
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> NAZWISKO </label>
-                        <LastName value={employee.lastname}/>
+                        <LastName value={lastName} onChange={setLastName}/>
                 </div>
 
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> E-MAIL </label>
-                        <Email value={employee.email}/>
+                        <Email value={email} onChange={setEmail}/>
                 </div>
 
+                {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ? <>
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> HASŁO </label>
                         <div className={"flex flex-row justify-end gap-4 grow"}>
-
-                                <Password value={employee.password}/>
+                                <Password value={password} onChange={setPassword}/>
                                 <button className={""}><FiSettings/></button>
                         </div>
                 </div>
 
+
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> KONTO BANKOWE </label>
-                        <BankAccountNumber value={employee.bank}/>
+                        <BankAccountNumber value={bank} onChange={setBank}/>
                 </div>
 
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> DATA URODZENIA </label>
-                        <DateOfBirth value={employee.birth}/>
+                        <DateOfBirth value={birth} onChange={setBirth}/>
                 </div>
 
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> PESEL </label>
-                        <Pesel value={employee.pesel}/>
+                        <Pesel value={pesel} onChange={setPesel}/>
                 </div>
 
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> WYNAGRODZENIE BRUTTO </label>
-                        <GrossSalary value={employee.salary}/>
+                        <GrossSalary value={salary} onChange={setSalary}/>
                 </div>
 
+                </> : <></>}
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> STANOWISKO </label>
-                        <PositionType value={employee.position}/>
+                        <PositionType value={position} onChange={setPosition}/>
                 </div>
 
+                {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                 <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> ROZPOCZĘCIE PRACY </label>
-                        <EmploymentStartDate value={employee.start}/>
+                        <EmploymentStartDate value={start} onChange={setStart}/>
                 </div>
+                    : <></>}
         </div>
 }
 export default EmployeeData;
