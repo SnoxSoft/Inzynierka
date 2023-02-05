@@ -18,7 +18,7 @@ root.render(
                 <Route path={"/"} element={<Layout />}>
                     <Route index element={<HomePage />}/>
                     <Route path={"employees"} element={<Employees />}/>
-                    <Route exact path={"employee/:id"} element={<Employee />}/>
+                    <Route exact path={"employee/:mode/:id"} element={<Employee />}/>
                 </Route>
             </Routes>
         </BrowserRouter>

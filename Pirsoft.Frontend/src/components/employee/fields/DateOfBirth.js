@@ -1,8 +1,8 @@
 
-const DateOfBirth = ({onChange, value}) => {
+const DateOfBirth = ({onChange, value, }) => {
 
-    return <input className={"grow border text-left text-black rounded-md"} type={"date"}
-               onChange={(e) => onChange(e.target.value)} value={value}></input>
+    return <input className={"grow border text-left text-black rounded-md h-6"} type={"date"}
+               onChange={(e) => {onChange(e.target.value) }} value={value}></input>
 
 }
 
