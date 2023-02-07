@@ -15,46 +15,61 @@ function Employees(){
     const[positionsList, setPositionsList] = useState();
     const[order, setOrder] = useState(true); // true oznacza sortowanie od A->Z, a false od Z->A
 
-    const employeesList2 = useSelector(selectAll());
-    const[employeesList, setEmployeesList] = useState(employeesList2)
+    //const employeesList2 = useSelector(selectAll());
+    //const[employeesList, setEmployeesList] = useState(employeesList2)
+
+    const [employeesList, setEmployeesList] = useState(Array);
+
+    //endpoint zakomentowany do uzycia
+    if (employeesList[0] === undefined) {
+        fetch("http://127.0.0.1:3001/getAllEmployees")
+            .then((response) => {response.json()
+                .then((response) => {
+                    setEmployeesList(response)
+                });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
 
     const findEmployees = (e) => {
         e.preventDefault()
 
-        let firstname = false;
         let firstnameValue = "";
-
-        let team = false;
         let teamValue = "";
-
-        let position = false;
         let positionValue = "";
 
         if(firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0){
             console.log(firstnameAndLastname);
             firstnameValue = firstnameAndLastname;
-            firstname = true;
         }
+        else firstnameValue = " ";
 
         if(teamsList !== undefined && teamsList.toString().length !== 0){
             console.log(teamsList);
             teamValue = teamsList;
-            team = true;
         }
+        else teamValue = " ";
 
         if(positionsList !== undefined && positionsList.toString().length !== 0){
             console.log(positionsList);
             positionValue = positionsList;
-            position = true;
         }
+        else positionValue = " ";
 
-        // potrzebne endpointy żeby kontynuować przeładowywanie listy
-        if(team){
+        // potrzebny endpoint żeby kontynuować przeładowywanie listy
 
-        }
-        else{
+        fetch("http://127.0.0.1:3001/getEmployees/"+firstnameValue+"/"+teamValue+"/"+positionValue+"/"+order)
+            .then((response) => {response.json()
+                .then((response) => {
+                    setEmployeesList(response)
+                });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
 
-        }
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
@@ -65,7 +80,7 @@ function Employees(){
 
     return(
         <div
-             className={"bg-green-menu rounded-md border-2 border-b-workday text-workday"}>
+            className={"bg-green-menu rounded-md border-2 border-b-workday text-workday"}>
             <div className={"p-4 gap-4 flex flex-wrap items-center"}>
 
                 <div className={"flex flex-col gap-2"}>
@@ -96,7 +111,7 @@ function Employees(){
             </div>
 
             <div id={"employee-list"} className={"rounded-md overflow-y-auto"}
-                style={{ height: wantedHeightsForList } }>
+                 style={{ height: wantedHeightsForList } }>
                 {employeesList ? <EmployeesList values={[employeesList][0]}/> : <p />}
             </div>
 
