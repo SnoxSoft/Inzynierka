@@ -1,100 +1,122 @@
-import ProfilePicture from "../components/employee/fields/ProfilePicture";
 import {useSelector} from "react-redux";
-import {selectId} from "../store/EmployeeSlice";
-import SkillsList from "../components/employee/fields/SkillsList";
+import {selectAll} from "../store/EmployeesListSlice";
+import EmployeesList from "../components/employees/EmployeesList";
+import TeamsList from "../components/employees/search/fields/TeamsList";
+import PositionsList from "../components/employees/search/fields/PositionsList";
+import FirstnameAndLastname from "../components/employees/search/fields/FirstnameAndLastname";
 import {useEffect, useState} from "react";
-import React from "react";
-import {useNavigate, useParams} from "react-router-dom";
 import ReusableButton from "../components/base/ReusableButton";
-import EmployeeData from "../components/employee/EmployeeData";
+import SortingButton from "../components/employees/search/fields/SortingButton";
 import FunctionForResize from "../components/base/FunctionForResize";
-import {MdOutlineArrowBackIosNew} from "react-icons/md";
+function Employees(){
 
+    const[firstnameAndLastname, setFirstnameAndLastname] = useState();
+    const[teamsList, setTeamsList] = useState();
+    const[positionsList, setPositionsList] = useState();
+    const[order, setOrder] = useState(true); // true oznacza sortowanie od A->Z, a false od Z->A
 
-function Employee(){
+    const employeesList2 = useSelector(selectAll());
+    const[employeesList, setEmployeesList] = useState(employeesList2)
 
-    const {id} = useParams();
-    const {mode} = useParams();
-    const navigate = useNavigate();
-
-    // na razie od ręki ustationy przywilej i zapisany w sesji
-    //podział na widoczność pól według roli konta plus podział na możliwość edycji.
-    //tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
-
-    //uprawnienia edycji oraz przeglądania danych konta pracownika według zalogowanego konta
-    sessionStorage.setItem("PRIVILEDGE", 'UNAUTHORIED')
-
-    // const currentPath = location.pathname,
-    //     parentPath = currentPath.substring(0, currentPath.lastIndexOf("/"));
-    //
-    // sessionStorage.getItem()
-    //console.log(parentPath)
+    //const [employeesList, setEmployeesList] = useState(Array);
 
     //endpoint zakomentowany do uzycia
-    // const[employee, setEmployee] = useState(Object);
-    // fetch("http://127.0.0.1:3001/employee/"+id)
-    //     .then((response) => response.json())
-    //     .then((response) => {
-    //         //console.log("fffffff "+ response)
-    //         setEmployee(response[0])
-    //     })
-    //     .catch((err) => {
-    //         console.log(err.message);
-    //     })
+    // if (employeesList[0] === undefined) {
+    //     fetch("http://127.0.0.1:3001/getAllEmployees")
+    //         .then((response) => {response.json()
+    //             .then((response) => {
+    //                 setEmployeesList(response)
+    //             });
+    //         })
+    //         .catch((err) => {
+    //             console.log(err.message);
+    //         })
+    // }
 
-    const employee = useSelector(selectId(id))
+    const findEmployees = (e) => {
+        e.preventDefault()
+
+        let firstnameValue = "";
+        let teamValue = "";
+        let positionValue = "";
+
+        if(firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0){
+            console.log(firstnameAndLastname);
+            firstnameValue = firstnameAndLastname;
+        }
+        else firstnameValue = " ";
+
+        if(teamsList !== undefined && teamsList.toString().length !== 0){
+            console.log(teamsList);
+            teamValue = teamsList;
+        }
+        else teamValue = " ";
+
+        if(positionsList !== undefined && positionsList.toString().length !== 0){
+            console.log(positionsList);
+            positionValue = positionsList;
+        }
+        else positionValue = " ";
+
+        // potrzebny endpoint żeby kontynuować przeładowywanie listy
+
+        // fetch("http://127.0.0.1:3001/getEmployees/"+firstnameValue+"/"+teamValue+"/"+positionValue+"/"+order)
+        //     .then((response) => {response.json()
+        //         .then((response) => {
+        //             setEmployeesList(response)
+        //         });
+        //     })
+        //     .catch((err) => {
+        //         console.log(err.message);
+        //     })
+
+    }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
         // Handler to call on window resize
-        FunctionForResize("employee-info", {setWantedHeightForList});
+        FunctionForResize("employee-list", {setWantedHeightForList});
     }, []);
 
     return(
-        <div id={"employee-info"}
-             className={"flex flex-col bg-green-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto"}
-             style={{ height: wantedHeightsForList } }>
-            <div className={"grow flex flex-row"}>
-                <EmployeeData employee={employee} />
-                <div className={"flex flex-col p-4"}>
-                    <ProfilePicture value={employee}/>
-                    <SkillsList noPerson={employee}/>
-                    <div className={"flex justify-center"}>
-                        {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
-                            <ReusableButton value={"EDYTUJ"} link={""} /> :
-                            <></>}
+        <div
+            className={"bg-green-menu rounded-md border-2 border-b-workday text-workday"}>
+            <div className={"p-4 gap-4 flex flex-wrap items-center"}>
+
+                <div className={"flex flex-col gap-2"}>
+                    <p className={""}>Wyszukaj pracownika</p>
+
+                    <div>
+                        <p className={""}>Imię i nazwisko: </p>
+                        <FirstnameAndLastname className={""} onChange={setFirstnameAndLastname}/>
                     </div>
+                    <div className={"flex flex-row gap-4 flex-wrap"}>
+                        <div>
+                            <p className={""}>Zespół: </p>
+                            <TeamsList className={""} onChange={setTeamsList}/>
+                        </div>
+
+                        <div>
+                            <p className={""}>Stanowisko: </p>
+                            <PositionsList className={""} onChange={setPositionsList}/>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div>
+                    <SortingButton setOrder={setOrder}/>
+                    <ReusableButton value={"SZUKAJ"} onClick={findEmployees}/>
                 </div>
             </div>
-            {mode === 'view' ?
-                <div className={"grow-0 p-4 flex flex-row justify-start"}>
-                    <button onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />Wstecz</button>
-                </div>
-                : <></>
-            }
-            <div className={"grow-0 p-4 flex flex-row justify-around"}>
 
-                {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
-                    <>
-                        {mode === 'view' ?
-                        <>
-                            <ReusableButton value={"USUŃ KONTO"} link={""} />
-                            <ReusableButton value={"ZAPISZ ZMIANY"} link={""} />
-                            <ReusableButton value={"WYSTAW WNIOSEK"} link={""} />
-                        </>
-                                : <></>
-                            }
-                        {mode === 'create' ?
-                            <ReusableButton value={"UTWÓRZ"}/>
-                            : <></>
-                        }
-                    </>
-                    : <></>}
-
-
+            <div id={"employee-list"} className={"rounded-md overflow-y-auto"}
+                 style={{ height: wantedHeightsForList } }>
+                {employeesList ? <EmployeesList values={[employeesList][0]}/> : <p />}
             </div>
+
         </div>
     );
 }
 
-export default Employee;
+export default Employees;
