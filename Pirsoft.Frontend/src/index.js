@@ -8,6 +8,8 @@ import store from "./store/store";
 import HomePage from "./pages/HomePage";
 import Employee from "./pages/Employee";
 import Employees from "./pages/Employees";
+import SkillsList from "./components/employee/fields/SkillsList";
+import SkillsChangeFrame from "./components/employee/SkillsChangeFrame";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -19,6 +21,8 @@ root.render(
                     <Route index element={<HomePage />}/>
                     <Route path={"employees"} element={<Employees />}/>
                     <Route exact path={"employee/:mode/:id"} element={<Employee />}/>
+                    <Route path={"employee/:mode/:id/skills"} element={<SkillsChangeFrame />}/>
+
                 </Route>
             </Routes>
         </BrowserRouter>
