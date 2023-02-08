@@ -61,7 +61,7 @@ function Employee(){
                     <SkillsList noPerson={employee}/>
                     <div className={"flex justify-center"}>
                         {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
-                            <ReusableButton value={"EDYTUJ"} link={""} /> :
+                            <ReusableButton value={"EDYTUJ"} link={`/employee/view/${employee.id}/skills`}/> :
                             <></>}
                     </div>
                 </div>
