@@ -1,6 +1,6 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {MdOutlineArrowBackIosNew} from "react-icons/md";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import FunctionForResize from "../base/FunctionForResize";
 import {useSelector} from "react-redux";
 import {selectId} from "../../store/EmployeeSlice";
@@ -25,10 +25,34 @@ function SkillChangeFrame() {
             }
         }
         details.push(
-        <div className={"grid grid-cols-2 gap-4 p-4 h-9"} key={availableSkill}>
+        <div className={"grid grid-cols-2 gap-4 p-4 h-9"}>
             <p>{allSkills[availableSkill]}</p><input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
         </div>
             );
+    }
+
+    const saveSkills = () => {
+        const element = document.getElementById('skills-edit');
+        const elements = element.getElementsByTagName("div");
+        console.log();
+        try {
+
+
+        for(const ele in elements){
+            //console.log(elements[ele])
+            const p = elements[ele].getElementsByTagName("p")[0];
+            const input = elements[ele].getElementsByTagName("input")[0];
+
+            if(p !== undefined && input !== undefined){
+                console.log(p.textContent)
+                console.log(input.checked)
+                //tutaj muszę zbudować jsona dla api
+            }
+        }
+        }catch (e) {
+
+        }
+
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
@@ -41,11 +65,14 @@ function SkillChangeFrame() {
             className={"p-4 grid grid-cols-1 bg-blue-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto text-center" +
                 ""}
             style={{ height: wantedHeightsForList } }>
-                <div>UMIEJĘTNOŚCI</div>
-                {details}
-                <div className={"p-4 flex flex-row justify-evenly"}>
-                    <ReusableButton value={"ZATWIERDŹ"}/>
-                    <ReusableButton value={"ZAMKNIJ"} onClick={() => navigate(-1)}/>
+
+                <div id={"skills-edit"} className={"flex flex-col justify-evenly"}>
+                    <div>UMIEJĘTNOŚCI</div>
+                    {details}
+                    <div className={"p-4 flex flex-row justify-evenly"}>
+                        <ReusableButton value={"ZATWIERDŹ"} onClick={saveSkills}/>
+                        <ReusableButton value={"ZAMKNIJ"} onClick={() => navigate(-1)}/>
+                    </div>
                 </div>
     </div>
 }
