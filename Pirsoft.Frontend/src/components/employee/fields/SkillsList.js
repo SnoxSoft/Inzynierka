@@ -1,12 +1,12 @@
 
-const SkillsList = ({noPerson}) => {
+const SkillsList = ({skillList}) => {
 
     let details = [];
 
-    for (const property in noPerson.skills) {
+    for (const skill in skillList) {
         details.push(
-            <li key={property}>
-                {noPerson.skills[property]}
+            <li key={skill}>
+                {skillList[skill]}
             </li>
         );
     }
