@@ -75,6 +75,7 @@ function Employee(){
     const[start, setStart] = useState(employeeData !== undefined ? employeeData.start : '');
 
     const skillsChangeName = employeeData !== undefined ? "EDYTUJ" : "WYBIERZ";
+    //test
 
     //rest of employee data
     const [avatarData, setAvatarData] = useState(employeeData !== undefined ? employeeData.avatar : undefined);
