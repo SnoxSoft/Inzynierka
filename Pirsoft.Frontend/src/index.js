@@ -5,9 +5,9 @@ import Layout from "./pages/Layout";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Provider} from "react-redux";
 import store from "./store/store";
-import HomePage from "./pages/HomePage";
-import Employee from "./pages/Employee";
+import Logging from "./pages/Logging";
 import Employees from "./pages/Employees";
+import EmployeePreRender from "./pages/EmployeePreRender";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -16,9 +16,9 @@ root.render(
         <BrowserRouter>
             <Routes>
                 <Route path={"/"} element={<Layout />}>
-                    <Route index element={<HomePage />}/>
+                    <Route index element={<Logging />}/>
                     <Route path={"employees"} element={<Employees />}/>
-                    <Route exact path={"employee/:mode/:id"} element={<Employee />}/>
+                    <Route exact path={"employee/:id"} element={<EmployeePreRender />}/>
                 </Route>
             </Routes>
         </BrowserRouter>

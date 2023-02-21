@@ -1,6 +1,5 @@
 import ProfilePicture from "../components/employee/fields/ProfilePicture";
-import {useSelector} from "react-redux";
-import {selectId} from "../store/EmployeeSlice";
+
 import SkillsList from "../components/employee/fields/SkillsList";
 import {useEffect, useState} from "react";
 import React from "react";
@@ -19,18 +18,13 @@ import Pesel from "../components/employee/fields/Pesel";
 import GrossSalary from "../components/employee/fields/GrossSalary";
 import PositionType from "../components/employee/fields/PositionType";
 import EmploymentStartDate from "../components/employee/fields/EmploymentStartDate";
-
-function Employee(){
-
+function EmployeeComponent({id, mode, employee, letRefresh}){
     //możliwe rodzaje parametru mode:
-    // view - jeśli osoba bez uprawnień przegląda
     // create - do tworzenia
-    // edit - osoba przeglądająca konto, uprawniona do edycji kont lub właściciel konta
-    const {mode} = useParams();
+    // edit - osoba przeglądająca konto lub
+    //        uprawniona do edycji kont lub właściciel konta
 
-    // id -1 w momencie gdy tworzymy pracownika
-    const {id} = useParams();
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     // na razie od ręki ustationy przywilej i zapisany w sesji
     //podział na widoczność pól według roli konta plus podział na możliwość edycji.
@@ -39,65 +33,74 @@ function Employee(){
     //uprawnienia edycji oraz przeglądania danych konta pracownika według zalogowanego konta
     sessionStorage.setItem("PRIVILEDGE", 'UNAUTHORIED')
 
-    // const currentPath = location.pathname,
-    //     parentPath = currentPath.substring(0, currentPath.lastIndexOf("/"));
-    //
-    // sessionStorage.getItem()
-    //console.log(parentPath)
-
-    //endpoint zakomentowany do uzycia
-    // const[employee, setEmployee] = useState(Object);
-    // fetch("http://127.0.0.1:3001/employee/"+id)
-    //     .then((response) => response.json())
-    //     .then((response) => {
-    //         //console.log("fffffff "+ response)
-    //         setEmployee(response[0])
-    //     })
-    //     .catch((err) => {
-    //         console.log(err.message);
-    //     })
-
     //purpose of it is to show or hide skill picker and changer
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
-
-    const [employeeData, setEmployeeData] = useState(useSelector(selectId(id)));
+    //const [employeeData, setEmployeeData] = useState(useSelector(selectId(id)));
 
     //employee data
-    const[firstName, setFirstName] = useState(employeeData !== undefined ? employeeData.firstname : '');
-    const[lastName, setLastName] = useState(employeeData !== undefined ? employeeData.lastname : '');
-    const[email, setEmail] = useState(employeeData !== undefined ? employeeData.email : '');
-    const[password, setPassword] = useState(employeeData !== undefined ? employeeData.password : '');
-    const[bank, setBank] = useState(employeeData !== undefined ? employeeData.bank : '');
-    const[birth, setBirth] = useState(employeeData !== undefined ? employeeData.birth : '');
-    const[pesel, setPesel] = useState(employeeData !== undefined ? employeeData.pesel : '');
-    const[salary, setSalary] = useState(employeeData !== undefined ? employeeData.salary : '');
-    const[position, setPosition] = useState(employeeData !== undefined ? employeeData.position : '');
-    const[start, setStart] = useState(employeeData !== undefined ? employeeData.start : '');
-
-    const skillsChangeName = employeeData !== undefined ? "EDYTUJ" : "WYBIERZ";
-    //test
+    const[firstName, setFirstName] = useState(employee !== undefined && employee !== null ? employee.firstname : '');
+    const[lastName, setLastName] = useState(employee !== undefined && employee !== null? employee.lastname : '');
+    const[email, setEmail] = useState(employee !== undefined && employee !== null ? employee.email : '');
+    const[password, setPassword] = useState(employee !== undefined && employee !== null ? employee.password : '');
+    const[bank, setBank] = useState(employee !== undefined && employee !== null ? employee.bank : '');
+    const[birth, setBirth] = useState(employee !== undefined && employee !== null ? employee.birth : '');
+    const[pesel, setPesel] = useState(employee !== undefined && employee !== null ? employee.pesel : '');
+    const[salary, setSalary] = useState(employee !== undefined && employee !== null ? employee.salary : '');
+    const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.position : '');
+    const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.start : '');
 
     //rest of employee data
-    const [avatarData, setAvatarData] = useState(employeeData !== undefined ? employeeData.avatar : undefined);
-    const [skillsData, setSkillsData] = useState(employeeData !== undefined ? employeeData.skills : []);
-
+    const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? employee.avatar : undefined);
+    const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
     useEffect(() => {
-        // Update the document title using the browser API
-        document.title = `You clicked  time s`;
-        console.log("vbbbbbbbbbbbb")
-        if (id.match(-1)) {
-            setFirstName("")
-            setLastName("")
-            setEmail("")
-            setPassword("")
-            setBank("")
-            setBirth("")
-            setPesel("")
-            setSalary("")
-            setPosition("")
-            setStart("")
+        console.log("data changed")
+        if(employee !== undefined && employee !== null && id !== '-1'){
+            console.log("w srodku")
+            console.log(employee);
+            setFirstName(employee.firstname);
+            setLastName(employee.lastname);
+            setEmail(employee.email);
+            setPassword(employee.password);
+            setBank(employee.bank);
+            setBirth(employee.birth);
+            setPesel(employee.pesel);
+            setSalary(employee.salary);
+            setPosition(employee.position);
+            setStart(employee.start);
+
+            setAvatarData(employee.avatar);
+            setSkillsData(employee.skills);
+
         }
+        else {
+            console.log("w minusach");
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setPassword('');
+            setBank('');
+            setBirth('');
+            setPesel('');
+            setSalary('');
+            setPosition('');
+            setStart('');
+
+            setAvatarData(undefined);
+            setSkillsData([]);
+        }
+        setEmployeeDataShow(true)
+
+
+        console.log("refresh przed")
+        console.log(letRefresh)
+        if(letRefresh === 1){
+            window.location.reload(true)
+            letRefresh = 0
+        }
+        console.log("refresh po")
+        console.log(letRefresh)
+
     }, [id]);
 
     const saveEmployee = () => {
@@ -118,10 +121,9 @@ function Employee(){
             skillsData +
             " \n avatar: " //+
             //avatarData
-
         )
-
     }
+
     const saveSkills = () => {
         const element = document.getElementById('skills-edit');
         const elements = element.getElementsByTagName("div");
@@ -159,7 +161,6 @@ function Employee(){
 
             if(mode === "edit") {
                 for (const property in skillsData) {
-                    console.log(allSkills[availableSkill].includes(skillsData[property]))
                     if (allSkills[availableSkill].includes(skillsData[property])) {
                         hasSkill = true;
                     }
@@ -182,7 +183,6 @@ function Employee(){
         // Handler to call on window resize
         FunctionForResize("employee-info", {setWantedHeightForList});
         FunctionForResize("skills", {setWantedHeightForList});
-
     }, []);
 
     return(
@@ -257,14 +257,16 @@ function Employee(){
                     <SkillsList skillList={skillsData} />
                     <div className={"flex justify-center"}>
                         {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
-                            <ReusableButton value={skillsChangeName}
+                            <ReusableButton value={employee !== undefined &&
+                                employee !== null ? "EDYTUJ" : "WYBIERZ"}
                                             onClick={ () => setSkills()}/>
                             :
                             <></>}
                     </div>
                 </div>
             </div>
-            {mode !== 'create' ?
+            {mode !== 'create' &&
+                sessionStorage.getItem('USER') !== id ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
                     <button onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />Wstecz</button>
                 </div>
@@ -307,7 +309,7 @@ function Employee(){
         </div>
         }
         </>
-    );
+    )
 }
 
-export default Employee;
+export default EmployeeComponent;
