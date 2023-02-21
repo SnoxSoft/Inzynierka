@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import FirstnameAndLastname from "../components/employees/search/fields/FirstnameAndLastname";
 import TeamsList from "../components/employees/search/fields/TeamsList";
@@ -12,6 +12,11 @@ import LoggingPassword from "../components/logging/LoggingPassword";
 import Email from "../components/employee/fields/Email";
 
 function Logging(){
+    if(sessionStorage.getItem('USER') == null){
+        document.title = "PIRSOFT: Okno logowania";
+    }
+    else document.title = "PIRSOFT: Ekran powitalny";
+
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
     const [email, setEmail] = useState();
@@ -37,6 +42,7 @@ function Logging(){
 
                         window.location.reload(false);
 
+
                     });
                 })
                 .catch((err) => {
@@ -45,6 +51,7 @@ function Logging(){
                     sessionStorage.setItem('FIRSTNAME', null)
                     sessionStorage.setItem('LASTNAME', null)
                     sessionStorage.setItem('AVATAR', null)
+
                 })
         }
     }
