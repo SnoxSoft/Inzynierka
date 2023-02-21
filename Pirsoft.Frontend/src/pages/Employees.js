@@ -9,6 +9,7 @@ import ReusableButton from "../components/base/ReusableButton";
 import SortingButton from "../components/employees/search/fields/SortingButton";
 import FunctionForResize from "../components/base/FunctionForResize";
 function Employees(){
+    document.title = 'PIRSOFT: Lista wszystkich pracowników'
 
     const[firstnameAndLastname, setFirstnameAndLastname] = useState();
     const[teamsList, setTeamsList] = useState();

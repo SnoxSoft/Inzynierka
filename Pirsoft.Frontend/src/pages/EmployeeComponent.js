@@ -18,7 +18,16 @@ import Pesel from "../components/employee/fields/Pesel";
 import GrossSalary from "../components/employee/fields/GrossSalary";
 import PositionType from "../components/employee/fields/PositionType";
 import EmploymentStartDate from "../components/employee/fields/EmploymentStartDate";
-function EmployeeComponent({id, mode, employee, letRefresh}){
+function EmployeeComponent({id, mode, employee}){
+    if(id === '-1'){
+        document.title = 'PIRSOFT: Rejestracja nowego pracownika'
+    }
+    else if(id === sessionStorage.getItem('USER')){
+        document.title = 'PIRSOFT: Twoje dane'
+    }
+    else document.title = 'PIRSOFT: Wyświetlanie danych pracownika'
+
+
     //możliwe rodzaje parametru mode:
     // create - do tworzenia
     // edit - osoba przeglądająca konto lub
@@ -54,10 +63,7 @@ function EmployeeComponent({id, mode, employee, letRefresh}){
     const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
     useEffect(() => {
-        console.log("data changed")
         if(employee !== undefined && employee !== null && id !== '-1'){
-            console.log("w srodku")
-            console.log(employee);
             setFirstName(employee.firstname);
             setLastName(employee.lastname);
             setEmail(employee.email);
@@ -74,7 +80,6 @@ function EmployeeComponent({id, mode, employee, letRefresh}){
 
         }
         else {
-            console.log("w minusach");
             setFirstName('');
             setLastName('');
             setEmail('');
@@ -90,16 +95,6 @@ function EmployeeComponent({id, mode, employee, letRefresh}){
             setSkillsData([]);
         }
         setEmployeeDataShow(true)
-
-
-        console.log("refresh przed")
-        console.log(letRefresh)
-        if(letRefresh === 1){
-            window.location.reload(true)
-            letRefresh = 0
-        }
-        console.log("refresh po")
-        console.log(letRefresh)
 
     }, [id]);
 
