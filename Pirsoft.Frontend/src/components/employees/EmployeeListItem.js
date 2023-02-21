@@ -27,7 +27,7 @@ const EmployeeListItem = ({employee}) => {
                     {showHideButtons && (
                         <>
                             <ReusableButton value={"WNIOSEK"}></ReusableButton>
-                            <ReusableButton value={"POKAŻ PROFIL"} link={`/employee/edit/${employee.id}`}></ReusableButton>
+                            <ReusableButton value={"POKAŻ PROFIL"} link={`/employee/${employee.id}`}></ReusableButton>
                         </>
                     )
                     }
