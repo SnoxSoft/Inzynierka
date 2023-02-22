@@ -339,7 +339,7 @@ function EmployeeComponent({id, mode, employee}){
 
                 {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                     <>
-                        {mode === 'edit' ?
+                        {mode === 'edit' && sessionStorage.getItem('USER') === id ?
                             <>
                                 <ReusableButton value={"USUŃ KONTO"} link={""} />
                                 <ReusableButton value={"ZAPISZ ZMIANY"} onClick={() => saveEmployee()}/>
