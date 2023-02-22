@@ -98,7 +98,9 @@ function Remind(){
 
     const sendVerifyEmail = () => {
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@')) {
-            fetch("http://127.0.0.1:3001/sendVerifyCode/"+email)
+            fetch("http://127.0.0.1:3001/sendVerifyCode/"+email, {
+                method: 'POST'
+            })
                 .then((response) => {
                     console.log(response.status)
                     if(response.status === 200){
