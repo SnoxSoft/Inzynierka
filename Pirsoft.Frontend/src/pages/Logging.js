@@ -80,10 +80,10 @@ function Logging(){
                     </div>
                 </div>
                 <div>
-                    <Link to={""} className={"text-weekend"}>Nie pamiętasz hasła?</Link>
+                    <Link to={"/remind"} className={"text-weekend"}>Nie pamiętasz hasła?</Link>
                 </div>
                 <br/>
-                <div className={"bg-blue-menu self-center"}>
+                <div className={"self-center"}>
                     <ReusableButton value={"ZALOGUJ"} onClick={() => logIn()}/>
                 </div>
             </div>
