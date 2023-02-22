@@ -1,7 +1,7 @@
 import TextInputEmployee from "./models/TextInputEmployee";
 
-const Email = ({onChange, value}) => {
-    return <TextInputEmployee onChange={onChange} value={value}/>
+const Email = ({onChange, value, disableChange}) => {
+    return <TextInputEmployee onChange={onChange} value={value} disableChange={disableChange}/>
 }
 
 export default Email;

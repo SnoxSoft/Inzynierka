@@ -136,7 +136,7 @@ function Remind(){
 
                 <div className={"flex flex-col gap-4"}>
                     <label>PODAJ EMAIL</label>
-                    <RemindEmail value={email} onChange={setEmail}/>
+                    <RemindEmail value={email} onChange={setEmail} disableChange={!codeNotVerified}/>
                 </div>
                 <br/>
                 {codeNotVerified ?
