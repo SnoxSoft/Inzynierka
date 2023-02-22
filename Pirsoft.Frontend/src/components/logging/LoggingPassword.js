@@ -3,8 +3,6 @@ import {useState} from "react";
 
 const LoggingPassword = ({onChange, value, showHide = true}) => {
 
-    console.log(showHide)
-
     const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<BiHide/>);
     function changeVisibilityForPassword() {
         const x = document.getElementById("logging-password");

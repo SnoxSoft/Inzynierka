@@ -18,6 +18,7 @@ import Pesel from "../components/employee/fields/Pesel";
 import GrossSalary from "../components/employee/fields/GrossSalary";
 import PositionType from "../components/employee/fields/PositionType";
 import EmploymentStartDate from "../components/employee/fields/EmploymentStartDate";
+import LoggingPassword from "../components/logging/LoggingPassword";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = 'PIRSOFT: Rejestracja nowego pracownika'
@@ -42,8 +43,10 @@ function EmployeeComponent({id, mode, employee}){
     //uprawnienia edycji oraz przeglądania danych konta pracownika według zalogowanego konta
     sessionStorage.setItem("PRIVILEDGE", 'UNAUTHORIED')
 
-    //purpose of it is to show or hide skill picker and changer
+    //purpose of it is to show employee data
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
+    const [showSkillsFrame, setShowSkillsFrame] = useState(false);
+    const [showPasswordChangeFrame, setShowPasswordChangeFrame] = useState(false);
     //const [employeeData, setEmployeeData] = useState(useSelector(selectId(id)));
 
     //employee data
@@ -140,10 +143,17 @@ function EmployeeComponent({id, mode, employee}){
 
         setSkillsData(skillsList)
         setEmployeeDataShow(true)
+        setShowSkillsFrame(false)
     }
 
     //component for showing skills under an avatar
     const [skillsComponent, setSkillsComponent] = useState(<></>);
+
+
+    const setNewPasswordFunction = () => {
+        setEmployeeDataShow(false);
+        setShowPasswordChangeFrame(true)
+    }
 
     //changing skills from change skill view
     const setSkills = () => {
@@ -170,6 +180,7 @@ function EmployeeComponent({id, mode, employee}){
         }
         setSkillsComponent(detailsOne)
         setEmployeeDataShow(false);
+        setShowSkillsFrame(true)
     }
 
     //for resizing main component
@@ -178,7 +189,59 @@ function EmployeeComponent({id, mode, employee}){
         // Handler to call on window resize
         FunctionForResize("employee-info", {setWantedHeightForList});
         FunctionForResize("skills", {setWantedHeightForList});
+        FunctionForResize("password", {setWantedHeightForList});
     }, []);
+
+    // zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
+    let disableData = sessionStorage.getItem('USER') !== id && mode !== 'create'
+
+
+    // poniżej znajdą się wszystkie dane i funkcje dla okienka zmiany hasła w danych pracownika
+
+    const [oldPassword, setOldPassword] = useState();
+    const [newPassword, setNewPassword] = useState();
+    const [newRepeatPassword, setNewRepeatPassword] = useState();
+
+    const [wrongOldPasswords, setWrongOldPassword] = useState(false)
+    const [wrongNewPasswords, setWrongNewPassword] = useState(false)
+    const [notTheSame, setNotTheSame] = useState(false)
+
+    const changePassword = () => {
+        if(oldPassword !== undefined && oldPassword.toString().length > 0 && oldPassword.toString() === password) {
+            if (newPassword !== undefined && newRepeatPassword !== undefined &&
+                newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0) {
+
+                //tutaj pomyslimy jakie wartosci sprawdzic
+
+                if (newPassword.toString() === newRepeatPassword.toString()) {
+                    setPassword(newPassword)
+
+                    setOldPassword('')
+                    setNewPassword('')
+                    setNewRepeatPassword('')
+
+                    setEmployeeDataShow(true);
+                    setShowPasswordChangeFrame(false)
+                } else {
+                    setNotTheSame(true);
+                    setTimeout(() => {
+                        setNotTheSame(false)
+                    }, 3000);
+                }
+            } else {
+                setWrongNewPassword(true);
+                setTimeout(() => {
+                    setWrongNewPassword(false)
+                }, 3000);
+            }
+        }
+        else {
+            setWrongOldPassword(true);
+            setTimeout(() => {
+                setWrongOldPassword(false)
+            }, 3000);
+        }
+    }
 
     return(
         <>
@@ -190,59 +253,64 @@ function EmployeeComponent({id, mode, employee}){
                 <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> IMIĘ </label>
-                        <FirstName value={firstName} onChange={setFirstName}/>
+                        <FirstName value={firstName} onChange={setFirstName} disableChange={disableData}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> NAZWISKO </label>
-                        <LastName value={lastName} onChange={setLastName}/>
+                        <LastName value={lastName} onChange={setLastName} disableChange={disableData}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> E-MAIL </label>
-                        <Email value={email} onChange={setEmail}/>
+                        <Email value={email} onChange={setEmail} disableChange={mode !== 'create'}/>
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ? <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> HASŁO </label>
                             <div className={"flex flex-row justify-end gap-4 grow"}>
-                                <Password value={password} onChange={setPassword}/>
-                                <button className={""}><FiSettings/></button>
+                                <Password value={password} onChange={setPassword}
+                                          showHide={sessionStorage.getItem('USER') === id || mode === 'create'}
+                                          disableChange={mode !== 'create'}/>
+                                {sessionStorage.getItem('USER') === id ?
+                                    <button className={""} onClick={() => setNewPasswordFunction()}><FiSettings/></button> :
+                                    <></>
+                                }
                             </div>
                         </div>
 
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> KONTO BANKOWE </label>
-                            <BankAccountNumber value={bank} onChange={setBank}/>
+                            <BankAccountNumber value={bank} onChange={setBank} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> DATA URODZENIA </label>
-                            <DateOfBirth value={birth} onChange={setBirth}/>
+                            <DateOfBirth value={birth} onChange={setBirth} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> PESEL </label>
-                            <Pesel value={pesel} onChange={setPesel}/>
+                            <Pesel value={pesel} onChange={setPesel} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> WYNAGRODZENIE BRUTTO </label>
-                            <GrossSalary value={salary} onChange={setSalary}/>
+                            <GrossSalary value={salary} onChange={setSalary} disableChange={disableData}/>
                         </div>
 
                     </> : <></>}
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> STANOWISKO </label>
-                        <PositionType value={position} onChange={setPosition}/>
+                        <PositionType value={position} onChange={setPosition} disableChange={disableData}/>
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> ROZPOCZĘCIE PRACY </label>
-                            <EmploymentStartDate value={start} onChange={setStart}/>
+                            <EmploymentStartDate value={start} onChange={setStart} disableChange={disableData}/>
                         </div>
                         : <></>}
                 </div>
@@ -251,7 +319,7 @@ function EmployeeComponent({id, mode, employee}){
                     <ProfilePicture picture={avatarData}/>
                     <SkillsList skillList={skillsData} />
                     <div className={"flex justify-center"}>
-                        {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
+                        {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' && sessionStorage.getItem('USER') === id || mode === 'create' ?
                             <ReusableButton value={employee !== undefined &&
                                 employee !== null ? "EDYTUJ" : "WYBIERZ"}
                                             onClick={ () => setSkills()}/>
@@ -288,20 +356,89 @@ function EmployeeComponent({id, mode, employee}){
             </div>
         </div>
         :
-        <div id={"skills"}
-             className={"p-4 grid grid-cols-1 bg-blue-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto text-center" +
-                 ""}
-             style={{ height: wantedHeightsForList } }>
+            <>
+                {showSkillsFrame ?
+                    <div id={"skills"}
+                         className={"p-4 grid grid-cols-1 bg-blue-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto text-center"}
+                         style={{height: wantedHeightsForList}}>
 
-            <div id={"skills-edit"} className={"flex flex-col justify-evenly"}>
-                <div>UMIEJĘTNOŚCI</div>
-                {skillsComponent}
-                <div className={"p-4 flex flex-row justify-evenly"}>
-                    <ReusableButton value={"ZATWIERDŹ"} onClick={ () => saveSkills()}/>
-                    <ReusableButton value={"ZAMKNIJ"} onClick={() => setEmployeeDataShow(true)}/>
+                        <div id={"skills-edit"} className={"flex flex-col justify-evenly"}>
+                            <div>UMIEJĘTNOŚCI</div>
+                            {skillsComponent}
+                            <div className={"p-4 flex flex-row justify-evenly"}>
+                                <ReusableButton value={"ZATWIERDŹ"} onClick={() => saveSkills()}/>
+                                <ReusableButton value={"ZAMKNIJ"} onClick={() => {setEmployeeDataShow(true); setShowSkillsFrame(false)}}/>
+                            </div>
+                        </div>
+                    </div> :
+                    <></>}
+
+                {showPasswordChangeFrame ?
+                <div id={"password"}
+                     className={"p-4 grid grid-cols-1 bg-blue-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto text-center"}
+                     style={{height: wantedHeightsForList}}>
+                    <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
+
+                        <div>
+                            <p>ZMIANA HASŁA</p>
+                        </div>
+                        <br/><br/>
+
+                        <div className={"flex flex-col gap-4"}>
+                            <label>PODAJ STARE HASŁO</label>
+                            <LoggingPassword value={oldPassword} onChange={setOldPassword} showHide={false}/>
+                        </div>
+                        <br/>
+
+                        <div className={"flex flex-col gap-4"}>
+                            <label>PODAJ NOWE HASŁO</label>
+                            <div className={"flex flex-col gap-4 self-center"}>
+                                <LoggingPassword value={newPassword} onChange={setNewPassword} showHide={false}/>
+                            </div>
+                        </div>
+                        <div className={"flex flex-col gap-4"}>
+                            <label>POWTÓRZ NOWE HASŁO</label>
+                            <div className={"flex flex-col gap-4 self-center"}>
+                                <LoggingPassword value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
+                            </div>
+                        </div>
+
+                        <br/><br/>
+
+                        <div className={"flex flex-row justify-evenly"}>
+                            <div className={"self-center"}>
+                                <ReusableButton value={"ZAMKNIJ"}
+                                    onClick={() => {
+                                        setOldPassword('');
+                                        setNewPassword('');
+                                        setNewRepeatPassword('');
+                                        setEmployeeDataShow(true);
+                                        setShowPasswordChangeFrame(false)}}/>
+                            </div>
+                            <div className={"bg-blue-menu self-center"}>
+                                <ReusableButton value={"ZATWIERDŹ"} onClick={() => changePassword()}/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div className={"flex flex-col items-center text-workday"}>
+                        {wrongNewPasswords ?
+                            <p className={"bg-red-700 rounded-md font-bold"}>Wpisz nowe hasła w pola</p> :
+                            <></>
+                        }
+                        {wrongOldPasswords ?
+                            <p className={"bg-red-700 rounded-md font-bold"}>Wpisane stare hasło jest błędne</p> :
+                            <></>
+                        }
+                        {notTheSame ?
+                            <p className={"bg-red-700 rounded-md font-bold"}>Wpisane nowe hasła są niezgodne</p> :
+                            <></>
+                        }
+                    </div>
                 </div>
-            </div>
-        </div>
+                :
+                <></>}
+            </>
         }
         </>
     )
