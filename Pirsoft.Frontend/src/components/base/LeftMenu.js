@@ -8,7 +8,7 @@ function LeftMenu(){
                 <>
             <MenuButton link={"/employees"} value={"PRACOWNICY"}/>
             <MenuButton link={'/employee/-1'} value={"REJESTRACJA"}/>
-            <MenuButton link={""} value={"AKCJA 2"}/>
+            <MenuButton link={"schedule"} value={"HARMONOGRAM OSOBISTY"}/>
             <MenuButton link={""} value={"AKCJA 3"}/>
                     </>
                 :
