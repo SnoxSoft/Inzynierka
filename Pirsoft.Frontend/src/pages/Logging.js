@@ -39,6 +39,7 @@ function Logging(){
                         sessionStorage.setItem('FIRSTNAME', response[0].firstname)
                         sessionStorage.setItem('LASTNAME', response[0].lastname)
                         sessionStorage.setItem('AVATAR', response[0].avatar)
+                        sessionStorage.setItem('START', response[0].start)
 
                         window.location.reload(false);
 
@@ -51,6 +52,7 @@ function Logging(){
                     sessionStorage.setItem('FIRSTNAME', null)
                     sessionStorage.setItem('LASTNAME', null)
                     sessionStorage.setItem('AVATAR', null)
+                    sessionStorage.setItem('START', null)
 
                 })
         }
