@@ -9,6 +9,18 @@ import dayjs from "dayjs";
 function Schedule(){
     document.title = "PIRSOFT: Harmonogram osobisty";
 
+    //ładowanie dni wolnych / wybranych / nieobecnych
+    let daysOff = [Object]
+    fetch("http://127.0.0.1:3001/monthDays/"+sessionStorage.getItem('USER'))
+        .then((response) => {response.json()
+            .then((response) => {
+                daysOff = response
+            });
+        })
+        .catch((err) => {
+            console.log(err.message);
+        })
+
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
     const options = {
@@ -33,11 +45,16 @@ function Schedule(){
 
     useEffect(() => {
         // Handler to call on window resize
-        FunctionForResize("schedule", {setWantedHeightForList});
+        //FunctionForResize("schedule", {setWantedHeightForList});
         FunctionForResize("schedule-list", {setWantedHeightForList});
         FunctionForResize("schedule-month", {setWantedHeightForList});
-        FunctionForResize("schedule-month-list", {setWantedHeightForList});
+        // FunctionForResize("schedule-month-list", {setWantedHeightForList});
+
     }, []);
+
+    const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
+        "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
+    ];
     const filtrSchedule = () => {
         const dateFrom = new Date(from);
         const dateTo = new Date(to);
@@ -46,11 +63,6 @@ function Schedule(){
             dateTo.getMonth() -
             dateFrom.getMonth() +
             12 * (dateTo.getFullYear() - dateFrom.getFullYear())+1
-
-        const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
-            "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
-        ];
-
 
         let localList = []
         for (let i = diff - 1; i >= 0; i--) {
@@ -78,13 +90,9 @@ function Schedule(){
 
     const [pickedMonthText, setPickedMonth] = useState('')
     const loadWholeMonthData = (pickedMonth) => {
-
+console.clear()
         setPickedMonth(pickedMonth)
         //console.log(pickedMonth.date)
-
-
-        //ładowanie dni wolnych / wybranych / nieobecnych
-        //monthDays/:id/:yyyy-mm
 
         const options2 = {
             year: "numeric",
@@ -116,7 +124,7 @@ function Schedule(){
         currentMonthDays = createDaysForCurrentMonth(
             pickedYearCurrently,
             pickedMonthCurrently,
-            dayjs(`${pickedYearCurrently}-${pickedMonthCurrently}-01`).daysInMonth()
+            daysOff
         );
 
         previousMonthDays = createDaysForPreviousMonth(firstDayOfCurrentMonth);
@@ -136,7 +144,7 @@ function Schedule(){
         setShowHidePickedMonth(true)
     }
 
-    function appendDay(day, month, today) {
+    function appendDay(day) {
         //m-2 flex self-end place-self-center text-workday
         let color = 'dayoffmonth'
 
@@ -148,16 +156,17 @@ function Schedule(){
             color = 'weekend'
         }
 
-        if(day.absent !== undefined && day.absent){
-            color = 'absent'
-        }
-
-        if(day.dayoff !== undefined && day.dayoff){
-            color = 'dayoff'
-        }
-
-        if(day.sick !== undefined && day.sick){
-            color = 'sick'
+        if(day.reason !== undefined){
+            //console.log(day.reason)
+            if(day.reason === 'absent'){
+                color = 'absent'
+            }
+            if(day.reason === 'dayoff'){
+                color = 'dayoff'
+            }
+            if(day.reason === 'sick'){
+                color = 'sick'
+            }
         }
 
         let border = ''
@@ -165,14 +174,14 @@ function Schedule(){
             border = 'outline-dashed outline-4'
         }
 
-        let style = 'flex flex-row justify-evenly hover:cursor-pointer bg-'+color+' m-2 rounded-md text-black '+border+' flex '
+        //console.log(color)
 
-        return <div className={style}>
+        return <div className={'flex flex-row justify-evenly hover:cursor-pointer bg-'+color+' m-2 rounded-md text-black '+border+' '}>
             {day.dayOfMonth}
         </div>
     }
 
-    function createDaysForCurrentMonth(year, month) {
+    function createDaysForCurrentMonth(year, month, daysOff) {
         let today = false
         return [...Array(getNumberOfDaysInMonth(year, month))].map((day, index) => {
             const dateToday = new Date()
@@ -183,12 +192,24 @@ function Schedule(){
                 today = true
             }
             else {today = false}
+            let reason = 'noReason'
+            for(let i = 0; i < daysOff.length; i++){
+                const offDayFound = new Date(daysOff[i].date)
+                if(year === offDayFound.getFullYear() &&
+                    month === offDayFound.getMonth() &&
+                    index + 1 === offDayFound.getDate()){
+                    reason = daysOff[i].reason
+                    //console.log(daysOff[i])
+                }
+
+            }
             return {
                 date: dayjs(`${year}-${month+1}-${index + 1}`).format("YYYY-MM-DD"),
                 dayOfMonth: index + 1,
                 isCurrentMonth: true,
                 today: today,
-                weekend: dateCurrentlyChecked.getDay() === 6 || dateCurrentlyChecked.getDay() === 0 ? true : false
+                weekend: dateCurrentlyChecked.getDay() === 6 || dateCurrentlyChecked.getDay() === 0 ? true : false,
+                reason: reason
             };
         });
     }
@@ -315,23 +336,78 @@ function Schedule(){
         return dayjs(`${year}-${month+1}-01`).daysInMonth();
     }
 
+    // to switch between months
+    const [showingAlert, setShowingAlert] = useState(false)
+    const changeMonth = (mode) => {
+
+        const pickedMonthTextDate = new Date(pickedMonthText.date)
+
+        if(mode === 'previous'){
+            const pickedMonthTextDateMinusOne = new Date(
+                pickedMonthTextDate.getFullYear(),
+                pickedMonthTextDate.getMonth(),
+                0)
+
+            if(pickedMonthTextDateMinusOne.toLocaleDateString("sv", options) < dateStart){
+                setShowingAlert(true);
+                setTimeout(() => {setShowingAlert(false)}, 3000);
+            }
+            else {
+                console.log("moge isc wstecz")
+                loadWholeMonthData({
+                    text: monthNames[pickedMonthTextDateMinusOne.getMonth()].toUpperCase()+" "
+                        +pickedMonthTextDateMinusOne.getFullYear(),
+                    date: pickedMonthTextDateMinusOne.toLocaleDateString("sv", options)})
+            }
+        }
+
+        if(mode === 'next'){
+            const pickedMonthTextDatePlusOne = new Date(
+                pickedMonthTextDate.getFullYear(),
+                pickedMonthTextDate.getMonth()+1,
+                1)
+
+            if(pickedMonthTextDatePlusOne.toLocaleDateString("sv", options) > dateToday){
+                setShowingAlert(true);
+                setTimeout(() => {setShowingAlert(false)}, 3000);
+            }
+            else {
+                console.log("yaaaay mozemy isc naprzod:)")
+                loadWholeMonthData({
+                    text: monthNames[pickedMonthTextDatePlusOne.getMonth()].toUpperCase()+" "
+                        +pickedMonthTextDatePlusOne.getFullYear(),
+                    date: pickedMonthTextDatePlusOne.toLocaleDateString("sv", options)})
+            }
+        }
+    }
+
     return(
         <>
         {showHidePickedMonth ?
             <div id={"schedule-month"}
              className={"bg-green-menu rounded-md border-2 border-b-workday"}>
                 <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
-                    <button className={"flex flex-row self-center gap-2"} onClick={() => setShowHidePickedMonth(false)}>
+                    <button className={"flex bg-d flex-row self-center gap-2"} onClick={() => setShowHidePickedMonth(false)}>
                         <div className={"flex flex-row self-center"}><MdOutlineArrowBackIosNew /></div>
                         <div>WSTECZ</div>
                     </button>
                     <div className={"text-workday flex flex-row gap-8"}>
-                        <div className={"flex place-self-center"}><MdOutlineArrowBackIosNew size={30}/></div>
-                        <div className={"flex place-self-center font-bold 20"}>{pickedMonthText !== undefined ? pickedMonthText.text : ''}</div>
-                        <div className={"flex place-self-center"}><MdOutlineArrowForwardIos size={30}/></div>
+                        <div className={"flex place-self-center hover:cursor-pointer"}
+                             onClick={() => changeMonth("previous")}>
+                            <MdOutlineArrowBackIosNew size={30}/></div>
+                        <div className={"flex place-self-center font-bold 20 w-40 bg-absent self-center"}>
+                            {pickedMonthText !== undefined ? pickedMonthText.text : ''}
+                        </div>
+                        <div className={"flex place-self-center hover:cursor-pointer"}
+                             onClick={() => changeMonth("next")}>
+                            <MdOutlineArrowForwardIos size={30}/>
+                        </div>
                     </div>
                     <div><ReusableButton value={"LEGENDA"}
                          onClick={() => console.log("tu bedzie legenda:)")}/></div>
+                </div>
+                <div className={"text-workday text-center"}>
+                    {showingAlert ? 'Nie możesz przejść poza zakres' : ' ... '}
                 </div>
                 <div id={"schedule-month-list"}
                      className={"grid grid-cols-7 p-2"}
