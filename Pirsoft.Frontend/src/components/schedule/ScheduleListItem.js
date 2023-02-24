@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {HiArrowLeft} from "react-icons/hi";
 
-const EmployeeListItem = ({text, date, setShowHidePickedMonth}) => {
+const ScheduleListItem = ({text, date, loadWholeMonthData}) => {
     const[showHideButtons, setShowHideButtons] = useState(false);
 
     const showOptions = () => {
@@ -13,9 +13,7 @@ const EmployeeListItem = ({text, date, setShowHidePickedMonth}) => {
     }
 
     const openWholeMonth = () => {
-        console.clear()
-        console.log(date)
-        setShowHidePickedMonth(false)
+        loadWholeMonthData({text: text, date: date})
 
     }
 
@@ -34,6 +32,6 @@ const EmployeeListItem = ({text, date, setShowHidePickedMonth}) => {
             </li>
 }
 
-export default EmployeeListItem;
+export default ScheduleListItem;
 
 //
