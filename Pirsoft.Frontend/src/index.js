@@ -10,6 +10,7 @@ import Employees from "./pages/Employees";
 import EmployeePreRender from "./pages/EmployeePreRender";
 import Remind from "./pages/Remind";
 import Schedule from "./pages/Schedule";
+import CompanySchedule from "./pages/CompanySchedule";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -22,6 +23,7 @@ root.render(
                     <Route path={"remind"} element={<Remind />}/>
                     <Route path={"employees"} element={<Employees />}/>
                     <Route path={"schedule"} element={<Schedule />}/>
+                    <Route path={"company-schedule"} element={<CompanySchedule />}/>
                     <Route exact path={"employee/:id"} element={<EmployeePreRender />}/>
                 </Route>
             </Routes>

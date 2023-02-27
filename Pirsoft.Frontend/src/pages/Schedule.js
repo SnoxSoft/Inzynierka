@@ -214,16 +214,6 @@ console.clear()
         });
     }
 
-    const getTextWeekday = (pickedDay) => {
-        const pickedDayWeekDay = pickedDay.getDay()
-        if(pickedDayWeekDay === 0){
-            return weekdays[6]
-        }
-        else {
-            return weekdays[pickedDayWeekDay-1]
-        }
-    }
-
     function createDaysForPreviousMonth(firstDayOfCurrentMonth) {
         const startingWeekDayOfCurrentMonth = firstDayOfCurrentMonth.getDay()
 
@@ -353,7 +343,6 @@ console.clear()
                 setTimeout(() => {setShowingAlert(false)}, 3000);
             }
             else {
-                console.log("moge isc wstecz")
                 loadWholeMonthData({
                     text: monthNames[pickedMonthTextDateMinusOne.getMonth()].toUpperCase()+" "
                         +pickedMonthTextDateMinusOne.getFullYear(),
@@ -372,7 +361,6 @@ console.clear()
                 setTimeout(() => {setShowingAlert(false)}, 3000);
             }
             else {
-                console.log("yaaaay mozemy isc naprzod:)")
                 loadWholeMonthData({
                     text: monthNames[pickedMonthTextDatePlusOne.getMonth()].toUpperCase()+" "
                         +pickedMonthTextDatePlusOne.getFullYear(),
@@ -387,25 +375,36 @@ console.clear()
             <div id={"schedule-month"}
              className={"bg-green-menu rounded-md border-2 border-b-workday"}>
                 <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
-                    <button className={"flex bg-d flex-row self-center gap-2"} onClick={() => setShowHidePickedMonth(false)}>
-                        <div className={"flex flex-row self-center"}><MdOutlineArrowBackIosNew /></div>
-                        <div>WSTECZ</div>
-                    </button>
-                    <div className={"text-workday flex flex-row gap-8"}>
-                        <div className={"flex place-self-center hover:cursor-pointer"}
-                             onClick={() => changeMonth("previous")}>
-                            <MdOutlineArrowBackIosNew size={30}/></div>
-                        <div className={"flex place-self-center font-bold 20 w-40 bg-absent self-center"}>
-                            {pickedMonthText !== undefined ? pickedMonthText.text : ''}
-                        </div>
-                        <div className={"flex place-self-center hover:cursor-pointer"}
-                             onClick={() => changeMonth("next")}>
-                            <MdOutlineArrowForwardIos size={30}/>
+                    <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
+                        <div>
+                            <button className={"flex bg-d flex-row self-center gap-2"} onClick={() => setShowHidePickedMonth(false)}>
+                                <div className={"flex flex-row self-center"}><MdOutlineArrowBackIosNew /></div>
+                                <div>WSTECZ</div>
+                            </button>
                         </div>
                     </div>
-                    <div><ReusableButton value={"LEGENDA"}
-                         onClick={() => console.log("tu bedzie legenda:)")}/></div>
+                    <div className={"col-start-1 row-start-1 place-self-center"}>
+                        <div className={"text-workday flex flex-row gap-8"}>
+                            <div className={"flex place-self-center hover:cursor-pointer"}
+                                 onClick={() => changeMonth("previous")}>
+                                <MdOutlineArrowBackIosNew size={30}/></div>
+                            <div className={"flex font-bold 20 w-40 place-content-center"}>
+                                {pickedMonthText !== undefined ? pickedMonthText.text : ''}
+                            </div>
+                            <div className={"flex place-self-center hover:cursor-pointer"}
+                                 onClick={() => changeMonth("next")}>
+                                <MdOutlineArrowForwardIos size={30}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
+                        <div>
+                            <ReusableButton value={"LEGENDA"}
+                                            onClick={() => console.log("tu bedzie legenda:)")}/>
+                        </div>
+                    </div>
                 </div>
+
                 <div className={"text-workday text-center"}>
                     {showingAlert ? 'Nie możesz przejść poza zakres' : ' ... '}
                 </div>
