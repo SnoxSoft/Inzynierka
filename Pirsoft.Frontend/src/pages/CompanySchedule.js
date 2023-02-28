@@ -6,18 +6,15 @@ import ScheduleListItem from "../components/schedule/ScheduleListItem";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
 import {FiLogOut} from "react-icons/fi";
+import {BiHide, BiShow} from "react-icons/bi";
+import TeamRow from "../components/companySchedule/TeamRow";
+import EmptyTeamRow from "../components/companySchedule/EmptyTeamRow";
+import EmployeeRow from "../components/companySchedule/EmployeeRow";
 
 function CompanySchedule(){
     document.title = "PIRSOFT: Harmonogram firmowy";
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-
-    // useEffect(() => {
-    //     // Handler to call on window resize
-    //     FunctionForResize("schedule-company-list", {setWantedHeightForList});
-    // }, []);
-
-
 
     //wszystkie zespoly ktore potrzebuje
     const [teams, setTeams] = useState(Object);
@@ -36,6 +33,7 @@ function CompanySchedule(){
         }
     }
 
+    // ładowanie raz zespołów po załądowaniu okna a nie na bieżąco
     if (teams[0] === undefined) {
         fetch("http://127.0.0.1:3001/getAllTeams")
             .then((response) => response.json())
@@ -49,9 +47,28 @@ function CompanySchedule(){
             })
     }
 
+    const [currentMonthDaysOff, setCurrentMonthDaysOff] = useState(Object);
+    const [monthDaysOffLoaded, setMonthDaysOffLoaded] = useState(false)
+    const loadMonthDaysOff = (data) => {
+        // ładowanie dni wolnych / wybranych / nieobecnych w wybranym miesiacu
+
+        fetch("http://127.0.0.1:3001/allCompanyMonthDays/2022-02")
+            .then((response) => response.json())
+            .then((response) => {
+                setCurrentMonthDaysOff(response)
+                setMonthDaysOffLoaded(true)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+
+    }
+
     const [employees, setEmployees] = useState(Object);
     const [employeesLoaded, setEmployeesLoaded] = useState(false)
 
+
+    // ładowanie wszystkich pracowników
     if (employees[0] === undefined) {
         fetch("http://127.0.0.1:3001/getAllEmployees")
             .then((response) => response.json())
@@ -82,6 +99,7 @@ function CompanySchedule(){
 
     const loadWholeMonthData = (pickedMonth) => {
         setPickedMonth(pickedMonth)
+
         //console.clear()
         //console.log(pickedMonth.date)
 
@@ -114,12 +132,6 @@ function CompanySchedule(){
 
         const days = [...currentMonthDays];
 
-        let calendarDaysLoad = []
-
-        days.forEach((day) => {
-            //calendarDaysLoad.push(appendDay(day));
-        });
-
         return days
 
     }
@@ -136,8 +148,9 @@ function CompanySchedule(){
 
     const loadWholeMonthDataForCompany = (today) => {
 
-        console.clear()
+        //console.clear()
         setAllTeamsAreLoadedInDivs(false)
+        setMonthDaysOffLoaded(false)
 
         const days = loadWholeMonthData({
             text: monthNames[today.getMonth()].toUpperCase()+" "
@@ -179,81 +192,70 @@ function CompanySchedule(){
 
         let row = 2
         teams.forEach((team) => {
-            //console.log(team)
+            // dodanie zespołów
             row = row + 1
             allTeamsLoad.push(
-                <div key={"team" + team.value}
-                     className={"row-start-"+row+" col-start-1 text-workday text-left"}>
-                    {team.value}
-                </div>)
+                <TeamRow team={team} row={row}/>)
 
+            // dodawanie pustych komponentów po prawej stronie zespołu
             let colTeam = 2
             days.forEach((day) => {
-                //console.log(day)
                 allTeamsLoad.push(
-                    <div key={"empty-column-for-team-"+day.dayOfMonth+"-"+team.value}
-                         className={"row-start-"+row+" col-start-"+colTeam+" text-workday"}>
-                    </div>)
+                    <EmptyTeamRow team={team} day={day} row={row} colTeam={colTeam}/>)
                 colTeam = colTeam + 1
             });
 
             employees.forEach((employee) => {
                 if(employee.team.toString().toUpperCase() === (team.value+'').toString().toUpperCase()){
-                    //console.log(employee.firstname)
                     row = row + 1
                     allTeamsLoad.push(
-                        <div key={"employee-" + row}
-                             className={"w-44 row-start-"+row+" col-start-1 text-workday text-right"}>
-                            {employee.firstname + ' ' + employee.lastname}
-                        </div>)
+                        <EmployeeRow employee={employee} row={row}/>)
 
+                    // szukanie dni wolnych danego pracownika
+                    let daysOffOfThisEmployee = []
+                    currentMonthDaysOff.forEach((e) => {
+                        if(e.employee === employee.id){
+                            daysOffOfThisEmployee = e.daysoff
+                        }
+                    })
+
+                    // dodawanie komponentów dni pracownika
                     let col = 2
                     days.forEach((day) => {
                         //console.log(day)
                         allTeamsLoad.push(
-
-                            appendDay(day, row, col)
+                            appendDay(day, row, col, daysOffOfThisEmployee)
                         )
                         col = col + 1
                     });
-
                 }
-
             });
-
         });
 
-        //console.log(allTeamsLoad)
+
+        // ustawianie calego kalendarza i pokazanie go
         setAllTeams(allTeamsLoad)
         setAllTeamsAreLoadedInDivs(true)
     }
 
     if(teamsLoaded && employeesLoaded && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
-        loadWholeMonthDataForCompany(new Date())
+        loadMonthDaysOff(new Date())
+        if(monthDaysOffLoaded) {
+            loadWholeMonthDataForCompany(new Date())
+        }
     }
 
-    console.log("alltimes3..")
-    console.log(allTeams)
-
-    function appendDay(day, row, col) {
-        //m-2 flex self-end place-self-center text-workday
+    function appendDay(day, row, col, daysOff) {
         let color = 'workday'
+
+        daysOff.forEach((d) => {
+            if(day.date === d){
+                color = 'absent'
+            }
+        })
 
         if(day.weekend !== undefined && day.weekend){
             color = 'weekend'
-        }
-
-        if(day.reason !== undefined){
-            //console.log(day.reason)
-            if(day.reason === 'absent'){
-                color = 'absent'
-            }
-            if(day.reason === 'dayoff'){
-                color = 'absent'
-            }
-            if(day.reason === 'sick'){
-                color = 'absent'
-            }
         }
 
         return <div
@@ -263,43 +265,13 @@ function CompanySchedule(){
         </div>
     }
 
-    // ładowanie dni wolnych / wybranych / nieobecnych w wybranym miesiacu
-    // let daysOff = [Object]
-    // fetch("http://127.0.0.1:3001/monthDays/"+sessionStorage.getItem('USER'))
-    //     .then((response) => {response.json()
-    //         .then((response) => {
-    //             daysOff = response
-    //         });
-    //     })
-    //     .catch((err) => {
-    //         console.log(err.message);
-    //     })
-
     function createDaysForCurrentMonth(year, month) {
         return [...Array(getNumberOfDaysInMonth(year, month))].map((day, index) => {
-            // const dateToday = new Date()
              const dateCurrentlyChecked = new Date(year, month, index + 1)
-            // if(year === dateToday.getFullYear() &&
-            //     month === dateToday.getMonth() &&
-            //     index + 1 === dateToday.getDate()){
-            //     today = true
-            // }
-            // else {today = false}
-            // let reason = 'noReason'
-            // for(let i = 0; i < daysOff.length; i++){
-            //     const offDayFound = new Date(daysOff[i].date)
-            //     if(year === offDayFound.getFullYear() &&
-            //         month === offDayFound.getMonth() &&
-            //         index + 1 === offDayFound.getDate()){
-            //         reason = daysOff[i].reason
-            //         //console.log(daysOff[i])
-            //     }
-            //
-            // }
             return {
                 date: dayjs(`${year}-${month+1}-${index + 1}`).format("YYYY-MM-DD"),
                 dayOfMonth: index + 1,
-                weekend: dateCurrentlyChecked.getDay() === 6 || dateCurrentlyChecked.getDay() === 0 ? true : false
+                weekend: dateCurrentlyChecked.getDay() === 6 || dateCurrentlyChecked.getDay() === 0 ? true : false,
             };
         });
     }
@@ -318,7 +290,10 @@ function CompanySchedule(){
                 pickedMonthTextDate.getMonth(),
                 0)
 
-            loadWholeMonthDataForCompany(pickedMonthTextDateMinusOne)
+            loadMonthDaysOff(pickedMonthTextDateMinusOne)
+            if(monthDaysOffLoaded) {
+                loadWholeMonthDataForCompany(pickedMonthTextDateMinusOne)
+            }
 
         }
 
@@ -328,7 +303,10 @@ function CompanySchedule(){
                 pickedMonthTextDate.getMonth()+1,
                 1)
 
-            loadWholeMonthDataForCompany(pickedMonthTextDatePlusOne)
+            loadMonthDaysOff(pickedMonthTextDatePlusOne)
+            if(monthDaysOffLoaded) {
+                loadWholeMonthDataForCompany(pickedMonthTextDatePlusOne)
+            }
 
         }
     }
@@ -373,7 +351,7 @@ function CompanySchedule(){
                 </div>
                 <div id={"schedule-company-list"}
                      style={{ height: wantedHeightsForList } }
-                     className={"rounded-md overflow-y-auto overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-1"}>
+                     className={"rounded-md overflow-y-auto overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2"}>
                     {allTeams}
                 </div>
             </div>

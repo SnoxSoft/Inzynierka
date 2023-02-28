@@ -176,7 +176,7 @@ console.clear()
 
         //console.log(color)
 
-        return <div className={'flex flex-row justify-evenly hover:cursor-pointer bg-'+color+' m-2 rounded-md text-black '+border+' '}>
+        return <div className={'flex flex-row justify-evenly border-workday border-2 hover:cursor-pointer bg-'+color+' m-2 rounded-md text-black '+border+' '}>
             {day.dayOfMonth}
         </div>
     }
