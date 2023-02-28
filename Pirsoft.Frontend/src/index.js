@@ -12,6 +12,7 @@ import Remind from "./pages/Remind";
 import Schedule from "./pages/Schedule";
 import CompanySchedule from "./pages/CompanySchedule";
 import Teams from "./pages/Teams";
+import Absences from "./pages/Absences";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -27,6 +28,7 @@ root.render(
                     <Route path={"company-schedule"} element={<CompanySchedule />}/>
                     <Route path={"teams"} element={<Teams />}/>
                     <Route exact path={"employee/:id"} element={<EmployeePreRender />}/>
+                    <Route path={"absences"} element={<Absences />}/>
                 </Route>
             </Routes>
         </BrowserRouter>
