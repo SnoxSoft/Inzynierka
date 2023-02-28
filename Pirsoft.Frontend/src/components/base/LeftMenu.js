@@ -10,6 +10,7 @@ function LeftMenu(){
             <MenuButton link={'/employee/-1'} value={"REJESTRACJA"}/>
             <MenuButton link={"schedule"} value={"HARMONOGRAM OSOBISTY"}/>
             <MenuButton link={"company-schedule"} value={"HARMONOGRAM FIRMY"}/>
+            <MenuButton link={"teams"} value={"ZESPOŁY W FIRMIE"}/>
             <MenuButton link={""} value={"AKCJA 3"}/>
                     </>
                 :
