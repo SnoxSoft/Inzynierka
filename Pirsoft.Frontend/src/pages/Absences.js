@@ -68,7 +68,7 @@ function Absences(){
             })
 
         //reloading days off and demand days endpoint
-        
+
     }
 
     //filtruj button log

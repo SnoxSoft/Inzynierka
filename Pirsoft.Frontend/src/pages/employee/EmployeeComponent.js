@@ -1,24 +1,24 @@
-import ProfilePicture from "../components/employee/fields/ProfilePicture";
+import ProfilePicture from "../../components/employee/fields/ProfilePicture";
 
-import SkillsList from "../components/employee/fields/SkillsList";
+import SkillsList from "../../components/employee/fields/SkillsList";
 import {useEffect, useState} from "react";
 import React from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
-import ReusableButton from "../components/base/ReusableButton";
-import FunctionForResize from "../components/base/FunctionForResize";
+import ReusableButton from "../../components/base/ReusableButton";
+import FunctionForResize from "../../components/base/FunctionForResize";
 import {MdOutlineArrowBackIosNew} from "react-icons/md";
-import FirstName from "../components/employee/fields/FirstName";
-import LastName from "../components/employee/fields/LastName";
-import Email from "../components/employee/fields/Email";
-import Password from "../components/employee/fields/Password";
+import FirstName from "../../components/employee/fields/FirstName";
+import LastName from "../../components/employee/fields/LastName";
+import Email from "../../components/employee/fields/Email";
+import Password from "../../components/employee/fields/Password";
 import {FiSettings} from "react-icons/fi";
-import BankAccountNumber from "../components/employee/fields/BankAccountNumber";
-import DateOfBirth from "../components/employee/fields/DateOfBirth";
-import Pesel from "../components/employee/fields/Pesel";
-import GrossSalary from "../components/employee/fields/GrossSalary";
-import PositionType from "../components/employee/fields/PositionType";
-import EmploymentStartDate from "../components/employee/fields/EmploymentStartDate";
-import LoggingPassword from "../components/logging/LoggingPassword";
+import BankAccountNumber from "../../components/employee/fields/BankAccountNumber";
+import DateOfBirth from "../../components/employee/fields/DateOfBirth";
+import Pesel from "../../components/employee/fields/Pesel";
+import GrossSalary from "../../components/employee/fields/GrossSalary";
+import PositionType from "../../components/employee/fields/PositionType";
+import EmploymentStartDate from "../../components/employee/fields/EmploymentStartDate";
+import LoggingPassword from "../../components/logging/LoggingPassword";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = 'PIRSOFT: Rejestracja nowego pracownika'
