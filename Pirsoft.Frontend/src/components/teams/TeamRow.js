@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import {VscTriangleDown,VscTriangleRight} from "react-icons/vsc";
 import {FiSettings} from "react-icons/fi";
 import {MdOpenInNew} from "react-icons/md";
+import ReusableButton from "../base/ReusableButton";
 
 const TeamRow = ({team, row, setEmployeesVisible}) => {
 
@@ -30,8 +31,13 @@ const TeamRow = ({team, row, setEmployeesVisible}) => {
             </div>
             {optionsEditVisible ?
                 <>
-                <button className={""} onClick={() => console.log("clicked open in new")}><MdOpenInNew/></button>
-                <button className={""} onClick={() => console.log("clicked settings")}><FiSettings/></button>
+                    <ReusableButton value={<MdOpenInNew/>}
+                            formatting={""} color={""}
+                            link={"/team-view/"+team.id}/>
+
+                    <ReusableButton value={<FiSettings/>}
+                            formatting={""} color={""}
+                            onClick={() => console.log("clicked settings")}/>
                 </> : <></>
             }
         </div>

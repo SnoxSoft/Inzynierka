@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import FunctionForResize from "../components/base/FunctionForResize";
-import ReusableButton from "../components/base/ReusableButton";
+import FunctionForResize from "../../components/base/FunctionForResize";
+import ReusableButton from "../../components/base/ReusableButton";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
-import TeamRow from "../components/teams/TeamRow";
-import EmployeeRow from "../components/teams/EmployeeRow";
-import TeamAndEmployees from "../components/teams/TeamAndEmployees";
+import TeamRow from "../../components/teams/TeamRow";
+import EmployeeRow from "../../components/teams/EmployeeRow";
+import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
 
 function Teams(){
     document.title = "PIRSOFT: Zespoły w firmie";
@@ -102,7 +102,7 @@ function Teams(){
             <div
              className={"bg-green-menu rounded-md border-2 border-b-workday p-4"}>
                 <div className={"flex flex-cols justify-end"}>
-                    <ReusableButton value={"DODAJ ZESPÓŁ"}/>
+                    <ReusableButton value={"DODAJ ZESPÓŁ"} link={"/team-add"}/>
                 </div>
                 <div id={"schedule-company-list"}
                      style={{ height: wantedHeightsForList } }

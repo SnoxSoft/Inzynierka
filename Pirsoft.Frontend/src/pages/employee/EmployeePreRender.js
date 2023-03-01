@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import React from "react";
 import {useParams} from "react-router-dom";
-import FunctionForResize from "../components/base/FunctionForResize";
+import FunctionForResize from "../../components/base/FunctionForResize";
 import EmployeeComponent from "./EmployeeComponent";
 
 function EmployeePreRender(){
