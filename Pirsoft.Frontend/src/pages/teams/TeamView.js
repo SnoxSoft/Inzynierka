@@ -4,6 +4,7 @@ import TeamMembers from "../../components/teamsAdd/TeamMembers";
 import TeamLeader from "../../components/teamsAdd/TeamLeader";
 import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
+import TeamMembersSkills from "../../components/teamsAdd/TeamMembersSkills";
 
 const TeamView = () => {
 
@@ -18,10 +19,11 @@ const TeamView = () => {
     const [leaderData, setLeaderData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
     const [employeeSkillData, setEmployeeSkillData] = useState([]);
+    const [employeeSkillDataLoad, setEmployeeSkillDataLoad] = useState(false)
     const [teamDataLoaded, setTeamDataLoaded] = useState(false);
 
-    if(!teamDataLoaded) {
-        fetch("http://127.0.0.1:3001/getTeamData/"+id)
+    if (!teamDataLoaded) {
+        fetch("http://127.0.0.1:3001/getTeamData/" + id)
             .then((response) => {
                 response.json()
                     .then((response) => {
@@ -36,13 +38,41 @@ const TeamView = () => {
             })
     }
 
-    if(teamDataLoaded){
+    if (teamDataLoaded) {
         console.clear()
         console.log(teamData)
         console.log(leaderData)
         console.log(employeeData)
-        console.log(employeeSkillData)
+        reloadSkills()
 
+    }
+
+    function reloadSkills(){
+        let skillList = []
+        employeeData.forEach((e) => {
+            e.skills.forEach((s) => {
+                let found = false
+                skillList.forEach(element => {
+                    if(element.name === s){
+                        found = true
+                    }
+                });
+                if(!found){
+                    skillList.push({name:s, value:1})
+                }
+                else {
+                    skillList.forEach(element => {
+                        if(element.name === s){
+                            element.value = element.value + 1;
+                        }
+                    });
+                }
+            })
+        })
+        if(!employeeSkillDataLoad) {
+            setEmployeeSkillData(skillList)
+            setEmployeeSkillDataLoad(true)
+        }
     }
 
     return (
@@ -54,10 +84,12 @@ const TeamView = () => {
         >
                 <div>NAZWA ZESPOŁU</div>
                 <TeamName disableChange={true} value={teamData}/>
+                <div>SILNE CECHY ZESPOŁU</div>
+                <TeamMembersSkills value={employeeSkillData}/>
                 <div>KIEROWNIK ZESPOŁU</div>
-                <TeamLeader />
+                <TeamLeader value={leaderData}/>
                 <div>CZŁONKOWIE ZESPOŁU</div>
-                <TeamMembers />
+                <TeamMembers value={employeeData}/>
 
             <div className={"flex flex-row gap-4"}>
                 <ReusableButton value={"ZAMKNIJ"} onClick={() => navigate(-1)}/>
