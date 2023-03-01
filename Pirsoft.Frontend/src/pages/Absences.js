@@ -54,11 +54,11 @@ function Absences(){
     // fetching of data for endpoint
     const [employeeAbsences, setEmployeeAbsences] = useState(Array);
     const fetchingEmployeeAbsences = () => {
-        console.log(checkUdrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo)
+        //console.log(checkUdrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo)
         fetch("http://127.0.0.1:3001/getEmployeeAbsences/"+sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
-                    console.log(response)
+                    //console.log(response)
                     response.sort(getSortOrder("from"))
                     setEmployeeAbsences(response)
                 });
@@ -66,6 +66,9 @@ function Absences(){
             .catch((err) => {
                 console.log(err.message);
             })
+
+        //reloading days off and demand days endpoint
+        
     }
 
     //filtruj button log
@@ -79,7 +82,40 @@ function Absences(){
 
     // date from date to / type of day off / status
     const [absencesList, setAbsencesList] = useState([]);
-    const [deleteAbsence,setDeleteAbsence] = useState([]);
+    function deleteAbsence(){
+        //endpoint for removing dayoff
+        //reloading days off and demand days endpoint
+    }
+    // for renaming status of absence
+    function renameType(type) {
+        if(type === 'sick'){
+            return 'urlop chorobowy'
+        }
+        if(type === 'dayoff'){
+            return 'urlop wypoczynkowy'
+        }
+        if(type === 'demand'){
+            return 'urlop na żądanie'
+        }
+        if(type === 'absent'){
+            return 'nieobecność'
+        }
+        return type
+    }
+
+    //for renaming status of absence
+    function renameStatus(status) {
+        if(status === 'refused'){
+            return 'odrzucony'
+        }
+        if(status === 'accepted'){
+            return 'zaakceptowany'
+        }
+        if(status === 'waiting'){
+            return 'oczekujący'
+        }
+        return status
+    }
 
     if (employeeAbsences[0] !== undefined && absencesList.length === 0){
         let absencesListLoad = [];
@@ -88,16 +124,16 @@ function Absences(){
             if (i.from > new Date().toLocaleDateString("sv", options)) {
                 absencesListLoad.push(
                     <div className={"grid grid-cols-2 text-start m-2 items-center h-12"} key={row}>
-                        <div>W terminie {i.from} - {i.to}. Type: {i.type}.</div>
-                        <div className={"grid grid-cols-3 items-center"}> Status: {i.state}.<ReusableButton value={"Usun"} onClick={deleteAbsence}/></div>
+                        <div>W terminie {i.from} - {i.to}, {renameType(i.type)}</div>
+                        <div className={"grid grid-cols-3 items-center"}> {renameStatus(i.state)} <ReusableButton value={"Usun"} onClick={() => deleteAbsence()}/></div>
                     </div>
                 )
                 row++;
             } else {
                 absencesListLoad.push(
                     <div className={"grid grid-cols-2 text-start m-2 text-weekend items-center h-12"} key={row}>
-                        <div>W terminie {i.from} - {i.to}. Type: {i.type}.</div>
-                        <div className={"grid grid-cols-3 items-center"}> Status: {i.state}.</div>
+                        <div>W terminie {i.from} - {i.to}, {renameType(i.type)}</div>
+                        <div className={"grid grid-cols-3 items-center"}> {renameStatus(i.state)} </div>
                     </div>
                 )
                 row++;
@@ -111,7 +147,7 @@ function Absences(){
             <div className={"grow p-4"}>
                 <div className={"flex flex-col text-workday text-center gap-4 "}>
                     <div className={"flex items-center justify-between"}>
-                        <h1> ZOSTALO DNI URLOPOWYCH: {leaveDays}, TYM NA ZADANIE: {onDemandDays}</h1>
+                        <h1> ZOSTALO DNI URLOPOWYCH: {leaveDays}, TYM NA ŻĄDANIE: {onDemandDays}</h1>
                         <ReusableButton value={"Wystaw \nWniosek"} color={"bg-blue-menu"}/>
                     </div>
                     <div>
@@ -120,14 +156,13 @@ function Absences(){
                     <div className={"flex justify-between"}>
                         <div className={"    gap-2 flex items-center justify-left"}>
                             <input type="checkbox" id="oczekujace" name="oczekujace" value="oczekujace" defaultChecked={true} onChange={(e) => setCheckOczekujace(e.target.checked)}/>
-                            <label htmlFor="oczekujace">oczekujace</label>
+                            <label htmlFor="oczekujace">OCZEKUJĄCE</label>
                             <input type="checkbox" id="zatwierdzone" name="zatwierdzone" value="zatwierdzone" defaultChecked={true} onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
-                            <label htmlFor="zatwierdzone">zatwierdzone</label>
+                            <label htmlFor="zatwierdzone">ZATWIERDZONE</label>
                             <input type="checkbox" id="udrzucone" name="udrzucone" value="udrzucone" defaultChecked={true} onChange={(e) => setCheckUdrzucone(e.target.checked)}/>
-                            <label htmlFor="udrzucone">udrzucone</label>
+                            <label htmlFor="udrzucone">ODRZUCONE</label>
                         </div>
-                        <div><ReusableButton value={"FILTRUJ"}
-                                                                             onClick={() => filtrAbsences()}
+                        <div><ReusableButton value={"FILTRUJ"} onClick={() => filtrAbsences()}
                         /></div>
                     </div>
                     <div id={"schedule-list"} className={"overflow-y-auto"} style={{ height: wantedHeightsForList}} >
