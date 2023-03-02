@@ -102,7 +102,7 @@ function Teams(){
             <div
              className={"bg-green-menu rounded-md border-2 border-b-workday p-4"}>
                 <div className={"flex flex-cols justify-end"}>
-                    <ReusableButton value={"DODAJ ZESPÓŁ"} link={"/team-add"}/>
+                    <ReusableButton value={"DODAJ ZESPÓŁ"} link={"/team-create"}/>
                 </div>
                 <div id={"schedule-company-list"}
                      style={{ height: wantedHeightsForList } }
