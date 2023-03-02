@@ -2,7 +2,7 @@ import {HiPlus} from "react-icons/hi";
 import ReusableButton from "../base/ReusableButton";
 import {useState} from "react";
 
-const TeamMember = ({value, disableChange, employeeData, setEmployeeData}) => {
+const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmployeesFinderShowing}) => {
     const [showOptions, setShowOptions] = useState(false)
     const setButtonsVisible = () => {
         if(!disableChange) {
@@ -38,7 +38,8 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData}) => {
                 </input>
                 {showOptions ?
                     <div className={"flex flex-row gap-4 place-content-center"}>
-                        <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}/>
+                        <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
+                        onClick={() => setEmployeesFinderShowing(true)}/>
                         <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
                             onClick={() => removeEmployeeFromList()}/>
                     </div>

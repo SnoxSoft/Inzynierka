@@ -2,12 +2,12 @@ import {HiPlus} from "react-icons/hi";
 import ReusableButton from "../base/ReusableButton";
 import TeamMember from "./TeamMember";
 
-const TeamMembers = ({disableChange, employeeData, setEmployeeData}) => {
+const TeamMembers = ({disableChange, employeeData, setEmployeeData, setEmployeesFinderShowing}) => {
     let showAllEmployees = []
 
     employeeData.forEach((v) => {
         showAllEmployees.push(<TeamMember value={v} disableChange={disableChange}
-          employeeData={employeeData} setEmployeeData={setEmployeeData}/>)
+          employeeData={employeeData} setEmployeeData={setEmployeeData} setEmployeesFinderShowing={setEmployeesFinderShowing}/>)
     })
 
 
@@ -18,7 +18,7 @@ const TeamMembers = ({disableChange, employeeData, setEmployeeData}) => {
             {!disableChange ?
                 <ReusableButton value={<HiPlus/>}
                     color={""}
-                    onClick={() => console.log("open widow to pick new employee")}
+                    onClick={() => setEmployeesFinderShowing(true)}
                     formatting={"hover:bg-gray-500 hover:border-2 hover:border-gray-400 w-96 h-6 rounded-md flex flex-col items-center place-content-center"}
                 /> :
                 <></>

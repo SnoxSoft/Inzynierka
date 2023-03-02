@@ -2,7 +2,7 @@ import {HiPlus} from "react-icons/hi";
 import ReusableButton from "../base/ReusableButton";
 import {useState} from "react";
 
-const TeamLeader = ({disableChange, value, setLeaderData}) => {
+const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShowing}) => {
     const [showOptions, setShowOptions] = useState(false)
 
     const setButtonsVisible = () => {
@@ -22,7 +22,7 @@ const TeamLeader = ({disableChange, value, setLeaderData}) => {
                 <ReusableButton value={<HiPlus/>}
                                 color={""}
                                 formatting={"hover:bg-gray-500 hover:border-2 hover:border-gray-400 w-96 h-6 rounded-md flex flex-col items-center place-content-center"}
-                                onClick={() => console.log("calling for window to find leader")}
+                                onClick={() => setEmployeesFinderShowing(true)}
                 />
                 :
                 <></>
@@ -39,7 +39,8 @@ const TeamLeader = ({disableChange, value, setLeaderData}) => {
                 </input>
                     {showOptions ?
                         <div className={"flex flex-row gap-4 place-content-center"}>
-                            <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}/>
+                            <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
+                            onClick={() => setEmployeesFinderShowing(true)}/>
                             <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
                             onClick={() => {setLeaderData(undefined)}}/>
                         </div>
