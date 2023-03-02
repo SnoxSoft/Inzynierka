@@ -6,11 +6,15 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsAdd/TeamMembersSkills";
 import FunctionForResize from "../../components/base/FunctionForResize";
+import EmployeesFinder from "../EmployeesFinder";
 
 const TeamWindow = ({id,mode, title}) => {
-    document.title = title
+    const[dynamicTitle, setDynamicTitle] = useState(title)
+    document.title = dynamicTitle
 
     const navigate = useNavigate()
+
+    const [employeesFinderShowing, setEmployeesFinderShowing] = useState(false)
 
     //loading data with one endpoint
     const [teamData, setTeamData] = useState([]);
@@ -90,7 +94,9 @@ const TeamWindow = ({id,mode, title}) => {
 
     return (
         <>
-            {teamDataLoaded || mode === 'create' ?
+            {employeesFinderShowing ?
+                <EmployeesFinder title={title} setTitle={setDynamicTitle} setEmployeesFinderShowing={setEmployeesFinderShowing}/> :
+            teamDataLoaded || mode === 'create' ?
                 <div id={"teams-add"}
                      className={"p-4 bg-blue-menu rounded-md border-2 border-b-workday text-workday"}
                      style={{height: wantedHeightsForList}}
@@ -102,12 +108,14 @@ const TeamWindow = ({id,mode, title}) => {
                         <TeamMembersSkills value={employeeSkillData}/>
                         <div>KIEROWNIK ZESPOŁU</div>
                         <TeamLeader disableChange={(mode === 'view')}
-                            value={leaderData} setLeaderData={setLeaderData}/>
+                            value={leaderData} setLeaderData={setLeaderData}
+                            setEmployeesFinderShowing={setEmployeesFinderShowing}/>
                         <div>CZŁONKOWIE ZESPOŁU</div>
                         <TeamMembers
                             disableChange={(mode === 'view')}
                             employeeData={employeeData} setEmployeeData={setEmployeeData}
-                            employeeSkillData={employeeSkillData} setEmployeeSkillData={setEmployeeSkillData}/>
+                            employeeSkillData={employeeSkillData} setEmployeeSkillData={setEmployeeSkillData}
+                            setEmployeesFinderShowing={setEmployeesFinderShowing}/>
 
                         <div className={"flex flex-row gap-2"}>
                             <ReusableButton value={"ZAMKNIJ"} onClick={() => navigate(-1)}/>
