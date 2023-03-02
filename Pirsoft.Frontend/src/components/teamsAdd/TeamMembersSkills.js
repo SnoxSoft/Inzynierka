@@ -17,30 +17,29 @@ const TeamMembersSkills = ({value}) => {
     let colors = ["bg-red-500", "bg-blue-400", "bg-green-700", "bg-orange-400"]
 
     let skillComponents = []
+    let columnCount = 1
+    if(value[0] !== undefined && value !== []) {
+        value.sort(getSortOrder("value"))
+        columnCount = value[0].value + 1
 
-    value.sort(getSortOrder("value"))
-    const columnCount = value[0].value + 1
+        let currentValue = value[0].value
 
-    console.log("column count"+ columnCount)
+        value.forEach((s) => {
+            if (parseInt(s.value) !== parseInt(currentValue)) {
+                if (randomNumber < 3) {
+                    randomNumber = randomNumber + 1
+                } else randomNumber = 0
+                currentValue = s.value
+            }
+            skillComponents.push(
+                <>
+                    <div key={s.name + "" + s.value} className={"col-start-1 text-center"}>{s.name}</div>
+                    <div key={s.value + "" + s.name}
+                         className={"col-start-2 col-span-" + s.value + " text-center " + colors[randomNumber] + " rounded-md"}>{s.value}</div>
+                </>)
 
-    let currentValue = value[0].value
-
-    value.forEach((s) => {
-        console.log(s.value + " " + currentValue)
-        console.log(s.value !== currentValue)
-        if(parseInt(s.value) !== parseInt(currentValue)){
-            if(randomNumber < 3){ randomNumber = randomNumber + 1}
-            else randomNumber = 0
-            currentValue = s.value
-        }
-        skillComponents.push(
-            <>
-                <div key={s.name+""+s.value}className={"col-start-1 text-center"}>{s.name}</div>
-                <div key={s.value+""+s.name} className={"col-start-2 col-span-"+s.value+" text-center "+colors[randomNumber]+" rounded-md"}>{s.value}</div>
-            </>)
-
-    })
-    console.log(value)
+        })
+    }
 
     return (
         <div className={"bg-gray-500 border-2 border-gray-400 w-96 h-fit rounded-md flex flex-col items-center place-content-center text-black"}>

@@ -37,7 +37,7 @@ const TeamRow = ({team, row, setEmployeesVisible}) => {
 
                     <ReusableButton value={<FiSettings/>}
                             formatting={""} color={""}
-                            onClick={() => console.log("clicked settings")}/>
+                            link={"/team-edit/"+team.id}/>
                 </> : <></>
             }
         </div>

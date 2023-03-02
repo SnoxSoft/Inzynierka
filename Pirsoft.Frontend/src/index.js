@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Layout from "./pages/Layout";
@@ -14,6 +13,8 @@ import CompanySchedule from "./pages/CompanySchedule";
 import Teams from "./pages/teams/Teams";
 import Absences from "./pages/Absences";
 import TeamView from "./pages/teams/TeamView";
+import TeamEdit from "./pages/teams/TeamEdit";
+import TeamCreate from "./pages/teams/TeamCreate";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -29,6 +30,8 @@ root.render(
                     <Route path={"company-schedule"} element={<CompanySchedule />}/>
                     <Route path={"teams"} element={<Teams />}/>
                     <Route path={"team-view/:id"} element={<TeamView />}/>
+                    <Route path={"team-edit/:id"} element={<TeamEdit />}/>
+                    <Route path={"team-create"} element={<TeamCreate />}/>
                     <Route exact path={"employee/:id"} element={<EmployeePreRender />}/>
                     <Route path={"absences"} element={<Absences />}/>
                 </Route>
