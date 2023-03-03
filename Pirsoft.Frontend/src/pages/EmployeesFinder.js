@@ -1,18 +1,18 @@
-import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
 import FirstnameAndLastname from "../components/employeesFinder/FirstnameAndLastname";
 import SortingButton from "../components/employeesFinder/SortingButton";
 import SkillsList from "../components/employeesFinder/SkillsList";
 import SkillsPicker from "../components/employeesFinder/SkillsPicker";
+import EmployeePickerListItem from "../components/employeesFinder/EmployeePickerListItem";
+import FunctionForResize from "../components/base/FunctionForResize";
 
 
 const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing}) => {
     setTitle("PIRSOFT: Wyszukiwarka pracowników")
 
     const [teamData, setTeamData] = useState("");
-    const [skillsPicked, setSkillsPicked] = useState(["SQL", "WORD"])
+    const [skillsPicked, setSkillsPicked] = useState([])
 
     const [skillsNotShows, setSkillsNotShows] = useState(true)
 
@@ -31,6 +31,37 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing}) => 
             .catch((err) => {
                 console.log(err.message);
             })
+    }
+
+    const [employeePickerData, setEmployeePickerData] = useState()
+    const [employeePickerDataLoad, setEmployeePickedDataLoad] = useState([])
+    const [employeePickerDataLoaded, setEmployeePickerDataLoaded] = useState(false)
+    function loadAllEmployeesByFilter(){
+        setEmployeePickerDataLoaded(false)
+
+        fetch("http://127.0.0.1:3001/getAllEmployeesForPicked")
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response)
+                setEmployeePickedDataLoad(response)
+                setEmployeePickerDataLoaded(true)
+                reloadEmployeePicker()
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+
+    }
+
+    function reloadEmployeePicker(){
+        let employeeLoad = []
+
+        employeePickerDataLoad.forEach((e) => {
+            employeeLoad.push(<EmployeePickerListItem employee={e}/>)
+        })
+
+        setEmployeePickerData(employeeLoad)
+        setEmployeePickerDataLoaded(false)
     }
 
     if(skillsLoaded){
@@ -86,6 +117,13 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing}) => 
         setSkillsNotShows(true)
     }
 
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+
+    useEffect(() => {
+        // Handler to call on window resize
+        FunctionForResize("employee-picker", {setWantedHeightForList});
+    }, []);
+
     useEffect(() => {
         pickSkills()
     }, [skillsPicked]);
@@ -93,31 +131,39 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing}) => 
     return (
         <>
             {skillsNotShows ?
-                <div id={"teams-add"}
+                <div
                      className={"p-4 bg-blue-menu rounded-md border-2 border-b-workday text-workday"}
-                     // style={{height: wantedHeightsForList}}
                 >
                     <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 overflow-y-auto"}>
                         <div>WYSZUKIWARKA PRACOWNIKÓW</div>
                         <div className={"flex flex-row place-items-center gap-2"}>
-                            <FirstnameAndLastname />
-                            <ReusableButton value={"SZUKAJ"}/>
+                            <div className={"flex flex-col place-self-start m-2 gap-2"}>
+                                <FirstnameAndLastname />
+                                <SkillsPicker setSkills={setSkillsPicked} setSkillsNotShows={setSkillsNotShows}/>
+                                <SkillsList skillList={skillsPicked}/>
+                            </div>
+
+                            <ReusableButton value={"SZUKAJ"}
+                                onClick={() => loadAllEmployeesByFilter()}/>
                             <SortingButton/>
                         </div>
-                        <div className={"bg-weekend"}>
-                            <SkillsPicker setSkills={setSkillsPicked} setSkillsNotShows={setSkillsNotShows}/>
-                            <SkillsList skillList={skillsPicked}/>
-                        </div>
-                        <div className={"flex flex-row gap-2 place-items-center"}>
-                                <ReusableButton value={"ZAMKNIJ"} onClick={() => {
-                                    setTitle(title)
-                                    setEmployeesFinderShowing(false)
-                                }}/>
-                            <div className={"flex flex-row"}>
-                                <div>Zamień pracowników miejscami</div>
-                                <input type={"checkbox"} className={"w-6 h-6"} />
-                                <ReusableButton value={"ZATWIERDŹ"} onClick={() => console.log("ZATWIERDŹ WYBORY")}/>
-                            </div>
+                    </div>
+
+                    <div  id={"employee-picker"} className={"bg-brown-menu border-2 border-workday menu rounded-md m-4 p-4 overflow-y-auto"}
+                         style={{height: wantedHeightsForList}}>
+                        <div>IMIE I NAZWISKO, ZESPÓŁ, STANOWISKO, UMIEJĘTNOŚCI</div>
+                        {employeePickerData}
+                    </div>
+
+                    <div className={"flex flex-row gap-2 justify-between"} >
+                        <ReusableButton value={"ZAMKNIJ"} onClick={() => {
+                            setTitle(title)
+                            setEmployeesFinderShowing(false)
+                        }}/>
+                        <div className={"flex flex-row gap-2 place-items-center "}>
+                            <div>Zamień pracowników miejscami</div>
+                            <input type={"checkbox"} className={"w-6 h-6"} />
+                            <ReusableButton value={"ZATWIERDŹ"} onClick={() => console.log("ZATWIERDŹ WYBORY")}/>
                         </div>
                     </div>
                 </div> :
@@ -125,7 +171,6 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing}) => 
                      className={"p-4 grid grid-cols-1 bg-blue-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto text-center"}
                      // style={{height: wantedHeightsForList}}
                 >
-
                     <div id={"skills-picker"} className={"flex flex-col justify-evenly"}>
                         <div>UMIEJĘTNOŚCI</div>
                         {skillsComponent}
