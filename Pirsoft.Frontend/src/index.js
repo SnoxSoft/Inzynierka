@@ -15,6 +15,7 @@ import Absences from "./pages/Absences";
 import TeamView from "./pages/teams/TeamView";
 import TeamEdit from "./pages/teams/TeamEdit";
 import TeamCreate from "./pages/teams/TeamCreate";
+import Requests from "./pages/Requests";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -34,6 +35,7 @@ root.render(
                     <Route path={"team-create"} element={<TeamCreate />}/>
                     <Route exact path={"employee/:id"} element={<EmployeePreRender />}/>
                     <Route path={"absences"} element={<Absences />}/>
+                    <Route path={"requests"} element={<Requests />}/>
                 </Route>
             </Routes>
         </BrowserRouter>
