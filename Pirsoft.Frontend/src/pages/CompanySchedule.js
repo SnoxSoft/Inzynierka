@@ -350,13 +350,13 @@ function CompanySchedule(){
                             </div>
                         </div>
                     </div>
+                    <div id={"schedule-company-list"}
+                         style={{ height: wantedHeightsForList, maxWidth:1000}}
+                         className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2"}>
+                        {allTeams}
+                    </div>
+                </div>
 
-                </div>
-                <div id={"schedule-company-list"}
-                     style={{ height: wantedHeightsForList, width: 100} }
-                     className={"rounded-md overflow-y-auto overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2"}>
-                    {allTeams}
-                </div>
             </>
             :
             <></>

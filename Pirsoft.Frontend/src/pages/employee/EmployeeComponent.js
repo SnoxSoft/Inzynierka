@@ -19,6 +19,8 @@ import GrossSalary from "../../components/employee/fields/GrossSalary";
 import PositionType from "../../components/employee/fields/PositionType";
 import EmploymentStartDate from "../../components/employee/fields/EmploymentStartDate";
 import LoggingPassword from "../../components/logging/LoggingPassword";
+import contract from "../../components/employee/fields/Contract";
+import Contract from "../../components/employee/fields/Contract";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = 'PIRSOFT: Rejestracja nowego pracownika'
@@ -58,6 +60,7 @@ function EmployeeComponent({id, mode, employee}){
     const[birth, setBirth] = useState(employee !== undefined && employee !== null ? employee.birth : '');
     const[pesel, setPesel] = useState(employee !== undefined && employee !== null ? employee.pesel : '');
     const[salary, setSalary] = useState(employee !== undefined && employee !== null ? employee.salary : '');
+    const[contract, setContract] = useState(employee !== undefined && employee !== null ? employee.contract : '');
     const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.position : '');
     const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.start : '');
 
@@ -75,6 +78,7 @@ function EmployeeComponent({id, mode, employee}){
             setBirth(employee.birth);
             setPesel(employee.pesel);
             setSalary(employee.salary);
+            setContract(employee.contract);
             setPosition(employee.position);
             setStart(employee.start);
 
@@ -91,6 +95,7 @@ function EmployeeComponent({id, mode, employee}){
             setBirth('');
             setPesel('');
             setSalary('');
+            setContract('');
             setPosition('');
             setStart('');
 
@@ -113,6 +118,7 @@ function EmployeeComponent({id, mode, employee}){
             birth + ", \n" +
             pesel + ", \n" +
             salary + ", \n" +
+            contract + ", \n" +
             position + ", \n" +
             start + " \n \n" +
             " skills: \n" +
@@ -299,6 +305,11 @@ function EmployeeComponent({id, mode, employee}){
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> WYNAGRODZENIE BRUTTO </label>
                             <GrossSalary value={salary} onChange={setSalary} disableChange={disableData}/>
+                        </div>
+
+                        <div className={"flex flex-row justify-between text-right gap-4"}>
+                            <label className={"basis-1/3"}> TYP UMOWY </label>
+                            <Contract value={contract} onChange={setContract} disableChange={disableData}/>
                         </div>
 
                     </> : <></>}
