@@ -246,21 +246,21 @@ function CompanySchedule(){
     }
 
     function appendDay(day, row, col, daysOff) {
-        let color = 'workday'
+        let color = 'bg-workday'
 
         daysOff.forEach((d) => {
             if(day.date === d){
-                color = 'absent'
+                color = 'bg-absent'
             }
         })
 
         if(day.weekend !== undefined && day.weekend){
-            color = 'weekend'
+            color = 'bg-weekend'
         }
 
         return <div
             className={
-            "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-8 h-8 hover:cursor-pointer bg-"+color+" rounded-md"}>
+            "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-8 h-8 hover:cursor-pointer "+color+" rounded-md"}>
             {/*{day.dayOfMonth}*/}
         </div>
     }
@@ -319,42 +319,45 @@ function CompanySchedule(){
     return(
         <>
         {teamsLoaded && allTeamsAreLoadedInDivs ?
-            <div
-             className={"bg-green-menu rounded-md border-2 border-b-workday"}>
+            <>
+                <div
+                 className={"bg-green-menu rounded-md border-2 border-b-workday"}>
 
-                <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
-                    <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                        <div>
-                            <ReusableButton value={"DZIŚ"} onClick={() => loadWholeMonthDataForCompany(new Date())}/>
-                        </div>
-                    </div>
-                    <div className={"col-start-1 row-start-1 place-self-center"}>
-                        <div className={"text-workday flex flex-row gap-8"}>
-                            <div className={"flex place-self-center hover:cursor-pointer"}
-                                 onClick={() => changeMonth("previous")}>
-                                <MdOutlineArrowBackIosNew size={30}/></div>
-                            <div className={"flex font-bold 20 w-40 place-content-center"}>
-                                {pickedMonthText !== undefined ? pickedMonthText.text : ''}
-                            </div>
-                            <div className={"flex place-self-center hover:cursor-pointer"}
-                                 onClick={() => changeMonth("next")}>
-                                <MdOutlineArrowForwardIos size={30}/>
+                    <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
+                        <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
+                            <div>
+                                <ReusableButton value={"DZIŚ"} onClick={() => loadWholeMonthDataForCompany(new Date())}/>
                             </div>
                         </div>
-                    </div>
-                    <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                        <div>
-                            <ReusableButton value={"LEGENDA"}
-                                 onClick={() => console.log("tu bedzie legenda:)")}/>
+                        <div className={"col-start-1 row-start-1 place-self-center"}>
+                            <div className={"text-workday flex flex-row gap-8"}>
+                                <div className={"flex place-self-center hover:cursor-pointer"}
+                                     onClick={() => changeMonth("previous")}>
+                                    <MdOutlineArrowBackIosNew size={30}/></div>
+                                <div className={"flex font-bold 20 w-40 place-content-center"}>
+                                    {pickedMonthText !== undefined ? pickedMonthText.text : ''}
+                                </div>
+                                <div className={"flex place-self-center hover:cursor-pointer"}
+                                     onClick={() => changeMonth("next")}>
+                                    <MdOutlineArrowForwardIos size={30}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
+                            <div>
+                                <ReusableButton value={"LEGENDA"}
+                                     onClick={() => console.log("tu bedzie legenda:)")}/>
+                            </div>
                         </div>
                     </div>
+
                 </div>
                 <div id={"schedule-company-list"}
-                     style={{ height: wantedHeightsForList } }
+                     style={{ height: wantedHeightsForList, width: 100} }
                      className={"rounded-md overflow-y-auto overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2"}>
                     {allTeams}
                 </div>
-            </div>
+            </>
             :
             <></>
         }
