@@ -118,7 +118,7 @@ function Requests(){
     }
 
     return(
-        <div id={"absences"} className="bg-green-menu rounded-md border-2 border-b-workday text-workday text-center">
+        <div id={"absences"} className="bg-green-menu menu rounded-md border-2 border-b-workday text-workday text-center">
             <div className={"flex flex-col gap-4 p-4"}>
                 <div className={"flex justify-evenly items-center"}>
                     <div>
@@ -157,9 +157,21 @@ function Requests(){
                 <div className={"flex justify-center"}>
                     <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
                 </div>
+                <div className={"flex justify-center"}>
+                    <ReusableButton value={"FILTRUJ"} formatting={"h-7 border-2 border-workday"} onClick={() => filtrAbsences()}/>
+                </div>
             </div>
-            <div className={"flex justify-center"}>
-                <ReusableButton value={"FILTRUJ"} onClick={() => filtrAbsences()}/>
+
+            <div className={"text-start ml-4 mr-8 items-center h-6 rounded-md flex bg-brown-menu border-2 border-workday text-workday font-bold"}>
+                <div className={"p-2 flex rounded-md basis-8/12"}>
+                    OPIS WNIOSKU
+                </div>
+                <div className={"flex basis-1/12 place-content-center rounded-md "}>
+                    STATUS
+                </div>
+                <div className={"flex justify-evenly basis-3/12"}>
+                    AKCJE
+                </div>
             </div>
             <div id={"schedule-list"} className={"overflow-y-auto"} style={{ height: wantedHeightsForList}} >
                 {absencesList}
