@@ -146,26 +146,26 @@ console.clear()
 
     function appendDay(day) {
         //m-2 flex self-end place-self-center text-workday
-        let color = 'dayoffmonth'
+        let color = 'bg-dayoffmonth'
 
         if(day.isCurrentMonth){
-            color = 'workday'
+            color = 'bg-workday'
         }
 
         if(day.weekend !== undefined && day.weekend){
-            color = 'weekend'
+            color = 'bg-weekend'
         }
 
         if(day.reason !== undefined){
             //console.log(day.reason)
             if(day.reason === 'absent'){
-                color = 'absent'
+                color = 'bg-absent'
             }
             if(day.reason === 'dayoff'){
-                color = 'dayoff'
+                color = 'bg-dayoff'
             }
             if(day.reason === 'sick'){
-                color = 'sick'
+                color = 'bg-sick'
             }
         }
 
@@ -176,7 +176,7 @@ console.clear()
 
         //console.log(color)
 
-        return <div className={'flex flex-row justify-evenly border-workday border-2 hover:cursor-pointer bg-'+color+' m-2 rounded-md text-black '+border+' '}>
+        return <div className={'flex flex-row justify-evenly border-workday border-2 hover:cursor-pointer '+color+' m-2 rounded-md text-black '+border+' '}>
             {day.dayOfMonth}
         </div>
     }
