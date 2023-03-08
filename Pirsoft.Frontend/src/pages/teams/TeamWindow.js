@@ -14,7 +14,15 @@ const TeamWindow = ({id,mode, title}) => {
 
     const navigate = useNavigate()
 
-    const [employeesFinderShowing, setEmployeesFinderShowing] = useState(false)
+    const [employeesFinderShow, setEmployeesFinderShow] = useState(false)
+
+    //const [howMuchYouCanPickAndWho, setHowMuchYouCanPickAndWho] = useState({howMuch: "", who: "", idPickedEmployee: null})
+    const [methodToUse, setMethodToUse] = useState()
+    const [isSwapPossible, setIsSwapPossible] = useState(false)
+    const [idOfCurrentPickedEmployee, setIdOfCurrentPickedEmployee] = useState()
+    const [multipleChoice, setMultipleChoice] = useState(false)
+    const [swapDataFillingIn, setSwapDataFillingIn] = useState("")
+
 
     //loading data with one endpoint
     const [teamData, setTeamData] = useState([]);
@@ -23,6 +31,9 @@ const TeamWindow = ({id,mode, title}) => {
     const [employeeSkillData, setEmployeeSkillData] = useState([]);
     const [employeeSkillDataLoad, setEmployeeSkillDataLoad] = useState(false)
     const [teamDataLoaded, setTeamDataLoaded] = useState(false);
+    const [swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee] = useState([])
+
+    const [swapEmployeesBetweenTeamsInformation, setSwapEmployeesBetweenTeamsInformation] = useState()
 
     if(mode === 'view' || mode === 'edit'){
     if (!teamDataLoaded) {
@@ -42,10 +53,6 @@ const TeamWindow = ({id,mode, title}) => {
     }}
 
     if (teamDataLoaded) {
-        // console.log("NOWE PRZEŁADOWANIE")
-        // console.log(teamData)
-        // console.log(leaderData)
-        // console.log(employeeData)
         reloadSkills()
 
     }
@@ -72,18 +79,85 @@ const TeamWindow = ({id,mode, title}) => {
                 }
             })
         })
-        if(!employeeSkillDataLoad) {
+        if(!employeeSkillDataLoad || mode === 'create') {
             setEmployeeSkillData(skillList)
             setEmployeeSkillDataLoad(true)
         }
     }
 
+    function setEmployeesFinderShowing(showOrNo, options){
+        if(options !== undefined) {
+            setMethodToUse(options.who)
+            setIsSwapPossible(options.idPickedEmployee !== null && options.who === "employee")
+            setIdOfCurrentPickedEmployee(options.idPickedEmployee)
+            setMultipleChoice(options.id === null && options.who === "employee")
+            setSwapDataFillingIn(options.howMuch)
+
+            //if ZMIEN or USUŃ on a someone who was exchanged, delete from exchange list.
+            setExchangeInformation(options.idPickedEmployee)
+        }
+        setEmployeesFinderShow(showOrNo)
+    }
+
     function saveOrCreate(){
-        console.log("saved data of whole team")
+        console.log("saved data of whole team, i will add endpoint here")
+        console.log(teamData)
+        console.log(leaderData)
+        console.log(employeeData)
+        console.log(swapTeamsBetweenTheseEmployee)
+    }
+
+    function setExchangeInformation(idToDeleteFromList = null) {
+        setSwapEmployeesBetweenTeamsInformation(<div></div>)
+        let loadSwapInformation = []
+
+        if (swapTeamsBetweenTheseEmployee.length > 0) {
+            loadSwapInformation.push(<div> Zamienione osoby pomędzy zespołami</div>)
+        }
+
+        let ifAnyChangeOnCurrentSwappedEmployeeList = []
+        swapTeamsBetweenTheseEmployee.forEach((s) => {
+            if (idToDeleteFromList === null) {
+                loadSwapInformation.push(<div> {s[0].firstandlastname}, zamieniona z osobą: {s.firstandlastname}</div>)
+                ifAnyChangeOnCurrentSwappedEmployeeList.push(s)
+            }
+
+            if (idToDeleteFromList !== null) {
+                if (s[0].id !== idToDeleteFromList) {
+                    //delete from swap list, no more swap if any change occur and get back previous employee to the list :)
+                    loadSwapInformation.push(<div> {s[0].firstandlastname}, zamieniona z
+                        osobą: {s.firstandlastname}</div>)
+                    ifAnyChangeOnCurrentSwappedEmployeeList.push(s)
+                } else {
+                    let employeeDataWithReturnedChanges = []
+                    employeeData.forEach((e) => {
+                        if(s[0].id === e.id){
+                            employeeDataWithReturnedChanges.push({id: s.id, firstandlastname: s.firstandlastname, skills: s.skills})
+                        }
+                        else {
+                            employeeDataWithReturnedChanges.push(e)
+                        }
+                    })
+                    setEmployeeData(employeeDataWithReturnedChanges)
+                }
+            }
+        })
+        if (swapTeamsBetweenTheseEmployee.length > 0) {
+            loadSwapInformation.push(<div> !!! </div>)
+            loadSwapInformation.push(<div> OSOBY ZOSTANĄ WYMIENIONE POMIĘDZY ZESPOŁAMI PO ZAPISANIU ZMIAN W AKTUALNIE
+                EDYTOWANYM ZESPOLE </div>)
+            loadSwapInformation.push(<div> !!! </div>)
+        }
+
+        setSwapTeamsBetweenTheseEmployee(ifAnyChangeOnCurrentSwappedEmployeeList)
+        if (loadSwapInformation.length > 0) {
+            setSwapEmployeesBetweenTeamsInformation(loadSwapInformation)
+        }
     }
 
     useEffect(() => {
         setEmployeeSkillDataLoad(false)
+        setExchangeInformation()
         reloadSkills()
     },[employeeData])
 
@@ -94,8 +168,21 @@ const TeamWindow = ({id,mode, title}) => {
 
     return (
         <>
-            {employeesFinderShowing ?
-                <EmployeesFinder title={title} setTitle={setDynamicTitle} setEmployeesFinderShowing={setEmployeesFinderShowing}/> :
+            {employeesFinderShow ?
+                <EmployeesFinder title={title} setTitle={setDynamicTitle}
+                     setEmployeesFinderShowing={setEmployeesFinderShowing}
+                     methodToUse={methodToUse}
+                     leaderData={leaderData}
+                     setLeaderData={setLeaderData}
+                     employeeData={employeeData}
+                     setEmployeeData={setEmployeeData}
+                     isSwapPossible={isSwapPossible}
+                     swapDataFillingIn={swapDataFillingIn}
+                     idOfCurrentPickedEmployee={idOfCurrentPickedEmployee}
+                     multipleChoice={multipleChoice}
+                     swapTeamsBetweenTheseEmployee={swapTeamsBetweenTheseEmployee}
+                     setSwapTeamsBetweenTheseEmployee={setSwapTeamsBetweenTheseEmployee}
+                    /> :
             teamDataLoaded || mode === 'create' ?
                 <div id={"teams-add"}
                      className={"p-4 bg-blue-menu rounded-md border-2 border-b-workday text-workday"}
@@ -103,20 +190,23 @@ const TeamWindow = ({id,mode, title}) => {
                 >
                     <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 overflow-y-auto"}>
                         <div>NAZWA ZESPOŁU</div>
-                        <TeamName disableChange={(mode === 'view')} value={teamData} onChange={setTeamData}/>
+                        <TeamName disableChange={(mode === 'view')} value={teamData} onChange={setTeamData} />
                         <div>SILNE CECHY ZESPOŁU</div>
                         <TeamMembersSkills value={employeeSkillData}/>
                         <div>KIEROWNIK ZESPOŁU</div>
                         <TeamLeader disableChange={(mode === 'view')}
                             value={leaderData} setLeaderData={setLeaderData}
-                            setEmployeesFinderShowing={setEmployeesFinderShowing}/>
+                            setEmployeesFinderShowing={setEmployeesFinderShowing}
+                            />
                         <div>CZŁONKOWIE ZESPOŁU</div>
                         <TeamMembers
                             disableChange={(mode === 'view')}
                             employeeData={employeeData} setEmployeeData={setEmployeeData}
                             employeeSkillData={employeeSkillData} setEmployeeSkillData={setEmployeeSkillData}
-                            setEmployeesFinderShowing={setEmployeesFinderShowing}/>
-
+                            setEmployeesFinderShowing={setEmployeesFinderShowing}
+                            swapTeamsBetweenTheseEmployee={swapTeamsBetweenTheseEmployee}
+                            setSwapTeamsBetweenTheseEmployee={setSwapTeamsBetweenTheseEmployee}/>
+                        <div className={"text-center"}>{swapEmployeesBetweenTeamsInformation}</div>
                         <div className={"flex flex-row gap-2"}>
                             <ReusableButton value={"ZAMKNIJ"} onClick={() => navigate(-1)}/>
                             {mode === 'create' ?
@@ -124,7 +214,7 @@ const TeamWindow = ({id,mode, title}) => {
                                 <></>
                             }
                             {mode === 'edit' ?
-                                <ReusableButton value={"ZAPISZ"} onClick={() => console.log("ZAPISZ ZESPOŁ")}/> :
+                                <ReusableButton value={"ZAPISZ"} onClick={() => saveOrCreate()}/> :
                                 <></>
                             }
                         </div>

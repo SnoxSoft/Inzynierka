@@ -17,14 +17,14 @@ const TeamMembersSkills = ({value}) => {
     let colors = ["bg-red-500", "bg-blue-400", "bg-green-700", "bg-orange-400"]
 
     let skillComponents = []
-    let columnCount = 1
+
     if(value[0] !== undefined && value !== []) {
         value.sort(getSortOrder("value"))
-        columnCount = value[0].value + 1
 
         let currentValue = value[0].value
 
         value.forEach((s) => {
+
             if (parseInt(s.value) !== parseInt(currentValue)) {
                 if (randomNumber < 3) {
                     randomNumber = randomNumber + 1
@@ -35,7 +35,7 @@ const TeamMembersSkills = ({value}) => {
                 <>
                     <div key={s.name + "" + s.value} className={"col-start-1 text-center"}>{s.name}</div>
                     <div key={s.value + "" + s.name}
-                         className={"col-start-2 col-span-" + s.value + " text-center " + colors[randomNumber] + " rounded-md"}>{s.value}</div>
+                         className={"col-start-2 text-center " + colors[randomNumber] + " rounded-md"}>{s.value}</div>
                 </>)
 
         })
@@ -44,7 +44,7 @@ const TeamMembersSkills = ({value}) => {
     return (
         <div className={"bg-gray-500 border-2 border-gray-400 w-96 h-fit rounded-md flex flex-col items-center place-content-center text-black"}>
 
-            <div className={"grid grid-cols-"+columnCount+" min-w-full gap-2 p-2"}>
+            <div className={"grid grid-cols-2 min-w-full gap-2 p-2"}>
                 {skillComponents}
             </div>
         </div>

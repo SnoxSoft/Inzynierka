@@ -15,6 +15,11 @@ const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShow
         }
     }
 
+    function setValuesForPickerAndOpenIt(){
+        //setHowMuchYouCanPickAndWho({howMuch: "one", who: "leader", idPickedEmployee: null});
+        setEmployeesFinderShowing(true, {howMuch: "one", who: "leader", idPickedEmployee: null});
+    }
+
     return (
         <>
         {value === undefined || (value.length !== undefined && value.length === 0) ?
@@ -22,7 +27,7 @@ const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShow
                 <ReusableButton value={<HiPlus/>}
                                 color={""}
                                 formatting={"hover:bg-gray-500 hover:border-2 hover:border-gray-400 w-96 h-6 rounded-md flex flex-col items-center place-content-center"}
-                                onClick={() => setEmployeesFinderShowing(true)}
+                                onClick={() => setValuesForPickerAndOpenIt()}
                 />
                 :
                 <></>
@@ -40,7 +45,7 @@ const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShow
                     {showOptions ?
                         <div className={"flex flex-row gap-4 place-content-center"}>
                             <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
-                            onClick={() => setEmployeesFinderShowing(true)}/>
+                            onClick={() => setValuesForPickerAndOpenIt()}/>
                             <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
                             onClick={() => {setLeaderData(undefined)}}/>
                         </div>
