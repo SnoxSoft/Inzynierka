@@ -2,7 +2,8 @@ import {HiPlus} from "react-icons/hi";
 import ReusableButton from "../base/ReusableButton";
 import {useState} from "react";
 
-const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmployeesFinderShowing}) => {
+const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmployeesFinderShowing,
+                        swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee}) => {
     const [showOptions, setShowOptions] = useState(false)
     const setButtonsVisible = () => {
         if(!disableChange) {
@@ -26,6 +27,21 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
             }
         })
         setEmployeeData(copyEmployeeData)
+
+        let swapTeamsDataWithoutCurrentEmployee = []
+        swapTeamsBetweenTheseEmployee.forEach((e) => {
+            console.log(e)
+            if (e[0].id !== value.id) {
+                swapTeamsDataWithoutCurrentEmployee.push(e)
+            } else {
+            }
+        })
+        setSwapTeamsBetweenTheseEmployee(swapTeamsDataWithoutCurrentEmployee)
+
+    }
+
+    function setValuesForPickerAndOpenIt(id, exchange = ""){
+        setEmployeesFinderShowing(true, {howMuch: "one"+exchange, who: "employee", idPickedEmployee: id});
     }
 
     let showAllEmployees = []
@@ -39,7 +55,9 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
                 {showOptions ?
                     <div className={"flex flex-row gap-4 place-content-center"}>
                         <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
-                        onClick={() => setEmployeesFinderShowing(true)}/>
+                        onClick={() => setValuesForPickerAndOpenIt(value.id)}/>
+                        {/*<ReusableButton value={"WYMIEŃ"} formatting={"h-6 w-20 border-2 border-gray-400"}*/}
+                        {/*                onClick={() => setValuesForPickerAndOpenIt(value.id,"Exchange")}/>*/}
                         <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
                             onClick={() => removeEmployeeFromList()}/>
                     </div>
