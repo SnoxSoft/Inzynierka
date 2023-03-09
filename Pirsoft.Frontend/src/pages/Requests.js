@@ -4,6 +4,7 @@ import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import TeamsList from "../components/employees/search/fields/TeamsList";
 import RequestsListItem from "../components/requests/RequestsListItem";
+import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
 
 
 function Requests(){
@@ -41,6 +42,11 @@ function Requests(){
     const [checkOdrzucone, setCheckOdrzucone] = useState(true);
     const [checkCreatedByCurrent, setCheckCreatedByCurrent] = useState(true);
     const [checkNotCreatedByCurrent, setCheckNotCreatedByCurrent] = useState(true)
+
+    // to show or hide request approval/rejection
+    const [requestsVisible, setRequestsVisible] = useState(true)
+
+    const [requestPickedData, setRequestPickedData] = useState(undefined)
 
     //order sorting function for absences (future to past)
     function getSortOrder(prop) {
@@ -104,7 +110,8 @@ function Requests(){
         for (const i of employeeAbsences) {
             if (i.from > new Date().toLocaleDateString("sv", options)) {
                 absencesListLoad.push(
-                    <RequestsListItem employeeAbsence={i} key={row}/>
+                    <RequestsListItem employeeAbsence={i} key={row} setRequestsVisible={setRequestsVisible}
+                                      setRequestPickedData={setRequestPickedData}/>
                 )
                 row++;
             } else {
@@ -118,6 +125,8 @@ function Requests(){
     }
 
     return(
+        <>
+        {requestsVisible ?
         <div id={"absences"} className="bg-green-menu menu rounded-md border-2 border-b-workday text-workday text-center">
             <div className={"flex flex-col gap-4 p-4"}>
                 <div className={"flex justify-evenly items-center"}>
@@ -177,6 +186,11 @@ function Requests(){
                 {absencesList}
             </div>
         </div>
+        :
+            <ApprovalOrRejectionRequest setRequestsVisible={setRequestsVisible}
+                                        requestPickedData={requestPickedData}/>
+        }
+            </>
     )
 }
 export default Requests;
