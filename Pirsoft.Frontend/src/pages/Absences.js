@@ -3,6 +3,7 @@ import ReusableButton from "../components/base/ReusableButton";
 import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import AbsencesListItem from "../components/absences/AbsencesListItem";
+import Request from "./Request";
 
 
 function Absences(){
@@ -19,6 +20,8 @@ function Absences(){
     const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
     const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
 
+    // show/hide absences and take  aday off
+    const [absencesVisible, setAbsencesVisible] = useState(true)
 
     // Handler to call on window resize
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
@@ -103,6 +106,8 @@ function Absences(){
     }
 
     return(
+        <>
+        {absencesVisible ?
         <div id={"absences"} className="flex flex-col grow bg-green-menu rounded-md border-2 border-b-workday text-workday">
             <div className={"flex p-4 gap-4 text-center flex-col"}>
                 <div className={"grow grid grid-cols-1 grid-rows-1 place-items-end"}>
@@ -110,7 +115,8 @@ function Absences(){
                         ZOSTALO DNI URLOPOWYCH: {leaveDays}, TYM NA ŻĄDANIE: {onDemandDays}
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                        <ReusableButton value={"Wystaw \nWniosek"} color={"bg-blue-menu"}/>
+                        <ReusableButton value={"Wystaw \nWniosek"} color={"bg-blue-menu"}
+                            onClick={() => setAbsencesVisible(false)}/>
                     </div>
                 </div>
                 <div className={"flex justify-center"}>
@@ -144,7 +150,10 @@ function Absences(){
             <div id={"schedule-list"} className={"overflow-y-scroll overflow-ellipsis"} style={{ height: wantedHeightsForList}}>
                 {absencesList}
             </div>
-        </div>
+        </div> :
+        <Request setAbsencesVisible={setAbsencesVisible}/>
+        }
+        </>
     )
 }
 export default Absences;

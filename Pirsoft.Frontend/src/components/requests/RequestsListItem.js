@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 
 
-const RequestsListItem = ({employeeAbsence, old = false}) => {
+const RequestsListItem = ({employeeAbsence, old = false, setRequestsVisible, setRequestPickedData}) => {
 
     const[showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -80,7 +80,10 @@ const RequestsListItem = ({employeeAbsence, old = false}) => {
                             <ReusableButton value={"USUN"} onClick={() => deleteAbsence()}/>
                         }
                         {employeeAbsence.state === "waiting" &&
-                            <ReusableButton value={"WNIOSEK"}/>
+                            <ReusableButton value={"WNIOSEK"} onClick={() => {
+                                setRequestPickedData(employeeAbsence)
+                                setRequestsVisible(false);
+                            }}/>
                         }
                             </> :
                         <></>

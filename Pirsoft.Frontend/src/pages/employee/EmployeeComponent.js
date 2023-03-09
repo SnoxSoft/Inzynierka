@@ -21,6 +21,7 @@ import EmploymentStartDate from "../../components/employee/fields/EmploymentStar
 import LoggingPassword from "../../components/logging/LoggingPassword";
 import contract from "../../components/employee/fields/Contract";
 import Contract from "../../components/employee/fields/Contract";
+import AddEmployeeAnAbsence from "../AddEmployeeAnAbsence";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = 'PIRSOFT: Rejestracja nowego pracownika'
@@ -203,7 +204,6 @@ function EmployeeComponent({id, mode, employee}){
 
 
     // poniżej znajdą się wszystkie dane i funkcje dla okienka zmiany hasła w danych pracownika
-
     const [oldPassword, setOldPassword] = useState();
     const [newPassword, setNewPassword] = useState();
     const [newRepeatPassword, setNewRepeatPassword] = useState();
@@ -248,6 +248,10 @@ function EmployeeComponent({id, mode, employee}){
             }, 3000);
         }
     }
+
+    // function and methods for giving absence for employee
+
+    const [showAddEmployeeAnAbsence, setShowAddEmployeeAnAbsence] = useState(false)
 
     return(
         <>
@@ -354,7 +358,10 @@ function EmployeeComponent({id, mode, employee}){
                             <>
                                 <ReusableButton value={"USUŃ KONTO"} link={""} />
                                 <ReusableButton value={"ZAPISZ ZMIANY"} onClick={() => saveEmployee()}/>
-                                <ReusableButton value={"WYSTAW WNIOSEK"} link={""} />
+                                <ReusableButton value={"WYSTAW WNIOSEK"} onClick={() => {
+                                    setShowAddEmployeeAnAbsence(true);
+                                    setEmployeeDataShow(false);
+                                }}/>
                             </>
                             : <></>
                         }
@@ -449,6 +456,12 @@ function EmployeeComponent({id, mode, employee}){
                 </div>
                 :
                 <></>}
+                {showAddEmployeeAnAbsence ?
+                    <AddEmployeeAnAbsence setShowAddEmployeeAnAbsence={setShowAddEmployeeAnAbsence}
+                                          setEmployeeDataShow={setEmployeeDataShow}
+                        forEmployee={employee}/> :
+                    <></>
+                }
             </>
         }
         </>
