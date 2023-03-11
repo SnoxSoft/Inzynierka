@@ -1,4 +1,5 @@
-﻿using Pirsoft.Api.PatternsAbstraction;
+﻿using Pirsoft.Api.DatabaseManagement;
+using Pirsoft.Api.PatternsAbstraction;
 using Pirsoft.Api.Validators;
 
 namespace Pirsoft.Api.Configurators
@@ -11,8 +12,13 @@ namespace Pirsoft.Api.Configurators
         {
             _services = services;
 
+            configureDatabaseManagement();
+
             configureValidators();
         }
+
+        private void configureDatabaseManagement()
+            => _services.AddSingleton<ICrudHandler, CrudHandler>();
 
         private void configureValidators()
         {
