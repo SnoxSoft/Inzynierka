@@ -8,9 +8,9 @@ namespace Pirsoft.Api.Models.ModelCreators
 
         public PositionTypeCreator(EPositionType positionType) => _positionType = positionType;
 
-        public override IApiModel CreateModel()
+        public override IApiModel CreateModel() => new PositionTypeModel()
         {
-            throw new NotImplementedException();
-        }
+            PositionType = _positionType.ToString(),
+        };
     }
 }
