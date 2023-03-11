@@ -8,9 +8,9 @@ namespace Pirsoft.Api.Models.ModelCreators
 
         public AccountTypeCreator(EAccountType accountType) => _accountType = accountType;
 
-        public override IApiModel CreateModel()
+        public override IApiModel CreateModel() => new AccountTypeModel()
         {
-            throw new NotImplementedException();
-        }
+            AccountType = _accountType.ToString(),
+        };
     }
 }
