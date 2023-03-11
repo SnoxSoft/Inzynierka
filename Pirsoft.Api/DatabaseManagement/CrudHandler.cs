@@ -11,33 +11,42 @@ namespace Pirsoft.Api.DatabaseManagement
 
         public void Create<TModel>(TModel entity) where TModel : class, IApiModel
         {
-            throw new NotImplementedException();
+            if (entity.Id != 0)
+            {
+                throw new ArgumentException($"Passed model object with '{nameof(entity.Id)}' property set, use {nameof(CrudHandler)}.Update instead.", nameof(entity));
+            }
+
+            _dbContext.Set<TModel>().Add(entity);
         }
 
         public TModel? Read<TModel>(int entityId) where TModel : class, IApiModel
-        {
-            throw new NotImplementedException();
-        }
+            => _dbContext.Set<TModel>().Find(entityId);
 
         public IEnumerable<TModel> ReadAll<TModel>() where TModel : class, IApiModel
-        {
-            throw new NotImplementedException();
-        }
+            => _dbContext.Set<TModel>().AsEnumerable();
 
         public void Update<TModel>(TModel entity) where TModel : class, IApiModel
         {
-            throw new NotImplementedException();
+            if (entity.Id < 1)
+            {
+                throw new ArgumentException($"Passed model object with '{nameof(entity.Id)}' property value less than 1", nameof(entity));
+            }
+
+            _dbContext.Set<TModel>().Update(entity);
         }
 
         public void Delete<TModel>(TModel entity) where TModel : class, IApiModel
         {
-            throw new NotImplementedException();
+            if (entity.Id < 1)
+            {
+                throw new ArgumentException($"Passed model object with '{nameof(entity.Id)}' property value less than 1", nameof(entity));
+            }
+
+            _dbContext.Set<TModel>().Remove(entity);
         }
 
         public int PushChangesToDatabase()
-        {
-            throw new NotImplementedException();
-        }
+            => _dbContext.SaveChanges(true);
     }
 
     public interface ICrudHandler
