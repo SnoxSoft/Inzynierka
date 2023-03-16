@@ -174,64 +174,25 @@ function CompanySchedule(){
             allTeamsLoad.push(
                 <div key={"top-weekdays-"+day.dayOfMonth}
                      className={"row-start-1 col-start-"+colDayOfWeek+" text-workday text-center"}>
-                    {getTextWeekday(day.date).toUpperCase()}
+                    <div>
+                        {getTextWeekday(day.date).toUpperCase()}
+                    </div>
+                    <div>
+                        {day.dayOfMonth}
+                    </div>
                 </div>)
             colDayOfWeek = colDayOfWeek + 1
         });
 
-        let colDayOfMonth = 2
-        days.forEach((day) => {
-            allTeamsLoad.push(
-                <div key={"top-days-"+day.dayOfMonth}
-                     className={"row-start-2 col-start-"+colDayOfMonth+" text-workday text-center"}>
-                    {day.dayOfMonth}
-                </div>)
-            colDayOfMonth = colDayOfMonth + 1
-        });
-
-
-        let row = 2
+        let row = 1
         teams.forEach((team) => {
             // dodanie zespołów
             row = row + 1
             allTeamsLoad.push(
-                <TeamRow team={team} row={row}/>)
+                <TeamRow team={team} row={row} days={days}
+                    employees={employees} currentMonthDaysOff={currentMonthDaysOff}/>)
 
-            // dodawanie pustych komponentów po prawej stronie zespołu
-            let colTeam = 2
-            days.forEach((day) => {
-                allTeamsLoad.push(
-                    <EmptyTeamRow team={team} day={day} row={row} colTeam={colTeam}/>)
-                colTeam = colTeam + 1
-            });
-
-            employees.forEach((employee) => {
-                if(employee.team.toString().toUpperCase() === (team.value+'').toString().toUpperCase()){
-                    row = row + 1
-                    allTeamsLoad.push(
-                        <EmployeeRow employee={employee} row={row}/>)
-
-                    // szukanie dni wolnych danego pracownika
-                    let daysOffOfThisEmployee = []
-                    currentMonthDaysOff.forEach((e) => {
-                        if(e.employee === employee.id){
-                            daysOffOfThisEmployee = e.daysoff
-                        }
-                    })
-
-                    // dodawanie komponentów dni pracownika
-                    let col = 2
-                    days.forEach((day) => {
-                        //console.log(day)
-                        allTeamsLoad.push(
-                            appendDay(day, row, col, daysOffOfThisEmployee)
-                        )
-                        col = col + 1
-                    });
-                }
-            });
         });
-
 
         // ustawianie calego kalendarza i pokazanie go
         setAllTeams(allTeamsLoad)
@@ -243,26 +204,6 @@ function CompanySchedule(){
         if(monthDaysOffLoaded) {
             loadWholeMonthDataForCompany(new Date())
         }
-    }
-
-    function appendDay(day, row, col, daysOff) {
-        let color = 'bg-workday'
-
-        daysOff.forEach((d) => {
-            if(day.date === d){
-                color = 'bg-absent'
-            }
-        })
-
-        if(day.weekend !== undefined && day.weekend){
-            color = 'bg-weekend'
-        }
-
-        return <div
-            className={
-            "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-8 h-8 hover:cursor-pointer "+color+" rounded-md"}>
-            {/*{day.dayOfMonth}*/}
-        </div>
     }
 
     function createDaysForCurrentMonth(year, month) {
@@ -311,18 +252,39 @@ function CompanySchedule(){
         }
     }
 
+    function FunctionForResizeScheduleWidth(){
+        // Set window width/height to state
+        const leftMenuComponent = document.getElementById("left-menu");
+
+        const currentComponent = document.getElementById("schedule-company-list");
+        if(leftMenuComponent != null && currentComponent != null){
+            const leftMenuPosition = leftMenuComponent.getBoundingClientRect();
+            const currentComponentPosition = currentComponent.getBoundingClientRect();
+            console.log(leftMenuPosition.width)
+            console.log(currentComponentPosition)
+            console.log(window.outerWidth)
+            // const wantedHeight = leftMenuPosition.height - (currentComponentPosition.y - leftMenuPosition.y);
+            // setWantedHeightForList(wantedHeight)
+        }
+        //
+        // window.addEventListener("resize", handleResize);
+        // handleResize();
+        // return () => window.removeEventListener("resize", handleResize);
+
+    }
+
     useEffect(() => {
         // Handler to call on window resize
         FunctionForResize("schedule-company-list", {setWantedHeightForList});
+        FunctionForResizeScheduleWidth()
     }, [allTeams]);
 
     return(
         <>
         {teamsLoaded && allTeamsAreLoadedInDivs ?
             <>
-                <div
-                 className={"bg-green-menu rounded-md border-2 border-b-workday"}>
-
+                <div className={"every-page-on-scroll overflow-y-hidden"}
+                     style={{minWidth: 1000}}>
                     <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
@@ -350,9 +312,10 @@ function CompanySchedule(){
                             </div>
                         </div>
                     </div>
+                    <hr/>
                     <div id={"schedule-company-list"}
-                         style={{ height: wantedHeightsForList, maxWidth:1000}}
-                         className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2"}>
+                         style={{ height: wantedHeightsForList, maxWidth: 1000}}
+                         className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2 content-start"}>
                         {allTeams}
                     </div>
                 </div>

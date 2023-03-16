@@ -127,9 +127,10 @@ function Requests(){
     return(
         <>
         {requestsVisible ?
-        <div id={"absences"} className="bg-green-menu menu rounded-md border-2 border-b-workday text-workday text-center">
-            <div className={"flex flex-col gap-4 p-4"}>
-                <div className={"flex justify-evenly items-center"}>
+        <div id={"absences"} className={"every-page-on-scroll flex flex-col text-workday"}
+            style={{minWidth: 800}}>
+            <div className={"flex flex-col gap-2 p-4"}>
+                <div className={"flex justify-evenly items-center flex-wrap gap-2"}>
                     <div>
                         IMIE <input className={"text-black rounded"} onChange={handleNameChange} value={userName}/>
                     </div>

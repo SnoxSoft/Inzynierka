@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .every-page-on-scroll {
+        @apply bg-green-menu rounded-md border-2 border-b-workday overflow-y-auto bg-green-menu h-full;
+    }
+    .left-menu-style {
+        @apply w-64 min-w-fit pb-2 pt-2 overflow-y-auto bg-brown-menu rounded-md grid grid-cols-1 place-items-center mt-4 ml-4 mb-4 border-2 gap-2 border-b-workday;
+    }
+}

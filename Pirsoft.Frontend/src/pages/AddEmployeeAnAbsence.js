@@ -17,12 +17,6 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
     }
     const currentDate = new Date();
 
-    // Handler to call on window resize
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-    useEffect(() => {
-        FunctionForResize("add-employee-request", {setWantedHeightForList});
-    }, []);
-
     // calendar component get/set
     const [dateFrom, setDateFrom] = useState(currentDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(currentDate.toLocaleDateString("sv", options));
@@ -36,22 +30,23 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
 
     return(
         <div id={"add-employee-request"}
-             className="flex grow p-4 gap-2 text-center flex-col bg-blue-menu rounded-md border-2 border-b-workday text-workday"
-             >
-            <div className={"grow grid grid-cols-1 grid-rows-1 place-items-end"}>
+             className={"every-page-on-scroll flex text-center flex-col bg-blue-menu text-workday p-4"}
+             style={{minWidth: 800}}>
+            <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
                 <div className={"col-start-1 row-start-1 place-self-center"}>
                     WNIOSEK URLOPOWY
                 </div>
-                    <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                        <ReusableButton value={<CgClose  size={30}/>}
-                                        onClick={() => {
-                                            setShowAddEmployeeAnAbsence(false);
-                                            setEmployeeDataShow(true);
-                                        }}
-                        formatting={""} color={""}/>
-                    </div>
+                <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
+                    <ReusableButton value={<CgClose  size={30}/>}
+                                    onClick={() => {
+                                        setShowAddEmployeeAnAbsence(false);
+                                        setEmployeeDataShow(true);
+                                    }}
+                    formatting={""} color={""}/>
+                </div>
             </div>
             <div>{forEmployee.firstname} {forEmployee.lastname}</div>
+            <br/>
             <div className={"flex p-4 gap-8 text-center flex-col"}>
                 <div className={"flex justify-center"}>
                     <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
@@ -72,7 +67,8 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
                     <input type={"checkbox"} className={"h-5 w-5 checked:decoration-workday self-center"}/>
                 </div>
             </div>
-            <div className={"overflow-y-auto flex justify-evenly"} >
+            <br/><br/>
+            <div className={"flex justify-evenly"} >
                 <ReusableButton value={"ZATWIERDZ"} onClick={() => {
                     setShowAddEmployeeAnAbsence(false);
                     setEmployeeDataShow(true);

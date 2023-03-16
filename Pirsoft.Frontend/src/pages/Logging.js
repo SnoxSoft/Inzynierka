@@ -61,7 +61,7 @@ function Logging(){
     return <>
         {sessionStorage.getItem('USER') === null ?
         <div id={"home-logging-in"}
-             className={"bg-green-menu rounded-md border-2 border-b-workday overflow-y-auto"}
+             className={"every-page-on-scroll"}
              style={{ height: wantedHeightsForList } }>
             <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                 <div>
@@ -91,7 +91,7 @@ function Logging(){
             </div>
         </div> :
             <div id={"home-logged-in"}
-                 className={"bg-green-menu rounded-md border-2 border-b-workday overflow-y-auto"}
+                 className={"every-page-on-scroll"}
                  style={{ height: wantedHeightsForList } }>
                 <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                     <div>

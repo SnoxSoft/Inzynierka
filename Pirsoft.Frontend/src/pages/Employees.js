@@ -73,16 +73,11 @@ function Employees(){
 
     }
 
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-    useEffect(() => {
-        // Handler to call on window resize
-        FunctionForResize("employee-list", {setWantedHeightForList});
-    }, []);
-
     return(
         <div
-            className={"bg-green-menu rounded-md border-2 border-b-workday text-workday"}>
-            <div className={"p-4 gap-4 flex flex-wrap items-center"}>
+            className={"every-page-on-scroll rounded-md border-2 border-b-workday text-workday overflow-y-hidden"}
+            style={{minWidth: 800}}>
+            <div className={"p-4 gap-4 grid grid-cols-2 items-center"}>
 
                 <div className={"flex flex-col gap-2"}>
                     <p className={""}>Wyszukaj pracownika</p>
@@ -110,9 +105,8 @@ function Employees(){
                     <ReusableButton value={"SZUKAJ"} onClick={findEmployees}/>
                 </div>
             </div>
-
-            <div id={"employee-list"} className={"rounded-md overflow-y-auto"}
-                 style={{ height: wantedHeightsForList } }>
+            <hr/>
+            <div id={"employee-list"} className={"rounded-md overflow-y-auto h-full"}>
                 {employeesList ? <EmployeesList values={[employeesList][0]}/> : <p />}
             </div>
 
