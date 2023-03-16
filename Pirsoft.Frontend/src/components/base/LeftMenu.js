@@ -2,7 +2,7 @@ import MenuButton from "./MenuButton";
 function LeftMenu(){
     return(
         <div id={"left-menu"}
-             className={"grow-0 w-64 bg-brown-menu rounded-md grid grid-cols-1 place-items-center mt-4 ml-4 mb-4 border-2 border-b-workday"}>
+             className={"left-menu-style"}>
 
             {sessionStorage.getItem('USER') ?
                 <>

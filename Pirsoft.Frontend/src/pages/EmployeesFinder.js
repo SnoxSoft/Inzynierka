@@ -204,9 +204,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-
     useEffect(() => {
-        // Handler to call on window resize
         FunctionForResize("employee-picker", {setWantedHeightForList});
     }, []);
 
@@ -217,10 +215,9 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     return (
         <>
             {skillsNotShows ?
-                <div
-                     className={"p-4 bg-blue-menu rounded-md border-2 border-b-workday text-workday"}
-                >
-                    <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 overflow-y-auto"}>
+                <div className={"every-page-on-scroll text-workday bg-blue-menu"}
+                style={{minWidth: 800}}>
+                    <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 p-4"}>
                         <div>WYSZUKIWARKA PRACOWNIKÓW</div>
                         <div className={"flex flex-row place-items-center gap-2"}>
                             <div className={"flex flex-col place-self-start m-2 gap-2"}>
@@ -235,13 +232,14 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                         </div>
                     </div>
 
-                    <div  id={"employee-picker"} className={"bg-brown-menu border-2 border-workday menu rounded-md m-4 p-4 overflow-y-auto"}
-                         style={{height: wantedHeightsForList}}>
-                        <div>IMIE I NAZWISKO, ZESPÓŁ, STANOWISKO, UMIEJĘTNOŚCI</div>
+                    <div  id={"employee-picker"} className={"grow bg-brown-menu border-2 bg-opacity-30 border-workday menu rounded-md m-4 overflow-y-auto"}
+                         style={{height: wantedHeightsForList - 100, minHeight:100}}>
+                        <div className={"p-4 pl-2"}>IMIE I NAZWISKO, ZESPÓŁ, STANOWISKO, UMIEJĘTNOŚCI</div>
+                        <hr/>
                         {employeePickerData}
                     </div>
 
-                    <div className={"flex flex-row gap-2 justify-between"} >
+                    <div id={"bottom-picker"} className={"flex flex-row gap-2 justify-between p-4"} >
                         <ReusableButton value={"ZAMKNIJ"} onClick={() => {
                             setTitle(title)
                             setEmployeesFinderShowing(false)
@@ -254,12 +252,13 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                     </div>
                 </div> :
                 <div id={"skills-finder"}
-                     className={"p-4 grid grid-cols-1 bg-blue-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto text-center"}
-                     // style={{height: wantedHeightsForList}}
+                     className={"every-page-on-scroll grid grid-cols-1"}
+                     style={{minWidth: 800}}
                 >
-                    <div id={"skills-picker"} className={"flex flex-col justify-evenly"}>
+                    <div id={"skills-picker"} className={"flex flex-col justify-evenly text-workday text-center p-4"}>
                         <div>UMIEJĘTNOŚCI</div>
                         {skillsComponent}
+                        <br/>
                         <div className={"p-4 flex flex-row justify-evenly"}>
                             <ReusableButton value={"ZATWIERDŹ"} onClick={() => choseSkills()}/>
                             <ReusableButton value={"ZAMKNIJ"} onClick={() => {setSkillsNotShows(true)}}/>

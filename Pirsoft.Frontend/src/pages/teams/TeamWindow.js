@@ -161,11 +161,6 @@ const TeamWindow = ({id,mode, title}) => {
         reloadSkills()
     },[employeeData])
 
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-    useEffect(() => {
-        FunctionForResize("body-team-edit", {setWantedHeightForList});
-    }, );
-
     return (
         <>
             {employeesFinderShow ?
@@ -185,10 +180,10 @@ const TeamWindow = ({id,mode, title}) => {
                     /> :
             teamDataLoaded || mode === 'create' ?
                 <div id={"teams-add"}
-                     className={"p-4 bg-blue-menu rounded-md border-2 border-b-workday text-workday"}
-                     style={{height: wantedHeightsForList}}
+                     className={"every-page-on-scroll text-workday bg-blue-menu"}
+                     style={{minWidth: 800}}
                 >
-                    <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 overflow-y-auto"}>
+                    <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 p-4"}>
                         <div>NAZWA ZESPOŁU</div>
                         <TeamName disableChange={(mode === 'view')} value={teamData} onChange={setTeamData} />
                         <div>SILNE CECHY ZESPOŁU</div>

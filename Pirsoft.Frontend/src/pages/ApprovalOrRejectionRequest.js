@@ -38,8 +38,10 @@ const ApprovalOrRejectionRequest = ({dateFrom, dateTo, name, type, requestId, se
     }
 
     return(
-        <div id={"ApprovalOrRejectionRequest"} className={"flex grow p-4 gap-2 text-center flex-col bg-blue-menu rounded-md border-2 border-b-workday text-workday"}>
-            <div className={"grow grid grid-cols-1 grid-rows-1 place-items-end"}>
+        <div id={"ApprovalOrRejectionRequest"}
+             className={"every-page-on-scroll flex p-4 gap-2 text-center flex-col bg-blue-menu text-workday"}
+             style={{minWidth: 800}}>
+            <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
                 <div className={"col-start-1 row-start-1 place-self-center"}>
                     WNIOSEK URLOPOWY
                 </div>
@@ -50,7 +52,8 @@ const ApprovalOrRejectionRequest = ({dateFrom, dateTo, name, type, requestId, se
                 </div>
             </div>
             <div>{requestPickedData.name}</div>
-            <div className={"flex grow p-4 gap-8 text-center flex-col "}>
+            <br/>
+            <div className={"flex p-4 gap-8 text-center flex-col "}>
                 <div className={"flex justify-center"}>
                     <Calendar from={requestPickedData.from} to={requestPickedData.to} disabled={true}/>
                 </div>
@@ -62,20 +65,17 @@ const ApprovalOrRejectionRequest = ({dateFrom, dateTo, name, type, requestId, se
                         {renameType(requestPickedData.type)}
                     </div>
                 </div>
-                <div className={"flex"}>
-                    <p className={"basis-1/3 text-end pr-4"}>
+                <div className={"flex place-content-center"}>
+                    <p className={"text-end pr-4"}>
                         URLOP BEZPŁATNY
                     </p>
                     <input type={"checkbox"} className={"h-5 w-5 checked:decoration-workday"} checked={requestPickedData.type} disabled={true}/>
                 </div>
             </div>
-            <div id={"schedule-list"} className={"flex justify-center gap-x-20"}>
-                <div>
-                    <ReusableButton value={"ODRZUC"} onClick={() => rejectRequest()}/>
-                </div>
-                <div className={"overflow-y-auto"} style={{ height: wantedHeightsForList}}>
-                    <ReusableButton value={"ZATWIERDZ"} onClick={() => approveRequest()}/>
-                </div>
+            <br/><br/>
+            <div id={"schedule-list"} className={"flex justify-evenly"}>
+                <ReusableButton value={"ODRZUC"} onClick={() => rejectRequest()}/>
+                <ReusableButton value={"ZATWIERDZ"} onClick={() => approveRequest()}/>
             </div>
         </div>
     )
