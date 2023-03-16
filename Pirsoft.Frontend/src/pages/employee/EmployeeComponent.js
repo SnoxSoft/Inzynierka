@@ -190,15 +190,6 @@ function EmployeeComponent({id, mode, employee}){
         setShowSkillsFrame(true)
     }
 
-    //for resizing main component
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-    useEffect(() => {
-        // Handler to call on window resize
-        FunctionForResize("employee-info", {setWantedHeightForList});
-        FunctionForResize("skills", {setWantedHeightForList});
-        FunctionForResize("password", {setWantedHeightForList});
-    }, []);
-
     // zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
     let disableData = sessionStorage.getItem('USER') !== id && mode !== 'create'
 
@@ -257,8 +248,8 @@ function EmployeeComponent({id, mode, employee}){
         <>
         {employeeDataShow ?
         <div id={"employee-info"}
-             className={"flex flex-col bg-green-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto"}
-             style={{ height: wantedHeightsForList } }>
+             className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto"}
+             style={{minWidth:800} }>
             <div className={"grow flex flex-row"}>
                 <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>
                     <div className={"flex flex-row justify-between text-right gap-4"}>
@@ -377,8 +368,8 @@ function EmployeeComponent({id, mode, employee}){
             <>
                 {showSkillsFrame ?
                     <div id={"skills"}
-                         className={"p-4 grid grid-cols-1 bg-blue-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto text-center"}
-                         style={{height: wantedHeightsForList}}>
+                         className={"every-page-on-scroll grid grid-cols-1 bg-blue-menu text-workday text-center"}
+                         style={{minWidth: 800}}>
 
                         <div id={"skills-edit"} className={"flex flex-col justify-evenly"}>
                             <div>UMIEJĘTNOŚCI</div>
@@ -393,8 +384,8 @@ function EmployeeComponent({id, mode, employee}){
 
                 {showPasswordChangeFrame ?
                 <div id={"password"}
-                     className={"p-4 grid grid-cols-1 bg-blue-menu rounded-md border-2 border-b-workday text-workday overflow-y-auto text-center"}
-                     style={{height: wantedHeightsForList}}>
+                     className={"every-page-on-scroll bg-blue-menu"}
+                     style={{minWidth: 800}}>
                     <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
 
                         <div>

@@ -90,44 +90,50 @@ const Request = ({setAbsencesVisible}) =>{
     }
 
     return(
-        <div id={"Request"} className="flex grow p-4 gap-8 text-center flex-col bg-blue-menu rounded-md border-2 border-b-workday text-workday">
-            <div className={"grow grid grid-cols-1 grid-rows-1 place-items-end"}>
+        <div id={"Request"}
+             className={"every-page-on-scroll flex text-center flex-col bg-blue-menu text-workday p-4"}
+             style={{minWidth: 800}}>
+            <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
                 <div className={"col-start-1 row-start-1 place-self-center"}>
                     WNIOSEK URLOPOWY
                 </div>
-                    <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                        <ReusableButton value={<CgClose  size={30}/>}
-                                        onClick={() => setAbsencesVisible(true)}
-                        formatting={""} color={""}/>
+                <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
+                    <ReusableButton value={<CgClose  size={30}/>}
+                                    onClick={() => setAbsencesVisible(true)}
+                    formatting={""} color={""}/>
+                </div>
+            </div>
+            <br/>
+            <div className={"flex p-4 gap-8 text-center flex-col"}>
+                <div className={"flex justify-center"}>
+                    <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
+                </div>
+                <div className={"flex "}>
+                    <p className={"basis-1/3 text-end pr-4"}>
+                        RODZAJ
+                    </p>
+                    <div className={"bg-workday text-black basis-1/3"}>
+                        <Select options={option} isOptionDisabled={(option) => option.value} defaultValue={{ value: '', label: 'URLOP WYPOCZYNKOWY'}}
+                                className={"h-6"}/>
                     </div>
-            </div>
-            <div className={"flex justify-center"}>
-                <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
-            </div>
-            <div className={"flex "}>
-                <p className={"basis-1/3 text-end pr-4"}>
-                    RODZAJ
-                </p>
-                <div className={"bg-workday text-black basis-1/3"}>
-                    <Select options={option} isOptionDisabled={(option) => option.value} defaultValue={{ value: '', label: 'URLOP WYPOCZYNKOWY'}}
-                            className={"h-6"}/>
+                </div>
+                <div className={"flex"}>
+                    <p className={"basis-1/3 text-end pr-4"}>
+                        URLOP BEZPŁATNY
+                    </p>
+                    <input type={"checkbox"} className={"h-5 w-5 checked:decoration-workday"} checked={leaveDaysLeft} disabled={true}/>
+                </div>
+                <div id={"schedule-list"} className={"flex"}>
+                    <p className={"text-end basis-1/3 pr-4"}>
+                        ZATWIERDZA
+                    </p>
+                    <div className={"flex flex-col basis-4/12 justify-start bg-workday rounded-md gap-1"}>
+                        {approversList}
+                    </div>
                 </div>
             </div>
-            <div className={"flex"}>
-                <p className={"basis-1/3 text-end pr-4"}>
-                    URLOP BEZPŁATNY
-                </p>
-                <input type={"checkbox"} className={"h-5 w-5 checked:decoration-workday"} checked={leaveDaysLeft} disabled={true}/>
-            </div>
-            <div id={"schedule-list"} className={"flex"}>
-                <p className={"text-end basis-1/3 pr-4"}>
-                    ZATWIERDZA
-                </p>
-                <div className={"flex flex-col basis-4/12 justify-start bg-workday rounded-md gap-1"}>
-                    {approversList}
-                </div>
-            </div>
-            <div className={"overflow-y-auto flex justify-evenly"} style={{ height: wantedHeightsForList}}>
+            <br/>
+            <div className={"flex justify-evenly"} style={{ height: wantedHeightsForList}}>
                 <ReusableButton value={"ZATWIERDZ"} onClick={() => setAbsencesVisible(true)}/>
             </div>
         </div>

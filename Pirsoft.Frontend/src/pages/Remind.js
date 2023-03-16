@@ -124,7 +124,7 @@ function Remind(){
     }
 
     return <div id={"password-reminder"}
-             className={"bg-green-menu rounded-md border-2 border-b-workday overflow-y-auto"}
+             className={"every-page-on-scroll"}
              style={{ height: wantedHeightsForList } }>
             <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
 

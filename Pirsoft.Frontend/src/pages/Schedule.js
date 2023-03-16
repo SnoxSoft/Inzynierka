@@ -44,13 +44,11 @@ function Schedule(){
     const [monthList, setMonthList] = useState([])
 
     useEffect(() => {
-        // Handler to call on window resize
-        //FunctionForResize("schedule", {setWantedHeightForList});
-        FunctionForResize("schedule-list", {setWantedHeightForList});
-        FunctionForResize("schedule-month", {setWantedHeightForList});
-        // FunctionForResize("schedule-month-list", {setWantedHeightForList});
+        FunctionForResize("schedule-month-list", {setWantedHeightForList});
 
     }, []);
+
+
 
     const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
         "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
@@ -89,6 +87,8 @@ function Schedule(){
     const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
 
     const [pickedMonthText, setPickedMonth] = useState('')
+
+
     const loadWholeMonthData = (pickedMonth) => {
 console.clear()
         setPickedMonth(pickedMonth)
@@ -369,11 +369,17 @@ console.clear()
         }
     }
 
+    useEffect(() => {
+        FunctionForResize("schedule-month-list", {setWantedHeightForList});
+
+    }, [pickedMonthText]);
+
     return(
         <>
         {showHidePickedMonth ?
             <div id={"schedule-month"}
-             className={"bg-green-menu rounded-md border-2 border-b-workday"}>
+             className={"every-page-on-scroll overflow-y-hidden"}
+            style={{minWidth: 800}}>
                 <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <div>
@@ -409,14 +415,15 @@ console.clear()
                     {showingAlert ? 'Nie możesz przejść poza zakres' : ' ... '}
                 </div>
                 <div id={"schedule-month-list"}
-                     className={"grid grid-cols-7 p-2"}
+                     className={"grid grid-cols-7 overflow-y-auto"}
                      style={{ height: wantedHeightsForList } }>
                         {daysOfWeek}
                         {calendarDays}
                 </div>
             </div> :
             <div id={"schedule"}
-                 className={"bg-green-menu rounded-md border-2 border-b-workday"}>
+                 className={"every-page-on-scroll overflow-y-hidden"}
+            style={{minWidth: 800}}>
                 <div className={"p-4 flex flex-wrap flex-col text-center text-workday gap-4"}>
                     <p>MIESIĄCE TWOJEJ PRACY</p>
                     <div className={"flex flex-row gap-4 flex-wrap"}>
@@ -464,8 +471,8 @@ console.clear()
                                                                 onClick={() => filtrSchedule()}/></div>
                     </div>
                 </div>
-                <div id={"schedule-list"} className={"rounded-md overflow-y-auto"}
-                     style={{ height: wantedHeightsForList } }>
+                <hr/>
+                <div id={"schedule-list"} className={"rounded-md overflow-y-auto h-full"}>
                     <ul>
                         {monthList.map((p) =>
                             <ScheduleListItem key={p.value} text={p.text} date={p.date}

@@ -90,7 +90,6 @@ function Teams(){
         loadWholeMonthDataForCompany()
     }
 
-
     useEffect(() => {
         // Handler to call on window resize
         FunctionForResize("schedule-company-list", {setWantedHeightForList});
@@ -100,10 +99,12 @@ function Teams(){
         <>
         {teamsLoaded && allTeamsAreLoadedInDivs ?
             <div
-             className={"bg-green-menu rounded-md border-2 border-b-workday p-4"}>
-                <div className={"flex flex-cols justify-end"}>
+             className={"every-page-on-scroll overflow-y-hidden"}
+            style={{minWidth: 800}}>
+                <div className={"flex flex-cols justify-end p-4"}>
                     <ReusableButton value={"DODAJ ZESPÓŁ"} link={"/team-create"}/>
                 </div>
+                <hr/>
                 <div id={"schedule-company-list"}
                      style={{ height: wantedHeightsForList } }
                      className={"rounded-md p-4 overflow-y-auto flex flex-col p-2 gap-2"}>
