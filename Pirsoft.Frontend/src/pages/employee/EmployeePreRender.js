@@ -36,7 +36,7 @@ function EmployeePreRender(){
                 <EmployeeComponent id={id} mode={'edit'} employee={employee}/> :
                     id === '-1' ?
                     <EmployeeComponent id={id} mode={'create'} employee={employee}/> :
-                    <>WYSTĄPIŁ BŁAD Z ŁADOWANIEM STRONY</>
+                    <></>
             }
         </>
     )
