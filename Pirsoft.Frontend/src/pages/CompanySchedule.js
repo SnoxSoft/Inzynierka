@@ -15,6 +15,8 @@ function CompanySchedule(){
     document.title = "PIRSOFT: Harmonogram firmowy";
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+    const[wantedWidthForList, setWantedWidthForList] = useState(1000);
+
 
     //wszystkie zespoly ktore potrzebuje
     const [teams, setTeams] = useState(Object);
@@ -254,6 +256,7 @@ function CompanySchedule(){
 
     function FunctionForResizeScheduleWidth(){
         // Set window width/height to state
+        console.clear()
         const leftMenuComponent = document.getElementById("left-menu");
 
         const currentComponent = document.getElementById("schedule-company-list");
@@ -261,8 +264,11 @@ function CompanySchedule(){
             const leftMenuPosition = leftMenuComponent.getBoundingClientRect();
             const currentComponentPosition = currentComponent.getBoundingClientRect();
             console.log(leftMenuPosition.width)
-            console.log(currentComponentPosition)
+            console.log(currentComponentPosition.x)
             console.log(window.outerWidth)
+            console.log(window.innerWidth)
+
+            setWantedWidthForList(window.outerWidth - currentComponentPosition.x)
             // const wantedHeight = leftMenuPosition.height - (currentComponentPosition.y - leftMenuPosition.y);
             // setWantedHeightForList(wantedHeight)
         }
@@ -277,7 +283,7 @@ function CompanySchedule(){
         // Handler to call on window resize
         FunctionForResize("schedule-company-list", {setWantedHeightForList});
         FunctionForResizeScheduleWidth()
-    }, [allTeams]);
+    }, );
 
     return(
         <>
@@ -314,7 +320,11 @@ function CompanySchedule(){
                     </div>
                     <hr/>
                     <div id={"schedule-company-list"}
-                         style={{ height: wantedHeightsForList, maxWidth: 1000}}
+                         style={{
+                             height: wantedHeightsForList,
+                             maxWidth: wantedWidthForList-6,
+                             width: wantedWidthForList-6,
+                             minWidth: 1000}}
                          className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2 content-start"}>
                         {allTeams}
                     </div>
