@@ -55,8 +55,39 @@ function Absences(){
         }
     }
 
-    // fetching of data for endpoint
+    // Zmienne do ładowania statusów i typów nieobecności
+    const [absencesStatus, setAbsencesStatus] = useState(undefined);
+    const [absencesTypes, setAbsencesTypes] = useState(undefined);
+
+    // Załadowanie statusów nieobecnośći
+    if(absencesStatus === undefined) {
+        fetch("http://127.0.0.1:3001/getAbsencesStatus/")
+            .then((response) => {response.json()
+                .then((response) => {
+                    setAbsencesStatus(response)
+                });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
+    // Załadowanie typów nieobecnośći
+    if(absencesTypes === undefined) {
+        fetch("http://127.0.0.1:3001/getAbsencesTypes/")
+            .then((response) => {response.json()
+                .then((response) => {
+                    setAbsencesTypes(response)
+                });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
+    // Ładowanie nieobecności pracownika, statusów nieobecności oraz nazwa nieobecności
     const [employeeAbsences, setEmployeeAbsences] = useState(Array);
+
     const fetchingEmployeeAbsences = () => {
         // datas to use: checkodrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo
         fetch("http://127.0.0.1:3001/getEmployeeAbsences/"+sessionStorage.getItem("USER"))
@@ -70,7 +101,6 @@ function Absences(){
             .catch((err) => {
                 console.log(err.message);
             })
-        //reloading days off and demand days endpoint
     }
 
     //filtruj button log
@@ -92,12 +122,16 @@ function Absences(){
         for (const i of employeeAbsences) {
             if (i.from > new Date().toLocaleDateString("sv", options)) {
                 absencesListLoad.push(
-                    <AbsencesListItem key={row} employeeAbsence={i} />
+                    <AbsencesListItem key={row} employeeAbsence={i}
+                                      absencesTypes={absencesTypes}
+                                      absencesStatus={absencesStatus}/>
                 )
                 row++;
             } else {
                 absencesListLoad.push(
-                    <AbsencesListItem key={row} employeeAbsence={i} old={true}/>
+                    <AbsencesListItem key={row} employeeAbsence={i} old={true}
+                                      absencesTypes={absencesTypes}
+                                      absencesStatus={absencesStatus}/>
                 )
                 row++;
             }
