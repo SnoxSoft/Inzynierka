@@ -2,41 +2,42 @@ import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 
 
-const AbsencesListItem = ({employeeAbsence, old = false}) => {
+const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absencesStatus}) => {
 
-    const[showHideButtons, setShowHideButtons] = useState(false);
+    const [showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
         setShowHideButtons(true);
     }
     const hideOptions = () => {
+
         setShowHideButtons(false);
     }
 
     // Background color changing depending on the state of the request
-    function colorBackground(state){
-        if (state === "refused"){
+    function colorBackground(state) {
+        if (state === "refused") {
             return 'bg-red-900'
         }
-        if (state === "accepted"){
+        if (state === "accepted") {
             return 'bg-green-500'
         }
-        if (state === "waiting"){
+        if (state === "waiting") {
             return 'bg-blue-500'
         }
     }
 
     // for renaming status of absence
     function renameType(type) {
-        if(type === 'sick'){
+        if (type === 'sick') {
             return 'urlop chorobowy'
         }
-        if(type === 'dayoff'){
+        if (type === 'dayoff') {
             return 'urlop wypoczynkowy'
         }
-        if(type === 'demand'){
+        if (type === 'demand') {
             return 'urlop na żądanie'
         }
-        if(type === 'absent'){
+        if (type === 'absent') {
             return 'nieobecność'
         }
         return type
@@ -44,32 +45,50 @@ const AbsencesListItem = ({employeeAbsence, old = false}) => {
 
     //for renaming status of absence
     function renameStatus(status) {
-        if(status === 'refused'){
+        if (status === 'refused') {
             return 'odrzucony'
         }
-        if(status === 'accepted'){
+        if (status === 'accepted') {
             return 'zaakceptowany'
         }
-        if(status === 'waiting'){
+        if (status === 'waiting') {
             return 'oczekujący'
         }
         return status
     }
 
     // Will need to replace with endpoint access and future pages
-    function deleteAbsence(){
+    function deleteAbsence() {
         //endpoint for removing dayoff
         //reloading days off and demand days endpoint
+    }
+    
+    const [absenceType, setAbsenceType] = useState("")
+    if (absenceType === "") {
+        absencesTypes.map((item) => {
+            if (employeeAbsence.type === item.key) {
+                setAbsenceType(item.value)
+            }
+        })
+    }
+
+    const [absenceStatus, setAbsenceStatus] = useState("")
+    if (absenceStatus === "") {
+        absencesStatus.map((item) => {
+            if (employeeAbsence.state === item.key) {
+                setAbsenceStatus(item.value)
+            }
+        })
     }
 
     return <>
         <div className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
             <div className={"p-2 flex rounded-md basis-8/12"}>
-                 W terminie {employeeAbsence.from} - {employeeAbsence.to}, {renameType(employeeAbsence.type)}
+                 W terminie {employeeAbsence.from} - {employeeAbsence.to}, {absenceType}
             </div>
             <div className={"flex basis-1/12 place-content-center rounded-md " + (!old && colorBackground(employeeAbsence.state) )}>
-                {renameStatus(employeeAbsence.state)}
+                {absenceStatus}
             </div>
             <div className={"flex justify-evenly basis-3/12"}>
                 {showHideButtons && (
