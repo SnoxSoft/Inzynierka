@@ -1,3 +1,6 @@
 namespace Pirsoft.Api.Models;
 
-public interface IApiModel { }
+public interface IApiModel
+{
+    int Id { get; set; }
+}
