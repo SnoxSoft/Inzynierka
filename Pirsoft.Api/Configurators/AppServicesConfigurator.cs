@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.PatternsAbstraction;
 
 namespace Pirsoft.Api.Configurators
@@ -19,6 +22,8 @@ namespace Pirsoft.Api.Configurators
 
         private void configureServices()
         {
+            registerDatabaseContext();
+
             _builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(_builder.Configuration.GetSection("AzureAd"));
@@ -29,6 +34,33 @@ namespace Pirsoft.Api.Configurators
                 .AddEndpointsApiExplorer();
             _builder.Services
                 .AddSwaggerGen();
+        }
+
+        private void registerDatabaseContext()
+        {
+            try
+            {
+                string connectionString = _builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    Debug.Print("Unable to get default connection string from appsettings.json config file.");
+                    throw new ArgumentException("Unable to get default connection string from appsettings.json config file.");
+                }
+
+                _builder.Services.AddDbContext<DatabaseContext>(
+                    options => options.UseMySQL(connectionString),
+                    contextLifetime: ServiceLifetime.Singleton,
+                    optionsLifetime: ServiceLifetime.Singleton);
+
+                Debug.Print("DbContext registered successfully.");
+
+            }
+            catch (ArgumentException ex)
+            {
+                // TODO: Michal - Ustalić jak można przekazać ten błąd na front
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
