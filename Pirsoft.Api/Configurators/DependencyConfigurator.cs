@@ -1,5 +1,4 @@
-﻿using Pirsoft.Api.Interfaces.Validators;
-using Pirsoft.Api.PatternsAbstraction;
+﻿using Pirsoft.Api.PatternsAbstraction;
 using Pirsoft.Api.Validators;
 
 namespace Pirsoft.Api.Configurators

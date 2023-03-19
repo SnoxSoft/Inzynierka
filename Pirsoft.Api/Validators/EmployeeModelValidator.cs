@@ -1,6 +1,5 @@
 ﻿using System.Net.Mail;
 using System.Text.RegularExpressions;
-using Pirsoft.Api.Interfaces.Validators;
 
 namespace Pirsoft.Api.Validators;
 
@@ -33,4 +32,11 @@ public class EmployeeModelValidator : IEmployeeModelValidator
             return false;
         }
     }
+}
+
+public interface IEmployeeModelValidator
+{
+    public bool IsPeselValid(string validatedExpression);
+    public bool IsBankAccountNumberValid(string bankAccountNumber);
+    public bool IsEmailAddressValid(string emailAddress);
 }
