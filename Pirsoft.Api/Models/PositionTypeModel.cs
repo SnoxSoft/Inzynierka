@@ -1,9 +1,9 @@
 ﻿namespace Pirsoft.Api.Models
 {
-    public partial class PositionModel : IApiModel
+    public partial class PositionTypeModel : IApiModel
     {
         public int Id { get; set; }
-        public string Position { get; set; } = null!;
+        public string PositionType { get; set; } = null!;
         public virtual ICollection<EmployeeModel> Employees { get; } = new List<EmployeeModel>();
     }
 }
