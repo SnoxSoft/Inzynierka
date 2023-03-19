@@ -4,6 +4,7 @@ import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import AbsencesListItem from "../components/absences/AbsencesListItem";
 import Request from "./Request";
+import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 
 
 function Absences(){
@@ -42,18 +43,6 @@ function Absences(){
     const [checkOczekujace, setCheckOczekujace] = useState(true);
     const [checkZatwierdzone, setCheckZatwierdzone] = useState(true);
     const [checkodrzucone, setCheckodrzucone] = useState(true);
-
-    //order sorting function for absences (future to past)
-    function getSortOrder(prop) {
-        return function(a, b) {
-            if (a[prop] < b[prop]) {
-                return 1;
-            } else if (a[prop] > b[prop]) {
-                return -1;
-            }
-            return 0;
-        }
-    }
 
     // Zmienne do ładowania statusów i typów nieobecności
     const [absencesStatus, setAbsencesStatus] = useState(undefined);
@@ -94,7 +83,7 @@ function Absences(){
             .then((response) => {response.json()
                 .then((response) => {
                     //console.log(response)
-                    response.sort(getSortOrder("from"))
+                    response.sort(FunctionForSortingJson("from", "descending"))
                     setEmployeeAbsences(response)
                 });
             })

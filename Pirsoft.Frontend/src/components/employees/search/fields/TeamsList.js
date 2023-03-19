@@ -1,29 +1,10 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
+import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
 
 const TeamsList = ({onChange}) => {
 
-    // wartosci z endpointa - brak
-    // const teams = [
-    //     { value: '', label: 'Wybierz...' },
-    //     { value: 'Zespół A', label: 'zespół A' },
-    //     { value: 'Zespół B', label: 'zespół B' },
-    //     { value: 'Zespół C', label: 'zespół C' }
-    // ]
-
-    //endpoint zakomentowany do uzycia
     const [teams, setTeams] = useState(Object);
-
-    function GetSortOrder(prop) {
-        return function(a, b) {
-            if (a[prop] > b[prop]) {
-                return 1;
-            } else if (a[prop] < b[prop]) {
-                return -1;
-            }
-            return 0;
-        }
-    }
 
     if (teams[0] === undefined) {
         fetch("http://127.0.0.1:3001/getAllTeams")
@@ -31,7 +12,7 @@ const TeamsList = ({onChange}) => {
             .then((response) => {
                // { value: '', label: 'Wybierz...' }
                 response.push({ value: '', label: 'Wybierz...' })
-                response.sort(GetSortOrder("value"))
+                response.sort(FunctionForSortingJson("value", "ascending"))
                 setTeams(response)
             })
             .catch((err) => {
