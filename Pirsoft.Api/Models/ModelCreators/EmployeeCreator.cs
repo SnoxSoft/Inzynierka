@@ -46,17 +46,19 @@ namespace Pirsoft.Api.Models.ModelCreators
             LastName = _lastName,
             Email = _email,
             Password = _password,
-            AccountType = _accountType,
+            // TODO: Michal - dopisać testy i implementację kreatorów
+            //AccountType = _accountType, 
             Pesel = _pesel,
             BankAccountNumber = _bankAccountNumber,
             DepartmentId = _departmentId,
             SeniorityInMonths = _seniorityInMonths,
-            EmploymentStartDate = _employmentStartDate,
-            IsActive = _isActive,
-            PasswordReset = _passwordReset,
-            DateOfBirth = _dateOfBirth,
+            EmploymentStartDate = DateOnly.FromDateTime(_employmentStartDate),
+            IsActive = Convert.ToSByte(_isActive),
+            PasswordReset = Convert.ToSByte(_passwordReset),
+            DateOfBirth = DateOnly.FromDateTime(_dateOfBirth),
             GrossSalary = _grossSalary,
-            PositionType = _positionType
+            // TODO: Michal - dopisać testy i implementację kreatorów
+            //PositionType = _positionType
         };
     }
 }
