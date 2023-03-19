@@ -1,4 +1,5 @@
 
+// Komponent do zmiany adresu email pozwalający na wpisanie kodu emailu do przypomnienia
 const RemindEmail = ({onChange, value, disableChange}) => {
 
     return <input id={"remind-email"}

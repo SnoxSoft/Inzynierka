@@ -1,4 +1,5 @@
 
+// Komponent do zmiany adresu email pozwalający na wpisanie kodu weryfikacyjnego
 const RemindCode = ({onChange, value}) => {
 
     return <input id={"remind-code"}
