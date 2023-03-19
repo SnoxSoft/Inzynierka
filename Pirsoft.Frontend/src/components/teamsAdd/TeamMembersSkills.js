@@ -1,17 +1,8 @@
 import {useState} from "react";
+import FunctionForSortingJson from "../base/FunctionForSortingJson";
 
 
 const TeamMembersSkills = ({value}) => {
-    function getSortOrder(prop) {
-        return function(a, b) {
-            if (a[prop] < b[prop]) {
-                return 1;
-            } else if (a[prop] > b[prop]) {
-                return -1;
-            }
-            return 0;
-        }
-    }
 
     let randomNumber = 0;
     let colors = ["bg-red-500", "bg-blue-400", "bg-green-700", "bg-orange-400"]
@@ -19,7 +10,7 @@ const TeamMembersSkills = ({value}) => {
     let skillComponents = []
 
     if(value[0] !== undefined && value !== []) {
-        value.sort(getSortOrder("value"))
+        value.sort(FunctionForSortingJson("value", "ascending"))
 
         let currentValue = value[0].value
 

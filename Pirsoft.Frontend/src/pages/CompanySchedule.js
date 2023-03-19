@@ -10,6 +10,7 @@ import {BiHide, BiShow} from "react-icons/bi";
 import TeamRow from "../components/companySchedule/TeamRow";
 import EmptyTeamRow from "../components/companySchedule/EmptyTeamRow";
 import EmployeeRow from "../components/companySchedule/EmployeeRow";
+import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 
 function CompanySchedule(){
     document.title = "PIRSOFT: Harmonogram firmowy";
@@ -24,23 +25,12 @@ function CompanySchedule(){
 
     const [allTeams, setAllTeams] = useState([])
 
-    function GetSortOrder(prop) {
-        return function(a, b) {
-            if (a[prop] > b[prop]) {
-                return 1;
-            } else if (a[prop] < b[prop]) {
-                return -1;
-            }
-            return 0;
-        }
-    }
-
     // ładowanie raz zespołów po załądowaniu okna a nie na bieżąco
     if (teams[0] === undefined) {
         fetch("http://127.0.0.1:3001/getAllTeams")
             .then((response) => response.json())
             .then((response) => {
-                response.sort(GetSortOrder("value"))
+                response.sort(FunctionForSortingJson("value", "ascending"))
                 setTeams(response)
                 setTeamsLoaded(true)
             })
@@ -75,7 +65,7 @@ function CompanySchedule(){
         fetch("http://127.0.0.1:3001/getAllEmployees")
             .then((response) => response.json())
             .then((response) => {
-                response.sort(GetSortOrder("lastname"))
+                response.sort(FunctionForSortingJson("lastname", "ascending"))
                 setEmployees(response)
                 setEmployeesLoaded(true)
             })

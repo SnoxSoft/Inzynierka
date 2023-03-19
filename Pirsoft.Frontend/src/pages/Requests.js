@@ -5,6 +5,7 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import TeamsList from "../components/employees/search/fields/TeamsList";
 import RequestsListItem from "../components/requests/RequestsListItem";
 import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
+import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 
 
 function Requests(){
@@ -48,18 +49,6 @@ function Requests(){
 
     const [requestPickedData, setRequestPickedData] = useState(undefined)
 
-    //order sorting function for absences (future to past)
-    function getSortOrder(prop) {
-        return function(a, b) {
-            if (a[prop] < b[prop]) {
-                return 1;
-            } else if (a[prop] > b[prop]) {
-                return -1;
-            }
-            return 0;
-        }
-    }
-
     //name , surname input field computing
     const [userName, setUserName] = useState('');
     const [userSurname, setUserSurname] = useState('');
@@ -78,7 +67,7 @@ function Requests(){
             .then((response) => {response.json()
                 .then((response) => {
                     //console.log(response)
-                    response.sort(getSortOrder("from"))
+                    response.sort(FunctionForSortingJson("from", "descending"))
                     setEmployeeAbsences(response)
                 });
             })
