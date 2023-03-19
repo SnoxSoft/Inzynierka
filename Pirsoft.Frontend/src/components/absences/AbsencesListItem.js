@@ -62,7 +62,7 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
         //endpoint for removing dayoff
         //reloading days off and demand days endpoint
     }
-    
+
     const [absenceType, setAbsenceType] = useState("")
     if (absenceType === "") {
         absencesTypes.map((item) => {
