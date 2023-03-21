@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 
 
-const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absencesStatus}) => {
+const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absencesStatus, absencesColors}) => {
 
     const [showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -13,58 +13,15 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
         setShowHideButtons(false);
     }
 
-    // Background color changing depending on the state of the request
-    function colorBackground(state) {
-        if (state === "refused") {
-            return 'bg-red-900'
-        }
-        if (state === "accepted") {
-            return 'bg-green-500'
-        }
-        if (state === "waiting") {
-            return 'bg-blue-500'
-        }
-    }
-
-    // for renaming status of absence
-    function renameType(type) {
-        if (type === 'sick') {
-            return 'urlop chorobowy'
-        }
-        if (type === 'dayoff') {
-            return 'urlop wypoczynkowy'
-        }
-        if (type === 'demand') {
-            return 'urlop na żądanie'
-        }
-        if (type === 'absent') {
-            return 'nieobecność'
-        }
-        return type
-    }
-
-    //for renaming status of absence
-    function renameStatus(status) {
-        if (status === 'refused') {
-            return 'odrzucony'
-        }
-        if (status === 'accepted') {
-            return 'zaakceptowany'
-        }
-        if (status === 'waiting') {
-            return 'oczekujący'
-        }
-        return status
-    }
-
-    // Will need to replace with endpoint access and future pages
+    // Akcja usunięcia nieobecności
     function deleteAbsence() {
-        //endpoint for removing dayoff
-        //reloading days off and demand days endpoint
+        // przeładowanie dni wolnych
     }
+
+    const [absenceColor, setAbsenceColor] = useState("")
 
     const [absenceType, setAbsenceType] = useState("")
-    if (absenceType === "") {
+    if (absenceType === "" && absencesTypes !== undefined) {
         absencesTypes.map((item) => {
             if (employeeAbsence.type === item.key) {
                 setAbsenceType(item.value)
@@ -73,10 +30,17 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
     }
 
     const [absenceStatus, setAbsenceStatus] = useState("")
-    if (absenceStatus === "") {
+    if (absenceStatus === "" && absencesStatus !== undefined) {
         absencesStatus.map((item) => {
             if (employeeAbsence.state === item.key) {
                 setAbsenceStatus(item.value)
+                if(absenceColor === "" && absencesColors !== undefined) {
+                    absencesColors.map((itemColor) => {
+                        if (item.key === itemColor.type) {
+                            setAbsenceColor(itemColor.color)
+                        }
+                    })
+                }
             }
         })
     }
@@ -87,7 +51,7 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
             <div className={"p-2 flex rounded-md basis-8/12"}>
                  W terminie {employeeAbsence.from} - {employeeAbsence.to}, {absenceType}
             </div>
-            <div className={"flex basis-1/12 place-content-center rounded-md " + (!old && colorBackground(employeeAbsence.state) )}>
+            <div className={"flex basis-1/12 place-content-center rounded-md " + (!old && absenceColor )}>
                 {absenceStatus}
             </div>
             <div className={"flex justify-evenly basis-3/12"}>

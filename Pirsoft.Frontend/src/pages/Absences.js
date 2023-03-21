@@ -46,6 +46,7 @@ function Absences(){
 
     // Zmienne do ładowania statusów i typów nieobecności
     const [absencesStatus, setAbsencesStatus] = useState(undefined);
+    const [absencesColors, setAbsencesColors] = useState(undefined);
     const [absencesTypes, setAbsencesTypes] = useState(undefined);
 
     // Załadowanie statusów nieobecnośći
@@ -60,6 +61,20 @@ function Absences(){
                 console.log(err.message);
             })
     }
+
+    // Załadowanie kolorów nieobecności
+    if(absencesColors === undefined) {
+        fetch("http://127.0.0.1:3001/getAbsencesColors/")
+            .then((response) => {response.json()
+                .then((response) => {
+                    setAbsencesColors(response)
+                });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
 
     // Załadowanie typów nieobecnośći
     if(absencesTypes === undefined) {
@@ -113,14 +128,16 @@ function Absences(){
                 absencesListLoad.push(
                     <AbsencesListItem key={row} employeeAbsence={i}
                                       absencesTypes={absencesTypes}
-                                      absencesStatus={absencesStatus}/>
+                                      absencesStatus={absencesStatus}
+                                      absencesColors={absencesColors}/>
                 )
                 row++;
             } else {
                 absencesListLoad.push(
                     <AbsencesListItem key={row} employeeAbsence={i} old={true}
                                       absencesTypes={absencesTypes}
-                                      absencesStatus={absencesStatus}/>
+                                      absencesStatus={absencesStatus}
+                                      absencesColors={absencesColors}/>
                 )
                 row++;
             }
