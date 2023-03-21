@@ -2,7 +2,8 @@ import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 
 
-const RequestsListItem = ({employeeAbsence, old = false, setRequestsVisible, setRequestPickedData}) => {
+const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, setRequestPickedData,
+                              requestsTypes, requestsStatus, requestsColors}) => {
 
     const[showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -12,7 +13,7 @@ const RequestsListItem = ({employeeAbsence, old = false, setRequestsVisible, set
         setShowHideButtons(false);
     }
 
-    // Background color changing depending on the state of the request
+    // Kolor tła inny w przypadku rodzaju
     function colorBackground(state){
         if (state === "refused"){
             return 'bg-red-900'
@@ -56,39 +57,64 @@ const RequestsListItem = ({employeeAbsence, old = false, setRequestsVisible, set
         return status
     }
 
-    // Will need to replace with the endpoint and access to future pages
-    function deleteAbsence(){
-        //endpoint for removing dayoff
-        //reloading days off and demand days endpoint
+    const [requestColor, setRequestColor] = useState("")
+
+    const [requestType, setRequestType] = useState("")
+    if (requestType === "" && requestsTypes !== undefined) {
+        requestsTypes.map((item) => {
+            if (employeeRequest.type === item.key) {
+                setRequestType(item.value)
+            }
+        })
+    }
+
+    const [requestStatus, setRequestStatus] = useState("")
+    if (requestStatus === "" && requestsStatus !== undefined) {
+        requestsStatus.map((item) => {
+            if (employeeRequest.state === item.key) {
+                setRequestStatus(item.value)
+                if(requestColor === "" && requestsColors !== undefined) {
+                    requestsColors.map((itemColor) => {
+                        if (item.key === itemColor.type) {
+                            setRequestColor(itemColor.color)
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    function deleteAbsence() {
+
     }
 
     return <>
         <div className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
             <div className={"p-2 flex rounded-md basis-8/12"}>
-                {employeeAbsence.name}, {employeeAbsence.team}, w terminie {employeeAbsence.from} - {employeeAbsence.to}, {employeeAbsence.applicant}, {renameType(employeeAbsence.type)}
+                {employeeRequest.name}, {employeeRequest.team}, w terminie {employeeRequest.from} - {employeeRequest.to}, {employeeRequest.applicant}, {requestType}
             </div>
-            <div className={"flex basis-1/12 place-content-center rounded-md " + (!old && colorBackground(employeeAbsence.state) )}>
-                {renameStatus(employeeAbsence.state)}
+            <div className={"flex basis-1/12 place-content-center rounded-md " + (!old && requestColor )}>
+                {requestStatus}
             </div>
             <div className={"flex justify-evenly basis-3/12"}>
                 {showHideButtons && (
                     <>
                         {!old ?
                             <>
-                        {employeeAbsence.state === "accepted" &&
+                        {employeeRequest.state === "accepted" &&
                             <ReusableButton value={"USUN"} onClick={() => deleteAbsence()}/>
                         }
-                        {employeeAbsence.state === "waiting" &&
+                        {employeeRequest.state === "waiting" &&
                             <ReusableButton value={"WNIOSEK"} onClick={() => {
-                                setRequestPickedData(employeeAbsence)
+                                setRequestPickedData(employeeRequest)
                                 setRequestsVisible(false);
                             }}/>
                         }
                             </> :
                         <></>
                     }
-                    <ReusableButton value={"POKAŻ PROFIL"} link={`/employee/${employeeAbsence.id}`}/>
+                    <ReusableButton value={"POKAŻ PROFIL"} link={`/employee/${employeeRequest.id}`}/>
                     </>
                 )
                 }

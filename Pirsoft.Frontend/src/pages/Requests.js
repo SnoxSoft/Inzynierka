@@ -60,15 +60,13 @@ function Requests(){
     };
 
     // fetching of data for endpoint
-    const [employeeAbsences, setEmployeeAbsences] = useState(Array);
-    const fetchingEmployeesAbsences = () => {
-        console.log(checkOdrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo, checkCreatedByCurrent, checkNotCreatedByCurrent, userName, userSurname, userTeam)
-        fetch("http://127.0.0.1:3001/getEmployeesAbsences/"+sessionStorage.getItem("USER"))
+    const [employeeRequests, setEmployeeRequests] = useState(Array);
+    const fetchingEmployeesRequests = () => {
+        fetch("http://127.0.0.1:3001/getEmployeesRequests/"+sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
-                    //console.log(response)
                     response.sort(FunctionForSortingJson("from", "descending"))
-                    setEmployeeAbsences(response)
+                    setEmployeeRequests(response)
                 });
             })
             .catch((err) => {
@@ -77,40 +75,87 @@ function Requests(){
         //reloading days off and demand days endpoint
     }
 
+    // Zmienne do ładowania statusów i typów nieobecności
+    const [requestsStatus, setRequestsStatus] = useState(undefined);
+    const [requestsColors, setRequestsColors] = useState(undefined);
+    const [requestsTypes, setRequestsTypes] = useState(undefined);
+
+    // Załadowanie statusów wniosków
+    if(requestsStatus === undefined) {
+        fetch("http://127.0.0.1:3001/getRequestsStatus/")
+            .then((response) => {response.json()
+                .then((response) => {
+                    setRequestsStatus(response)
+                });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
+    // Załadowanie kolorów nieobecności
+    if(requestsColors === undefined) {
+        fetch("http://127.0.0.1:3001/getRequestsColors/")
+            .then((response) => {response.json()
+                .then((response) => {
+                    setRequestsColors(response)
+                });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
+
+    // Załadowanie typów nieobecnośći
+    if(requestsTypes === undefined) {
+        fetch("http://127.0.0.1:3001/getRequestsTypes/")
+            .then((response) => {response.json()
+                .then((response) => {
+                    setRequestsTypes(response)
+                });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
     //filtruj button log
     const filtrAbsences = () => {
-        fetchingEmployeesAbsences()
+        fetchingEmployeesRequests()
     }
-    if (employeeAbsences[0] === undefined) {
-        fetchingEmployeesAbsences()
+    if (employeeRequests[0] === undefined) {
+        fetchingEmployeesRequests()
     }
 
     // date from date to / type of day off / status
-    const [absencesList, setAbsencesList] = useState([]);
-    function deleteAbsence(){
-        //endpoint for removing dayoff
-        //reloading days off and demand days endpoint
-    }
+    const [requestsList, setRequestsList] = useState([]);
 
     // Absences of employees list method (future/past days off)
-    if (employeeAbsences[0] !== undefined && absencesList.length === 0){
-        let absencesListLoad = [];
+    if (employeeRequests[0] !== undefined && requestsList.length === 0){
+        let requestsListLoad = [];
         let row = 1;
-        for (const i of employeeAbsences) {
+        for (const i of employeeRequests) {
             if (i.from > new Date().toLocaleDateString("sv", options)) {
-                absencesListLoad.push(
-                    <RequestsListItem employeeAbsence={i} key={row} setRequestsVisible={setRequestsVisible}
-                                      setRequestPickedData={setRequestPickedData}/>
+                requestsListLoad.push(
+                    <RequestsListItem employeeRequest={i} key={row} setRequestsVisible={setRequestsVisible}
+                                      setRequestPickedData={setRequestPickedData}
+                                      requestsTypes={requestsTypes}
+                                      requestsStatus={requestsStatus}
+                                      requestsColors={requestsColors}/>
                 )
                 row++;
             } else {
-                absencesListLoad.push(
-                    <RequestsListItem employeeAbsence={i} key={row} old={true}/>
+                requestsListLoad.push(
+                    <RequestsListItem employeeRequest={i} key={row} old={true}
+                                      requestsTypes={requestsTypes}
+                                      requestsStatus={requestsStatus}
+                                      requestsColors={requestsColors}/>
                 )
                 row++;
             }
         }
-        setAbsencesList(absencesListLoad)
+        setRequestsList(requestsListLoad)
     }
 
     return(
@@ -173,7 +218,7 @@ function Requests(){
                 </div>
             </div>
             <div id={"schedule-list"} className={"overflow-y-auto"} style={{ height: wantedHeightsForList}} >
-                {absencesList}
+                {requestsList}
             </div>
         </div>
         :
