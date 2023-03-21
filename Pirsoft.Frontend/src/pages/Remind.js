@@ -29,7 +29,6 @@ function Remind(){
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
     useEffect(() => {
-        // Handler to call on window resize
         FunctionForResize("password-reminder", {setWantedHeightForList});
     }, []);
 
@@ -38,7 +37,6 @@ function Remind(){
             if (code !== undefined && code.toString().length > 0) {
                 fetch("http://127.0.0.1:3001/verifyCode/"+email+"/"+code)
                     .then((response) => {
-                        console.log(response.status)
                         if(response.status === 200){
                             setCodeNotVerified(false)
                         }
@@ -49,7 +47,6 @@ function Remind(){
                     })
                     .catch((err) => {
                         console.log(err.message);
-
                     })
             }
             else {
@@ -67,7 +64,7 @@ function Remind(){
         if (newPassword !== undefined && newRepeatPassword !== undefined &&
             newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0) {
 
-            //tutaj pomyslimy jakie wartosci sprawdzic
+            // Tutaj do pomyślenia jakie wartosci sprawdzic
 
             if(newPassword.toString() === newRepeatPassword.toString()){
                 fetch("http://127.0.0.1:3001/changePassword/"+email+"/"+newPassword)
@@ -102,7 +99,6 @@ function Remind(){
                 method: 'POST'
             })
                 .then((response) => {
-                    console.log(response.status)
                     if(response.status === 200){
                         setMailSentAlert(true);
                         setTimeout(() => {setMailSentAlert(false)}, 3000);
@@ -114,7 +110,6 @@ function Remind(){
                 })
                 .catch((err) => {
                     console.log(err.message);
-
                 })
         }
         else {
@@ -188,7 +183,6 @@ function Remind(){
                 {problemOccured ? <p className={"bg-red-700 rounded-md font-bold"}>Wystapił nieoczekiwany błąd, spróbuj ponownie za chwilę</p> : <></> }
                 {wrongPasswords ? <p className={"bg-red-700 rounded-md font-bold"}>Wpisz nowe hasła w pola</p> : <></> }
                 {notTheSame ? <p className={"bg-red-700 rounded-md font-bold"}>Wpisane hasła są niezgodne</p> : <></> }
-
             </div>
         </div>
 }
