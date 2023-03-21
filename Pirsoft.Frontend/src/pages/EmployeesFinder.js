@@ -16,7 +16,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
 
     const [pickedEmployeeData, setPickedEmployeeData] = useState([]);
 
-    // filtering options
+    // Opcje do filtrowania
     const [skillsPicked, setSkillsPicked] = useState([])
     const[order, setOrder] = useState(true);
     const[firstnameAndLastname, setFirstnameAndLastname] = useState();
@@ -33,7 +33,6 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
         fetch("http://127.0.0.1:3001/getAllSkills")
             .then((response) => response.json())
             .then((response) => {
-                //console.log(response)
                 setSkills(response)
                 setSkillsLoaded(true)
             })
@@ -47,15 +46,10 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     const [employeePickerDataLoaded, setEmployeePickerDataLoaded] = useState(false)
     function loadAllEmployeesByFilter(){
         setEmployeePickerDataLoaded(false)
-        // console.log("GETTING FILTER DATA HERE")
-        // console.log(skillsPicked)
-        // console.log(order)
-        // console.log(firstnameAndLastname)
 
         fetch("http://127.0.0.1:3001/getAllEmployeesForPicked")
             .then((response) => response.json())
             .then((response) => {
-                console.log(response)
                 let employeeLoad = []
 
                 response.forEach((e) => {
@@ -74,7 +68,6 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
             .catch((err) => {
                 console.log(err.message);
             })
-
     }
 
     function finderAcceptChanges(){
@@ -99,11 +92,10 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                     setEmployeeData([...employeeDataWithoutCurrentEmployee, pickedEmployeeData])
                     setEmployeesFinderShowing(false)
                 } else {
-                    // whole function to swap employees
-                    // two endpoints on a team window side to swap employees when saving changes.
+                    // cała funkcja do wymienienia ze sobą pracowników
 
                     let employeeDataWithoutCurrentEmployee = []
-                    // getting changed employee
+
                     let changedEmployeeDataArray = []
                     employeeData.forEach((e) => {
                         if (e.id !== idOfCurrentPickedEmployee) {
@@ -113,20 +105,12 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                         }
                     })
 
-                    console.log("pickeddddddddddddd swapp")
-                    console.log("swap option...")
-                    console.log(changedEmployeeDataArray)
-                    console.log(employeeDataWithoutCurrentEmployee)
-                    console.log(pickedEmployeeData)
                     setEmployeeData([...employeeDataWithoutCurrentEmployee, pickedEmployeeData])
 
-                    //getting picked employee data
                     let pickedEmployeeDataArray = []
                     pickedEmployeeDataArray.push(pickedEmployeeData)
-                    console.log(pickedEmployeeDataArray)
+
                     let createRecordForChangedEmployeeData = {...changedEmployeeDataArray[0], ...pickedEmployeeDataArray}
-                    console.log("data for changed")
-                    console.log(createRecordForChangedEmployeeData)
 
                     let swapTeamsBetweenTheseEmployeeTemp = swapTeamsBetweenTheseEmployee
                     swapTeamsBetweenTheseEmployeeTemp.push(createRecordForChangedEmployeeData)
@@ -136,11 +120,8 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                         } else {
                         }
                     })
-                    //
-                    // setSwapTeamsBetweenTheseEmployee(changedEmployeeData)
-                    // swapTeamsBetweenTheseEmployee
-                    setSwapTeamsBetweenTheseEmployee(swapTeamsBetweenTheseEmployeeTemp)
 
+                    setSwapTeamsBetweenTheseEmployee(swapTeamsBetweenTheseEmployeeTemp)
                     setEmployeesFinderShowing(false)
                 }
             }
@@ -196,10 +177,8 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
         }catch (e) {
         }
         const myObjStr = JSON.stringify(skillsList);
-        console.log(myObjStr);
 
         setSkillsPicked(skillsList)
-
         setSkillsNotShows(true)
     }
 

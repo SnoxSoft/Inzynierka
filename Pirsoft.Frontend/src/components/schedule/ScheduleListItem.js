@@ -14,7 +14,6 @@ const ScheduleListItem = ({text, date, loadWholeMonthData}) => {
 
     const openWholeMonth = () => {
         loadWholeMonthData({text: text, date: date})
-
     }
 
     return <li className={"flex flex-row m-4 p-4 gap-4 text-workday hover:cursor-pointer rounded-md max-w-fit"}
@@ -33,5 +32,3 @@ const ScheduleListItem = ({text, date, loadWholeMonthData}) => {
 }
 
 export default ScheduleListItem;
-
-//

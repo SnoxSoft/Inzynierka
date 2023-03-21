@@ -16,12 +16,9 @@ function Employees(){
     const[positionsList, setPositionsList] = useState();
     const[order, setOrder] = useState(true); // true oznacza sortowanie od A->Z, a false od Z->A
 
-    //const employeesList2 = useSelector(selectAll());
-    //const[employeesList, setEmployeesList] = useState(employeesList2)
-
     const [employeesList, setEmployeesList] = useState(Array);
 
-    //endpoint zakomentowany do uzycia
+    // Pobranie listy wszystkich pracowników
     if (employeesList[0] === undefined) {
         fetch("http://127.0.0.1:3001/getAllEmployees")
             .then((response) => {response.json()
@@ -42,25 +39,21 @@ function Employees(){
         let positionValue = "";
 
         if(firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0){
-            console.log(firstnameAndLastname);
             firstnameValue = firstnameAndLastname;
         }
         else firstnameValue = " ";
 
         if(teamsList !== undefined && teamsList.toString().length !== 0){
-            console.log(teamsList);
             teamValue = teamsList;
         }
         else teamValue = " ";
 
         if(positionsList !== undefined && positionsList.toString().length !== 0){
-            console.log(positionsList);
             positionValue = positionsList;
         }
         else positionValue = " ";
 
-        // potrzebny endpoint żeby kontynuować przeładowywanie listy
-
+        // Pobranie listy pracowników przy użyciu przycisku Szukaj
         fetch("http://127.0.0.1:3001/getEmployees/"+firstnameValue+"/"+teamValue+"/"+positionValue+"/"+order)
             .then((response) => {response.json()
                 .then((response) => {
@@ -70,7 +63,6 @@ function Employees(){
             .catch((err) => {
                 console.log(err.message);
             })
-
     }
 
     return(
@@ -97,9 +89,7 @@ function Employees(){
                             <PositionsList className={""} onChange={setPositionsList}/>
                         </div>
                     </div>
-
                 </div>
-
                 <div>
                     <SortingButton setOrder={setOrder}/>
                     <ReusableButton value={"SZUKAJ"} onClick={findEmployees}/>

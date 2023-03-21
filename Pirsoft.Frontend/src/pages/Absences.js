@@ -10,7 +10,7 @@ import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 function Absences(){
     document.title = "PIRSOFT: Moje nieobecnosci";
 
-    // calendar initial date setters and options
+    // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
         year: "numeric",
         month: "2-digit",
@@ -21,25 +21,24 @@ function Absences(){
     const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
     const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
 
-    // show/hide absences and take  aday off
+    // Pokazywanie/chowanie nieobecności czy wybieranie wniosku
     const [absencesVisible, setAbsencesVisible] = useState(true)
 
-    // Handler to call on window resize
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
         FunctionForResize("schedule-list", {setWantedHeightForList});
         FunctionForResize("schedule-month", {setWantedHeightForList});
     }, []);
 
-    // calendar component get/set
+    // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
 
-    //hard coded value for testing will need to replace with endpoint
+    // Będe potrzebować tu endpointa do czytania tych wartości
     const onDemandDays = 5;
     const leaveDays = 10;
 
-    // checkboxes states
+    // Stany checkboxów
     const [checkOczekujace, setCheckOczekujace] = useState(true);
     const [checkZatwierdzone, setCheckZatwierdzone] = useState(true);
     const [checkodrzucone, setCheckodrzucone] = useState(true);
@@ -93,11 +92,11 @@ function Absences(){
     const [employeeAbsences, setEmployeeAbsences] = useState(Array);
 
     const fetchingEmployeeAbsences = () => {
-        // datas to use: checkodrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo
+        // Na endpoint należy wysłać body z danymi filtrowania
+        // checkodrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo
         fetch("http://127.0.0.1:3001/getEmployeeAbsences/"+sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
-                    //console.log(response)
                     response.sort(FunctionForSortingJson("from", "descending"))
                     setEmployeeAbsences(response)
                 });

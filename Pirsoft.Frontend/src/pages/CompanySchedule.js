@@ -53,7 +53,6 @@ function CompanySchedule(){
             .catch((err) => {
                 console.log(err.message);
             })
-
     }
 
     const [employees, setEmployees] = useState(Object);
@@ -92,9 +91,6 @@ function CompanySchedule(){
     const loadWholeMonthData = (pickedMonth) => {
         setPickedMonth(pickedMonth)
 
-        //console.clear()
-        //console.log(pickedMonth.date)
-
         const options2 = {
             year: "numeric",
             month: "2-digit",
@@ -106,7 +102,6 @@ function CompanySchedule(){
         const pickedMonthDate = new Date(pickedYearCurrently, pickedMonthCurrently,1)
 
         let currentMonthDays = [];
-
         let daysOfWeekLoad = []
 
         weekdays.forEach((weekday) => {
@@ -139,8 +134,6 @@ function CompanySchedule(){
     }
 
     const loadWholeMonthDataForCompany = (today) => {
-
-        //console.clear()
         setAllTeamsAreLoadedInDivs(false)
         setMonthDaysOffLoaded(false)
 
@@ -151,7 +144,7 @@ function CompanySchedule(){
 
         let allTeamsLoad = []
 
-        //naglowek miesiaca dwa puste pola
+        // Naglowek miesiaca dwa puste pola
         allTeamsLoad.push(
             <div
                 className={"row-start-1 col-start-1"}>
@@ -227,7 +220,6 @@ function CompanySchedule(){
             if(monthDaysOffLoaded) {
                 loadWholeMonthDataForCompany(pickedMonthTextDateMinusOne)
             }
-
         }
 
         if(mode === 'next'){
@@ -240,37 +232,20 @@ function CompanySchedule(){
             if(monthDaysOffLoaded) {
                 loadWholeMonthDataForCompany(pickedMonthTextDatePlusOne)
             }
-
         }
     }
 
     function FunctionForResizeScheduleWidth(){
-        // Set window width/height to state
-        console.clear()
         const leftMenuComponent = document.getElementById("left-menu");
 
         const currentComponent = document.getElementById("schedule-company-list");
         if(leftMenuComponent != null && currentComponent != null){
-            const leftMenuPosition = leftMenuComponent.getBoundingClientRect();
             const currentComponentPosition = currentComponent.getBoundingClientRect();
-            console.log(leftMenuPosition.width)
-            console.log(currentComponentPosition.x)
-            console.log(window.outerWidth)
-            console.log(window.innerWidth)
-
             setWantedWidthForList(window.outerWidth - currentComponentPosition.x)
-            // const wantedHeight = leftMenuPosition.height - (currentComponentPosition.y - leftMenuPosition.y);
-            // setWantedHeightForList(wantedHeight)
         }
-        //
-        // window.addEventListener("resize", handleResize);
-        // handleResize();
-        // return () => window.removeEventListener("resize", handleResize);
-
     }
 
     useEffect(() => {
-        // Handler to call on window resize
         FunctionForResize("schedule-company-list", {setWantedHeightForList});
         FunctionForResizeScheduleWidth()
     }, );
@@ -319,7 +294,6 @@ function CompanySchedule(){
                         {allTeams}
                     </div>
                 </div>
-
             </>
             :
             <></>
