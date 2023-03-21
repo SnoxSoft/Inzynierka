@@ -31,28 +31,26 @@ function EmployeeComponent({id, mode, employee}){
     }
     else document.title = 'PIRSOFT: Wyświetlanie danych pracownika'
 
-
-    //możliwe rodzaje parametru mode:
+    // Możliwe rodzaje parametru mode:
     // create - do tworzenia
     // edit - osoba przeglądająca konto lub
     //        uprawniona do edycji kont lub właściciel konta
 
     const navigate = useNavigate()
 
-    // na razie od ręki ustationy przywilej i zapisany w sesji
-    //podział na widoczność pól według roli konta plus podział na możliwość edycji.
-    //tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
+    // Na razie od ręki ustationy przywilej i zapisany w sesji
+    // Podział na widoczność pól według roli konta plus podział na możliwość edycji.
+    // Tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
 
-    //uprawnienia edycji oraz przeglądania danych konta pracownika według zalogowanego konta
+    // Uprawnienia edycji oraz przeglądania danych konta pracownika według zalogowanego konta
     sessionStorage.setItem("PRIVILEDGE", 'UNAUTHORIED')
 
-    //purpose of it is to show employee data
+    // Do pokazania danych pracownika
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
     const [showSkillsFrame, setShowSkillsFrame] = useState(false);
     const [showPasswordChangeFrame, setShowPasswordChangeFrame] = useState(false);
-    //const [employeeData, setEmployeeData] = useState(useSelector(selectId(id)));
 
-    //employee data
+    // Dane pracownika
     const[firstName, setFirstName] = useState(employee !== undefined && employee !== null ? employee.firstname : '');
     const[lastName, setLastName] = useState(employee !== undefined && employee !== null? employee.lastname : '');
     const[email, setEmail] = useState(employee !== undefined && employee !== null ? employee.email : '');
@@ -65,7 +63,7 @@ function EmployeeComponent({id, mode, employee}){
     const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.position : '');
     const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.start : '');
 
-    //rest of employee data
+    // Reszta danych pracownika
     const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? employee.avatar : undefined);
     const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
@@ -146,25 +144,25 @@ function EmployeeComponent({id, mode, employee}){
         }catch (e) {
         }
         const myObjStr = JSON.stringify(skillsList);
-        //console.log(myObjStr);
 
         setSkillsData(skillsList)
         setEmployeeDataShow(true)
         setShowSkillsFrame(false)
     }
 
-    //component for showing skills under an avatar
+    // Komponent do pokazywania umiejętności pod awatarem
     const [skillsComponent, setSkillsComponent] = useState(<></>);
-
 
     const setNewPasswordFunction = () => {
         setEmployeeDataShow(false);
         setShowPasswordChangeFrame(true)
     }
 
-    //changing skills from change skill view
+    // Zmiana umiejętności
     const setSkills = () => {
         setSkillsComponent(<></>)
+
+        // To jeszcze trzeba załadować z endpointu
         const allSkills = ["GROOVY", "C++", "SQL", "WORD", "EXCEL","PHP", "JAVA", "C#"]
         let detailsOne = []
 
@@ -190,11 +188,11 @@ function EmployeeComponent({id, mode, employee}){
         setShowSkillsFrame(true)
     }
 
-    // zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
+    // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
     let disableData = sessionStorage.getItem('USER') !== id && mode !== 'create'
 
 
-    // poniżej znajdą się wszystkie dane i funkcje dla okienka zmiany hasła w danych pracownika
+    // Poniżej znajdą się wszystkie dane i funkcje dla okienka zmiany hasła w danych pracownika
     const [oldPassword, setOldPassword] = useState();
     const [newPassword, setNewPassword] = useState();
     const [newRepeatPassword, setNewRepeatPassword] = useState();
@@ -208,7 +206,7 @@ function EmployeeComponent({id, mode, employee}){
             if (newPassword !== undefined && newRepeatPassword !== undefined &&
                 newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0) {
 
-                //tutaj pomyslimy jakie wartosci sprawdzic
+                // Tutaj pomyslimy jakie wartosci sprawdzic
 
                 if (newPassword.toString() === newRepeatPassword.toString()) {
                     setPassword(newPassword)
@@ -239,8 +237,6 @@ function EmployeeComponent({id, mode, employee}){
             }, 3000);
         }
     }
-
-    // function and methods for giving absence for employee
 
     const [showAddEmployeeAnAbsence, setShowAddEmployeeAnAbsence] = useState(false)
 

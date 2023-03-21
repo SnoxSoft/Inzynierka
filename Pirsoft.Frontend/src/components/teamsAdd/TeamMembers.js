@@ -1,7 +1,6 @@
 import {HiPlus} from "react-icons/hi";
 import ReusableButton from "../base/ReusableButton";
 import TeamMember from "./TeamMember";
-
 const TeamMembers = ({disableChange, employeeData, setEmployeeData, setEmployeesFinderShowing,
                          swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee}) => {
     let showAllEmployees = []

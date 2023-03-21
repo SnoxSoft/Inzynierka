@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 
-
 const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absencesStatus, absencesColors}) => {
 
     const [showHideButtons, setShowHideButtons] = useState(false);
@@ -15,7 +14,7 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
 
     // Akcja usunięcia nieobecności
     function deleteAbsence() {
-        // przeładowanie dni wolnych
+        // Przeładowanie dni wolnych
     }
 
     const [absenceColor, setAbsenceColor] = useState("")

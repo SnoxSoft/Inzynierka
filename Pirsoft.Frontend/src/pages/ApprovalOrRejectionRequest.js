@@ -9,9 +9,6 @@ import {CgClose} from "react-icons/cg";
 const ApprovalOrRejectionRequest = ({dateFrom, dateTo, name, type, requestId, setRequestsVisible, requestPickedData}) => {
     document.title = "PIRSOFT: Zatwierdzanie wniosku urlopowego";
 
-    console.log(requestPickedData)
-
-    // Handler to call on window resize
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
         FunctionForResize("schedule-list", {setWantedHeightForList});
@@ -33,7 +30,6 @@ const ApprovalOrRejectionRequest = ({dateFrom, dateTo, name, type, requestId, se
         if(type === 'demand'){
             return 'URLOP NA ŻĄDANIE'
         }
-
         return type
     }
 

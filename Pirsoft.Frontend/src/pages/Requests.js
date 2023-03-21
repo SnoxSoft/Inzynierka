@@ -7,11 +7,10 @@ import RequestsListItem from "../components/requests/RequestsListItem";
 import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 
-
 function Requests(){
     document.title = "PIRSOFT: WNIOSKI PRACOWNIKOW";
 
-    // calendar initial date setters and options
+    // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
         year: "numeric",
         month: "2-digit",
@@ -22,34 +21,32 @@ function Requests(){
     const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
     const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
 
-
-    // Handler to call on window resize
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
         FunctionForResize("schedule-list", {setWantedHeightForList});
         FunctionForResize("schedule-month", {setWantedHeightForList});
     }, []);
 
-    // calendar get/set
+    // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
 
-    // Team data
+    // Zespół do filtrowania
     const[userTeam, setUserTeam] = useState();
 
-    // checkboxes states
+    // Checkboxy fo filtrowania
     const [checkOczekujace, setCheckOczekujace] = useState(true);
     const [checkZatwierdzone, setCheckZatwierdzone] = useState(true);
     const [checkOdrzucone, setCheckOdrzucone] = useState(true);
     const [checkCreatedByCurrent, setCheckCreatedByCurrent] = useState(true);
     const [checkNotCreatedByCurrent, setCheckNotCreatedByCurrent] = useState(true)
 
-    // to show or hide request approval/rejection
+    // Pokazanie lub schowanie listy wniosków / akceptacji/odrzucenia wniosku
     const [requestsVisible, setRequestsVisible] = useState(true)
 
     const [requestPickedData, setRequestPickedData] = useState(undefined)
 
-    //name , surname input field computing
+    // Imie i nazwisko dla filtra
     const [userName, setUserName] = useState('');
     const [userSurname, setUserSurname] = useState('');
     const handleNameChange = event => {
@@ -59,7 +56,7 @@ function Requests(){
         setUserSurname(event.target.value);
     };
 
-    // fetching of data for endpoint
+    // Pobranie listy wniosków
     const [employeeRequests, setEmployeeRequests] = useState(Array);
     const fetchingEmployeesRequests = () => {
         fetch("http://127.0.0.1:3001/getEmployeesRequests/"+sessionStorage.getItem("USER"))
@@ -72,7 +69,6 @@ function Requests(){
             .catch((err) => {
                 console.log(err.message);
             })
-        //reloading days off and demand days endpoint
     }
 
     // Zmienne do ładowania statusów i typów nieobecności
@@ -106,7 +102,6 @@ function Requests(){
             })
     }
 
-
     // Załadowanie typów nieobecnośći
     if(requestsTypes === undefined) {
         fetch("http://127.0.0.1:3001/getRequestsTypes/")
@@ -120,18 +115,18 @@ function Requests(){
             })
     }
 
-    //filtruj button log
-    const filtrAbsences = () => {
+    // Filtrowanie wniosków
+    const filtrRequests = () => {
         fetchingEmployeesRequests()
     }
     if (employeeRequests[0] === undefined) {
         fetchingEmployeesRequests()
     }
 
-    // date from date to / type of day off / status
+    // W tej zmiennej znajduje się cała lista wniosków
     const [requestsList, setRequestsList] = useState([]);
 
-    // Absences of employees list method (future/past days off)
+    // Tworzenie listy wniosków urlopowych, wnioski już przestarzałe są w szarym kolorze
     if (employeeRequests[0] !== undefined && requestsList.length === 0){
         let requestsListLoad = [];
         let row = 1;
@@ -202,7 +197,7 @@ function Requests(){
                     <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
                 </div>
                 <div className={"flex justify-center"}>
-                    <ReusableButton value={"FILTRUJ"} formatting={"h-7 border-2 border-workday"} onClick={() => filtrAbsences()}/>
+                    <ReusableButton value={"FILTRUJ"} formatting={"h-7 border-2 border-workday"} onClick={() => filtrRequests()}/>
                 </div>
             </div>
 

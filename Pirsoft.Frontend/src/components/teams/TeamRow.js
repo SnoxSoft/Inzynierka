@@ -9,7 +9,6 @@ const TeamRow = ({team, row, setEmployeesVisible}) => {
 
     const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleRight/>);
 
-    // dołączyć całą funkcjonalność do chowania zespołów
     function changeVisibilityForPassword() {
         if (changeVisibilityIcon.type === VscTriangleDown) {
             setChangeVisibilityIcon(<VscTriangleRight />);

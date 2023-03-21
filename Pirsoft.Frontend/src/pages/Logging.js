@@ -23,7 +23,6 @@ function Logging(){
     const [password, setPassword] = useState();
 
     useEffect(() => {
-        // Handler to call on window resize
         FunctionForResize("home-logging-in", {setWantedHeightForList});
         FunctionForResize("home-logged-in", {setWantedHeightForList});
     }, []);
@@ -33,8 +32,6 @@ function Logging(){
             fetch("http://127.0.0.1:3001/getEmployee/"+email+"/"+password)
                 .then((response) => {response.json()
                     .then((response) => {
-                        //setEmployeesList(response)
-
                         sessionStorage.setItem('USER', response[0].id)
                         sessionStorage.setItem('FIRSTNAME', response[0].firstname)
                         sessionStorage.setItem('LASTNAME', response[0].lastname)

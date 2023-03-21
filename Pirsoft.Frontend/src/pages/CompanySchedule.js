@@ -18,7 +18,6 @@ function CompanySchedule(){
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     const[wantedWidthForList, setWantedWidthForList] = useState(1000);
 
-
     //wszystkie zespoly ktore potrzebuje
     const [teams, setTeams] = useState(Object);
     const [teamsLoaded, setTeamsLoaded] = useState(false)
@@ -58,7 +57,6 @@ function CompanySchedule(){
     const [employees, setEmployees] = useState(Object);
     const [employeesLoaded, setEmployeesLoaded] = useState(false)
 
-
     // ładowanie wszystkich pracowników
     if (employees[0] === undefined) {
         fetch("http://127.0.0.1:3001/getAllEmployees")
@@ -91,12 +89,6 @@ function CompanySchedule(){
     const loadWholeMonthData = (pickedMonth) => {
         setPickedMonth(pickedMonth)
 
-        const options2 = {
-            year: "numeric",
-            month: "2-digit",
-            day: "numeric"
-        }
-
         const pickedMonthCurrently = parseInt(pickedMonth.date.substring(5,7))-1
         const pickedYearCurrently = parseInt(pickedMonth.date.substring(0,4))
         const pickedMonthDate = new Date(pickedYearCurrently, pickedMonthCurrently,1)
@@ -120,7 +112,6 @@ function CompanySchedule(){
         const days = [...currentMonthDays];
 
         return days
-
     }
 
     const getTextWeekday = (pickedDay) => {
@@ -207,7 +198,6 @@ function CompanySchedule(){
     }
 
     const changeMonth = (mode) => {
-
         const pickedMonthTextDate = new Date(pickedMonthText.date)
 
         if(mode === 'previous'){

@@ -92,7 +92,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                     setEmployeeData([...employeeDataWithoutCurrentEmployee, pickedEmployeeData])
                     setEmployeesFinderShowing(false)
                 } else {
-                    // cała funkcja do wymienienia ze sobą pracowników
+                    // Cała funkcja do wymienienia ze sobą pracowników
 
                     let employeeDataWithoutCurrentEmployee = []
 

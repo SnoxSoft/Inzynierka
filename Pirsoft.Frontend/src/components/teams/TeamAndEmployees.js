@@ -7,7 +7,6 @@ const TeamAndEmployees = ({row, team, employees}) => {
 
     const[employeesVisible, setEmployeesVisible] = useState(false);
 
-
     let createTeamsComponent = []
 
     createTeamsComponent.push(<TeamRow team={team} row={row}

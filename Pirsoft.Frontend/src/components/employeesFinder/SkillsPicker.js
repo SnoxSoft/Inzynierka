@@ -2,7 +2,6 @@ import ReusableButton from "../base/ReusableButton";
 
 const SkillsPicker = ({setSkills, setSkillsNotShows}) => {
 
-
     return <div className={"flex flex-row place-items-center gap-2"}>
         <div>UMIEJĘTNOŚCI:</div>
         <div>

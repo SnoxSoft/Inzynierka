@@ -14,9 +14,7 @@ const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShow
             }
         }
     }
-
     function setValuesForPickerAndOpenIt(){
-        //setHowMuchYouCanPickAndWho({howMuch: "one", who: "leader", idPickedEmployee: null});
         setEmployeesFinderShowing(true, {howMuch: "one", who: "leader", idPickedEmployee: null});
     }
 
