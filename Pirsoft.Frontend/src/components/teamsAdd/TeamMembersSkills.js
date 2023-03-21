@@ -1,7 +1,6 @@
 import {useState} from "react";
 import FunctionForSortingJson from "../base/FunctionForSortingJson";
 
-
 const TeamMembersSkills = ({value}) => {
 
     let randomNumber = 0;

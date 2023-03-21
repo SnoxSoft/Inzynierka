@@ -9,7 +9,7 @@ import {CgClose} from "react-icons/cg";
 const Request = ({setAbsencesVisible}) =>{
     document.title = "PIRSOFT: Wniosek";
 
-    // calendar initial date setters and options
+    // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
         year: "numeric",
         month: "2-digit",
@@ -21,22 +21,21 @@ const Request = ({setAbsencesVisible}) =>{
     const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
 
 
-    // Handler to call on window resize
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
         FunctionForResize("schedule-list", {setWantedHeightForList});
         FunctionForResize("schedule-month", {setWantedHeightForList});
     }, []);
 
-    // calendar component get/set
+    // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
 
-    //hard coded value for testing will need to replace with endpoint
+    // Będe potrzebować tu endpointa do czytania tych wartości przy wybraniu wniosku
     const onDemandDays = 5;
     const leaveDays = 0;
 
-    // method to verify unpaid leave button.
+    // Metoda do ustawienia bezpłatnego dnia
     const checker = (numberOfDaysOff) => {
         if (numberOfDaysOff === 0){
             return true
@@ -48,14 +47,14 @@ const Request = ({setAbsencesVisible}) =>{
         { value: (checker(leaveDays) || checker(onDemandDays)), label: 'URLOP NA ZADANIE' }
     ]
 
-    // checkbox state
+    // Zaznaczenie opcji urlop bezpłaty jeśli brak dni urlopowych
     const [leaveDaysLeft, setLeaveDaysLeft] = useState(false);
 
     if (leaveDays === 0 && leaveDaysLeft !== true){
         setLeaveDaysLeft(true);
     }
 
-    // fetching of data for endpoint
+    // Pobranie listy osób, które mogą zatwierdzić wniosek
     const [approvers, setApprovers] = useState(Array);
 
     const fetchingApprovers = () => {
@@ -68,7 +67,6 @@ const Request = ({setAbsencesVisible}) =>{
             .catch((err) => {
                 console.log(err.message);
             })
-        //reloading days off and demand days endpoint
     }
 
     if (approvers[0] === undefined) {

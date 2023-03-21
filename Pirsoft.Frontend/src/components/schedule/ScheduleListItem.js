@@ -6,7 +6,6 @@ const ScheduleListItem = ({text, date, loadWholeMonthData}) => {
 
     const showOptions = () => {
         setShowHideButtons(true);
-
     }
     const hideOptions = () => {
         setShowHideButtons(false);

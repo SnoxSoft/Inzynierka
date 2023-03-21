@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import ReusableButton from "../../components/base/ReusableButton";
-import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
-import TeamRow from "../../components/teams/TeamRow";
-import EmployeeRow from "../../components/teams/EmployeeRow";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
 import FunctionForSortingJson from "../../components/base/FunctionForSortingJson";
 
@@ -12,14 +9,14 @@ function Teams(){
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
-    //wszystkie zespoly ktore potrzebuje
+    // Wszystkie zespoly ktore są potrzebne
     const [teams, setTeams] = useState(Object);
     const [teamsLoaded, setTeamsLoaded] = useState(false)
 
     const [allTeams, setAllTeams] = useState([])
 
 
-    // ładowanie raz zespołów po załądowaniu okna a nie na bieżąco
+    // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
     if (teams[0] === undefined) {
         fetch("http://127.0.0.1:3001/getAllTeams")
             .then((response) => response.json())
@@ -40,7 +37,7 @@ function Teams(){
     const [employeesLoaded, setEmployeesLoaded] = useState(false)
 
 
-    // ładowanie wszystkich pracowników
+    // Ładowanie wszystkich pracowników
     if (employees[0] === undefined) {
         fetch("http://127.0.0.1:3001/getAllEmployees")
             .then((response) => response.json())
@@ -57,8 +54,6 @@ function Teams(){
     const [allTeamsAreLoadedInDivs, setAllTeamsAreLoadedInDivs] = useState(false)
 
     const loadWholeMonthDataForCompany = (today) => {
-
-        //console.clear()
         setAllTeamsAreLoadedInDivs(false)
         setMonthDaysOffLoaded(false)
 
@@ -66,13 +61,13 @@ function Teams(){
 
         let row = 2
         teams.forEach((team) => {
-            // dodanie zespołów
+            // Dodanie zespołów
             row = row + 1
             allTeamsLoad.push(<TeamAndEmployees row={row} team={team} employees={employees}/>)
 
         });
 
-        // ustawianie calego kalendarza i pokazanie go
+        // Ustawianie calego kalendarza i pokazanie go
         setAllTeams(allTeamsLoad)
         setAllTeamsAreLoadedInDivs(true)
     }

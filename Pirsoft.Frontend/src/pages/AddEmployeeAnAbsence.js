@@ -9,7 +9,7 @@ import {CgClose} from "react-icons/cg";
 const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow, forEmployee}) =>{
     document.title = "PIRSOFT: Wystaw wniosek";
 
-    // calendar initial date setters and options
+    // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
         year: "numeric",
         month: "2-digit",
@@ -17,7 +17,7 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
     }
     const currentDate = new Date();
 
-    // calendar component get/set
+    // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(currentDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(currentDate.toLocaleDateString("sv", options));
 

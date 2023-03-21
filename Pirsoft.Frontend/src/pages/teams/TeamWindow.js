@@ -15,16 +15,13 @@ const TeamWindow = ({id,mode, title}) => {
     const navigate = useNavigate()
 
     const [employeesFinderShow, setEmployeesFinderShow] = useState(false)
-
-    //const [howMuchYouCanPickAndWho, setHowMuchYouCanPickAndWho] = useState({howMuch: "", who: "", idPickedEmployee: null})
     const [methodToUse, setMethodToUse] = useState()
     const [isSwapPossible, setIsSwapPossible] = useState(false)
     const [idOfCurrentPickedEmployee, setIdOfCurrentPickedEmployee] = useState()
     const [multipleChoice, setMultipleChoice] = useState(false)
     const [swapDataFillingIn, setSwapDataFillingIn] = useState("")
 
-
-    //loading data with one endpoint
+    // Ładowanie danych
     const [teamData, setTeamData] = useState([]);
     const [leaderData, setLeaderData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
@@ -54,7 +51,6 @@ const TeamWindow = ({id,mode, title}) => {
 
     if (teamDataLoaded) {
         reloadSkills()
-
     }
 
     function reloadSkills(){
@@ -93,7 +89,8 @@ const TeamWindow = ({id,mode, title}) => {
             setMultipleChoice(options.id === null && options.who === "employee")
             setSwapDataFillingIn(options.howMuch)
 
-            //if ZMIEN or USUŃ on a someone who was exchanged, delete from exchange list.
+            // Jeśli ZMIEN lub USUŃ na kimś kto został zamieniony to usuwany zostaje on
+            // z on usunięty z exchange list
             setExchangeInformation(options.idPickedEmployee)
         }
         setEmployeesFinderShow(showOrNo)

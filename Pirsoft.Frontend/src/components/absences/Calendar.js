@@ -1,5 +1,4 @@
 import React, {useState, useRef} from "react";
-import companySchedule from "../../pages/CompanySchedule";
 const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false}) => {
 
     const options = {

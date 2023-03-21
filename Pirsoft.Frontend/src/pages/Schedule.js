@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 function Schedule(){
     document.title = "PIRSOFT: Harmonogram osobisty";
 
-    //ładowanie dni wolnych / wybranych / nieobecnych
+    // Ładowanie dni wolnych / wybranych / nieobecnych
     let daysOff = [Object]
     fetch("http://127.0.0.1:3001/monthDays/"+sessionStorage.getItem('USER'))
         .then((response) => {response.json()
@@ -48,11 +48,10 @@ function Schedule(){
 
     }, []);
 
-
-
     const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
         "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
     ];
+
     const filtrSchedule = () => {
         const dateFrom = new Date(from);
         const dateTo = new Date(to);
@@ -73,14 +72,9 @@ function Schedule(){
                 });
         }
         setMonthList(localList)
-
     }
 
     const[showHidePickedMonth, setShowHidePickedMonth] = useState(false);
-
-    // funkcje dla wyswietlania calego wybranego miesiaca
-
-    //const [pickedMonth, setPickedMonth] = useState({text: '', date: ''})//{text: 'luty 2023', date: '2023-02'})
 
     const [daysOfWeek, setDaysOfWeek] = useState([])
     const [calendarDays, setCalendarDays] = useState([])
@@ -88,17 +82,8 @@ function Schedule(){
 
     const [pickedMonthText, setPickedMonth] = useState('')
 
-
     const loadWholeMonthData = (pickedMonth) => {
-console.clear()
         setPickedMonth(pickedMonth)
-        //console.log(pickedMonth.date)
-
-        const options2 = {
-            year: "numeric",
-            month: "2-digit",
-            day: "numeric"
-        }
 
         const pickedMonthCurrently = parseInt(pickedMonth.date.substring(5,7))-1
         const pickedYearCurrently = parseInt(pickedMonth.date.substring(0,4))
@@ -132,7 +117,6 @@ console.clear()
         nextMonthDays = createDaysForNextMonth(lastDayOfCurrentMonth);
 
         const days = [...previousMonthDays, ...currentMonthDays, ...nextMonthDays];
-        //console.log(days)
 
         let calendarDaysLoad = []
 
@@ -173,8 +157,6 @@ console.clear()
         if(day.today){
             border = 'outline-dashed outline-4'
         }
-
-        //console.log(color)
 
         return <div className={'flex flex-row justify-evenly border-workday border-2 hover:cursor-pointer '+color+' m-2 rounded-md text-black '+border+' '}>
             {day.dayOfMonth}
@@ -326,10 +308,9 @@ console.clear()
         return dayjs(`${year}-${month+1}-01`).daysInMonth();
     }
 
-    // to switch between months
+    // Czy pokazać powiadomienie gdy nie można prześć poza zakres pracy
     const [showingAlert, setShowingAlert] = useState(false)
     const changeMonth = (mode) => {
-
         const pickedMonthTextDate = new Date(pickedMonthText.date)
 
         if(mode === 'previous'){

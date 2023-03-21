@@ -37,7 +37,6 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
             }
         })
         setSwapTeamsBetweenTheseEmployee(swapTeamsDataWithoutCurrentEmployee)
-
     }
 
     function setValuesForPickerAndOpenIt(id, exchange = ""){
@@ -66,8 +65,6 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
                 }
             </div>
         )
-
-
 
     return (<>{showAllEmployees}</>)
 }

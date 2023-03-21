@@ -1,5 +1,3 @@
-import TextInputEmployee from "../employee/fields/models/TextInputEmployee";
-
 
 const LoggingEmail = ({onChange, value}) => {
 

@@ -13,50 +13,6 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
         setShowHideButtons(false);
     }
 
-    // Kolor tła inny w przypadku rodzaju
-    function colorBackground(state){
-        if (state === "refused"){
-            return 'bg-red-900'
-        }
-        if (state === "accepted"){
-            return 'bg-green-500'
-        }
-        if (state === "waiting"){
-            return 'bg-blue-500'
-        }
-    }
-
-    // for renaming status of absence
-    function renameType(type) {
-        if(type === 'sick'){
-            return 'urlop chorobowy'
-        }
-        if(type === 'dayoff'){
-            return 'urlop wypoczynkowy'
-        }
-        if(type === 'demand'){
-            return 'urlop na żądanie'
-        }
-        if(type === 'absent'){
-            return 'nieobecność'
-        }
-        return type
-    }
-
-    //for renaming status of absence
-    function renameStatus(status) {
-        if(status === 'refused'){
-            return 'odrzucony'
-        }
-        if(status === 'accepted'){
-            return 'zaakceptowany'
-        }
-        if(status === 'waiting'){
-            return 'oczekujący'
-        }
-        return status
-    }
-
     const [requestColor, setRequestColor] = useState("")
 
     const [requestType, setRequestType] = useState("")

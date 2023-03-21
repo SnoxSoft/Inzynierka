@@ -106,7 +106,7 @@ function Absences(){
             })
     }
 
-    //filtruj button log
+    // Filtrowanie nieobecności
     const filtrAbsences = () => {
         fetchingEmployeeAbsences()
     }

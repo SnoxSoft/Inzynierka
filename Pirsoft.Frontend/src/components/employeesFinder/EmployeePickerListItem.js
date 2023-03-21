@@ -72,5 +72,3 @@ const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, se
 }
 
 export default EmployeePickerListItem;
-
-//
