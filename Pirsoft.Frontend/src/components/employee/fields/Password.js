@@ -6,12 +6,12 @@ const Password = ({onChange, value, showHide = false, disableChange = false}) =>
 
     const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<BiHide/>);
     function changeVisibilityForPassword() {
-        const x = document.getElementById("employee-password");
-        if (x.type === "password") {
-            x.type = "text";
+        const password_component = document.getElementById("employee-password");
+        if (password_component.type === "password") {
+            password_component.type = "text";
             setChangeVisibilityIcon(<BiShow />);
         } else {
-            x.type = "password";
+            password_component.type = "password";
             setChangeVisibilityIcon(<BiHide />);
         }
     }
