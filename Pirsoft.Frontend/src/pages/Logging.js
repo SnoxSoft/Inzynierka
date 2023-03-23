@@ -10,6 +10,7 @@ import {FiSettings} from "react-icons/fi";
 import LoggingEmail from "../components/logging/LoggingEmail";
 import LoggingPassword from "../components/logging/LoggingPassword";
 import Email from "../components/employee/fields/Email";
+import {serverIp} from "../Configure";
 
 function Logging(){
     if(sessionStorage.getItem('USER') == null){
@@ -29,7 +30,7 @@ function Logging(){
 
     const logIn = () => {
         if (sessionStorage.getItem('USER') === null) {
-            fetch("http://127.0.0.1:3001/getEmployee/"+email+"/"+password)
+            fetch(serverIp+"/getEmployee/"+email+"/"+password)
                 .then((response) => {response.json()
                     .then((response) => {
                         sessionStorage.setItem('USER', response[0].id)
@@ -39,8 +40,6 @@ function Logging(){
                         sessionStorage.setItem('START', response[0].start)
 
                         window.location.reload(false);
-
-
                     });
                 })
                 .catch((err) => {

@@ -1,13 +1,13 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
+import {serverIp} from "../../../../Configure";
 
 const PositionsList = ({onChange}) => {
-
     const [positions, setPositions] = useState(Object);
 
     if (positions[0] === undefined) {
-        fetch("http://127.0.0.1:3001/getAllPositions")
+        fetch(serverIp+"/getAllPositions")
             .then((response) => response.json())
             .then((response) => {
                 response.push({ value: '', label: 'Wybierz...' })

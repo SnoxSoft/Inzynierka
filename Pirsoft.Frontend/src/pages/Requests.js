@@ -6,6 +6,7 @@ import TeamsList from "../components/employees/search/fields/TeamsList";
 import RequestsListItem from "../components/requests/RequestsListItem";
 import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
+import {serverIp} from "../Configure";
 
 function Requests(){
     document.title = "PIRSOFT: WNIOSKI PRACOWNIKOW";
@@ -59,7 +60,7 @@ function Requests(){
     // Pobranie listy wniosków
     const [employeeRequests, setEmployeeRequests] = useState(Array);
     const fetchingEmployeesRequests = () => {
-        fetch("http://127.0.0.1:3001/getEmployeesRequests/"+sessionStorage.getItem("USER"))
+        fetch(serverIp+"/getEmployeesRequests/"+sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
                     response.sort(FunctionForSortingJson("from", "descending"))
@@ -78,7 +79,7 @@ function Requests(){
 
     // Załadowanie statusów wniosków
     if(requestsStatus === undefined) {
-        fetch("http://127.0.0.1:3001/getRequestsStatus/")
+        fetch(serverIp+"/getRequestsStatus/")
             .then((response) => {response.json()
                 .then((response) => {
                     setRequestsStatus(response)
@@ -91,7 +92,7 @@ function Requests(){
 
     // Załadowanie kolorów nieobecności
     if(requestsColors === undefined) {
-        fetch("http://127.0.0.1:3001/getRequestsColors/")
+        fetch(serverIp+"/getRequestsColors/")
             .then((response) => {response.json()
                 .then((response) => {
                     setRequestsColors(response)
@@ -104,7 +105,7 @@ function Requests(){
 
     // Załadowanie typów nieobecnośći
     if(requestsTypes === undefined) {
-        fetch("http://127.0.0.1:3001/getRequestsTypes/")
+        fetch(serverIp+"/getRequestsTypes/")
             .then((response) => {response.json()
                 .then((response) => {
                     setRequestsTypes(response)

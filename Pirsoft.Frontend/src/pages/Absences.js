@@ -5,6 +5,7 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import AbsencesListItem from "../components/absences/AbsencesListItem";
 import Request from "./Request";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
+import {serverIp} from "../Configure";
 
 
 function Absences(){
@@ -50,7 +51,7 @@ function Absences(){
 
     // Załadowanie statusów nieobecnośći
     if(absencesStatus === undefined) {
-        fetch("http://127.0.0.1:3001/getAbsencesStatus/")
+        fetch(serverIp+"/getAbsencesStatus/")
             .then((response) => {response.json()
                 .then((response) => {
                     setAbsencesStatus(response)
@@ -63,7 +64,7 @@ function Absences(){
 
     // Załadowanie kolorów nieobecności
     if(absencesColors === undefined) {
-        fetch("http://127.0.0.1:3001/getAbsencesColors/")
+        fetch(serverIp+"/getAbsencesColors/")
             .then((response) => {response.json()
                 .then((response) => {
                     setAbsencesColors(response)
@@ -77,7 +78,7 @@ function Absences(){
 
     // Załadowanie typów nieobecnośći
     if(absencesTypes === undefined) {
-        fetch("http://127.0.0.1:3001/getAbsencesTypes/")
+        fetch(serverIp+"/getAbsencesTypes/")
             .then((response) => {response.json()
                 .then((response) => {
                     setAbsencesTypes(response)
@@ -94,7 +95,7 @@ function Absences(){
     const fetchingEmployeeAbsences = () => {
         // Na endpoint należy wysłać body z danymi filtrowania
         // checkodrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo
-        fetch("http://127.0.0.1:3001/getEmployeeAbsences/"+sessionStorage.getItem("USER"))
+        fetch(serverIp+"/getEmployeeAbsences/"+sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
                     response.sort(FunctionForSortingJson("from", "descending"))

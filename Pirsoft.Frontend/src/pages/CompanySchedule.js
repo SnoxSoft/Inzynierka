@@ -1,16 +1,11 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
-import {HiArrowLeft} from "react-icons/hi";
-import ScheduleListItem from "../components/schedule/ScheduleListItem";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
-import {FiLogOut} from "react-icons/fi";
-import {BiHide, BiShow} from "react-icons/bi";
 import TeamRow from "../components/companySchedule/TeamRow";
-import EmptyTeamRow from "../components/companySchedule/EmptyTeamRow";
-import EmployeeRow from "../components/companySchedule/EmployeeRow";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
+import {serverIp} from "../Configure";
 
 function CompanySchedule(){
     document.title = "PIRSOFT: Harmonogram firmowy";
@@ -26,7 +21,7 @@ function CompanySchedule(){
 
     // ładowanie raz zespołów po załądowaniu okna a nie na bieżąco
     if (teams[0] === undefined) {
-        fetch("http://127.0.0.1:3001/getAllTeams")
+        fetch(serverIp+"/getAllTeams")
             .then((response) => response.json())
             .then((response) => {
                 response.sort(FunctionForSortingJson("value", "ascending"))
@@ -43,7 +38,7 @@ function CompanySchedule(){
     const loadMonthDaysOff = (data) => {
         // ładowanie dni wolnych / wybranych / nieobecnych w wybranym miesiacu
 
-        fetch("http://127.0.0.1:3001/allCompanyMonthDays/2022-02")
+        fetch(serverIp+"/allCompanyMonthDays/2022-02")
             .then((response) => response.json())
             .then((response) => {
                 setCurrentMonthDaysOff(response)
@@ -59,7 +54,7 @@ function CompanySchedule(){
 
     // ładowanie wszystkich pracowników
     if (employees[0] === undefined) {
-        fetch("http://127.0.0.1:3001/getAllEmployees")
+        fetch(serverIp+"/getAllEmployees")
             .then((response) => response.json())
             .then((response) => {
                 response.sort(FunctionForSortingJson("lastname", "ascending"))

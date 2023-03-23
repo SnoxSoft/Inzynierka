@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import LoggingPassword from "../components/logging/LoggingPassword";
 import RemindEmail from "../components/base/remind/RemindEmail";
 import {MdOutlineArrowBackIosNew} from "react-icons/md";
 import RemindCode from "../components/base/remind/RemindCode";
+import {serverIp} from "../Configure";
 
 function Remind(){
     document.title = "PIRSOFT: Przypomnienie hasła";
@@ -35,7 +36,7 @@ function Remind(){
     const verifyCode = () => {
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@')) {
             if (code !== undefined && code.toString().length > 0) {
-                fetch("http://127.0.0.1:3001/verifyCode/"+email+"/"+code)
+                fetch(serverIp+"/verifyCode/"+email+"/"+code)
                     .then((response) => {
                         if(response.status === 200){
                             setCodeNotVerified(false)
@@ -67,7 +68,7 @@ function Remind(){
             // Tutaj do pomyślenia jakie wartosci sprawdzic
 
             if(newPassword.toString() === newRepeatPassword.toString()){
-                fetch("http://127.0.0.1:3001/changePassword/"+email+"/"+newPassword)
+                fetch(serverIp+"/changePassword/"+email+"/"+newPassword)
                     .then((response) => {
                         console.log(response.status)
                         if(response.status === 200){
@@ -95,7 +96,7 @@ function Remind(){
 
     const sendVerifyEmail = () => {
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@')) {
-            fetch("http://127.0.0.1:3001/sendVerifyCode/"+email, {
+            fetch(serverIp+"/sendVerifyCode/"+email, {
                 method: 'POST'
             })
                 .then((response) => {

@@ -1,13 +1,14 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
+import {serverIp} from "../../../../Configure";
 
 const TeamsList = ({onChange}) => {
 
     const [teams, setTeams] = useState(Object);
 
     if (teams[0] === undefined) {
-        fetch("http://127.0.0.1:3001/getAllTeams")
+        fetch(serverIp+"/getAllTeams")
             .then((response) => response.json())
             .then((response) => {
                // { value: '', label: 'Wybierz...' }
