@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsAdd/TeamMembersSkills";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import EmployeesFinder from "../EmployeesFinder";
+import {serverIp} from "../../Configure";
 
 const TeamWindow = ({id,mode, title}) => {
     const[dynamicTitle, setDynamicTitle] = useState(title)
@@ -34,7 +35,7 @@ const TeamWindow = ({id,mode, title}) => {
 
     if(mode === 'view' || mode === 'edit'){
     if (!teamDataLoaded) {
-        fetch("http://127.0.0.1:3001/getTeamData/" + id)
+        fetch(serverIp+"/getTeamData/" + id)
             .then((response) => {
                 response.json()
                     .then((response) => {

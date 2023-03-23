@@ -4,6 +4,7 @@ import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import Select from "react-select";
 import {CgClose} from "react-icons/cg";
+import {serverIp} from "../Configure";
 
 
 const Request = ({setAbsencesVisible}) =>{
@@ -58,7 +59,7 @@ const Request = ({setAbsencesVisible}) =>{
     const [approvers, setApprovers] = useState(Array);
 
     const fetchingApprovers = () => {
-        fetch("http://127.0.0.1:3001/getApprovers/"+sessionStorage.getItem("USER"))
+        fetch(serverIp+"/getApprovers/"+sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
                     setApprovers(response)

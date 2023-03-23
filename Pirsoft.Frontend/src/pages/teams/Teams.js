@@ -3,6 +3,7 @@ import FunctionForResize from "../../components/base/FunctionForResize";
 import ReusableButton from "../../components/base/ReusableButton";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
 import FunctionForSortingJson from "../../components/base/FunctionForSortingJson";
+import {serverIp} from "../../Configure";
 
 function Teams(){
     document.title = "PIRSOFT: Zespoły w firmie";
@@ -18,7 +19,7 @@ function Teams(){
 
     // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
     if (teams[0] === undefined) {
-        fetch("http://127.0.0.1:3001/getAllTeams")
+        fetch(serverIp+"/getAllTeams")
             .then((response) => response.json())
             .then((response) => {
                 response.sort(FunctionForSortingJson("value", "ascending"))
@@ -39,7 +40,7 @@ function Teams(){
 
     // Ładowanie wszystkich pracowników
     if (employees[0] === undefined) {
-        fetch("http://127.0.0.1:3001/getAllEmployees")
+        fetch(serverIp+"/getAllEmployees")
             .then((response) => response.json())
             .then((response) => {
                 response.sort(FunctionForSortingJson("lastname", "ascending"))

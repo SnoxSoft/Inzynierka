@@ -6,6 +6,7 @@ import SkillsList from "../components/employeesFinder/SkillsList";
 import SkillsPicker from "../components/employeesFinder/SkillsPicker";
 import EmployeePickerListItem from "../components/employeesFinder/EmployeePickerListItem";
 import FunctionForResize from "../components/base/FunctionForResize";
+import {serverIp} from "../Configure";
 
 
 const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
@@ -30,7 +31,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     const [swapOption, setSwapOption] = useState(false)
 
     if (skills[0] === undefined) {
-        fetch("http://127.0.0.1:3001/getAllSkills")
+        fetch(serverIp+"/getAllSkills")
             .then((response) => response.json())
             .then((response) => {
                 setSkills(response)
@@ -47,7 +48,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     function loadAllEmployeesByFilter(){
         setEmployeePickerDataLoaded(false)
 
-        fetch("http://127.0.0.1:3001/getAllEmployeesForPicked")
+        fetch(serverIp+"/getAllEmployeesForPicked")
             .then((response) => response.json())
             .then((response) => {
                 let employeeLoad = []

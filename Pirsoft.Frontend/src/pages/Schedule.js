@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
-import {HiArrowLeft} from "react-icons/hi";
 import ScheduleListItem from "../components/schedule/ScheduleListItem";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
+import {serverIp} from "../Configure";
 
 function Schedule(){
     document.title = "PIRSOFT: Harmonogram osobisty";
 
     // Ładowanie dni wolnych / wybranych / nieobecnych
     let daysOff = [Object]
-    fetch("http://127.0.0.1:3001/monthDays/"+sessionStorage.getItem('USER'))
+    fetch(serverIp+"/monthDays/"+sessionStorage.getItem('USER'))
         .then((response) => {response.json()
             .then((response) => {
                 daysOff = response
