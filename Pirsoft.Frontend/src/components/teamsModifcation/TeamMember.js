@@ -1,6 +1,7 @@
 import {HiPlus} from "react-icons/hi";
 import ReusableButton from "../base/ReusableButton";
 import {useState} from "react";
+import TeamEmployeeEditButton from "./TeamEmployeeEditButtons";
 
 const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmployeesFinderShowing,
                         swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee}) => {
@@ -30,7 +31,6 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
 
         let swapTeamsDataWithoutCurrentEmployee = []
         swapTeamsBetweenTheseEmployee.forEach((e) => {
-            console.log(e)
             if (e[0].id !== value.id) {
                 swapTeamsDataWithoutCurrentEmployee.push(e)
             } else {
@@ -51,18 +51,22 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
                 <input id={"dhbjhbs"} className={"grow border text-black rounded-md text-center h-6 w-96 hover:cursor-pointer hover:bg-weekend"} type={"text"}
                        value={value.firstandlastname} disabled={true}>
                 </input>
-                {showOptions ?
-                    <div className={"flex flex-row gap-4 place-content-center"}>
-                        <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
-                        onClick={() => setValuesForPickerAndOpenIt(value.id)}/>
-                        {/*<ReusableButton value={"WYMIEŃ"} formatting={"h-6 w-20 border-2 border-gray-400"}*/}
-                        {/*                onClick={() => setValuesForPickerAndOpenIt(value.id,"Exchange")}/>*/}
-                        <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
-                            onClick={() => removeEmployeeFromList()}/>
-                    </div>
-                    :
-                    <></>
-                }
+                {/* zostawiam ten kawałek kodu w razie gdyby coś nie działało jak należy*/}
+                {/*{showOptions ?*/}
+                {/*    <div className={"flex flex-row gap-4 place-content-center"}>*/}
+                {/*        <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}*/}
+                {/*        onClick={() => setValuesForPickerAndOpenIt(value.id)}/>*/}
+                {/*        <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}*/}
+                {/*            onClick={() => removeEmployeeFromList()}/>*/}
+                {/*    </div>*/}
+                {/*    :*/}
+                {/*    <></>*/}
+                {/*}*/}
+                <TeamEmployeeEditButton showOptions={showOptions}
+                                        changeMethod={setValuesForPickerAndOpenIt}
+                                        changeValue={value.id}
+                                        deleteMethod={removeEmployeeFromList}
+                                        />
             </div>
         )
 

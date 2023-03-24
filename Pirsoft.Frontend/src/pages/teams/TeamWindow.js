@@ -1,10 +1,10 @@
 import ReusableButton from "../../components/base/ReusableButton";
-import TeamName from "../../components/teamsAdd/TeamName";
-import TeamMembers from "../../components/teamsAdd/TeamMembers";
-import TeamLeader from "../../components/teamsAdd/TeamLeader";
+import TeamName from "../../components/teamsModifcation/TeamName";
+import TeamMembers from "../../components/teamsModifcation/TeamMembers";
+import TeamLeader from "../../components/teamsModifcation/TeamLeader";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import TeamMembersSkills from "../../components/teamsAdd/TeamMembersSkills";
+import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import EmployeesFinder from "../EmployeesFinder";
 import {serverIp} from "../../Configure";
