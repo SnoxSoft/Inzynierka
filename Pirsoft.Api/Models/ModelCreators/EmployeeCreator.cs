@@ -1,16 +1,14 @@
 ﻿using Pirsoft.Api.Enums;
-using Pirsoft.Api.Factory;
-using Pirsoft.Api.Interfaces;
 
-namespace Pirsoft.Api.Models
+namespace Pirsoft.Api.Models.ModelCreators
 {
-    public class EmployeeCreator : Creator
+    public class EmployeeCreator : ModelCreatorFactoryBase
     {
         private readonly string _firstName;
         private readonly string _lastName;
         private readonly string _email;
         private readonly string _password;
-        private readonly AccountType _accountType;
+        private readonly EAccountType _accountType;
         private readonly string _pesel;
         private readonly string _bankAccountNumber;
         private readonly int _departmentId;
@@ -20,10 +18,10 @@ namespace Pirsoft.Api.Models
         private readonly bool _passwordReset;
         private readonly DateTime _dateOfBirth;
         private readonly double _grossSalary;
-        private readonly PositionType _positionType;
-        
-        public EmployeeCreator(string firstName, string lastName, string email, string password, AccountType accountType, string pesel, string bankAccountNumber,
-            int departmentId, int seniorityInMonths, DateTime employmentStartDate, bool isActive, bool passwordReset, DateTime dateOfBirth, double grossSalary, PositionType positionType)
+        private readonly EPositionType _positionType;
+
+        public EmployeeCreator(string firstName, string lastName, string email, string password, EAccountType accountType, string pesel, string bankAccountNumber,
+            int departmentId, int seniorityInMonths, DateTime employmentStartDate, bool isActive, bool passwordReset, DateTime dateOfBirth, double grossSalary, EPositionType positionType)
         {
             _firstName = firstName;
             _lastName = lastName;
@@ -41,24 +39,24 @@ namespace Pirsoft.Api.Models
             _grossSalary = grossSalary;
             _positionType = positionType;
         }
-        
-        public override IModel CreateModel() => new EmployeeModel
+
+        public override IApiModel CreateModel() => new EmployeeModel
         {
             FirstName = _firstName,
             LastName = _lastName,
             Email = _email,
             Password = _password,
-            AccountType = _accountType,
+            AccountType = (AccountTypeModel)new AccountTypeCreator(_accountType).CreateModel(), 
             Pesel = _pesel,
             BankAccountNumber = _bankAccountNumber,
             DepartmentId = _departmentId,
             SeniorityInMonths = _seniorityInMonths,
-            EmploymentStartDate = _employmentStartDate,
-            IsActive = _isActive,
-            PasswordReset = _passwordReset,
-            DateOfBirth = _dateOfBirth,
+            EmploymentStartDate = DateOnly.FromDateTime(_employmentStartDate),
+            IsActive = Convert.ToSByte(_isActive),
+            PasswordReset = Convert.ToSByte(_passwordReset),
+            DateOfBirth = DateOnly.FromDateTime(_dateOfBirth),
             GrossSalary = _grossSalary,
-            PositionType = _positionType
+            PositionType = (PositionTypeModel)new PositionTypeCreator(_positionType).CreateModel(),
         };
     }
 }
