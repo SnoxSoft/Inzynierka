@@ -13,7 +13,9 @@ module.exports = {
                 'sick' : '#41abd9',
                 'dayoff' : '#4c8e41',
                 'workday' : '#ffffff',
-                'dayoffmonth' : '#5f5f5f'
+                'dayoffmonth' : '#5f5f5f',
+
+                'rating' : '#F9F01E',
 
                 },
             },
