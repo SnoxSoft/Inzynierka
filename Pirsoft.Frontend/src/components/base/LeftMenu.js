@@ -6,13 +6,14 @@ function LeftMenu(){
 
             {sessionStorage.getItem('USER') ?
                 <>
-            <MenuButton link={"/employees"} value={"PRACOWNICY"}/>
-            <MenuButton link={'/employee/-1'} value={"REJESTRACJA"}/>
-            <MenuButton link={"/schedule"} value={"HARMONOGRAM OSOBISTY"}/>
-            <MenuButton link={"/company-schedule"} value={"HARMONOGRAM FIRMY"}/>
-            <MenuButton link={"/teams"} value={"ZESPOŁY W FIRMIE"}/>
-            <MenuButton link={"/absences"} value={"MOJE NIEOBECNOSCI"}/>
-            <MenuButton link={"/requests"} value={"WNIOSKI PRACOWNIKOW"}/>
+            <MenuButton link={"/employees"} value={"Pracownicy"}/>
+            <MenuButton link={'/employee/-1'} value={"Rejestracja"}/>
+            <MenuButton link={"/schedule"} value={"Harmonogram osobisty"}/>
+            <MenuButton link={"/company-schedule"} value={"Harmonogram firmy"}/>
+            <MenuButton link={"/teams"} value={"Zespoły w firmie"}/>
+            <MenuButton link={"/absences"} value={"Moje nieobecności"}/>
+            <MenuButton link={"/requests"} value={"Wnioski pracowników"}/>
+            <MenuButton link={"/grades"} value={"Oceny kwartalne"}/>
                     </>
                 :
                 <></>}
