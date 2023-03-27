@@ -31,25 +31,30 @@ function RequestsFilter({
             </div>
         </div>
         <div className={"flex items-center justify-center gap-4"}>
-            <div>
-                <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckOczekujace(e.target.checked)}/>
-                <label htmlFor="oczekujace">OCZEKUJĄCE</label>
+            <div className={"flex flex-col"}>
+                <label>OCZEKUJĄCE</label>
+                <input type="checkbox" defaultChecked={true}
+                       onChange={(e) => setCheckOczekujace(e.target.checked)}/>
             </div>
-            <div>
-                <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
-                <label htmlFor="zatwierdzone">ZATWIERDZONE</label>
+            <div className={"flex flex-col"}>
+                <label>ZATWIERDZONE</label>
+                <input type="checkbox" defaultChecked={true}
+                       onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
             </div>
-            <div>
-                <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckOdrzucone(e.target.checked)}/>
-                <label htmlFor="odrzucone">ODRZUCONE</label>
+            <div className={"flex flex-col"}>
+                <label>ODRZUCONE</label>
+                <input type="checkbox" defaultChecked={true}
+                       onChange={(e) => setCheckOdrzucone(e.target.checked)}/>
             </div>
-            <div>
-                <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckCreatedByCurrent(e.target.checked)}/>
-                <label htmlFor="current">WYSTAWIONE PREZE MNIE</label>
+            <div className={"flex flex-col"}>
+                <label>WYSTAWIONE PREZE MNIE</label>
+                <input type="checkbox" defaultChecked={true}
+                       onChange={(e) => setCheckCreatedByCurrent(e.target.checked)}/>
             </div>
-            <div>
-                <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckNotCreatedByCurrent(e.target.checked)}/>
-                <label htmlFor="notcurrent">NIE WYSTAWIONE PREZE MNIE</label>
+            <div className={"flex flex-col"}>
+                <label>NIE WYSTAWIONE PREZE MNIE</label>
+                <input type="checkbox" defaultChecked={true}
+                       onChange={(e) => setCheckNotCreatedByCurrent(e.target.checked)}/>
             </div>
         </div>
         <div className={"flex justify-center"}>
