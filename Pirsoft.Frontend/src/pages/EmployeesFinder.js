@@ -151,7 +151,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                 }
 
                 detailsOne.push(
-                    <div key={"skill"+availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
+                    <div id={"skill"+availableSkill} key={"skill"+availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
                         <p>{skills[availableSkill]}</p>
                         <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
                     </div>
@@ -166,17 +166,18 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
         const elements = element.getElementsByTagName("div");
 
         let skillsList = [];
-        try {
-            for(const ele in elements){
+
+        for(const ele in elements){
+            if(elements[ele].id !== undefined && elements[ele].id.includes("skill")) {
                 const p = elements[ele].getElementsByTagName("p")[0];
                 const input = elements[ele].getElementsByTagName("input")[0];
 
-                if(p !== undefined && input !== undefined && input.checked){
-                    skillsList.push(p.textContent+"");
+                if (p !== undefined && input !== undefined && input.checked) {
+                    skillsList.push(p.textContent + "");
                 }
             }
-        }catch (e) {
         }
+
         const myObjStr = JSON.stringify(skillsList);
 
         setSkillsPicked(skillsList)
