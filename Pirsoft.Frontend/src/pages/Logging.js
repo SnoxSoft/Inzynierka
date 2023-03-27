@@ -16,7 +16,9 @@ function Logging(){
     if(sessionStorage.getItem('USER') == null){
         document.title = "PIRSOFT: Okno logowania";
     }
-    else document.title = "PIRSOFT: Ekran powitalny";
+    else {
+        document.title = "PIRSOFT: Ekran powitalny";
+    }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
