@@ -5,7 +5,7 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import AbsencesListItem from "../components/absences/AbsencesListItem";
 import Request from "./Request";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
-import {serverIp} from "../Configure";
+import {serverIp} from "../GlobalAppConfig";
 
 
 function Absences(){

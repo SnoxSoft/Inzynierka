@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import Select from "react-select";
-import {serverIp} from "../../Configure";
+import {serverIp} from "../../GlobalAppConfig";
 import GradeListItem from "../../components/grades/GradeListItem";
 
 function ReceivedGrades({heightFromParent}){

@@ -6,7 +6,7 @@ import TeamsList from "../components/employees/search/fields/TeamsList";
 import RequestsListItem from "../components/requests/RequestsListItem";
 import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
-import {serverIp} from "../Configure";
+import {serverIp} from "../GlobalAppConfig";
 import RequestsFilter from "../components/requests/RequestsFilter";
 
 function Requests(){

@@ -7,7 +7,7 @@ import FirstnameAndLastname from "../components/employees/search/fields/Firstnam
 import {useEffect, useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
 import SortingButton from "../components/employees/search/fields/SortingButton";
-import {serverIp} from "../Configure";
+import {serverIp} from "../GlobalAppConfig";
 
 function Employees(){
     document.title = 'PIRSOFT: Lista wszystkich pracowników'
