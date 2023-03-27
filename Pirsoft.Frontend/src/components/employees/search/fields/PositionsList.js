@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
-import {serverIp} from "../../../../Configure";
+import {serverIp} from "../../../../GlobalAppConfig";
 
 const PositionsList = ({onChange}) => {
     const [positions, setPositions] = useState(Object);

@@ -3,7 +3,7 @@ import FunctionForResize from "../../components/base/FunctionForResize";
 import ReusableButton from "../../components/base/ReusableButton";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
 import FunctionForSortingJson from "../../components/base/FunctionForSortingJson";
-import {serverIp} from "../../Configure";
+import {serverIp} from "../../GlobalAppConfig";
 
 function Teams(){
     document.title = "PIRSOFT: Zespoły w firmie";

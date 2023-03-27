@@ -10,7 +10,7 @@ import {FiSettings} from "react-icons/fi";
 import LoggingEmail from "../components/logging/LoggingEmail";
 import LoggingPassword from "../components/logging/LoggingPassword";
 import Email from "../components/employee/fields/Email";
-import {serverIp} from "../Configure";
+import {serverIp} from "../GlobalAppConfig";
 
 function Logging(){
     if(sessionStorage.getItem('USER') == null){

@@ -6,7 +6,7 @@ import SkillsList from "../components/employeesFinder/SkillsList";
 import SkillsPicker from "../components/employeesFinder/SkillsPicker";
 import EmployeePickerListItem from "../components/employeesFinder/EmployeePickerListItem";
 import FunctionForResize from "../components/base/FunctionForResize";
-import {serverIp} from "../Configure";
+import {serverIp} from "../GlobalAppConfig";
 
 
 const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,

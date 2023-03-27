@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import EmployeesFinder from "../EmployeesFinder";
-import {serverIp} from "../../Configure";
+import {serverIp} from "../../GlobalAppConfig";
 
 const TeamWindow = ({id,mode, title}) => {
     const[dynamicTitle, setDynamicTitle] = useState(title)

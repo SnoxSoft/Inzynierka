@@ -4,7 +4,7 @@ import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import Select from "react-select";
 import {CgClose} from "react-icons/cg";
-import {serverIp} from "../Configure";
+import {serverIp} from "../GlobalAppConfig";
 
 
 const Request = ({setAbsencesVisible}) =>{

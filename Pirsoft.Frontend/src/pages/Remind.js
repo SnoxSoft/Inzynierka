@@ -6,7 +6,7 @@ import LoggingPassword from "../components/logging/LoggingPassword";
 import RemindEmail from "../components/base/remind/RemindEmail";
 import {MdOutlineArrowBackIosNew} from "react-icons/md";
 import RemindCode from "../components/base/remind/RemindCode";
-import {serverIp} from "../Configure";
+import {serverIp} from "../GlobalAppConfig";
 
 function Remind(){
     document.title = "PIRSOFT: Przypomnienie hasła";

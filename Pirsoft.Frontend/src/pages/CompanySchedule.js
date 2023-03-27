@@ -5,7 +5,7 @@ import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md
 import dayjs from "dayjs";
 import TeamRow from "../components/companySchedule/TeamRow";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
-import {serverIp} from "../Configure";
+import {serverIp} from "../GlobalAppConfig";
 
 function CompanySchedule(){
     document.title = "PIRSOFT: Harmonogram firmowy";
