@@ -165,12 +165,19 @@ function Absences(){
                 </div>
                 <div className={"flex justify-center"}>
                     <div className={"gap-2 flex items-center justify-center"}>
-                        <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckOczekujace(e.target.checked)}/>
-                        <label htmlFor="oczekujace">OCZEKUJĄCE</label>
-                        <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
-                        <label htmlFor="zatwierdzone">ZATWIERDZONE</label>
-                        <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckodrzucone(e.target.checked)}/>
-                        <label htmlFor="odrzucone">ODRZUCONE</label>
+                        <div className={"flex flex-col"}>
+                            <label>OCZEKUJĄCE</label>
+                            <input type="checkbox" defaultChecked={true}
+                                   onChange={(e) => setCheckOczekujace(e.target.checked)}/>
+                        </div>
+                        <div className={"flex flex-col"}>
+                            <label>ZATWIERDZONE</label>
+                            <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
+                        </div>
+                        <div className={"flex flex-col"}>
+                            <label>ODRZUCONE</label>
+                            <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckodrzucone(e.target.checked)}/>
+                        </div>
                     </div>
                 </div>
                 <div className={"flex justify-center"}>
