@@ -69,10 +69,7 @@ function CompanySchedule(){
     const [allTeamsAreLoadedInDivs, setAllTeamsAreLoadedInDivs] = useState(false)
 
     const [pickedMonthText, setPickedMonth] = useState('')
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-    }
+
     const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
         "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
     ];
@@ -123,10 +120,15 @@ function CompanySchedule(){
         setAllTeamsAreLoadedInDivs(false)
         setMonthDaysOffLoaded(false)
 
+        const optionsForFormatDate = {
+            year: "numeric",
+            month: "2-digit",
+        }
+
         const days = loadWholeMonthData({
             text: monthNames[today.getMonth()].toUpperCase()+" "
                 +today.getFullYear(),
-            date: today.toLocaleDateString("sv", options)})
+            date: today.toLocaleDateString("sv", optionsForFormatDate)})
 
         let allTeamsLoad = []
 
