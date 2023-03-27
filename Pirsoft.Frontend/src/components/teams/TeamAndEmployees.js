@@ -17,7 +17,7 @@ const TeamAndEmployees = ({row, team, employees}) => {
             row = row + 1
             createTeamsComponent.push(
                 employeesVisible ?
-                <EmployeeRow employee={employee} row={row}/> :
+                <EmployeeRow employee={employee} row={row} team={team.value}/> :
                     <></>
             )
 

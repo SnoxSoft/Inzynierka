@@ -61,6 +61,8 @@ function Requests(){
     // Pobranie listy wniosków
     const [employeeRequests, setEmployeeRequests] = useState(Array);
     const fetchingEmployeesRequests = () => {
+        // Tutaj do dodanie do body całą
+
         fetch(serverIp+"/getEmployeesRequests/"+sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
