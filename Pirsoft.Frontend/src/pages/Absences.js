@@ -5,7 +5,7 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import AbsencesListItem from "../components/absences/AbsencesListItem";
 import Request from "./Request";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
-import {serverIp} from "../GlobalAppConfig";
+import {labelFilter, serverIp} from "../GlobalAppConfig";
 
 
 function Absences(){
@@ -181,7 +181,7 @@ function Absences(){
                     </div>
                 </div>
                 <div className={"flex justify-center"}>
-                    <ReusableButton value={"FILTRUJ"} formatting={"h-7 border-2 border-workday"} onClick={() => filtrAbsences()}/>
+                    <ReusableButton value={labelFilter} formatting={"h-7 border-2 border-workday"} onClick={() => filtrAbsences()}/>
                 </div>
             </div>
             <div className={"text-start ml-4 mr-8 items-center h-6 bg-brown-menu rounded-md flex text-workday border-2 border-workday font-bold"}>

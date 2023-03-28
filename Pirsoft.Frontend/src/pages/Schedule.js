@@ -4,7 +4,7 @@ import ReusableButton from "../components/base/ReusableButton";
 import ScheduleListItem from "../components/schedule/ScheduleListItem";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
-import {serverIp} from "../GlobalAppConfig";
+import {labelFilter, serverIp} from "../GlobalAppConfig";
 
 function Schedule(){
     document.title = "PIRSOFT: Harmonogram osobisty";
@@ -447,7 +447,7 @@ function Schedule(){
                                    } }
                             />
                         </div>
-                        <div className={"grow"}><ReusableButton value={"FILTRUJ"}
+                        <div className={"grow"}><ReusableButton value={labelFilter}
                                                                 onClick={() => filtrSchedule()}/></div>
                     </div>
                 </div>

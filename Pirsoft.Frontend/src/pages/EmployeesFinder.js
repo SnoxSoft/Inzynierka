@@ -6,7 +6,7 @@ import SkillsList from "../components/employeesFinder/SkillsList";
 import SkillsPicker from "../components/employeesFinder/SkillsPicker";
 import EmployeePickerListItem from "../components/employeesFinder/EmployeePickerListItem";
 import FunctionForResize from "../components/base/FunctionForResize";
-import {serverIp} from "../GlobalAppConfig";
+import {labelFind, serverIp} from "../GlobalAppConfig";
 
 
 const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
@@ -207,7 +207,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                                 <SkillsList skillList={skillsPicked}/>
                             </div>
 
-                            <ReusableButton value={"SZUKAJ"}
+                            <ReusableButton value={labelFind}
                                 onClick={() => loadAllEmployeesByFilter()}/>
                             <SortingButton setOrder={setOrder}/>
                         </div>

@@ -2,6 +2,7 @@ import TeamsList from "../employees/search/fields/TeamsList";
 import Calendar from "../absences/Calendar";
 import ReusableButton from "../base/ReusableButton";
 import React from "react";
+import {labelFilter} from "../../GlobalAppConfig";
 
 function RequestsFilter({
                             handleNameChange, userName,
@@ -61,7 +62,7 @@ function RequestsFilter({
             <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
         </div>
         <div className={"flex justify-center"}>
-            <ReusableButton value={"FILTRUJ"} formatting={"h-7 border-2 border-workday"} onClick={() => filtrRequests()}/>
+            <ReusableButton value={labelFilter} formatting={"h-7 border-2 border-workday"} onClick={() => filtrRequests()}/>
         </div>
     </div>
     )
