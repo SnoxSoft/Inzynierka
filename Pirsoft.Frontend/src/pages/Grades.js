@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
 import ReceivedGrades from "./grades/ReceivedGrades";
+import GivenGrades from "./grades/GivenGrades";
 
 const Request = () =>{
     document.title = "PIRSOFT: Oceny kwartalne";
@@ -45,7 +46,7 @@ const Request = () =>{
                     style={{height:wantedHeightsForList-18}}>
                         <div className="flex-auto">
                                 <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                                    Brak
+                                    <GivenGrades heightFromParent={wantedHeightsForList-18} />
                                 </div>
                                 <div className={openTab === 2 ? "block" : "hidden"} id="link2">
                                     <ReceivedGrades heightFromParent={wantedHeightsForList-18} />

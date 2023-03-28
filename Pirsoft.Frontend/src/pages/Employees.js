@@ -7,7 +7,7 @@ import FirstnameAndLastname from "../components/employees/search/fields/Firstnam
 import {useEffect, useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
 import SortingButton from "../components/employees/search/fields/SortingButton";
-import {serverIp} from "../GlobalAppConfig";
+import {labelFind, serverIp} from "../GlobalAppConfig";
 
 function Employees(){
     document.title = 'PIRSOFT: Lista wszystkich pracowników'
@@ -93,7 +93,7 @@ function Employees(){
                 </div>
                 <div>
                     <SortingButton setOrder={setOrder}/>
-                    <ReusableButton value={"SZUKAJ"} onClick={findEmployees}/>
+                    <ReusableButton value={labelFind} onClick={findEmployees}/>
                 </div>
             </div>
             <hr/>

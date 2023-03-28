@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
-import {serverIp} from "../../../../GlobalAppConfig";
+import {serverIp, teamAdditionalRow} from "../../../../GlobalAppConfig";
 
 const TeamsList = ({onChange}) => {
 
@@ -11,8 +11,7 @@ const TeamsList = ({onChange}) => {
         fetch(serverIp+"/getAllTeams")
             .then((response) => response.json())
             .then((response) => {
-               // { value: '', label: 'Wybierz...' }
-                response.push({ value: '', label: 'Wybierz...' })
+                response.push({ value: '', label: teamAdditionalRow })
                 response.sort(FunctionForSortingJson("value", "ascending"))
                 setTeams(response)
             })
@@ -22,7 +21,7 @@ const TeamsList = ({onChange}) => {
     }
 
     return <Select className={"w-96 text-black"}
-                   defaultValue={{ value: '', label: 'Wybierz...' }}
+                   defaultValue={{ value: '', label: teamAdditionalRow }}
                    options={teams}
                    onChange={(e) => onChange(e.value)}/>
 

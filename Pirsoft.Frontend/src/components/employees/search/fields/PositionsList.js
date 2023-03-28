@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
-import {serverIp} from "../../../../GlobalAppConfig";
+import {positionAdditionalRow, serverIp} from "../../../../GlobalAppConfig";
 
 const PositionsList = ({onChange}) => {
     const [positions, setPositions] = useState(Object);
@@ -10,7 +10,7 @@ const PositionsList = ({onChange}) => {
         fetch(serverIp+"/getAllPositions")
             .then((response) => response.json())
             .then((response) => {
-                response.push({ value: '', label: 'Wybierz...' })
+                response.push({ value: '', label: positionAdditionalRow })
                 response.sort(FunctionForSortingJson("value", "ascending"))
                 setPositions(response)
             })
@@ -20,7 +20,7 @@ const PositionsList = ({onChange}) => {
     }
 
     return <Select className={"w-96 text-black"}
-                   defaultValue={{ value: '', label: 'Wybierz...' }}
+                   defaultValue={{ value: '', label: positionAdditionalRow }}
                    options={positions}
                    onChange={(e) => onChange(e.value)}/>
 
