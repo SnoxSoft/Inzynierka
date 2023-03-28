@@ -3,7 +3,7 @@ import Select from "react-select";
 import {labelFind, serverIp, yearAdditionalRow} from "../../GlobalAppConfig";
 import GradeListItem from "../../components/grades/GradeListItem";
 import TeamsList from "../../components/employees/search/fields/TeamsList";
-import FirstNameAndLastName from "./FirstNameAndLastName";
+import FirstNameAndLastName from "../../components/grades/FirstNameAndLastName";
 import ReusableButton from "../../components/base/ReusableButton";
 
 function GivenGrades({heightFromParent}){
@@ -62,7 +62,7 @@ function GivenGrades({heightFromParent}){
         }
         setLoadedGrades(temporaryGradesList)
     }
-    
+
     useEffect(() => {
         FunctionForResizeGrades()
     }, [pickedYear, heightFromParent]);
