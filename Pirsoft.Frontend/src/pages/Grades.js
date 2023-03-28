@@ -3,6 +3,7 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
 import ReceivedGrades from "./grades/ReceivedGrades";
 import GivenGrades from "./grades/GivenGrades";
+import GiveGradesWindow from "./grades/GiveGradesWindow";
 
 const Request = () =>{
     document.title = "PIRSOFT: Oceny kwartalne";
@@ -13,11 +14,14 @@ const Request = () =>{
     }, []);
 
     const [openTab, setOpenTab] = React.useState(1);
+    const [gradesVisible, setGradesVisible] = useState(true)
 
     return(
-        <div id={"grades"}
-             className={"every-page-on-scroll flex text-center flex-wrap text-workday p-4 w-full"}
-             style={{minWidth: 800}}>
+        <>
+            {gradesVisible ?
+            <div id={"grades"}
+                 className={"every-page-on-scroll flex text-center flex-wrap text-workday p-4 w-full"}
+                 style={{minWidth: 800}}>
                 <div className="w-full">
                     <ul className="flex list-none flex-wrap flex-row">
                         <li className="flex-auto text-center">
@@ -40,7 +44,7 @@ const Request = () =>{
                                 Otrzymane oceny
                             </a>
                         </li>
-                        <ReusableButton value={"Wystaw ocenę"}/>
+                        <ReusableButton value={"Wystaw ocenę"} onClick={setGradesVisible(false)}/>
                     </ul>
                     <div id={"tabs-component"} className={"flex flex-col bg-brown-menu rounded-b-md rounded-tr-md border-2 border-workday"}
                     style={{height:wantedHeightsForList-18}}>
@@ -54,8 +58,11 @@ const Request = () =>{
                         </div>
                     </div>
                 </div>
-
-        </div>
+            </div>
+                :
+                <GiveGradesWindow setGradesVisible={setGradesVisible}/>
+            }
+        </>
     )
 }
 export default Request;
