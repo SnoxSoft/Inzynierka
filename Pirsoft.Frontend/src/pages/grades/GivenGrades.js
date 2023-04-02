@@ -6,7 +6,7 @@ import TeamsList from "../../components/employees/search/fields/TeamsList";
 import FirstNameAndLastName from "../../components/grades/FirstNameAndLastName";
 import ReusableButton from "../../components/base/ReusableButton";
 
-function GivenGrades({heightFromParent}){
+function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGradesVisible}){
     document.title = 'PIRSOFT: Oceny pracowników'
 
     const[pickedYear, setPickedYear] = useState();
@@ -43,7 +43,7 @@ function GivenGrades({heightFromParent}){
     // Metoda pobierająca listę ocen z bieżącego roku
     const getGrades = () => {
         // Pobranie listy ocen na podstawie wybranego roku
-        fetch(serverIp+"/getGrades/"+sessionStorage.getItem('USER')+"/"+pickedYear)
+        fetch(serverIp+"/getGivenGrades/"+sessionStorage.getItem('USER')+"/"+pickedYear)
             .then((response) => {response.json()
                 .then((response) => {
                     setCurrentGradesList(response)
@@ -57,7 +57,10 @@ function GivenGrades({heightFromParent}){
         if(currentGradesList !== undefined) {
             for (const i of currentGradesList) {
                 temporaryGradesList.push(
-                    <GradeListItem grade={i}/>)
+                    <GradeListItem grade={i}
+                       setGradeMode={setGradeMode}
+                       setPickedGradeData={setPickedGradeData}
+                       setGradesVisible={setGradesVisible}/>)
             }
         }
         setLoadedGrades(temporaryGradesList)

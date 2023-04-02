@@ -14,7 +14,7 @@ const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, se
             if(methodToUse === 'leader'){
                 setPickedEmployeeData({id: employee.id, firstandlastname: employee.firstname + ' ' + employee.lastname})
             }
-            if(methodToUse === 'employee'){
+            if(methodToUse === 'employee' || methodToUse === 'grade'){
                 setPickedEmployeeData({id: employee.id, firstandlastname: employee.firstname + ' ' + employee.lastname, skills: employee.skills})
             }
         }
@@ -66,8 +66,6 @@ const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, se
                         {skillList}
                     </div>
                 </div>
-
-
             </div>
 }
 

@@ -12,8 +12,11 @@ import {labelFind, serverIp} from "../GlobalAppConfig";
 const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                              methodToUse, isSwapPossible, idOfCurrentPickedEmployee, multipleChoice,
                          leaderData, setLeaderData, employeeData, setEmployeeData,
-                             swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee}) => {
-    setTitle("PIRSOFT: Wyszukiwarka pracowników")
+                             swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee,
+                             setPickedPersonId,
+                             setPickedPersonName}) => {
+
+    document.title = "PIRSOFT: Wyszukiwarka pracowników"
 
     const [pickedEmployeeData, setPickedEmployeeData] = useState([]);
 
@@ -56,7 +59,9 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                 response.forEach((e) => {
                     employeeLoad.push(
                         <EmployeePickerListItem employee={e}
-                          pickOneOrMore={(methodToUse === 'employee' && isSwapPossible) || methodToUse === 'leader'}
+                          pickOneOrMore={(methodToUse === 'employee' && isSwapPossible)
+                              || methodToUse === 'leader'
+                              || methodToUse === 'grade'}
                           pickedEmployeeData={pickedEmployeeData} setPickedEmployeeData={setPickedEmployeeData}
                           methodToUse={methodToUse}
                         />
@@ -73,6 +78,11 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
 
     function finderAcceptChanges(){
         if(pickedEmployeeData.length !== 0) {
+            if(methodToUse === 'grade'){
+                setPickedPersonId(pickedEmployeeData.id)
+                setPickedPersonName(pickedEmployeeData.firstandlastname)
+                setEmployeesFinderShowing(false)
+            }
             if (methodToUse === 'leader') {
                 setLeaderData(pickedEmployeeData)
                 setEmployeesFinderShowing(false)
@@ -203,8 +213,13 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                         <div className={"flex flex-row place-items-center gap-2"}>
                             <div className={"flex flex-col place-self-start m-2 gap-2"}>
                                 <FirstnameAndLastname  className={""} onChange={setFirstnameAndLastname}/>
-                                <SkillsPicker setSkills={setSkillsPicked} setSkillsNotShows={setSkillsNotShows}/>
-                                <SkillsList skillList={skillsPicked}/>
+                                {methodToUse !== 'grade' ?
+                                    <>
+                                        <SkillsPicker setSkills={setSkillsPicked} setSkillsNotShows={setSkillsNotShows}/>
+                                        <SkillsList skillList={skillsPicked}/>
+                                    </>:
+                                    <></>
+                                }
                             </div>
 
                             <ReusableButton value={labelFind}
@@ -226,9 +241,13 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                             setEmployeesFinderShowing(false)
                         }}/>
                         <div className={"flex flex-row gap-2 place-items-center "}>
-                            <div className={"flex text-end"}>Wymień aktualnego i wybranego pracownika pomiędzy zespołami</div>
-                            <input type={"checkbox"} className={"w-6 h-6"} disabled={!isSwapPossible} onChange={(e) => setSwapOption(e.target.checked)}/>
+                            {methodToUse !== 'grade' ?
+                                <>
+                                    <div className={"flex text-end"}>Wymień aktualnego i wybranego pracownika pomiędzy zespołami</div>
+                                    <input type={"checkbox"} className={"w-6 h-6"} disabled={!isSwapPossible} onChange={(e) => setSwapOption(e.target.checked)}/>
+                                </> :
                             <ReusableButton value={"ZATWIERDŹ"} onClick={() => finderAcceptChanges()}/>
+                            }
                         </div>
                     </div>
                 </div> :
