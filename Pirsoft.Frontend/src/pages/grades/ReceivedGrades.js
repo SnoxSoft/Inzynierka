@@ -4,7 +4,7 @@ import {labelFind, serverIp, yearAdditionalRow} from "../../GlobalAppConfig";
 import GradeListItem from "../../components/grades/GradeListItem";
 import ReusableButton from "../../components/base/ReusableButton";
 
-function ReceivedGrades({heightFromParent}){
+function ReceivedGrades({heightFromParent, setGradeMode, setPickedGradeData, setGradesVisible}){
     document.title = 'PIRSOFT: Moje oceny kwartalne'
 
     const[pickedYear, setPickedYear] = useState();
@@ -55,7 +55,10 @@ function ReceivedGrades({heightFromParent}){
         if(currentGradesList !== undefined) {
             for (const i of currentGradesList) {
                 temporaryGradesList.push(
-                    <GradeListItem grade={i}/>)
+                    <GradeListItem grade={i}
+                       setGradeMode={setGradeMode}
+                       setPickedGradeData={setPickedGradeData}
+                       setGradesVisible={setGradesVisible}/>)
             }
         }
         setLoadedGrades(temporaryGradesList)
@@ -74,7 +77,13 @@ function ReceivedGrades({heightFromParent}){
                         defaultValue={{ value: 0, label: yearAdditionalRow }}
                         options={years}
                         onChange={(e) => setPickedYear(e.value)}/>
-                <ReusableButton value={labelFind} onClick={getGrades} />
+                <ReusableButton value={labelFind}
+                                onClick={() => {
+                                    if(pickedYear){
+                                    getGrades();
+                                    }
+                                }
+                } />
             </div>
             <hr/>
             <div id={"grades-list"} className={"rounded-md overflow-y-auto flex flex-col place-content-between"}

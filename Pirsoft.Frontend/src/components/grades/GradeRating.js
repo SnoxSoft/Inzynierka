@@ -1,21 +1,26 @@
-import React from "react";
-import {TiStarFullOutline, TiStarOutline} from "react-icons/ti";
+import React, {useEffect} from "react";
+import GradeRatingItem from "./GradeRatingItem";
 
-const GradeRating = ({rating}) => {
+const GradeRating = ({value, onChange,
+         placing = "place-self-start", createMode = false})=> {
     let ratings = []
-    for (let i = 1; i<=5 ; i++){
-        if(i <= rating){
-            ratings.push(<>
-                <TiStarFullOutline fontSize={30} className={"text-rating"}/>
-            </>)
+
+    function loadGradesStars() {
+        for (let i = 1; i <= 5; i++) {
+            ratings.push(
+                <GradeRatingItem rating={i}
+                                 fullStar={i <= value}
+                                 createMode={createMode} onChange={onChange}/>)
         }
-        else
-        ratings.push(<>
-            <TiStarOutline fontSize={30} className={"text-rating"}/>
-        </>)
     }
 
-    return <div className={"place-self-start flex flex-row gap-2"}>
+    loadGradesStars()
+
+    useEffect(() => {
+        loadGradesStars()
+    },[value])
+
+    return <div className={placing + " flex flex-row gap-2"}>
         {ratings}
     </div>
 

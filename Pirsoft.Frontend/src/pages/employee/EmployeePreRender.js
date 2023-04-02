@@ -35,8 +35,8 @@ function EmployeePreRender(){
             {employee?
                 <EmployeeComponent id={id} mode={'edit'} employee={employee}/> :
                     id === '-1' ?
-                    <EmployeeComponent id={id} mode={'create'} employee={employee}/> :
-                    <></>
+                <EmployeeComponent id={id} mode={'create'} employee={employee}/> :
+                <>LOADER TUTAJ ustawic key frames i wstawic komponent na sztywno</>
             }
         </>
     )

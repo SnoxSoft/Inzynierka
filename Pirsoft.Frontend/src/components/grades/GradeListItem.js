@@ -1,10 +1,7 @@
 import React, {useState} from "react";
-
-import ReusableButton from "../base/ReusableButton";
-import {MdOpenInNew} from "react-icons/md";
 import GradeRating from "./GradeRating";
 
-const GradeListItem = ({grade}) => {
+const GradeListItem = ({grade, setGradeMode, setPickedGradeData, setGradesVisible}) => {
     const[showHideButtons, setShowHideButtons] = useState(false);
 
     const showOptions = () => {
@@ -16,16 +13,22 @@ const GradeListItem = ({grade}) => {
     }
 
     return <li className={"flex flex-row m-2 p-2 gap-2 hover:bg-dayoffmonth hover:cursor-pointer hover:bg-opacity-80 rounded-md bg-brown-menu border-b-workday border-2"}
-            onMouseOver={showOptions} onMouseLeave={hideOptions}>
+            onMouseOver={showOptions} onMouseLeave={hideOptions} onClick={() => {
+                                            setPickedGradeData(grade);
+                                            setGradeMode("view");
+                                            setGradesVisible(false);}}>
                 <div>{grade.quartet}</div>
                 <div className={"flex flex-col"}>
                     <div className={"place-self-start"}>
-                        {grade.title} {grade.time}
+                        {grade.title} Ocena pracownika: {grade.personName} {grade.time}
                     </div>
                     <div className={"place-self-start text-left"}>
                         {grade.message}
                     </div>
-                    <GradeRating rating={grade.grade}/>
+                    <div className={"flex flex-row"}>
+                        <GradeRating value={grade.grade}/>
+                        <div></div>
+                    </div>
                 </div>
     </li>
 

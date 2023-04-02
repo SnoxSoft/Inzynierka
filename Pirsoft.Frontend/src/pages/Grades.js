@@ -16,6 +16,9 @@ const Request = () =>{
     const [openTab, setOpenTab] = React.useState(1);
     const [gradesVisible, setGradesVisible] = useState(true)
 
+    const[gradeMode, setGradeMode] = useState("view")
+    const[pickedGradeData, setPickedGradeData] = useState(undefined)
+
     return(
         <>
             {gradesVisible ?
@@ -44,23 +47,32 @@ const Request = () =>{
                                 Otrzymane oceny
                             </a>
                         </li>
-                        <ReusableButton value={"Wystaw ocenę"} onClick={setGradesVisible(false)}/>
+                        <ReusableButton value={"Wystaw ocenę"} onClick={() => {
+                            setGradeMode("create");
+                            setPickedGradeData(undefined);
+                            setGradesVisible(false)}}/>
                     </ul>
                     <div id={"tabs-component"} className={"flex flex-col bg-brown-menu rounded-b-md rounded-tr-md border-2 border-workday"}
                     style={{height:wantedHeightsForList-18}}>
                         <div className="flex-auto">
                                 <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                                    <GivenGrades heightFromParent={wantedHeightsForList-18} />
+                                    <GivenGrades heightFromParent={wantedHeightsForList-18}
+                                        setGradeMode={setGradeMode}
+                                        setPickedGradeData={setPickedGradeData}
+                                        setGradesVisible={setGradesVisible}/>
                                 </div>
                                 <div className={openTab === 2 ? "block" : "hidden"} id="link2">
-                                    <ReceivedGrades heightFromParent={wantedHeightsForList-18} />
+                                    <ReceivedGrades heightFromParent={wantedHeightsForList-18}
+                                        setGradeMode={setGradeMode}
+                                        setPickedGradeData={setPickedGradeData}
+                                        setGradesVisible={setGradesVisible}/>
                                 </div>
                         </div>
                     </div>
                 </div>
             </div>
                 :
-                <GiveGradesWindow setGradesVisible={setGradesVisible}/>
+                <GiveGradesWindow setGradesVisible={setGradesVisible} mode={gradeMode} pickedGradeData={pickedGradeData}/>
             }
         </>
     )
