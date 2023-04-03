@@ -18,8 +18,8 @@ public class EmployeeModel : IApiModel
     public int ContractIdId { get; set; }
     public int DepartmentId { get; set; }
     public int SeniorityLevelId { get; set; }
-    public int AccountTypeId { get; set; }
-    public virtual AccountTypeModel AccountType { get; set; } = null!;
+    public int CompanyRoleId { get; set; }
+    public virtual CompanyRoleModel CompanyRole { get; set; } = null!;
     public virtual ContractTypeModel ContractType { get; set; } = null!;
     public virtual DepartmentModel Department { get; set; } = null!;
     public virtual HolidayModel? Holiday { get; set; }

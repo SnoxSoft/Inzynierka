@@ -9,7 +9,7 @@ namespace Pirsoft.Api.DatabaseManagement
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
-        public virtual DbSet<AccountTypeModel> Account_type { get; set; }
+        public virtual DbSet<CompanyRoleModel> Company_role { get; set; }
         public virtual DbSet<ContractTypeModel> Contract_type { get; set; }
         public virtual DbSet<DepartmentModel> Departament { get; set; }
         public virtual DbSet<EmployeeModel> Employee { get; set; }
