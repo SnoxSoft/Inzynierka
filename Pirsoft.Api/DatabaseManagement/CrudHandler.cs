@@ -11,9 +11,9 @@ namespace Pirsoft.Api.DatabaseManagement
 
         public void Create<TModel>(TModel entity) where TModel : class, IApiModel
         {
-            if (entity.Id != 0)
+            if (entity.ApiInternalId != 0)
             {
-                throw new ArgumentException($"Passed model object with '{nameof(entity.Id)}' property set, use {nameof(CrudHandler)}.Update instead.", nameof(entity));
+                throw new ArgumentException($"Passed model object with '{nameof(entity.ApiInternalId)}' property set, use {nameof(CrudHandler)}.Update instead.", nameof(entity));
             }
 
             _dbContext.Set<TModel>().Add(entity);
@@ -27,9 +27,9 @@ namespace Pirsoft.Api.DatabaseManagement
 
         public void Update<TModel>(TModel entity) where TModel : class, IApiModel
         {
-            if (entity.Id < 1)
+            if (entity.ApiInternalId < 1)
             {
-                throw new ArgumentException($"Passed model object with '{nameof(entity.Id)}' property value less than 1", nameof(entity));
+                throw new ArgumentException($"Passed model object with '{nameof(entity.ApiInternalId)}' property value less than 1", nameof(entity));
             }
 
             _dbContext.Set<TModel>().Update(entity);
@@ -37,9 +37,9 @@ namespace Pirsoft.Api.DatabaseManagement
 
         public void Delete<TModel>(TModel entity) where TModel : class, IApiModel
         {
-            if (entity.Id < 1)
+            if (entity.ApiInternalId < 1)
             {
-                throw new ArgumentException($"Passed model object with '{nameof(entity.Id)}' property value less than 1", nameof(entity));
+                throw new ArgumentException($"Passed model object with '{nameof(entity.ApiInternalId)}' property value less than 1", nameof(entity));
             }
 
             _dbContext.Set<TModel>().Remove(entity);
