@@ -17,12 +17,12 @@ public class EmployeeModel : IApiModel
     public double GrossSalary { get; set; }
     public int ContractIdId { get; set; }
     public int DepartmentId { get; set; }
-    public int PositionId { get; set; }
+    public int SeniorityLevelId { get; set; }
     public int AccountTypeId { get; set; }
     public virtual AccountTypeModel AccountType { get; set; } = null!;
     public virtual ContractTypeModel ContractType { get; set; } = null!;
     public virtual DepartmentModel Department { get; set; } = null!;
     public virtual HolidayModel? Holiday { get; set; }
-    public virtual PositionTypeModel PositionType { get; set; } = null!;
+    public virtual SeniorityLevelModel SeniorityLevel { get; set; } = null!;
     public virtual ICollection<SkillModel> Skills { get; } = new List<SkillModel>();
 }

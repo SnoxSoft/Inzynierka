@@ -17,7 +17,7 @@ public class EmployeeController : ControllerBase
 
     [HttpPost("create/new/employee")]
     public IApiModel CreateNewEmployee(string firstName, string lastName, string email, string password, EAccountType accountType, string pesel, string bankAccountNumber,
-         int departmentId, int seniorityInMonths, DateTime employmentStartDate, bool isActive, bool passwordReset, DateTime dateOfBirth, double grossSalary, EPositionType positionType)
+         int departmentId, int seniorityInMonths, DateTime employmentStartDate, bool isActive, bool passwordReset, DateTime dateOfBirth, double grossSalary, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
             pesel = "Missing data";
@@ -27,6 +27,6 @@ public class EmployeeController : ControllerBase
             bankAccountNumber = "Missing data";
 
         return new EmployeeCreator(firstName, lastName, email, password, accountType, pesel, bankAccountNumber, departmentId,
-            seniorityInMonths, employmentStartDate, isActive, passwordReset, dateOfBirth, grossSalary, positionType).CreateModel();
+            seniorityInMonths, employmentStartDate, isActive, passwordReset, dateOfBirth, grossSalary, seniorityLevel).CreateModel();
     }
 }

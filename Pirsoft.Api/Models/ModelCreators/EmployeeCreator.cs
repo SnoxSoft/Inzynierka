@@ -18,10 +18,10 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly bool _passwordReset;
         private readonly DateTime _dateOfBirth;
         private readonly double _grossSalary;
-        private readonly EPositionType _positionType;
+        private readonly ESeniorityLevel _seniorityLevel;
 
         public EmployeeCreator(string firstName, string lastName, string email, string password, EAccountType accountType, string pesel, string bankAccountNumber,
-            int departmentId, int seniorityInMonths, DateTime employmentStartDate, bool isActive, bool passwordReset, DateTime dateOfBirth, double grossSalary, EPositionType positionType)
+            int departmentId, int seniorityInMonths, DateTime employmentStartDate, bool isActive, bool passwordReset, DateTime dateOfBirth, double grossSalary, ESeniorityLevel seniorityLevel)
         {
             _firstName = firstName;
             _lastName = lastName;
@@ -37,7 +37,7 @@ namespace Pirsoft.Api.Models.ModelCreators
             _passwordReset = passwordReset;
             _dateOfBirth = dateOfBirth;
             _grossSalary = grossSalary;
-            _positionType = positionType;
+            _seniorityLevel = seniorityLevel;
         }
 
         public override IApiModel CreateModel() => new EmployeeModel
@@ -56,7 +56,7 @@ namespace Pirsoft.Api.Models.ModelCreators
             PasswordReset = Convert.ToSByte(_passwordReset),
             DateOfBirth = DateOnly.FromDateTime(_dateOfBirth),
             GrossSalary = _grossSalary,
-            PositionType = (PositionTypeModel)new PositionTypeCreator(_positionType).CreateModel(),
+            SeniorityLevel = (SeniorityLevelModel)new SeniorityLevelCreator(_seniorityLevel).CreateModel(),
         };
     }
 }

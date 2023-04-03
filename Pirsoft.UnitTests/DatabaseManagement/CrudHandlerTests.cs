@@ -212,7 +212,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
         public static IEnumerable<object[]> GetTestData()
         {
             yield return new object[] { new AccountTypeModel() };
-            yield return new object[] { new PositionTypeModel() };
+            yield return new object[] { new SeniorityLevelModel() };
             yield return new object[] { new EmployeeModel() };
         }
     }
