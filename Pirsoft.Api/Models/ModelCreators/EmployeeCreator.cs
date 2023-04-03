@@ -8,7 +8,7 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly string _lastName;
         private readonly string _email;
         private readonly string _password;
-        private readonly EAccountType _accountType;
+        private readonly ECompanyRole _companyRole;
         private readonly string _pesel;
         private readonly string _bankAccountNumber;
         private readonly int _departmentId;
@@ -20,14 +20,14 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly double _grossSalary;
         private readonly ESeniorityLevel _seniorityLevel;
 
-        public EmployeeCreator(string firstName, string lastName, string email, string password, EAccountType accountType, string pesel, string bankAccountNumber,
+        public EmployeeCreator(string firstName, string lastName, string email, string password, ECompanyRole companyRole, string pesel, string bankAccountNumber,
             int departmentId, int seniorityInMonths, DateTime employmentStartDate, bool isActive, bool passwordReset, DateTime dateOfBirth, double grossSalary, ESeniorityLevel seniorityLevel)
         {
             _firstName = firstName;
             _lastName = lastName;
             _email = email;
             _password = password;
-            _accountType = accountType;
+            _companyRole = companyRole;
             _pesel = pesel;
             _bankAccountNumber = bankAccountNumber;
             _departmentId = departmentId;
@@ -46,7 +46,7 @@ namespace Pirsoft.Api.Models.ModelCreators
             LastName = _lastName,
             Email = _email,
             Password = _password,
-            AccountType = (AccountTypeModel)new AccountTypeCreator(_accountType).CreateModel(), 
+            CompanyRole = (CompanyRoleModel)new CompanyRoleCreator(_companyRole).CreateModel(), 
             Pesel = _pesel,
             BankAccountNumber = _bankAccountNumber,
             DepartmentId = _departmentId,

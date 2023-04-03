@@ -1,6 +1,6 @@
 ﻿namespace Pirsoft.Api.Enums
 {
-    public enum EAccountType
+    public enum ECompanyRole
     {
         Accounting     = 1,
         Administrator  = 2,

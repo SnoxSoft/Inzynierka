@@ -8,27 +8,27 @@ using System;
 
 namespace Pirsoft.UnitTests.ModelCreators
 {
-    public class AccountTypeCreatorTests
+    public class CompanyRoleCreatorTests
     {
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void CreateModel_CreatesCorrectModel(EAccountType testData)
+        public void CreateModel_CreatesCorrectModel(ECompanyRole testData)
         {
             //Arrange
-            AccountTypeCreator sut = new(testData);
+            CompanyRoleCreator sut = new(testData);
 
             //Act
             IApiModel result = sut.CreateModel();
 
             //Assert
-            result.Should().BeOfType<AccountTypeModel>();
+            result.Should().BeOfType<CompanyRoleModel>();
         }
 
         public static IEnumerable<object[]> GetTestData()
         {
-            foreach (EAccountType accountType in Enum.GetValues(typeof(EAccountType)))
+            foreach (ECompanyRole companyRole in Enum.GetValues(typeof(ECompanyRole)))
             {
-                yield return new object[] { accountType };
+                yield return new object[] { companyRole };
             }
         }
     }
