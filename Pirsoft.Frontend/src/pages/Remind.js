@@ -6,10 +6,25 @@ import LoggingPassword from "../components/logging/LoggingPassword";
 import RemindEmail from "../components/base/remind/RemindEmail";
 import {MdOutlineArrowBackIosNew} from "react-icons/md";
 import RemindCode from "../components/base/remind/RemindCode";
-import {serverIp} from "../GlobalAppConfig";
+import {
+    alertMessageSent,
+    alertNewPasswordsAreIncompatible,
+    alertPutNewPasswords,
+    alertUnexpectedError,
+    alertVerficationCodeIsIncompatible,
+    alertWrongEmail,
+    labelApprove, labelBack,
+    labelGiveEmail,
+    labelGiveNewPassword,
+    labelGiveNewPasswordAgain,
+    labelRemindPassword,
+    labelSendVerificationEmail,
+    labelVerificationCode, pageNameRemind,
+    serverIp
+} from "../GlobalAppConfig";
 
 function Remind(){
-    document.title = "PIRSOFT: Przypomnienie hasła";
+    document.title = pageNameRemind;
 
     const navigate = useNavigate()
 
@@ -126,32 +141,32 @@ function Remind(){
 
                 <div>
                     <div className={"grow-0 p-4 flex flex-row justify-start"}>
-                        <button onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />Wstecz</button>
+                        <button onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />{labelBack}</button>
                     </div>
-                    <p>PRZYPOMNIJ HASŁO</p>
+                    <p>{labelRemindPassword}</p>
                 </div>
                 <br/><br/>
 
                 <div className={"flex flex-col gap-4"}>
-                    <label>PODAJ EMAIL</label>
+                    <label>{labelGiveEmail}</label>
                     <RemindEmail value={email} onChange={setEmail} disableChange={!codeNotVerified}/>
                 </div>
                 <br/>
                 {codeNotVerified ?
                     <div className={"flex flex-col gap-4"}>
-                        <label>KOD WERYFIKACYJNY</label>
+                        <label>{labelVerificationCode}</label>
                         <RemindCode value={code} onChange={setCode}/>
                     </div>
                         :
                     <>
                         <div className={"flex flex-col gap-4"}>
-                            <label>PODAJ NOWE HASŁO</label>
+                            <label>{labelGiveNewPassword}</label>
                             <div className={"flex flex-col gap-4 self-center"}>
                                 <LoggingPassword value={newPassword} onChange={setNewPassword} showHide={false}/>
                             </div>
                         </div>
                         <div className={"flex flex-col gap-4"}>
-                            <label>POWTÓRZ NOWE HASŁO</label>
+                            <label>{labelGiveNewPasswordAgain}</label>
                             <div className={"flex flex-col gap-4 self-center"}>
                                 <LoggingPassword value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
                             </div>
@@ -163,27 +178,27 @@ function Remind(){
                 {codeNotVerified ?
                     <>
                         <div className={"self-center"}>
-                            <ReusableButton value={"WYŚLIJ EMAIL WERYFIKACYJNY"} onClick={() => sendVerifyEmail()}/>
+                            <ReusableButton value={labelSendVerificationEmail} onClick={() => sendVerifyEmail()}/>
                         </div>
                         <br/>
                         <div className={"bg-blue-menu self-center"}>
-                            <ReusableButton value={"ZATWIERDŹ"} onClick={() => verifyCode()}/>
+                            <ReusableButton value={labelApprove} onClick={() => verifyCode()}/>
                         </div>
                     </>
                     :
                     <div className={"bg-blue-menu self-center"}>
-                        <ReusableButton value={"ZATWIERDŹ"} onClick={() => changePassword()}/>
+                        <ReusableButton value={labelApprove} onClick={() => changePassword()}/>
                     </div>
                 }
 
             </div>
             <div className={"flex flex-col items-center text-workday"}>
-                {mailSentAlert ? <p className={"bg-green-700 rounded-md font-bold"}>Wiadomość została wysłana</p> : <></> }
-                {badCodeAlert ? <p className={"bg-red-700 rounded-md font-bold"}>Kod weryfikacyjny jest niezgodny</p> : <></> }
-                {badEmailAlert ? <p className={"bg-red-700 rounded-md font-bold"}>Wprowadzony email jest błędny</p> : <></> }
-                {problemOccured ? <p className={"bg-red-700 rounded-md font-bold"}>Wystapił nieoczekiwany błąd, spróbuj ponownie za chwilę</p> : <></> }
-                {wrongPasswords ? <p className={"bg-red-700 rounded-md font-bold"}>Wpisz nowe hasła w pola</p> : <></> }
-                {notTheSame ? <p className={"bg-red-700 rounded-md font-bold"}>Wpisane hasła są niezgodne</p> : <></> }
+                {mailSentAlert ? <p className={"bg-green-700 rounded-md font-bold"}>{alertMessageSent}</p> : <></> }
+                {badCodeAlert ? <p className={"bg-red-700 rounded-md font-bold"}>{alertVerficationCodeIsIncompatible}</p> : <></> }
+                {badEmailAlert ? <p className={"bg-red-700 rounded-md font-bold"}>{alertWrongEmail}</p> : <></> }
+                {problemOccured ? <p className={"bg-red-700 rounded-md font-bold"}>{alertUnexpectedError}</p> : <></> }
+                {wrongPasswords ? <p className={"bg-red-700 rounded-md font-bold"}>{alertPutNewPasswords}</p> : <></> }
+                {notTheSame ? <p className={"bg-red-700 rounded-md font-bold"}>{alertNewPasswordsAreIncompatible}</p> : <></> }
             </div>
         </div>
 }

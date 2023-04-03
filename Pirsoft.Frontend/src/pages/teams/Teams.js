@@ -3,10 +3,10 @@ import FunctionForResize from "../../components/base/FunctionForResize";
 import ReusableButton from "../../components/base/ReusableButton";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
 import FunctionForSortingJson from "../../components/base/FunctionForSortingJson";
-import {serverIp} from "../../GlobalAppConfig";
+import {labelCreateTeam, pageNameTeams, serverIp} from "../../GlobalAppConfig";
 
 function Teams(){
-    document.title = "PIRSOFT: Zespoły w firmie";
+    document.title = pageNameTeams;
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
@@ -89,7 +89,7 @@ function Teams(){
              className={"every-page-on-scroll overflow-y-hidden"}
             style={{minWidth: 800}}>
                 <div className={"flex flex-cols justify-end p-4"}>
-                    <ReusableButton value={"DODAJ ZESPÓŁ"} link={"/team-create"}/>
+                    <ReusableButton value={labelCreateTeam} link={"/team-create"}/>
                 </div>
                 <hr/>
                 <div id={"schedule-company-list"}

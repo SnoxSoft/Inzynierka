@@ -33,7 +33,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff}) => {
 
         return <div
             className={
-                "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-8 h-8 hover:cursor-pointer "+color+" rounded-md"}>
+                "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-7 h-6 hover:cursor-pointer "+color+" rounded-md"}>
             {/*{day.dayOfMonth}*/}
         </div>
     }
@@ -77,7 +77,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff}) => {
         <>
             <div key={"team" + team.value}
                     onClick={() => changeVisibilityForTeamData()}
-                    className={"hover:cursor-pointer row-start-"+row+" col-start-1 bg-absent w-max text-workday text-left"}>
+                    className={"hover:cursor-pointer row-start-"+row+" col-start-1 w-max text-workday text-left"}>
                 <button>{changeVisibilityIcon}</button>
                 {team.value}
             </div>

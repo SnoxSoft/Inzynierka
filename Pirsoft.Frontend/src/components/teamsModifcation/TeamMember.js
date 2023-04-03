@@ -51,17 +51,6 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
                 <input id={"dhbjhbs"} className={"grow border text-black rounded-md text-center h-6 w-96 hover:cursor-pointer hover:bg-weekend"} type={"text"}
                        value={value.firstandlastname} disabled={true}>
                 </input>
-                {/* zostawiam ten kawałek kodu w razie gdyby coś nie działało jak należy*/}
-                {/*{showOptions ?*/}
-                {/*    <div className={"flex flex-row gap-4 place-content-center"}>*/}
-                {/*        <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}*/}
-                {/*        onClick={() => setValuesForPickerAndOpenIt(value.id)}/>*/}
-                {/*        <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}*/}
-                {/*            onClick={() => removeEmployeeFromList()}/>*/}
-                {/*    </div>*/}
-                {/*    :*/}
-                {/*    <></>*/}
-                {/*}*/}
                 <TeamEmployeeEditButton showOptions={showOptions}
                                         changeMethod={setValuesForPickerAndOpenIt}
                                         changeValue={value.id}

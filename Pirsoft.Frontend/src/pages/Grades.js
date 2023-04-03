@@ -4,9 +4,10 @@ import ReusableButton from "../components/base/ReusableButton";
 import ReceivedGrades from "./grades/ReceivedGrades";
 import GivenGrades from "./grades/GivenGrades";
 import GiveGradesWindow from "./grades/GiveGradesWindow";
+import {labelGivenGrades, labelReceivedGrades, pageNameGrades} from "../GlobalAppConfig";
 
-const Request = () =>{
-    document.title = "PIRSOFT: Oceny kwartalne";
+const Grades = () =>{
+    document.title = pageNameGrades;
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
@@ -34,7 +35,7 @@ const Request = () =>{
                                         : "bg-dayoffmonth")}
                                 onClick={e => {e.preventDefault();setOpenTab(1);}}
                                 href="#link1">
-                                Wystawione oceny
+                                {labelGivenGrades}
                             </a>
                         </li>
                         <li className="mr-2 flex-auto text-center">
@@ -44,7 +45,7 @@ const Request = () =>{
                                         : "bg-dayoffmonth")}
                                 onClick={e => {e.preventDefault();setOpenTab(2);}}
                                 href="#link2">
-                                Otrzymane oceny
+                                {labelReceivedGrades}
                             </a>
                         </li>
                         <ReusableButton value={"Wystaw ocenę"} onClick={() => {
@@ -77,4 +78,4 @@ const Request = () =>{
         </>
     )
 }
-export default Request;
+export default Grades;

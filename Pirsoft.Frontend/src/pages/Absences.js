@@ -5,11 +5,18 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import AbsencesListItem from "../components/absences/AbsencesListItem";
 import Request from "./Request";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
-import {labelFilter, serverIp} from "../GlobalAppConfig";
+import {
+    headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
+    labelFilter, pageNameAbsences,
+    requestActionLabel,
+    requestDescriptionLabel, requestStatusApprovedLabel, requestStatusDisapprovedLabel,
+    requestStatusLabel, requestStatusWaitingLabel,
+    serverIp
+} from "../GlobalAppConfig";
 
 
 function Absences(){
-    document.title = "PIRSOFT: Moje nieobecnosci";
+    document.title = pageNameAbsences;
 
     // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
@@ -153,7 +160,7 @@ function Absences(){
             <div className={"flex p-4 gap-4 text-center flex-col"}>
                 <div className={"grow grid grid-cols-1 grid-rows-1 place-items-end"}>
                     <div className={"col-start-1 row-start-1 place-self-center"}>
-                        ZOSTALO DNI URLOPOWYCH: {leaveDays}, TYM NA ŻĄDANIE: {onDemandDays}
+                        {headerAbsencesEndOfDaysOff}: {leaveDays}, {headerAbsencesDaysNoPayLeft}: {onDemandDays}
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <ReusableButton value={"Wystaw \nWniosek"} color={"bg-blue-menu"}
@@ -166,16 +173,16 @@ function Absences(){
                 <div className={"flex justify-center"}>
                     <div className={"gap-2 flex items-center justify-center"}>
                         <div className={"flex flex-col"}>
-                            <label>OCZEKUJĄCE</label>
+                            <label>{requestStatusWaitingLabel}</label>
                             <input type="checkbox" defaultChecked={true}
                                    onChange={(e) => setCheckOczekujace(e.target.checked)}/>
                         </div>
                         <div className={"flex flex-col"}>
-                            <label>ZATWIERDZONE</label>
+                            <label>{requestStatusApprovedLabel}</label>
                             <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
                         </div>
                         <div className={"flex flex-col"}>
-                            <label>ODRZUCONE</label>
+                            <label>{requestStatusDisapprovedLabel}</label>
                             <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckodrzucone(e.target.checked)}/>
                         </div>
                     </div>
@@ -186,13 +193,13 @@ function Absences(){
             </div>
             <div className={"text-start ml-4 mr-8 items-center h-6 bg-brown-menu rounded-md flex text-workday border-2 border-workday font-bold"}>
                 <div className={"p-2 flex rounded-md basis-8/12"}>
-                    OPIS WNIOSKU
+                    {requestDescriptionLabel}
                 </div>
                 <div className={"flex basis-1/12 place-content-center rounded-md "}>
-                    STATUS
+                    {requestStatusLabel}
                 </div>
                 <div className={"flex justify-evenly basis-3/12"}>
-                    AKCJE
+                    {requestActionLabel}
                 </div>
             </div>
             <div id={"schedule-list"} className={"overflow-y-scroll overflow-ellipsis"} style={{ height: wantedHeightsForList}}>

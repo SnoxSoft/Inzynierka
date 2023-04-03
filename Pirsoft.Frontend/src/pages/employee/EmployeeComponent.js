@@ -22,14 +22,39 @@ import LoggingPassword from "../../components/logging/LoggingPassword";
 import contract from "../../components/employee/fields/Contract";
 import Contract from "../../components/employee/fields/Contract";
 import AddEmployeeAnAbsence from "../AddEmployeeAnAbsence";
+import {
+    alertNewPasswordsAreIncompatible,
+    alertOldPasswordIsIncompatible,
+    alertPutNewPasswords,
+    firstnameLabel,
+    headerPasswordChange,
+    labelApprove,
+    labelBack, labelBankAccount, labelBirthDate,
+    labelClose, labelContractType,
+    labelCreate,
+    labelDelete,
+    labelEdit,
+    labelEmail,
+    labelGiveNewPassword,
+    labelGiveNewPasswordAgain,
+    labelGiveOldPassword,
+    labelPassword, labelPESEL,
+    labelPick,
+    labelPosition,
+    labelRequest, labelSalary,
+    labelSave,
+    labelStartDate,
+    lastnameLabel, pageNameEmployeeData, pageNameEmployeeRegister, pageNameEmployeeView,
+    skillsLabel
+} from "../../GlobalAppConfig";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
-        document.title = 'PIRSOFT: Rejestracja nowego pracownika'
+        document.title = pageNameEmployeeRegister;
     }
     else if(id === sessionStorage.getItem('USER')){
-        document.title = 'PIRSOFT: Twoje dane'
+        document.title = pageNameEmployeeData;
     }
-    else document.title = 'PIRSOFT: Wyświetlanie danych pracownika'
+    else document.title = pageNameEmployeeView;
 
     // Możliwe rodzaje parametru mode:
     // create - do tworzenia
@@ -249,23 +274,23 @@ function EmployeeComponent({id, mode, employee}){
             <div className={"grow flex flex-row"}>
                 <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>
                     <div className={"flex flex-row justify-between text-right gap-4"}>
-                        <label className={"basis-1/3"}> IMIĘ </label>
+                        <label className={"basis-1/3"}> {firstnameLabel} </label>
                         <FirstName value={firstName} onChange={setFirstName} disableChange={disableData}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
-                        <label className={"basis-1/3"}> NAZWISKO </label>
+                        <label className={"basis-1/3"}> {lastnameLabel} </label>
                         <LastName value={lastName} onChange={setLastName} disableChange={disableData}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
-                        <label className={"basis-1/3"}> E-MAIL </label>
+                        <label className={"basis-1/3"}> {labelEmail} </label>
                         <Email value={email} onChange={setEmail} disableChange={mode !== 'create'}/>
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ? <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> HASŁO </label>
+                            <label className={"basis-1/3"}> {labelPassword} </label>
                             <div className={"flex flex-row justify-end gap-4 grow"}>
                                 <Password value={password} onChange={setPassword}
                                           showHide={sessionStorage.getItem('USER') === id || mode === 'create'}
@@ -279,39 +304,39 @@ function EmployeeComponent({id, mode, employee}){
 
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> KONTO BANKOWE </label>
+                            <label className={"basis-1/3"}> {labelBankAccount} </label>
                             <BankAccountNumber value={bank} onChange={setBank} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> DATA URODZENIA </label>
+                            <label className={"basis-1/3"}> {labelBirthDate} </label>
                             <DateOfBirth value={birth} onChange={setBirth} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> PESEL </label>
+                            <label className={"basis-1/3"}> {labelPESEL} </label>
                             <Pesel value={pesel} onChange={setPesel} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> WYNAGRODZENIE BRUTTO </label>
+                            <label className={"basis-1/3"}> {labelSalary} </label>
                             <GrossSalary value={salary} onChange={setSalary} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> TYP UMOWY </label>
+                            <label className={"basis-1/3"}> {labelContractType} </label>
                             <Contract value={contract} onChange={setContract} disableChange={disableData}/>
                         </div>
 
                     </> : <></>}
                     <div className={"flex flex-row justify-between text-right gap-4"}>
-                        <label className={"basis-1/3"}> STANOWISKO </label>
+                        <label className={"basis-1/3"}> {labelPosition} </label>
                         <PositionType value={position} onChange={setPosition} disableChange={disableData}/>
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                         <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> ROZPOCZĘCIE PRACY </label>
+                            <label className={"basis-1/3"}> {labelStartDate} </label>
                             <EmploymentStartDate value={start} onChange={setStart} disableChange={disableData}/>
                         </div>
                         : <></>}
@@ -323,7 +348,7 @@ function EmployeeComponent({id, mode, employee}){
                     <div className={"flex justify-center"}>
                         {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' && sessionStorage.getItem('USER') === id || mode === 'create' ?
                             <ReusableButton value={employee !== undefined &&
-                                employee !== null ? "EDYTUJ" : "WYBIERZ"}
+                                employee !== null ? labelEdit : labelPick}
                                             onClick={ () => setSkills()}/>
                             :
                             <></>}
@@ -333,7 +358,7 @@ function EmployeeComponent({id, mode, employee}){
             {mode !== 'create' &&
                 sessionStorage.getItem('USER') !== id ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
-                    <button onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />Wstecz</button>
+                    <button onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />{labelBack}</button>
                 </div>
                 : <></>
             }
@@ -343,9 +368,9 @@ function EmployeeComponent({id, mode, employee}){
                     <>
                         {mode === 'edit' && sessionStorage.getItem('USER') === id ?
                             <>
-                                <ReusableButton value={"USUŃ KONTO"} link={""} />
-                                <ReusableButton value={"ZAPISZ ZMIANY"} onClick={() => saveEmployee()}/>
-                                <ReusableButton value={"WYSTAW WNIOSEK"} onClick={() => {
+                                <ReusableButton value={labelDelete} link={""} />
+                                <ReusableButton value={labelSave} onClick={() => saveEmployee()}/>
+                                <ReusableButton value={labelRequest} onClick={() => {
                                     setShowAddEmployeeAnAbsence(true);
                                     setEmployeeDataShow(false);
                                 }}/>
@@ -353,7 +378,7 @@ function EmployeeComponent({id, mode, employee}){
                             : <></>
                         }
                         {mode === 'create' ?
-                            <ReusableButton value={"UTWÓRZ"} onClick={() => saveEmployee()}/>
+                            <ReusableButton value={labelCreate} onClick={() => saveEmployee()}/>
                             : <></>
                         }
                     </>
@@ -368,11 +393,11 @@ function EmployeeComponent({id, mode, employee}){
                          style={{minWidth: 800}}>
 
                         <div id={"skills-edit"} className={"flex flex-col justify-evenly"}>
-                            <div>UMIEJĘTNOŚCI</div>
+                            <div>{skillsLabel}</div>
                             {skillsComponent}
                             <div className={"p-4 flex flex-row justify-evenly"}>
-                                <ReusableButton value={"ZATWIERDŹ"} onClick={() => saveSkills()}/>
-                                <ReusableButton value={"ZAMKNIJ"} onClick={() => {setEmployeeDataShow(true); setShowSkillsFrame(false)}}/>
+                                <ReusableButton value={labelApprove} onClick={() => saveSkills()}/>
+                                <ReusableButton value={labelClose} onClick={() => {setEmployeeDataShow(true); setShowSkillsFrame(false)}}/>
                             </div>
                         </div>
                     </div> :
@@ -385,24 +410,24 @@ function EmployeeComponent({id, mode, employee}){
                     <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
 
                         <div>
-                            <p>ZMIANA HASŁA</p>
+                            <p>{headerPasswordChange}</p>
                         </div>
                         <br/><br/>
 
                         <div className={"flex flex-col gap-4"}>
-                            <label>PODAJ STARE HASŁO</label>
+                            <label>{labelGiveOldPassword}</label>
                             <LoggingPassword value={oldPassword} onChange={setOldPassword} showHide={false}/>
                         </div>
                         <br/>
 
                         <div className={"flex flex-col gap-4"}>
-                            <label>PODAJ NOWE HASŁO</label>
+                            <label>{labelGiveNewPassword}</label>
                             <div className={"flex flex-col gap-4 self-center"}>
                                 <LoggingPassword value={newPassword} onChange={setNewPassword} showHide={false}/>
                             </div>
                         </div>
                         <div className={"flex flex-col gap-4"}>
-                            <label>POWTÓRZ NOWE HASŁO</label>
+                            <label>{labelGiveNewPasswordAgain}</label>
                             <div className={"flex flex-col gap-4 self-center"}>
                                 <LoggingPassword value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
                             </div>
@@ -412,7 +437,7 @@ function EmployeeComponent({id, mode, employee}){
 
                         <div className={"flex flex-row justify-evenly"}>
                             <div className={"self-center"}>
-                                <ReusableButton value={"ZAMKNIJ"}
+                                <ReusableButton value={labelClose}
                                     onClick={() => {
                                         setOldPassword('');
                                         setNewPassword('');
@@ -421,22 +446,22 @@ function EmployeeComponent({id, mode, employee}){
                                         setShowPasswordChangeFrame(false)}}/>
                             </div>
                             <div className={"bg-blue-menu self-center"}>
-                                <ReusableButton value={"ZATWIERDŹ"} onClick={() => changePassword()}/>
+                                <ReusableButton value={labelApprove} onClick={() => changePassword()}/>
                             </div>
                         </div>
 
                     </div>
                     <div className={"flex flex-col items-center text-workday"}>
                         {wrongNewPasswords ?
-                            <p className={"bg-red-700 rounded-md font-bold"}>Wpisz nowe hasła w pola</p> :
+                            <p className={"bg-red-700 rounded-md font-bold"}>{alertPutNewPasswords}</p> :
                             <></>
                         }
                         {wrongOldPasswords ?
-                            <p className={"bg-red-700 rounded-md font-bold"}>Wpisane stare hasło jest błędne</p> :
+                            <p className={"bg-red-700 rounded-md font-bold"}>{alertOldPasswordIsIncompatible}</p> :
                             <></>
                         }
                         {notTheSame ?
-                            <p className={"bg-red-700 rounded-md font-bold"}>Wpisane nowe hasła są niezgodne</p> :
+                            <p className={"bg-red-700 rounded-md font-bold"}>{alertNewPasswordsAreIncompatible}</p> :
                             <></>
                         }
                     </div>

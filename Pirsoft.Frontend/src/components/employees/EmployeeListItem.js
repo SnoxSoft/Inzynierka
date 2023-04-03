@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import ReusableButton from "../base/ReusableButton";
+import {labelRequest, labelShowProfile} from "../../GlobalAppConfig";
 
 const EmployeeListItem = ({employee}) => {
     const[showHideButtons, setShowHideButtons] = useState(false);
@@ -26,8 +27,8 @@ const EmployeeListItem = ({employee}) => {
                 <div className={"grow flex flex-row justify-end gap-2"}>
                     {showHideButtons && (
                         <>
-                            <ReusableButton value={"WNIOSEK"}></ReusableButton>
-                            <ReusableButton value={"POKAŻ PROFIL"} link={`/employee/${employee.id}`}></ReusableButton>
+                            <ReusableButton value={labelRequest}></ReusableButton>
+                            <ReusableButton value={labelShowProfile} link={`/employee/${employee.id}`}></ReusableButton>
                         </>
                     )
                     }

@@ -2,7 +2,14 @@ import TeamsList from "../employees/search/fields/TeamsList";
 import Calendar from "../absences/Calendar";
 import ReusableButton from "../base/ReusableButton";
 import React from "react";
-import {labelFilter} from "../../GlobalAppConfig";
+import {
+    firstnameLabel,
+    labelFilter,
+    lastnameLabel,
+    requestStatusApprovedLabel, requestStatusCreatedByMeLabel, requestStatusCreatedNotByMeLabel,
+    requestStatusDisapprovedLabel, requestStatusWaitingLabel,
+    teamLabel
+} from "../../GlobalAppConfig";
 
 function RequestsFilter({
                             handleNameChange, userName,
@@ -21,39 +28,39 @@ function RequestsFilter({
     <div className={"flex flex-col gap-2 p-4"}>
         <div className={"flex justify-evenly items-center flex-wrap gap-2"}>
             <div>
-                IMIE <input className={"text-black rounded"} onChange={handleNameChange} value={userName}/>
+                {firstnameLabel} <input className={"text-black rounded"} onChange={handleNameChange} value={userName}/>
             </div>
             <div>
-                NAZWISKO <input className={"text-black rounded"} onChange={handleSurnameChange} value={userSurname}/>
+                {lastnameLabel} <input className={"text-black rounded"} onChange={handleSurnameChange} value={userSurname}/>
             </div>
             <div className={"flex gap-x-2 items-center"}>
-                ZESPOL
+                {teamLabel}
                 <TeamsList className={""} onChange={setUserTeam}/>
             </div>
         </div>
         <div className={"flex items-center justify-center gap-4"}>
             <div className={"flex flex-col"}>
-                <label>OCZEKUJĄCE</label>
+                <label>{requestStatusWaitingLabel}</label>
                 <input type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckOczekujace(e.target.checked)}/>
             </div>
             <div className={"flex flex-col"}>
-                <label>ZATWIERDZONE</label>
+                <label>{requestStatusApprovedLabel}</label>
                 <input type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
             </div>
             <div className={"flex flex-col"}>
-                <label>ODRZUCONE</label>
+                <label>{requestStatusDisapprovedLabel}</label>
                 <input type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckOdrzucone(e.target.checked)}/>
             </div>
             <div className={"flex flex-col"}>
-                <label>WYSTAWIONE PREZE MNIE</label>
+                <label>{requestStatusCreatedByMeLabel}</label>
                 <input type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckCreatedByCurrent(e.target.checked)}/>
             </div>
             <div className={"flex flex-col"}>
-                <label>NIE WYSTAWIONE PREZE MNIE</label>
+                <label>{requestStatusCreatedNotByMeLabel}</label>
                 <input type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckNotCreatedByCurrent(e.target.checked)}/>
             </div>

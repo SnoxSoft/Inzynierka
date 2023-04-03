@@ -41,17 +41,6 @@ const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShow
                           value={value.firstandlastname} disabled={true}
                        >
                 </input>
-                    {/* zostawiam ten kawałek kodu w razie gdyby coś nie działało jak należy*/}
-                    {/*{showOptions ?*/}
-                    {/*    <div className={"flex flex-row gap-4 place-content-center"}>*/}
-                    {/*        <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}*/}
-                    {/*        onClick={() => setValuesForPickerAndOpenIt()}/>*/}
-                    {/*        <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}*/}
-                    {/*        onClick={() => {setLeaderData(undefined)}}/>*/}
-                    {/*    </div>*/}
-                    {/*    :*/}
-                    {/*    <></>*/}
-                    {/*}*/}
                     <TeamEmployeeEditButton showOptions={showOptions}
                                             changeMethod={setValuesForPickerAndOpenIt}
 

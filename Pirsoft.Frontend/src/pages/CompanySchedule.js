@@ -5,10 +5,10 @@ import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md
 import dayjs from "dayjs";
 import TeamRow from "../components/companySchedule/TeamRow";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
-import {serverIp} from "../GlobalAppConfig";
+import {legendLabel, legendToday, months, pageNameCompanySchedule, serverIp, weekdays} from "../GlobalAppConfig";
 
 function CompanySchedule(){
-    document.title = "PIRSOFT: Harmonogram firmowy";
+    document.title = pageNameCompanySchedule;
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     const[wantedWidthForList, setWantedWidthForList] = useState(1000);
@@ -70,11 +70,6 @@ function CompanySchedule(){
 
     const [pickedMonthText, setPickedMonth] = useState('')
 
-    const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
-        "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
-    ];
-
-    const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
     const [daysOfWeek, setDaysOfWeek] = useState([])
     const [calendarDays, setCalendarDays] = useState([])
 
@@ -91,7 +86,7 @@ function CompanySchedule(){
         weekdays.forEach((weekday) => {
             daysOfWeekLoad.push(
                 <div className={"m-2 flex self-end place-self-center text-workday"}>
-                    {weekday.toString().toUpperCase()}
+                    {weekday.toString()}
                 </div>);
         });
         setDaysOfWeek(daysOfWeekLoad)
@@ -126,7 +121,7 @@ function CompanySchedule(){
         }
 
         const days = loadWholeMonthData({
-            text: monthNames[today.getMonth()].toUpperCase()+" "
+            text: months[today.getMonth()]+" "
                 +today.getFullYear(),
             date: today.toLocaleDateString("sv", optionsForFormatDate)})
 
@@ -146,9 +141,9 @@ function CompanySchedule(){
         days.forEach((day) => {
             allTeamsLoad.push(
                 <div key={"top-weekdays-"+day.dayOfMonth}
-                     className={"row-start-1 col-start-"+colDayOfWeek+" text-workday text-center"}>
+                     className={"row-start-1 col-start-"+colDayOfWeek+" text-workday text-center w-8 h-12"}>
                     <div>
-                        {getTextWeekday(day.date).toUpperCase()}
+                        {getTextWeekday(day.date)}
                     </div>
                     <div>
                         {day.dayOfMonth}
@@ -223,30 +218,34 @@ function CompanySchedule(){
     }
 
     function FunctionForResizeScheduleWidth(){
-        const leftMenuComponent = document.getElementById("left-menu");
 
-        const currentComponent = document.getElementById("schedule-company-list");
-        if(leftMenuComponent != null && currentComponent != null){
-            const currentComponentPosition = currentComponent.getBoundingClientRect();
-            setWantedWidthForList(window.outerWidth - currentComponentPosition.x)
+        //const leftMenuComponent = document.getElementById("left-menu");
+
+        const scheduleParentComponent = document.getElementById("company-schedule-parent");
+
+        //const currentComponent = document.getElementById("schedule-company-list");
+        if(scheduleParentComponent){//leftMenuComponent != null && currentComponent != null){
+            const currentComponentPosition = scheduleParentComponent.getBoundingClientRect();
+            //setWantedWidthForList(window.outerWidth - currentComponentPosition.x)
+            setWantedWidthForList(currentComponentPosition.width)
         }
     }
 
     useEffect(() => {
         FunctionForResize("schedule-company-list", {setWantedHeightForList});
-        FunctionForResizeScheduleWidth()
+        //FunctionForResizeScheduleWidth()
     }, );
 
     return(
         <>
         {teamsLoaded && allTeamsAreLoadedInDivs ?
             <>
-                <div className={"every-page-on-scroll overflow-y-hidden"}
-                     style={{minWidth: 1000}}>
+                <div id={"company-schedule-parent"} className={"every-page-on-scroll overflow-y-hidden"}
+                     style={{minWidth: 800}}>
                     <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
-                                <ReusableButton value={"DZIŚ"} onClick={() => loadWholeMonthDataForCompany(new Date())}/>
+                                <ReusableButton value={legendToday} onClick={() => loadWholeMonthDataForCompany(new Date())}/>
                             </div>
                         </div>
                         <div className={"col-start-1 row-start-1 place-self-center"}>
@@ -265,7 +264,7 @@ function CompanySchedule(){
                         </div>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
-                                <ReusableButton value={"LEGENDA"}
+                                <ReusableButton value={legendLabel}
                                      onClick={() => console.log("tu bedzie legenda:)")}/>
                             </div>
                         </div>
@@ -274,9 +273,9 @@ function CompanySchedule(){
                     <div id={"schedule-company-list"}
                          style={{
                              height: wantedHeightsForList,
-                             maxWidth: wantedWidthForList-6,
-                             width: wantedWidthForList-6,
-                             minWidth: 1000}}
+                             // maxWidth: wantedWidthForList,
+                             // width: wantedWidthForList,
+                             minWidth: 800}}
                          className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2 content-start"}>
                         {allTeams}
                     </div>

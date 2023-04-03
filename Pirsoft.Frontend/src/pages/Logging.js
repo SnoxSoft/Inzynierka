@@ -10,14 +10,22 @@ import {FiSettings} from "react-icons/fi";
 import LoggingEmail from "../components/logging/LoggingEmail";
 import LoggingPassword from "../components/logging/LoggingPassword";
 import Email from "../components/employee/fields/Email";
-import {serverIp} from "../GlobalAppConfig";
+import {
+    labelEmail,
+    labelLogIn,
+    labelPassword, pageNameHomePage,
+    pageNameLogging,
+    serverIp,
+    welcomeMessage,
+    welcomeMessageShort
+} from "../GlobalAppConfig";
 
 function Logging(){
     if(sessionStorage.getItem('USER') == null){
-        document.title = "PIRSOFT: Okno logowania";
+        document.title = pageNameLogging;
     }
     else {
-        document.title = "PIRSOFT: Ekran powitalny";
+        document.title = pageNameHomePage;
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
@@ -63,18 +71,17 @@ function Logging(){
              style={{ height: wantedHeightsForList } }>
             <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                 <div>
-                    <p>WITAJ</p>
-                    <p>ZALOGUJ SIĘ</p>
+                    <p>{welcomeMessage}</p>
                 </div>
                 <br></br>
 
                 <div className={"flex flex-col gap-4"}>
-                    <label>EMAIL</label>
+                    <label>{labelEmail}</label>
                     <LoggingEmail value={email} onChange={setEmail}/>
                 </div>
                 <br></br>
                 <div className={"flex flex-col gap-4"}>
-                    <label>HASŁO</label>
+                    <label>{labelPassword}</label>
                     <div className={"flex flex-col gap-4 self-center"}>
                         <LoggingPassword value={password} onChange={setPassword}/>
                     </div>
@@ -84,7 +91,7 @@ function Logging(){
                 </div>
                 <br/>
                 <div className={"self-center"}>
-                    <ReusableButton value={"ZALOGUJ"} onClick={() => logIn()}/>
+                    <ReusableButton value={labelLogIn} onClick={() => logIn()}/>
                 </div>
             </div>
         </div> :
@@ -93,7 +100,7 @@ function Logging(){
                  style={{ height: wantedHeightsForList } }>
                 <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                     <div>
-                        <p>{'WITAJ, '+
+                        <p>{welcomeMessageShort+
                             sessionStorage.getItem('FIRSTNAME')+' '+
                             sessionStorage.getItem('LASTNAME')}</p>
                     </div>

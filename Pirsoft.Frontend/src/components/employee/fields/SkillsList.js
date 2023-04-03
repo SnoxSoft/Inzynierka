@@ -1,3 +1,4 @@
+import {skillsLabel} from "../../../GlobalAppConfig";
 
 const SkillsList = ({skillList}) => {
 
@@ -12,7 +13,7 @@ const SkillsList = ({skillList}) => {
     }
 
     return <div className={"text-center"}>
-        <p>UMIEJĘTNOŚCI</p>
+        <p>{skillsLabel}</p>
         <ul>
             {details}
         </ul>

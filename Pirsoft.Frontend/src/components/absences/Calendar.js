@@ -1,4 +1,5 @@
-import React, {useState, useRef} from "react";
+import React from "react";
+import {calendarLabelFrom, calendarLabelTo} from "../../GlobalAppConfig";
 const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false}) => {
 
     const options = {
@@ -39,7 +40,7 @@ const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false}) => {
     return (
         <div className={"content-center"}>
             <div className={"flex flex-row gap-4 place-self-center justify-left "}>
-                <p className={""}>OD: <input
+                <p className={""}>{calendarLabelFrom}<input
                     type={"date"}
                     className={"text-black rounded-md disabled:text-black disabled:bg-workday"}
                     value={from}
@@ -51,7 +52,7 @@ const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false}) => {
                     }}
                     onBlur={() => validateDate(from, "from")}
                 /></p>
-                <p className={""}>DO: <input
+                <p className={""}>{calendarLabelTo}<input
                     type={"date"}
                     className={"text-black rounded-md disabled:text-black disabled:bg-workday"}
                     value={to}

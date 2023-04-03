@@ -1,12 +1,13 @@
 import ReusableButton from "../base/ReusableButton";
 import {MdOpenInNew} from "react-icons/md";
 import React from "react";
+import {gradePersonLabel} from "../../GlobalAppConfig";
 
 const PersonData = ({onChange, value, find = false, setPersonId, setHideFinder}) => {
 
         return (
         <div className={"flex flex-col gap-2"}>
-                <div className={"flex flex-row place-content-center"}>Osoba
+                <div className={"flex flex-row place-content-center"}>{gradePersonLabel}
                         {find ?
                             <ReusableButton value={<MdOpenInNew/>} formatting={""} color={""}
                             onClick={() => setHideFinder(true)}/> :

@@ -1,4 +1,12 @@
 import MenuButton from "./MenuButton";
+import {
+    absencesMenu,
+    companyScheduleMenu,
+    employeeRegisterMenu,
+    employeesMenu, gradesMenu, requestsMenu,
+    scheduleMenu,
+    teamsMenu
+} from "../../GlobalAppConfig";
 function LeftMenu(){
     return(
         <div id={"left-menu"}
@@ -6,14 +14,14 @@ function LeftMenu(){
 
             {sessionStorage.getItem('USER') ?
                 <>
-            <MenuButton link={"/employees"} value={"Pracownicy"}/>
-            <MenuButton link={'/employee/-1'} value={"Rejestracja"}/>
-            <MenuButton link={"/schedule"} value={"Harmonogram osobisty"}/>
-            <MenuButton link={"/company-schedule"} value={"Harmonogram firmy"}/>
-            <MenuButton link={"/teams"} value={"Zespoły w firmie"}/>
-            <MenuButton link={"/absences"} value={"Moje nieobecności"}/>
-            <MenuButton link={"/requests"} value={"Wnioski pracowników"}/>
-            <MenuButton link={"/grades"} value={"Oceny kwartalne"}/>
+            <MenuButton link={"/employees"} value={employeesMenu}/>
+            <MenuButton link={'/employee/-1'} value={employeeRegisterMenu}/>
+            <MenuButton link={"/schedule"} value={scheduleMenu}/>
+            <MenuButton link={"/company-schedule"} value={companyScheduleMenu}/>
+            <MenuButton link={"/teams"} value={teamsMenu}/>
+            <MenuButton link={"/absences"} value={absencesMenu}/>
+            <MenuButton link={"/requests"} value={requestsMenu}/>
+            <MenuButton link={"/grades"} value={gradesMenu}/>
                     </>
                 :
                 <></>}

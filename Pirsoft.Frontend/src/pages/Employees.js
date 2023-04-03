@@ -1,16 +1,14 @@
-import {useSelector} from "react-redux";
-import {selectAll} from "../store/EmployeesListSlice";
 import EmployeesList from "../components/employees/EmployeesList";
 import TeamsList from "../components/employees/search/fields/TeamsList";
 import PositionsList from "../components/employees/search/fields/PositionsList";
 import FirstnameAndLastname from "../components/employees/search/fields/FirstnameAndLastname";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
 import SortingButton from "../components/employees/search/fields/SortingButton";
-import {labelFind, serverIp} from "../GlobalAppConfig";
+import {headerEmployees, labelFind, labelFirstNameAndLastName, pageNameEmployees, serverIp} from "../GlobalAppConfig";
 
 function Employees(){
-    document.title = 'PIRSOFT: Lista wszystkich pracowników'
+    document.title = pageNameEmployees;
 
     const[firstnameAndLastname, setFirstnameAndLastname] = useState();
     const[teamsList, setTeamsList] = useState();
@@ -73,20 +71,17 @@ function Employees(){
             <div className={"p-4 gap-4 grid grid-cols-2 items-center"}>
 
                 <div className={"flex flex-col gap-2"}>
-                    <p className={""}>Wyszukaj pracownika</p>
-
+                    <p>{headerEmployees}</p>
                     <div>
-                        <p className={""}>Imię i nazwisko: </p>
+                        <p className={""}>{labelFirstNameAndLastName}</p>
                         <FirstnameAndLastname className={""} onChange={setFirstnameAndLastname}/>
                     </div>
-                    <div className={"flex flex-row gap-4 flex-wrap"}>
+                    <div className={"flex flex-row gap-2 flex-wrap"}>
                         <div>
-                            <p className={""}>Zespół: </p>
                             <TeamsList className={""} onChange={setTeamsList}/>
                         </div>
 
                         <div>
-                            <p className={""}>Stanowisko: </p>
                             <PositionsList className={""} onChange={setPositionsList}/>
                         </div>
                     </div>

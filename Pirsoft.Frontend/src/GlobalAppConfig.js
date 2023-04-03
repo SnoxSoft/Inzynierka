@@ -1,16 +1,242 @@
 
+// Adres ip aplikacji
 const serverIp = "http://127.0.0.1:3001";
 
+// Nazwa aplikacji
+const appName = "PIRSOFT";
+
+// Nazwy stron na pasku zadań
+const pageNameRemind = appName + ": Przypomnienie hasła";
+const pageNameAbsences = appName + ": Moje nieobecności"
+const pageNameLogging = appName + ": Okno logowania";
+const pageNameHomePage = appName + ": Ekran powitalny";
+const pageNameAddEmployeeAnAbsence = appName + ": Wystaw wniosek";
+const pageNameApprovalOrRejectionRequest = appName + ": Zatwierdzanie wniosku urlopowego";
+const pageNameCompanySchedule = appName + ": Harmonogram firmowy";
+const pageNameEmployees = appName + ": Lista wszystkich pracowników";
+const pageNameSchedule = appName + ": Harmonogram osobisty";
+const pageNameEmployeeRegister = appName + ": Rejestracja nowego pracownika";
+const pageNameEmployeeData = appName + ": Twoje dane";
+const pageNameEmployeeView = appName + ": Wyświetlanie danych pracownika";
+const pageNameTeams = appName + ": Zespoły w firmie";
+const pageNameTeamEdit = appName + ": Edycja danych zespołu";
+const pageNameTeamCreate = appName + ": Tworzenie zespołu";
+const pageNameTeamView = appName + ": Wyświetlanie danych zespołu";
+const pageNameReceivedGrades = appName + ": Moje oceny kwartalne";
+const pageNameGivenGrades = appName + ": Oceny pracowników";
+const pageNameEmployeesFinder = appName + ": Wyszukiwarka pracowników";
+const pageNameGrades = appName + ": Oceny kwartalne";
+const pageNameGiveGradesWindowView = appName + ": Ocena pracownika";
+const pageNameGiveGradesWindowGive = appName + ": Ocenianie pracownika";
+const pageNameRequest = appName + ": Wniosek";
+const pageNameRequests = appName + ": Wnioski pracowników";
+
+
+
+// Strona powitalna, logowanie
+const welcomeMessage = "Witaj, zaloguj się";
+const welcomeMessageShort = "Witaj, ";
+const labelEmail = "E-mail";
+const labelPassword = "Hasło";
+
+// Nazwa wyświetlająca się jak nie ma awataru
+const avatarAlterText = "Moje konto";
+
+// Lewe menu aplikacji
+const employeesMenu = "Pracownicy";
+const employeeRegisterMenu = "Rejestracja";
+const scheduleMenu = "Harmonogram osobisty";
+const companyScheduleMenu = "Harmonogram firmy";
+const teamsMenu = "Zespoły w firmie";
+const absencesMenu = "Moje nieobecności";
+const requestsMenu = "Wnioski pracowników";
+const gradesMenu = "Oceny kwartalne";
+const gradeMenu = "Ocena kwartalna";
+
+// Nazwy guzików
 const labelFind = "Szukaj";
+const labelLogIn = "Zaloguj";
 const labelFilter = "Filtruj";
 const labelClose = "Zamknij";
 const labelApprove = "Zatwierdź";
+const labelChange = "Zmień";
+const labelEdit = "Edytuj";
 const labelDisapprove = "Odrzuć";
+const labelDelete = "Usuń";
+const labelPick = "Wybierz";
+const labelClear = "Wyczyść";
+const labelBack = "Wstecz";
+const labelCreate = "Utwórz";
+const labelSave = "Zapisz";
 
+// Rekordy uzupełniające listy
 const teamAdditionalRow = "Wybierz zespół...";
 const positionAdditionalRow = "Wybierz stanowisko...";
 const yearAdditionalRow = "Wybierz rok...";
 
-export {serverIp,
-    labelFind, labelFilter, labelClose, labelApprove, labelDisapprove,
-    teamAdditionalRow, positionAdditionalRow, yearAdditionalRow};
+// Wybieranie wniosku urlopowego komponenty
+const labelRequestType = "Rodzaj";
+
+// Nieobecności/wnioski komponenty
+const labelRequest = "Wniosek";
+const labelFromTimeOfAbsence = "W terminie";
+const labelFromTimeOfRequest = "w terminie";
+const labelShowProfile = "Pokaż profil";
+
+// Nazwy dotyczące komponentu kalendarza
+const calendarLabelFrom = "Od:";
+const calendarLabelTo = "Do:";
+
+const skillsLabel = "Umiejętności";
+
+const labelFirstNameAndLastName = "Imie i nazwisko:";
+
+const gradeMessageLabel = "Treść";
+const gradeTitleLabel = "Tytuł";
+const gradePersonLabel = "Osoba";
+const employeeGradeText = "Ocena pracownika:";
+
+// Filtr wniosków urlopowych
+const firstnameLabel = "Imie";
+const lastnameLabel = "Nazwisko";
+const teamLabel = "Zespół"
+
+// Nagłowek moich nieobecności urlopowych
+const headerAbsencesEndOfDaysOff = "Zostało dni urlopowych";
+const headerAbsencesDaysNoPayLeft = "w tym na żądanie";
+
+// Statusy filtrów wniosków urlopowych
+const requestStatusWaitingLabel = "Oczekujące";
+const requestStatusApprovedLabel = "Zatwierdzone";
+const requestStatusDisapprovedLabel = "Odrzucone";
+const requestStatusCreatedByMeLabel = "Wystawione przeze mnie";
+const requestStatusCreatedNotByMeLabel = "Nie wystawione przeze mnie";
+
+// Nagłówek miesięcy pracy zalogowanego pracownika
+const monthsOfYourWorkLabel = "Miesiące Twojej pracy";
+const legendLabel = "Legenda";
+const legendToday = "Dziś";
+
+// Dane wniosków urlopowych
+const requestDescriptionLabel = "Opis wniosku";
+const requestStatusLabel = "Status";
+const requestActionLabel = "Akcje";
+const labelRequestNoPay = "Urlop bezpłatny";
+const labelRequestApprovers = "Zatwierdza";
+
+// Dane pracownika
+const labelBankAccount = "Konto bankowe";
+const labelBirthDate = "Data urodzenia";
+const labelPESEL = " PESEL";
+const labelSalary = "Wynagrodzenie brutto";
+const labelContractType = "Typ umowy";
+const labelPosition = "Stanowisko";
+const labelStartDate = "Rozpoczęcie pracy";
+
+
+// Oceny kwartalne
+const labelGivenGrades = "Wystawione oceny";
+const labelReceivedGrades = "Otrzymane oceny";
+
+// Edycja/ tworzenie/ wyświetlenie zespołu
+const labelTeamName = "Nazwa zespołu";
+const labelStrongSkills = "Silne cechy zespołu";
+const labelTeamManager = "Kierownik zespołu";
+const labelTeamMembers = "Członkowie zespołu";
+const labelCreateTeam = "Dodaj zespoł";
+
+// Przypomnienie hasła
+const labelRemindPassword = "Przypomnij hasło";
+const labelGiveEmail = "Podaj e-mail";
+const labelVerificationCode = "Kod weryfikacyjny";
+const labelGiveOldPassword = "Podaj stare hasło";
+const labelGiveNewPassword = "Podaj nowe hasło";
+const labelGiveNewPasswordAgain = "Powtórz nowe hasło";
+const labelSendVerificationEmail = "Wyślij email weryfikacyjny";
+const headerPasswordChange = "Zmiana hasła";
+
+const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
+const months = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
+    "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
+
+const headerEmployeesFinder = "Wyszukiwarka pracowników";
+const headerEmployeesFinderList = "Imie i nazwisko, Zespół, Stanowisko, Umiejętności"
+const labelEmployeeFinderExchanceEmployeesBetween = "Wymień aktualnego i wybranego pracownika pomiędzy zespołami";
+const headerEmployees = "Wyszukaj pracownika";
+const labelSwapInformation = "Osoby zostaną wymienione pomiędzy zespołami po zapisaniu zmian w aktualnie edytowanym zespole";
+const labelPersonChangedWith = "zamieniona z osobą";
+const labelAllPeopleChangedBetweenTeams = "Zamienione osoby pomędzy zespołami";
+
+
+// Wiadomości informacyjne w oknie przypominania hasła
+const alertMessageSent = "Wiadomość została wysłana";
+const alertVerficationCodeIsIncompatible = "Kod weryfikacyjny jest niezgodny";
+const alertWrongEmail = "Wprowadzony email jest błędny";
+const alertUnexpectedError = "Wystapił nieoczekiwany błąd, spróbuj ponownie za chwilę";
+const alertPutNewPasswords = "Wpisz nowe hasła w pola";
+const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
+const alertOldPasswordIsIncompatible = "Wpisane stare hasło jest błędne";
+
+export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelSave, labelCreate,
+    labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
+
+    pageNameRemind, pageNameEmployeeRegister, pageNameGiveGradesWindowGive, pageNameGiveGradesWindowView, pageNameTeamEdit, pageNameTeamCreate,
+    pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
+    pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
+    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams,
+
+    calendarLabelFrom, calendarLabelTo,
+    labelRequest, labelShowProfile,
+    labelFromTimeOfAbsence, labelFromTimeOfRequest,
+    teamAdditionalRow, positionAdditionalRow, yearAdditionalRow,
+    employeesMenu,
+    employeeRegisterMenu,
+    scheduleMenu,
+    companyScheduleMenu,
+    teamsMenu,
+    absencesMenu ,
+    requestsMenu,
+    gradesMenu,
+    gradeMenu,
+
+    labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition,labelBankAccount,labelContractType,
+
+    skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
+    employeeGradeText,
+    firstnameLabel, lastnameLabel, teamLabel,
+    requestStatusWaitingLabel,
+    requestStatusApprovedLabel,
+    requestStatusDisapprovedLabel,
+    requestStatusCreatedByMeLabel,
+    requestStatusCreatedNotByMeLabel,
+
+    monthsOfYourWorkLabel,
+    legendLabel, legendToday,
+
+    weekdays, months,
+
+    requestStatusLabel, requestActionLabel, requestDescriptionLabel,
+    labelRequestType, labelRequestNoPay, labelRequestApprovers,
+
+    labelSendVerificationEmail, labelRemindPassword, labelGiveEmail,
+    labelVerificationCode, labelGiveNewPassword, labelGiveNewPasswordAgain, labelGiveOldPassword, headerPasswordChange,
+
+    alertMessageSent,
+    alertVerficationCodeIsIncompatible,
+    alertWrongEmail,
+    alertUnexpectedError,
+    alertPutNewPasswords,
+    alertNewPasswordsAreIncompatible,
+    alertOldPasswordIsIncompatible,
+
+    labelReceivedGrades, labelGivenGrades,
+
+    headerEmployeesFinder, headerEmployeesFinderList, labelEmployeeFinderExchanceEmployeesBetween,
+
+    headerEmployees,
+
+    headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
+    labelSwapInformation,
+
+    labelStrongSkills, labelTeamManager, labelTeamMembers, labelTeamName, labelPersonChangedWith, labelAllPeopleChangedBetweenTeams, labelCreateTeam
+};
