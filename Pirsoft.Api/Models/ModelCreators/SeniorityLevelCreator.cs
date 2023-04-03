@@ -10,7 +10,7 @@ namespace Pirsoft.Api.Models.ModelCreators
 
         public override IApiModel CreateModel() => new SeniorityLevelModel()
         {
-            SeniorityLevel = _seniorityLevel.ToString(),
+            seniority_level_name = _seniorityLevel.ToString(),
         };
     }
 }
