@@ -26,7 +26,7 @@ public class EmployeeModel : IApiModel
     public virtual CompanyRoleModel CompanyRole { get; set; } = null!;
     public virtual ContractTypeModel ContractType { get; set; } = null!;
     public virtual DepartmentModel Department { get; set; } = null!;
-    public virtual HolidayModel? Holiday { get; set; }
+    public virtual AbsenceModel? Holiday { get; set; }
     public virtual SeniorityLevelModel SeniorityLevel { get; set; } = null!;
     public virtual ICollection<SkillModel> Skills { get; } = new List<SkillModel>();
 }
