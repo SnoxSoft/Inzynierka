@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pirsoft.Api.Models;
 
@@ -7,26 +8,29 @@ public class EmployeeModel : IApiModel
     [NotMapped]
     public int ApiInternalId { get; set; }
 
-    public string FirstName { get; set; } = null!;
-    public string LastName { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string Password { get; set; } = null!;
-    public string Pesel { get; set; } = null!;
-    public string? BankAccountNumber { get; set; }
-    public int SeniorityInMonths { get; set; }
-    public DateOnly EmploymentStartDate { get; set; }
-    public sbyte IsActive { get; set; }
-    public sbyte PasswordReset { get; set; }
-    public DateOnly DateOfBirth { get; set; }
-    public double GrossSalary { get; set; }
-    public int ContractIdId { get; set; }
-    public int DepartmentId { get; set; }
-    public int SeniorityLevelId { get; set; }
-    public int CompanyRoleId { get; set; }
-    public virtual CompanyRoleModel CompanyRole { get; set; } = null!;
-    public virtual ContractTypeModel ContractType { get; set; } = null!;
-    public virtual DepartmentModel Department { get; set; } = null!;
-    public virtual AbsenceModel? Holiday { get; set; }
-    public virtual SeniorityLevelModel SeniorityLevel { get; set; } = null!;
-    public virtual ICollection<SkillModel> Skills { get; } = new List<SkillModel>();
+    [Key]
+    public int employee_id { get => ApiInternalId; set => ApiInternalId = value; }
+    public string first_name { get; set; } = null!;
+    public string last_name { get; set; } = null!;
+    public string email_address { get; set; } = null!;
+    public string password { get; set; } = null!;
+    public string pesel { get; set; } = null!;
+    public string? bank_account_number { get; set; }
+    public int seniority_in_months { get; set; }
+    public DateTime employment_start_date { get; set; }
+    public byte is_active { get; set; }
+    public byte password_reset { get; set; }
+    public DateTime birth_date { get; set; }
+    public double salary_gross { get; set; }
+    public int employee_contract_type_id { get; set; }
+    public int employee_department_id { get; set; }
+    public int employee_seniority_level_id { get; set; }
+    public int employee_company_role_id { get; set; }
+
+    public virtual CompanyRoleModel employee_company_role { get; set; } = null!;
+    public virtual ContractTypeModel employee_contract_type { get; set; } = null!;
+    public virtual DepartmentModel employee_department { get; set; } = null!;
+    public virtual SeniorityLevelModel employee_seniority_level { get; set; } = null!;
+    public virtual ICollection<AbsenceModel> absences { get; } = new List<AbsenceModel>();
+    public virtual ICollection<SkillModel> skills { get; } = new List<SkillModel>();
 }
