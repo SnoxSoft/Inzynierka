@@ -10,7 +10,7 @@ namespace Pirsoft.Api.Models.ModelCreators
 
         public override IApiModel CreateModel() => new CompanyRoleModel()
         {
-            CompanyRole = _companyRole.ToString(),
+            role_name = _companyRole.ToString(),
         };
     }
 }
