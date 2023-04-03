@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
+import {labelDelete, labelFromTimeOfRequest, labelRequest, labelShowProfile} from "../../GlobalAppConfig";
 
 
 const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, setRequestPickedData,
@@ -48,7 +49,7 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
         <div className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
             <div className={"p-2 flex rounded-md basis-8/12"}>
-                {employeeRequest.name}, {employeeRequest.team}, w terminie {employeeRequest.from} - {employeeRequest.to}, {employeeRequest.applicant}, {requestType}
+                {employeeRequest.name}, {employeeRequest.team}, {labelFromTimeOfRequest} {employeeRequest.from} - {employeeRequest.to}, {employeeRequest.applicant}, {requestType}
             </div>
             <div className={"flex basis-1/12 place-content-center rounded-md " + (!old && requestColor )}>
                 {requestStatus}
@@ -59,10 +60,10 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
                         {!old ?
                             <>
                         {employeeRequest.state === "accepted" &&
-                            <ReusableButton value={"USUN"} onClick={() => deleteAbsence()}/>
+                            <ReusableButton value={labelDelete} onClick={() => deleteAbsence()}/>
                         }
                         {employeeRequest.state === "waiting" &&
-                            <ReusableButton value={"WNIOSEK"} onClick={() => {
+                            <ReusableButton value={labelRequest} onClick={() => {
                                 setRequestPickedData(employeeRequest)
                                 setRequestsVisible(false);
                             }}/>
@@ -70,7 +71,7 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
                             </> :
                         <></>
                     }
-                    <ReusableButton value={"POKAŻ PROFIL"} link={`/employee/${employeeRequest.id}`}/>
+                    <ReusableButton value={labelShowProfile} link={`/employee/${employeeRequest.id}`}/>
                     </>
                 )
                 }

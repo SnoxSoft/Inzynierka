@@ -6,7 +6,15 @@ import SkillsList from "../components/employeesFinder/SkillsList";
 import SkillsPicker from "../components/employeesFinder/SkillsPicker";
 import EmployeePickerListItem from "../components/employeesFinder/EmployeePickerListItem";
 import FunctionForResize from "../components/base/FunctionForResize";
-import {labelFind, serverIp} from "../GlobalAppConfig";
+import {
+    headerEmployeesFinder,
+    headerEmployeesFinderList,
+    labelApprove,
+    labelClose, labelEmployeeFinderExchanceEmployeesBetween,
+    labelFind, pageNameEmployeesFinder,
+    serverIp,
+    skillsLabel
+} from "../GlobalAppConfig";
 
 
 const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
@@ -16,7 +24,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                              setPickedPersonId,
                              setPickedPersonName}) => {
 
-    document.title = "PIRSOFT: Wyszukiwarka pracowników"
+    document.title = pageNameEmployeesFinder;
 
     const [pickedEmployeeData, setPickedEmployeeData] = useState([]);
 
@@ -209,7 +217,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                 <div className={"every-page-on-scroll text-workday bg-blue-menu"}
                 style={{minWidth: 800}}>
                     <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 p-4"}>
-                        <div>WYSZUKIWARKA PRACOWNIKÓW</div>
+                        <div>{headerEmployeesFinder}</div>
                         <div className={"flex flex-row place-items-center gap-2"}>
                             <div className={"flex flex-col place-self-start m-2 gap-2"}>
                                 <FirstnameAndLastname  className={""} onChange={setFirstnameAndLastname}/>
@@ -230,24 +238,25 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
 
                     <div  id={"employee-picker"} className={"grow bg-brown-menu border-2 bg-opacity-30 border-workday menu rounded-md m-4 overflow-y-auto"}
                          style={{height: wantedHeightsForList - 100, minHeight:100}}>
-                        <div className={"p-4 pl-2"}>IMIE I NAZWISKO, ZESPÓŁ, STANOWISKO, UMIEJĘTNOŚCI</div>
+                        <div className={"p-4 pl-4"}>{headerEmployeesFinderList}</div>
                         <hr/>
                         {employeePickerData}
                     </div>
 
                     <div id={"bottom-picker"} className={"flex flex-row gap-2 justify-between p-4"} >
-                        <ReusableButton value={"ZAMKNIJ"} onClick={() => {
+                        <ReusableButton value={labelClose} onClick={() => {
                             setTitle(title)
                             setEmployeesFinderShowing(false)
                         }}/>
                         <div className={"flex flex-row gap-2 place-items-center "}>
                             {methodToUse !== 'grade' ?
                                 <>
-                                    <div className={"flex text-end"}>Wymień aktualnego i wybranego pracownika pomiędzy zespołami</div>
+                                    <div className={"flex text-end"}>{labelEmployeeFinderExchanceEmployeesBetween}</div>
                                     <input type={"checkbox"} className={"w-6 h-6"} disabled={!isSwapPossible} onChange={(e) => setSwapOption(e.target.checked)}/>
                                 </> :
-                            <ReusableButton value={"ZATWIERDŹ"} onClick={() => finderAcceptChanges()}/>
+                                <></>
                             }
+                            <ReusableButton value={labelApprove} onClick={() => finderAcceptChanges()}/>
                         </div>
                     </div>
                 </div> :
@@ -256,12 +265,12 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                      style={{minWidth: 800}}
                 >
                     <div id={"skills-picker"} className={"flex flex-col justify-evenly text-workday text-center p-4"}>
-                        <div>UMIEJĘTNOŚCI</div>
+                        <div>{skillsLabel}</div>
                         {skillsComponent}
                         <br/>
                         <div className={"p-4 flex flex-row justify-evenly"}>
-                            <ReusableButton value={"ZATWIERDŹ"} onClick={() => choseSkills()}/>
-                            <ReusableButton value={"ZAMKNIJ"} onClick={() => {setSkillsNotShows(true)}}/>
+                            <ReusableButton value={labelApprove} onClick={() => choseSkills()}/>
+                            <ReusableButton value={labelClose} onClick={() => {setSkillsNotShows(true)}}/>
                         </div>
                     </div>
                 </div>

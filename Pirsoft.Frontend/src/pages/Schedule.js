@@ -4,10 +4,17 @@ import ReusableButton from "../components/base/ReusableButton";
 import ScheduleListItem from "../components/schedule/ScheduleListItem";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
-import {labelFilter, serverIp} from "../GlobalAppConfig";
+import {
+    calendarLabelFrom,
+    calendarLabelTo, labelBack,
+    labelFilter,
+    legendLabel, months,
+    monthsOfYourWorkLabel, pageNameSchedule,
+    serverIp, weekdays
+} from "../GlobalAppConfig";
 
 function Schedule(){
-    document.title = "PIRSOFT: Harmonogram osobisty";
+    document.title = pageNameSchedule;
 
     // Ładowanie dni wolnych / wybranych / nieobecnych
     let daysOff = [Object]
@@ -48,10 +55,6 @@ function Schedule(){
 
     }, []);
 
-    const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
-        "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
-    ];
-
     const filtrSchedule = () => {
         const dateFrom = new Date(from);
         const dateTo = new Date(to);
@@ -67,7 +70,7 @@ function Schedule(){
             const newDate = new Date(newDateFrom.setMonth(newDateFrom.getMonth()+i))//.toLocaleDateString("sv", options);
             localList.push(
                 {
-                    text: monthNames[ newDate.getMonth()].toUpperCase()+" "+newDate.getFullYear(),
+                    text: months[ newDate.getMonth()]+" "+newDate.getFullYear(),
                     date: newDate.toLocaleDateString("sv", options)
                 });
         }
@@ -78,7 +81,7 @@ function Schedule(){
 
     const [daysOfWeek, setDaysOfWeek] = useState([])
     const [calendarDays, setCalendarDays] = useState([])
-    const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
+
 
     const [pickedMonthText, setPickedMonth] = useState('')
 
@@ -98,7 +101,7 @@ function Schedule(){
         weekdays.forEach((weekday) => {
             daysOfWeekLoad.push(
                 <div className={"m-2 flex self-end place-self-center text-workday"}>
-                    {weekday.toString().toUpperCase()}
+                    {weekday.toString()}
                 </div>);
         });
         setDaysOfWeek(daysOfWeekLoad)
@@ -324,7 +327,7 @@ function Schedule(){
             }
             else {
                 loadWholeMonthData({
-                    text: monthNames[pickedMonthTextDateMinusOne.getMonth()].toUpperCase()+" "
+                    text: months[pickedMonthTextDateMinusOne.getMonth()].toUpperCase()+" "
                         +pickedMonthTextDateMinusOne.getFullYear(),
                     date: pickedMonthTextDateMinusOne.toLocaleDateString("sv", options)})
             }
@@ -342,7 +345,7 @@ function Schedule(){
             }
             else {
                 loadWholeMonthData({
-                    text: monthNames[pickedMonthTextDatePlusOne.getMonth()].toUpperCase()+" "
+                    text: months[pickedMonthTextDatePlusOne.getMonth()].toUpperCase()+" "
                         +pickedMonthTextDatePlusOne.getFullYear(),
                     date: pickedMonthTextDatePlusOne.toLocaleDateString("sv", options)})
             }
@@ -365,7 +368,7 @@ function Schedule(){
                         <div>
                             <button className={"flex bg-d flex-row self-center gap-2"} onClick={() => setShowHidePickedMonth(false)}>
                                 <div className={"flex flex-row self-center"}><MdOutlineArrowBackIosNew /></div>
-                                <div>WSTECZ</div>
+                                <div>{labelBack}</div>
                             </button>
                         </div>
                     </div>
@@ -385,7 +388,7 @@ function Schedule(){
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <div>
-                            <ReusableButton value={"LEGENDA"}
+                            <ReusableButton value={legendLabel}
                                             onClick={() => console.log("tu bedzie legenda:)")}/>
                         </div>
                     </div>
@@ -405,10 +408,10 @@ function Schedule(){
                  className={"every-page-on-scroll overflow-y-hidden"}
             style={{minWidth: 800}}>
                 <div className={"p-4 flex flex-wrap flex-col text-center text-workday gap-4"}>
-                    <p>MIESIĄCE TWOJEJ PRACY</p>
+                    <p>{monthsOfYourWorkLabel}</p>
                     <div className={"flex flex-row gap-4 flex-wrap"}>
                         <div className={"flex flex-row gap-4 place-self-center"}>
-                            <p className={""}>OD: </p>
+                            <p className={""}>{calendarLabelFrom}</p>
                             <input className={"grow border text-left text-black rounded-md h-6 w-52"}
                                    id="month-year-from"
                                    type="month"
@@ -429,7 +432,7 @@ function Schedule(){
                         </div>
 
                         <div className={"flex flex-row gap-4 place-self-center"}>
-                            <p className={""}>DO: </p>
+                            <p className={""}>{calendarLabelTo}</p>
                             <input className={"grow border text-left text-black rounded-md h-6 w-52"}
                                    id="month-year-to"
                                    type="month"

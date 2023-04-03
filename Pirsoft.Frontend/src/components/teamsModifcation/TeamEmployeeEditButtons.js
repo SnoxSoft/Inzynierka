@@ -1,4 +1,5 @@
 import ReusableButton from "../base/ReusableButton";
+import {labelChange, labelDelete} from "../../GlobalAppConfig";
 
 const TeamEmployeeEditButtons = ({showOptions, changeMethod, changeValue, deleteMethod, deleteValue}) => {
 
@@ -6,9 +7,9 @@ const TeamEmployeeEditButtons = ({showOptions, changeMethod, changeValue, delete
         <>
             {showOptions ?
                 <div className={"flex flex-row gap-4 place-content-center"}>
-                    <ReusableButton value={"ZMIEŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
+                    <ReusableButton value={labelChange} formatting={"h-6 w-16 border-2 border-gray-400"}
                                     onClick={() => changeMethod(changeValue)}/>
-                    <ReusableButton value={"USUŃ"} formatting={"h-6 w-16 border-2 border-gray-400"}
+                    <ReusableButton value={labelDelete} formatting={"h-6 w-16 border-2 border-gray-400"}
                                     onClick={() => deleteMethod(deleteValue)}/>
                 </div>
                 :

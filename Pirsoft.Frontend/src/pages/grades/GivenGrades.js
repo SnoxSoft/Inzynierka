@@ -1,15 +1,19 @@
 import {useEffect, useState} from "react";
 import Select from "react-select";
-import {labelFind, serverIp, yearAdditionalRow} from "../../GlobalAppConfig";
+import {labelFind, pageNameGivenGrades, serverIp, yearAdditionalRow} from "../../GlobalAppConfig";
 import GradeListItem from "../../components/grades/GradeListItem";
 import TeamsList from "../../components/employees/search/fields/TeamsList";
 import FirstNameAndLastName from "../../components/grades/FirstNameAndLastName";
 import ReusableButton from "../../components/base/ReusableButton";
 
 function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGradesVisible}){
-    document.title = 'PIRSOFT: Oceny pracowników'
+    document.title = pageNameGivenGrades;
 
+    // Dane do fitrowania listy ocen
+    const[firstNameAndLastName, setFirstNameAndLastName] = useState()
+    const[pickedTeam, setPickedTeam] = useState()
     const[pickedYear, setPickedYear] = useState();
+
     const[years, setYears] = useState(undefined);
     const[currentGradesList, setCurrentGradesList] = useState();
     const[loadedGrades, setLoadedGrades] = useState(undefined)
@@ -42,8 +46,10 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
 
     // Metoda pobierająca listę ocen z bieżącego roku
     const getGrades = () => {
+        console.log(firstNameAndLastName)
+        console.log(pickedTeam)
         // Pobranie listy ocen na podstawie wybranego roku
-        fetch(serverIp+"/getGivenGrades/"+sessionStorage.getItem('USER')+"/"+pickedYear)
+        fetch(serverIp + "/getGivenGrades/" + sessionStorage.getItem('USER') + "/" + pickedYear)
             .then((response) => {response.json()
                 .then((response) => {
                     setCurrentGradesList(response)
@@ -70,8 +76,6 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
         FunctionForResizeGrades()
     }, [pickedYear, heightFromParent]);
 
-    const[firstNameAndLastName, setFirstNameAndLastName] = useState()
-    const[pickedTeam, setPickedTeam] = useState()
     return(
         <div
             className={"every-page-on-scroll border-b-2 border-0 bg-brown-menu text-workday overflow-y-hidden"}

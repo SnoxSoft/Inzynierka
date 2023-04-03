@@ -1,4 +1,11 @@
-import {labelApprove, labelClose, labelDisapprove, serverIp} from "../../GlobalAppConfig";
+import {
+    gradeMenu,
+    labelApprove,
+    labelClose,
+    labelDisapprove, pageNameGiveGradesWindowGive,
+    pageNameGiveGradesWindowView,
+    serverIp
+} from "../../GlobalAppConfig";
 import ReusableButton from "../../components/base/ReusableButton";
 import {CgClose} from "react-icons/cg";
 import PersonData from "../../components/giveGrade/PersonData";
@@ -14,10 +21,10 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
     const [title, setTitle] = useState("")
     if(title === ""){
         if(mode === "view"){
-            setTitle("PIRSOFT: Ocena pracownika")
+            setTitle(pageNameGiveGradesWindowView)
         }
         else {
-            setTitle("PIRSOFT: Ocenianie pracownika")
+            setTitle(pageNameGiveGradesWindowGive)
         }
     }
 
@@ -78,7 +85,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
              style={{minWidth: 800}}>
             <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
                 <div className={"col-start-1 row-start-1 place-self-center"}>
-                    Ocena kwartalna
+                    {gradeMenu}
                 </div>
                 <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                     <ReusableButton value={<CgClose  size={30}/>}
@@ -112,7 +119,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
             <br/>
             <div className={"flex justify-evenly"}>
                 {
-                    mode == "create" ?
+                    mode === "create" ?
                         <>
                             <ReusableButton value={labelDisapprove} onClick={() => closeGradeWindow()}/>
                             <ReusableButton value={labelApprove} onClick={() => giveGrade()}/>

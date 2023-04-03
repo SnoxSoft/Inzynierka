@@ -4,11 +4,18 @@ import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import Select from "react-select";
 import {CgClose} from "react-icons/cg";
-import {serverIp} from "../GlobalAppConfig";
+import {
+    labelApprove,
+    labelRequest,
+    labelRequestApprovers,
+    labelRequestNoPay,
+    labelRequestType, pageNameRequest,
+    serverIp
+} from "../GlobalAppConfig";
 
 
 const Request = ({setAbsencesVisible}) =>{
-    document.title = "PIRSOFT: Wniosek";
+    document.title = pageNameRequest;
 
     // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
@@ -94,7 +101,7 @@ const Request = ({setAbsencesVisible}) =>{
              style={{minWidth: 800}}>
             <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
                 <div className={"col-start-1 row-start-1 place-self-center"}>
-                    WNIOSEK URLOPOWY
+                    {labelRequest}
                 </div>
                 <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                     <ReusableButton value={<CgClose  size={30}/>}
@@ -109,7 +116,7 @@ const Request = ({setAbsencesVisible}) =>{
                 </div>
                 <div className={"flex "}>
                     <p className={"basis-1/3 text-end pr-4"}>
-                        RODZAJ
+                        {labelRequestType}
                     </p>
                     <div className={"bg-workday text-black basis-1/3"}>
                         <Select options={option} isOptionDisabled={(option) => option.value} defaultValue={{ value: '', label: 'URLOP WYPOCZYNKOWY'}}
@@ -118,13 +125,13 @@ const Request = ({setAbsencesVisible}) =>{
                 </div>
                 <div className={"flex"}>
                     <p className={"basis-1/3 text-end pr-4"}>
-                        URLOP BEZPŁATNY
+                        {labelRequestNoPay}
                     </p>
                     <input type={"checkbox"} className={"h-5 w-5 checked:decoration-workday"} checked={leaveDaysLeft} disabled={true}/>
                 </div>
                 <div id={"schedule-list"} className={"flex"}>
                     <p className={"text-end basis-1/3 pr-4"}>
-                        ZATWIERDZA
+                        {labelRequestApprovers}
                     </p>
                     <div className={"flex flex-col basis-4/12 justify-start bg-workday rounded-md gap-1"}>
                         {approversList}
@@ -133,7 +140,7 @@ const Request = ({setAbsencesVisible}) =>{
             </div>
             <br/>
             <div className={"flex justify-evenly"} style={{ height: wantedHeightsForList}}>
-                <ReusableButton value={"ZATWIERDZ"} onClick={() => setAbsencesVisible(true)}/>
+                <ReusableButton value={labelApprove} onClick={() => setAbsencesVisible(true)}/>
             </div>
         </div>
     )

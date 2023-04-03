@@ -6,11 +6,17 @@ import TeamsList from "../components/employees/search/fields/TeamsList";
 import RequestsListItem from "../components/requests/RequestsListItem";
 import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
-import {serverIp} from "../GlobalAppConfig";
+import {
+    pageNameRequests,
+    requestActionLabel,
+    requestDescriptionLabel,
+    requestStatusLabel,
+    serverIp
+} from "../GlobalAppConfig";
 import RequestsFilter from "../components/requests/RequestsFilter";
 
 function Requests(){
-    document.title = "PIRSOFT: WNIOSKI PRACOWNIKOW";
+    document.title = pageNameRequests;
 
     // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
@@ -177,13 +183,13 @@ function Requests(){
 
             <div className={"text-start ml-4 mr-8 items-center h-6 rounded-md flex bg-brown-menu border-2 border-workday text-workday font-bold"}>
                 <div className={"p-2 flex rounded-md basis-8/12"}>
-                    OPIS WNIOSKU
+                    {requestDescriptionLabel}
                 </div>
                 <div className={"flex basis-1/12 place-content-center rounded-md "}>
-                    STATUS
+                    {requestStatusLabel}
                 </div>
                 <div className={"flex justify-evenly basis-3/12"}>
-                    AKCJE
+                    {requestActionLabel}
                 </div>
             </div>
             <div id={"schedule-list"} className={"overflow-y-auto"} style={{ height: wantedHeightsForList}} >

@@ -7,7 +7,16 @@ import {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import EmployeesFinder from "../EmployeesFinder";
-import {serverIp} from "../../GlobalAppConfig";
+import {
+    labelAllPeopleChangedBetweenTeams,
+    labelClose,
+    labelCreate, labelPersonChangedWith,
+    labelSave,
+    labelStrongSkills,
+    labelSwapInformation, labelTeamManager, labelTeamMembers,
+    labelTeamName,
+    serverIp
+} from "../../GlobalAppConfig";
 
 const TeamWindow = ({id,mode, title}) => {
     const[dynamicTitle, setDynamicTitle] = useState(title)
@@ -106,25 +115,24 @@ const TeamWindow = ({id,mode, title}) => {
     }
 
     function setExchangeInformation(idToDeleteFromList = null) {
-        setSwapEmployeesBetweenTeamsInformation(<div></div>)
+        setSwapEmployeesBetweenTeamsInformation(<div>{labelAllPeopleChangedBetweenTeams}</div>)
         let loadSwapInformation = []
 
         if (swapTeamsBetweenTheseEmployee.length > 0) {
-            loadSwapInformation.push(<div> Zamienione osoby pomędzy zespołami</div>)
+            loadSwapInformation.push(<div>{}</div>)
         }
 
         let ifAnyChangeOnCurrentSwappedEmployeeList = []
         swapTeamsBetweenTheseEmployee.forEach((s) => {
             if (idToDeleteFromList === null) {
-                loadSwapInformation.push(<div> {s[0].firstandlastname}, zamieniona z osobą: {s.firstandlastname}</div>)
+                loadSwapInformation.push(<div> {s[0].firstandlastname}, {labelPersonChangedWith}: {s.firstandlastname}</div>)
                 ifAnyChangeOnCurrentSwappedEmployeeList.push(s)
             }
 
             if (idToDeleteFromList !== null) {
                 if (s[0].id !== idToDeleteFromList) {
                     //delete from swap list, no more swap if any change occur and get back previous employee to the list :)
-                    loadSwapInformation.push(<div> {s[0].firstandlastname}, zamieniona z
-                        osobą: {s.firstandlastname}</div>)
+                    loadSwapInformation.push(<div> {s[0].firstandlastname}, {labelPersonChangedWith}: {s.firstandlastname}</div>)
                     ifAnyChangeOnCurrentSwappedEmployeeList.push(s)
                 } else {
                     let employeeDataWithReturnedChanges = []
@@ -142,8 +150,7 @@ const TeamWindow = ({id,mode, title}) => {
         })
         if (swapTeamsBetweenTheseEmployee.length > 0) {
             loadSwapInformation.push(<div> !!! </div>)
-            loadSwapInformation.push(<div> OSOBY ZOSTANĄ WYMIENIONE POMIĘDZY ZESPOŁAMI PO ZAPISANIU ZMIAN W AKTUALNIE
-                EDYTOWANYM ZESPOLE </div>)
+            loadSwapInformation.push(<div>{labelSwapInformation}</div>)
             loadSwapInformation.push(<div> !!! </div>)
         }
 
@@ -182,16 +189,16 @@ const TeamWindow = ({id,mode, title}) => {
                      style={{minWidth: 800}}
                 >
                     <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 p-4"}>
-                        <div>NAZWA ZESPOŁU</div>
+                        <div>{labelTeamName}</div>
                         <TeamName disableChange={(mode === 'view')} value={teamData} onChange={setTeamData} />
-                        <div>SILNE CECHY ZESPOŁU</div>
+                        <div>{labelStrongSkills}</div>
                         <TeamMembersSkills value={employeeSkillData}/>
-                        <div>KIEROWNIK ZESPOŁU</div>
+                        <div>{labelTeamManager}</div>
                         <TeamLeader disableChange={(mode === 'view')}
                             value={leaderData} setLeaderData={setLeaderData}
                             setEmployeesFinderShowing={setEmployeesFinderShowing}
                             />
-                        <div>CZŁONKOWIE ZESPOŁU</div>
+                        <div>{labelTeamMembers}</div>
                         <TeamMembers
                             disableChange={(mode === 'view')}
                             employeeData={employeeData} setEmployeeData={setEmployeeData}
@@ -201,13 +208,13 @@ const TeamWindow = ({id,mode, title}) => {
                             setSwapTeamsBetweenTheseEmployee={setSwapTeamsBetweenTheseEmployee}/>
                         <div className={"text-center"}>{swapEmployeesBetweenTeamsInformation}</div>
                         <div className={"flex flex-row gap-2"}>
-                            <ReusableButton value={"ZAMKNIJ"} onClick={() => navigate(-1)}/>
+                            <ReusableButton value={labelClose} onClick={() => navigate(-1)}/>
                             {mode === 'create' ?
-                                <ReusableButton value={"UTWÓRZ"} onClick={() => console.log("UTWÓRZ ZESPOŁ")}/> :
+                                <ReusableButton value={labelCreate} onClick={() => saveOrCreate()}/> :
                                 <></>
                             }
                             {mode === 'edit' ?
-                                <ReusableButton value={"ZAPISZ"} onClick={() => saveOrCreate()}/> :
+                                <ReusableButton value={labelSave} onClick={() => saveOrCreate()}/> :
                                 <></>
                             }
                         </div>

@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import GradeRating from "./GradeRating";
+import {employeeGradeText} from "../../GlobalAppConfig";
 
 const GradeListItem = ({grade, setGradeMode, setPickedGradeData, setGradesVisible}) => {
     const[showHideButtons, setShowHideButtons] = useState(false);
@@ -20,7 +21,7 @@ const GradeListItem = ({grade, setGradeMode, setPickedGradeData, setGradesVisibl
                 <div>{grade.quartet}</div>
                 <div className={"flex flex-col"}>
                     <div className={"place-self-start"}>
-                        {grade.title} Ocena pracownika: {grade.personName} {grade.time}
+                        {grade.title} {employeeGradeText} {grade.personName} {grade.time}
                     </div>
                     <div className={"place-self-start text-left"}>
                         {grade.message}
