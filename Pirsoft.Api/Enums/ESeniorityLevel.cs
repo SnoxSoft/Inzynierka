@@ -1,9 +1,10 @@
 ﻿namespace Pirsoft.Api.Enums
 {
-    public enum EPositionType
+    public enum ESeniorityLevel
     {
         Junior = 1,
         Mid    = 2,
-        Senior = 3,
+        Other  = 3,
+        Senior = 4,
     }
 }

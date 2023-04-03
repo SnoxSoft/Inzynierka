@@ -8,27 +8,27 @@ using System.Collections.Generic;
 
 namespace Pirsoft.UnitTests.ModelCreators
 {
-    public class PositionCreatorTests
+    public class SeniorityLevelCreatorTests
     {
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void CreateModel_CreatesCorrectModel(EPositionType testData)
+        public void CreateModel_CreatesCorrectModel(ESeniorityLevel testData)
         {
             //Arrange
-            PositionTypeCreator sut = new(testData);
+            SeniorityLevelCreator sut = new(testData);
 
             //Act
             IApiModel result = sut.CreateModel();
 
             //Assert
-            result.Should().BeOfType<PositionTypeModel>();
+            result.Should().BeOfType<SeniorityLevelModel>();
         }
 
         public static IEnumerable<object[]> GetTestData()
         {
-            foreach (EAccountType positionType in Enum.GetValues(typeof(EPositionType)))
+            foreach (ESeniorityLevel seniorityLevel in Enum.GetValues(typeof(ESeniorityLevel)))
             {
-                yield return new object[] { positionType };
+                yield return new object[] { seniorityLevel };
             }
         }
     }

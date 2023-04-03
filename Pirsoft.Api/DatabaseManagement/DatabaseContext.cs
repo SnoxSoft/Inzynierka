@@ -14,7 +14,7 @@ namespace Pirsoft.Api.DatabaseManagement
         public virtual DbSet<DepartmentModel> Departament { get; set; }
         public virtual DbSet<EmployeeModel> Employee { get; set; }
         public virtual DbSet<HolidayModel> Holiday { get; set; }
-        public virtual DbSet<PositionTypeModel> Position { get; set; }
+        public virtual DbSet<SeniorityLevelModel> SeniorityLevel { get; set; }
         public virtual DbSet<SkillModel> Skills { get; set; }
     }
 }
