@@ -1,12 +1,16 @@
-﻿namespace Pirsoft.Api.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Pirsoft.Api.Models
 {
     public partial class HolidayModel : IApiModel
     {
-        public int Id { get; set; }
+        [NotMapped]
+        public int ApiInternalId { get; set; }
+
         public int EmployeeId
         {
-            get => Id;
-            set => Id = value;
+            get => ApiInternalId;
+            set => ApiInternalId = value;
         }
         public DateOnly HolidayStart { get; set; }
         public DateOnly HolidayEnd { get; set; }

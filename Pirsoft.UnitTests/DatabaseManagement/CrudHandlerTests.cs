@@ -47,7 +47,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
         public void Create_ShouldThrowException_WhenEntityIdDifferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
-            testEntity.Id = 1;
+            testEntity.ApiInternalId = 1;
 
             //Act
             Action act = () => _sut.Create(testEntity);
@@ -129,7 +129,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
         public void Update_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
-            testEntity.Id = 1;
+            testEntity.ApiInternalId = 1;
             IEnumerable<TModel> testData = prepareTestData(testEntity);
             Mock<DbSet<TModel>> mockSet = DbSetMocks.CreateMock(testData);
 
@@ -160,7 +160,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
         public void Delete_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
-            testEntity.Id = 1;
+            testEntity.ApiInternalId = 1;
             IEnumerable<TModel> testData = prepareTestData(testEntity);
             Mock<DbSet<TModel>> mockSet = DbSetMocks.CreateMock(testData);
 
