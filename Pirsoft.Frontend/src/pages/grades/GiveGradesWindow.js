@@ -15,6 +15,7 @@ import GradeMessage from "../../components/giveGrade/GradeMessage";
 import GradeRating from "../../components/grades/GradeRating";
 import {useEffect, useState} from "react";
 import EmployeesFinder from "../EmployeesFinder";
+import {endpointGetAvailableQuartets} from "../../EndpointAppConfig";
 
 function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
 
@@ -42,7 +43,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
     async function loadAvailableQuartets(){
         let availableQuartetsLoad = []
         if(pickedPersonId !== ""){
-            const response = await fetch(serverIp + "/getAvailableQuartets/" + pickedPersonId)
+            const response = await fetch(serverIp + "/" + endpointGetAvailableQuartets + "/" + pickedPersonId)
             const quarters = await response.json();
 
              quarters.forEach((q) => {

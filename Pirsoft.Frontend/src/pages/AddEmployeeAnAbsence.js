@@ -27,6 +27,8 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
     const [dateFrom, setDateFrom] = useState(currentDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(currentDate.toLocaleDateString("sv", options));
 
+
+    // Pobranie tych danych z endpointu..
     const absenceOptions = [
         { value: 'dayoff', label: 'Urlop wypoczynkowy'},
         { value: 'demand', label: 'Urlop na żądanie' },

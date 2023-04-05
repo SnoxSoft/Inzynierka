@@ -12,13 +12,14 @@ import {
     monthsOfYourWorkLabel, pageNameSchedule,
     serverIp, weekdays
 } from "../GlobalAppConfig";
+import {endpointGetEmployeeMonthDaysOff} from "../EndpointAppConfig";
 
 function Schedule(){
     document.title = pageNameSchedule;
 
     // Ładowanie dni wolnych / wybranych / nieobecnych
     let daysOff = [Object]
-    fetch(serverIp+"/monthDays/"+sessionStorage.getItem('USER')+"/2023-02")
+    fetch(serverIp + "/" + endpointGetEmployeeMonthDaysOff + "/" + sessionStorage.getItem('USER') + "/" + "2023-02")
         .then((response) => {response.json()
             .then((response) => {
                 daysOff = response

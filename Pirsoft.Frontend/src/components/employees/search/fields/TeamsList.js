@@ -2,13 +2,14 @@ import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
 import {serverIp, teamAdditionalRow} from "../../../../GlobalAppConfig";
+import {endpointGetAllTeams} from "../../../../EndpointAppConfig";
 
 const TeamsList = ({onChange}) => {
 
     const [teams, setTeams] = useState(Object);
 
     if (teams[0] === undefined) {
-        fetch(serverIp+"/getAllTeams")
+        fetch(serverIp + "/" + endpointGetAllTeams)
             .then((response) => response.json())
             .then((response) => {
                 response.push({ value: '', label: teamAdditionalRow })

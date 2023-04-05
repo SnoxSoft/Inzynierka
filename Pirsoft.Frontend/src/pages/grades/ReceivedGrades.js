@@ -3,6 +3,7 @@ import Select from "react-select";
 import {labelFind, pageNameReceivedGrades, serverIp, yearAdditionalRow} from "../../GlobalAppConfig";
 import GradeListItem from "../../components/grades/GradeListItem";
 import ReusableButton from "../../components/base/ReusableButton";
+import {endpointGetEmployedYears, endpointGetReceivedYearGrades} from "../../EndpointAppConfig";
 
 function ReceivedGrades({heightFromParent, setGradeMode, setPickedGradeData, setGradesVisible}){
     document.title = pageNameReceivedGrades;
@@ -13,7 +14,7 @@ function ReceivedGrades({heightFromParent, setGradeMode, setPickedGradeData, set
     const[loadedGrades, setLoadedGrades] = useState(undefined)
 
     if(years === undefined) {
-        fetch(serverIp + "/getYears/" + sessionStorage.getItem('USER'))
+        fetch(serverIp + "/" + endpointGetEmployedYears + "/" + sessionStorage.getItem('USER'))
             .then((response) => {
                 response.json()
                     .then((response) => {
@@ -41,7 +42,7 @@ function ReceivedGrades({heightFromParent, setGradeMode, setPickedGradeData, set
     // Funkcja pobierająca listę ocen z bieżącego roku
     function getGrades () {
         // Pobranie listy ocen na podstawie wybranego roku
-        fetch(serverIp + "/getGrades/" + sessionStorage.getItem('USER') + "/" + pickedYear)
+        fetch(serverIp + "/" + endpointGetReceivedYearGrades + "/" + sessionStorage.getItem('USER') + "/" + pickedYear)
             .then((response) => {response.json()
                 .then((response) => {
                     setCurrentGradesList(response)

@@ -1,15 +1,9 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
-import FirstnameAndLastname from "../components/employees/search/fields/FirstnameAndLastname";
-import TeamsList from "../components/employees/search/fields/TeamsList";
-import PositionsList from "../components/employees/search/fields/PositionsList";
 import ReusableButton from "../components/base/ReusableButton";
 import {Link} from "react-router-dom";
-import Password from "../components/employee/fields/Password";
-import {FiSettings} from "react-icons/fi";
 import LoggingEmail from "../components/logging/LoggingEmail";
 import LoggingPassword from "../components/logging/LoggingPassword";
-import Email from "../components/employee/fields/Email";
 import {
     labelEmail,
     labelLogIn,
@@ -19,6 +13,7 @@ import {
     welcomeMessage,
     welcomeMessageShort
 } from "../GlobalAppConfig";
+import {endpointGetLogIn} from "../EndpointAppConfig";
 
 function Logging(){
     if(sessionStorage.getItem('USER') == null){
@@ -40,7 +35,7 @@ function Logging(){
 
     const logIn = () => {
         if (sessionStorage.getItem('USER') === null) {
-            fetch(serverIp+"/getEmployee/"+email+"/"+password)
+            fetch(serverIp + "/" + endpointGetLogIn + "/" + email + "/" + password)
                 .then((response) => {response.json()
                     .then((response) => {
                         sessionStorage.setItem('USER', response[0].id)

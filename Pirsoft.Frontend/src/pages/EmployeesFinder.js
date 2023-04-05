@@ -15,6 +15,7 @@ import {
     serverIp,
     skillsLabel
 } from "../GlobalAppConfig";
+import {endpointGetAllEmployeesForFinder, endpointGetAllSkills} from "../EndpointAppConfig";
 
 
 const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
@@ -42,7 +43,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     const [swapOption, setSwapOption] = useState(false)
 
     if (skills[0] === undefined) {
-        fetch(serverIp+"/getAllSkills")
+        fetch(serverIp + "/" + endpointGetAllSkills)
             .then((response) => response.json())
             .then((response) => {
                 setSkills(response)
@@ -59,7 +60,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     function loadAllEmployeesByFilter(){
         setEmployeePickerDataLoaded(false)
 
-        fetch(serverIp+"/getAllEmployeesForPicked")
+        fetch(serverIp + "/" + endpointGetAllEmployeesForFinder)
             .then((response) => response.json())
             .then((response) => {
                 let employeeLoad = []

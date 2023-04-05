@@ -7,12 +7,17 @@ import Request from "./Request";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 import {
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
-    labelFilter, pageNameAbsences,
+    labelFilter, labelRequest, pageNameAbsences,
     requestActionLabel,
     requestDescriptionLabel, requestStatusApprovedLabel, requestStatusDisapprovedLabel,
     requestStatusLabel, requestStatusWaitingLabel,
     serverIp
 } from "../GlobalAppConfig";
+import {
+    endpointGetAbsencesColors,
+    endpointGetAbsencesStatuses, endpointGetAbsencesTypes,
+    endpointGetEmployeeAbsences
+} from "../EndpointAppConfig";
 
 
 function Absences(){
@@ -58,7 +63,7 @@ function Absences(){
 
     // Załadowanie statusów nieobecnośći
     if(absencesStatus === undefined) {
-        fetch(serverIp+"/getAbsencesStatus/")
+        fetch(serverIp + "/" + endpointGetAbsencesStatuses)
             .then((response) => {response.json()
                 .then((response) => {
                     setAbsencesStatus(response)
@@ -71,7 +76,7 @@ function Absences(){
 
     // Załadowanie kolorów nieobecności
     if(absencesColors === undefined) {
-        fetch(serverIp+"/getAbsencesColors/")
+        fetch(serverIp + "/" + endpointGetAbsencesColors)
             .then((response) => {response.json()
                 .then((response) => {
                     setAbsencesColors(response)
@@ -85,7 +90,7 @@ function Absences(){
 
     // Załadowanie typów nieobecnośći
     if(absencesTypes === undefined) {
-        fetch(serverIp+"/getAbsencesTypes/")
+        fetch(serverIp + "/" + endpointGetAbsencesTypes)
             .then((response) => {response.json()
                 .then((response) => {
                     setAbsencesTypes(response)
@@ -102,7 +107,7 @@ function Absences(){
     const fetchingEmployeeAbsences = () => {
         // Na endpoint należy wysłać body z danymi filtrowania
         // checkodrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo
-        fetch(serverIp+"/getEmployeeAbsences/"+sessionStorage.getItem("USER"))
+        fetch(serverIp + "/" + endpointGetEmployeeAbsences + "/" + sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
                     response.sort(FunctionForSortingJson("from", "descending"))
@@ -163,7 +168,7 @@ function Absences(){
                         {headerAbsencesEndOfDaysOff}: {leaveDays}, {headerAbsencesDaysNoPayLeft}: {onDemandDays}
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                        <ReusableButton value={"Wystaw \nWniosek"} color={"bg-blue-menu"}
+                        <ReusableButton value={labelRequest} color={"bg-blue-menu"}
                             onClick={() => setAbsencesVisible(false)}/>
                     </div>
                 </div>

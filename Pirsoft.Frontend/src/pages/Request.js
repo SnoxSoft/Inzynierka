@@ -12,6 +12,7 @@ import {
     labelRequestType, pageNameRequest,
     serverIp
 } from "../GlobalAppConfig";
+import {endpointGetRequestApprovers} from "../EndpointAppConfig";
 
 
 const Request = ({setAbsencesVisible}) =>{
@@ -50,9 +51,10 @@ const Request = ({setAbsencesVisible}) =>{
         }else return false
     };
 
+    // Pobranie tych danych z endpointu..
     const option = [
-        { value: checker(leaveDays), label: 'URLOP WYPOCZYNKOWY'},
-        { value: (checker(leaveDays) || checker(onDemandDays)), label: 'URLOP NA ZADANIE' }
+        { value: checker(leaveDays), label: 'Urlop wypoczynkowy'},
+        { value: (checker(leaveDays) || checker(onDemandDays)), label: 'Urlop na żądanie' }
     ]
 
     // Zaznaczenie opcji urlop bezpłaty jeśli brak dni urlopowych
@@ -66,7 +68,7 @@ const Request = ({setAbsencesVisible}) =>{
     const [approvers, setApprovers] = useState(Array);
 
     const fetchingApprovers = () => {
-        fetch(serverIp+"/getApprovers/"+sessionStorage.getItem("USER"))
+        fetch(serverIp + "/" + endpointGetRequestApprovers + "/" + sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
                     setApprovers(response)
@@ -119,7 +121,7 @@ const Request = ({setAbsencesVisible}) =>{
                         {labelRequestType}
                     </p>
                     <div className={"bg-workday text-black basis-1/3"}>
-                        <Select options={option} isOptionDisabled={(option) => option.value} defaultValue={{ value: '', label: 'URLOP WYPOCZYNKOWY'}}
+                        <Select options={option} isOptionDisabled={(option) => option.value} defaultValue={{ value: '', label: 'Urlop wypoczynkowy'}}
                                 className={"h-6"}/>
                     </div>
                 </div>

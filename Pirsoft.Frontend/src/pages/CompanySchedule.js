@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import TeamRow from "../components/companySchedule/TeamRow";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 import {legendLabel, legendToday, months, pageNameCompanySchedule, serverIp, weekdays} from "../GlobalAppConfig";
+import {endpointGetAllCompanyMonthDaysOff, endpointGetAllEmployees, endpointGetAllTeams} from "../EndpointAppConfig";
 
 function CompanySchedule(){
     document.title = pageNameCompanySchedule;
@@ -21,7 +22,7 @@ function CompanySchedule(){
 
     // ładowanie raz zespołów po załądowaniu okna a nie na bieżąco
     if (teams[0] === undefined) {
-        fetch(serverIp+"/getAllTeams")
+        fetch(serverIp + "/" + endpointGetAllTeams)
             .then((response) => response.json())
             .then((response) => {
                 response.sort(FunctionForSortingJson("value", "ascending"))
@@ -38,7 +39,7 @@ function CompanySchedule(){
     const loadMonthDaysOff = (data) => {
         // ładowanie dni wolnych / wybranych / nieobecnych w wybranym miesiacu
 
-        fetch(serverIp+"/allCompanyMonthDays/2022-02")
+        fetch(serverIp + "/" + endpointGetAllCompanyMonthDaysOff + "/2022-02")
             .then((response) => response.json())
             .then((response) => {
                 setCurrentMonthDaysOff(response)
@@ -54,7 +55,7 @@ function CompanySchedule(){
 
     // ładowanie wszystkich pracowników
     if (employees[0] === undefined) {
-        fetch(serverIp+"/getAllEmployees")
+        fetch(serverIp + "/" + endpointGetAllEmployees)
             .then((response) => response.json())
             .then((response) => {
                 response.sort(FunctionForSortingJson("lastname", "ascending"))
