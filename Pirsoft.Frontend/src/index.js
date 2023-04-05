@@ -17,6 +17,7 @@ import TeamEdit from "./pages/teams/TeamEdit";
 import TeamCreate from "./pages/teams/TeamCreate";
 import Requests from "./pages/Requests";
 import Grades from "./pages/Grades";
+import Notifications from "./pages/notifications/Notifications";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -38,6 +39,7 @@ root.render(
                     <Route path={"absences"} element={<Absences />}/>
                     <Route path={"requests"} element={<Requests />}/>
                     <Route path={"grades"} element={<Grades />}/>
+                    <Route path={"notifications"} element={<Notifications />}/>
                 </Route>
             </Routes>
         </BrowserRouter>
