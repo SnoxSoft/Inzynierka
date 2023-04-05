@@ -138,6 +138,8 @@ const labelStartDate = "Rozpoczęcie pracy";
 const labelGivenGrades = "Wystawione oceny";
 const labelReceivedGrades = "Otrzymane oceny";
 
+const labelQuartet = "Kwartał";
+
 // Edycja/ tworzenie/ wyświetlenie zespołu
 const labelTeamName = "Nazwa zespołu";
 const labelStrongSkills = "Silne cechy zespołu";
@@ -229,7 +231,7 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     alertNewPasswordsAreIncompatible,
     alertOldPasswordIsIncompatible,
 
-    labelReceivedGrades, labelGivenGrades,
+    labelReceivedGrades, labelGivenGrades, labelQuartet,
 
     headerEmployeesFinder, headerEmployeesFinderList, labelEmployeeFinderExchanceEmployeesBetween,
 

@@ -1,3 +1,4 @@
+import {labelQuartet} from "../../GlobalAppConfig";
 
 const YearQuartets = ({onChange, value, createMode = false,
                       availableQuartets = []}) => {
@@ -26,7 +27,7 @@ const YearQuartets = ({onChange, value, createMode = false,
     }
 
     return <div className={"flex flex-col gap-2"}>
-        <div>Kwartał</div>
+        <div>{labelQuartet}</div>
         <div className={"flex flex-row gap-8 place-self-center"}>
             {quartets}
         </div>

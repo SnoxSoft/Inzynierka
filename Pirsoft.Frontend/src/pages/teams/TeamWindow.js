@@ -5,7 +5,6 @@ import TeamLeader from "../../components/teamsModifcation/TeamLeader";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
-import FunctionForResize from "../../components/base/FunctionForResize";
 import EmployeesFinder from "../EmployeesFinder";
 import {
     labelAllPeopleChangedBetweenTeams,
@@ -17,6 +16,7 @@ import {
     labelTeamName,
     serverIp
 } from "../../GlobalAppConfig";
+import {endpointGetTeamData} from "../../EndpointAppConfig";
 
 const TeamWindow = ({id,mode, title}) => {
     const[dynamicTitle, setDynamicTitle] = useState(title)
@@ -44,7 +44,7 @@ const TeamWindow = ({id,mode, title}) => {
 
     if(mode === 'view' || mode === 'edit'){
     if (!teamDataLoaded) {
-        fetch(serverIp+"/getTeamData/" + id)
+        fetch(serverIp + "/" + endpointGetTeamData + "/" + id)
             .then((response) => {
                 response.json()
                     .then((response) => {

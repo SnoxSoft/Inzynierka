@@ -6,6 +6,7 @@ import {useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
 import SortingButton from "../components/employees/search/fields/SortingButton";
 import {headerEmployees, labelFind, labelFirstNameAndLastName, pageNameEmployees, serverIp} from "../GlobalAppConfig";
+import {endpointGetAllEmployees, endpointGetEmployees} from "../EndpointAppConfig";
 
 function Employees(){
     document.title = pageNameEmployees;
@@ -19,7 +20,7 @@ function Employees(){
 
     // Pobranie listy wszystkich pracowników
     if (employeesList[0] === undefined) {
-        fetch(serverIp+"/getAllEmployees")
+        fetch(serverIp + "/" + endpointGetAllEmployees)
             .then((response) => {response.json()
                 .then((response) => {
                     setEmployeesList(response)
@@ -53,7 +54,7 @@ function Employees(){
         else positionValue = " ";
 
         // Pobranie listy pracowników przy użyciu przycisku Szukaj
-        fetch(serverIp+"/getEmployees/"+firstnameValue+"/"+teamValue+"/"+positionValue+"/"+order)
+        fetch(serverIp + "/" + endpointGetEmployees + "/" + firstnameValue + "/" + teamValue + "/" + positionValue + "/" + order)
             .then((response) => {response.json()
                 .then((response) => {
                     setEmployeesList(response)

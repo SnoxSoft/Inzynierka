@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from "react";
-import ReusableButton from "../components/base/ReusableButton";
-import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
-import TeamsList from "../components/employees/search/fields/TeamsList";
 import RequestsListItem from "../components/requests/RequestsListItem";
 import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
@@ -10,10 +7,14 @@ import {
     pageNameRequests,
     requestActionLabel,
     requestDescriptionLabel,
-    requestStatusLabel,
-    serverIp
+    requestStatusLabel, serverIp,
 } from "../GlobalAppConfig";
 import RequestsFilter from "../components/requests/RequestsFilter";
+import {
+    endpointGetEmployeesRequests,
+    endpointGetRequestsColors,
+    endpointGetRequestsStatuses, endpointGetRequestsTypes
+} from "../EndpointAppConfig";
 
 function Requests(){
     document.title = pageNameRequests;
@@ -69,7 +70,7 @@ function Requests(){
     const fetchingEmployeesRequests = () => {
         // Tutaj do dodanie do body całą
 
-        fetch(serverIp+"/getEmployeesRequests/"+sessionStorage.getItem("USER"))
+        fetch(serverIp + "/" + endpointGetEmployeesRequests + "/" + sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
                     response.sort(FunctionForSortingJson("from", "descending"))
@@ -88,7 +89,7 @@ function Requests(){
 
     // Załadowanie statusów wniosków
     if(requestsStatus === undefined) {
-        fetch(serverIp+"/getRequestsStatus/")
+        fetch(serverIp + "/" + endpointGetRequestsStatuses + "/")
             .then((response) => {response.json()
                 .then((response) => {
                     setRequestsStatus(response)
@@ -101,7 +102,7 @@ function Requests(){
 
     // Załadowanie kolorów nieobecności
     if(requestsColors === undefined) {
-        fetch(serverIp+"/getRequestsColors/")
+        fetch(serverIp + "/" + endpointGetRequestsColors + "/")
             .then((response) => {response.json()
                 .then((response) => {
                     setRequestsColors(response)
@@ -114,7 +115,7 @@ function Requests(){
 
     // Załadowanie typów nieobecnośći
     if(requestsTypes === undefined) {
-        fetch(serverIp+"/getRequestsTypes/")
+        fetch(serverIp + "/" + endpointGetRequestsTypes + "/")
             .then((response) => {response.json()
                 .then((response) => {
                     setRequestsTypes(response)
@@ -198,7 +199,8 @@ function Requests(){
         </div>
         :
             <ApprovalOrRejectionRequest setRequestsVisible={setRequestsVisible}
-                                        requestPickedData={requestPickedData}/>
+                                        requestPickedData={requestPickedData}
+                                        requestsTypes={requestsTypes}/>
         }
             </>
     )

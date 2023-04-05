@@ -3,6 +3,8 @@ import React from "react";
 import {useParams} from "react-router-dom";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import EmployeeComponent from "./EmployeeComponent";
+import {serverIp} from "../../GlobalAppConfig";
+import {endpointGetEmployeeData} from "../../EndpointAppConfig";
 
 function EmployeePreRender(){
 
@@ -19,7 +21,7 @@ function EmployeePreRender(){
     useEffect(() => {
         const fetchData = async () => {
             if(id !== '-1') {
-                const response = await fetch('http://127.0.0.1:3001/employee/' + id);
+                const response = await fetch(serverIp + "/" + endpointGetEmployeeData + "/" + id);
                 const newData = await response.json();
                 setEmployee(newData[0]);
             }

@@ -4,6 +4,7 @@ import ReusableButton from "../../components/base/ReusableButton";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
 import FunctionForSortingJson from "../../components/base/FunctionForSortingJson";
 import {labelCreateTeam, pageNameTeams, serverIp} from "../../GlobalAppConfig";
+import {endpointGetAllEmployees, endpointGetAllTeams} from "../../EndpointAppConfig";
 
 function Teams(){
     document.title = pageNameTeams;
@@ -19,7 +20,7 @@ function Teams(){
 
     // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
     if (teams[0] === undefined) {
-        fetch(serverIp+"/getAllTeams")
+        fetch(serverIp + "/" + endpointGetAllTeams)
             .then((response) => response.json())
             .then((response) => {
                 response.sort(FunctionForSortingJson("value", "ascending"))
@@ -40,7 +41,7 @@ function Teams(){
 
     // Ładowanie wszystkich pracowników
     if (employees[0] === undefined) {
-        fetch(serverIp+"/getAllEmployees")
+        fetch(serverIp + "/" + endpointGetAllEmployees)
             .then((response) => response.json())
             .then((response) => {
                 response.sort(FunctionForSortingJson("lastname", "ascending"))

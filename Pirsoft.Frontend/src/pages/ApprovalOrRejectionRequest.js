@@ -13,7 +13,7 @@ import {
 } from "../GlobalAppConfig";
 
 
-const ApprovalOrRejectionRequest = ({dateFrom, dateTo, name, type, requestId, setRequestsVisible, requestPickedData}) => {
+const ApprovalOrRejectionRequest = ({setRequestsVisible, requestPickedData, requestsTypes}) => {
     document.title = pageNameApprovalOrRejectionRequest;
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
@@ -23,21 +23,20 @@ const ApprovalOrRejectionRequest = ({dateFrom, dateTo, name, type, requestId, se
     }, []);
 
     function rejectRequest(){
-
+        // dodanie endpointu
     }
 
     function approveRequest(){
-
+        // dodanie onedpointu
     }
 
-    function renameType(type) {
-        if(type === 'dayoff'){
-            return 'URLOP WYPOCZYNKOWY'
-        }
-        if(type === 'demand'){
-            return 'URLOP NA ŻĄDANIE'
-        }
-        return type
+    const [requestType, setRequestType] = useState("")
+    if (requestType === "" && requestsTypes !== undefined) {
+        requestsTypes.map((item) => {
+            if (requestPickedData.type === item.key) {
+                setRequestType(item.value)
+            }
+        })
     }
 
     return(
@@ -65,7 +64,7 @@ const ApprovalOrRejectionRequest = ({dateFrom, dateTo, name, type, requestId, se
                         {labelRequestType}
                     </p>
                     <div className={"bg-workday text-black basis-1/3 rounded-md"}>
-                        {renameType(requestPickedData.type)}
+                        {requestType}
                     </div>
                 </div>
                 <div className={"flex place-content-center"}>

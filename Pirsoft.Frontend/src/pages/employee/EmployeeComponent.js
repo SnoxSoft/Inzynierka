@@ -3,9 +3,8 @@ import ProfilePicture from "../../components/employee/fields/ProfilePicture";
 import SkillsList from "../../components/employee/fields/SkillsList";
 import {useEffect, useState} from "react";
 import React from "react";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import ReusableButton from "../../components/base/ReusableButton";
-import FunctionForResize from "../../components/base/FunctionForResize";
 import {MdOutlineArrowBackIosNew} from "react-icons/md";
 import FirstName from "../../components/employee/fields/FirstName";
 import LastName from "../../components/employee/fields/LastName";
@@ -19,7 +18,6 @@ import GrossSalary from "../../components/employee/fields/GrossSalary";
 import PositionType from "../../components/employee/fields/PositionType";
 import EmploymentStartDate from "../../components/employee/fields/EmploymentStartDate";
 import LoggingPassword from "../../components/logging/LoggingPassword";
-import contract from "../../components/employee/fields/Contract";
 import Contract from "../../components/employee/fields/Contract";
 import AddEmployeeAnAbsence from "../AddEmployeeAnAbsence";
 import {
@@ -44,9 +42,10 @@ import {
     labelRequest, labelSalary,
     labelSave,
     labelStartDate,
-    lastnameLabel, pageNameEmployeeData, pageNameEmployeeRegister, pageNameEmployeeView,
+    lastnameLabel, pageNameEmployeeData, pageNameEmployeeRegister, pageNameEmployeeView, serverIp,
     skillsLabel
 } from "../../GlobalAppConfig";
+import {endpointGetAllSkills, endpointGetAvailableQuartets} from "../../EndpointAppConfig";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -183,18 +182,31 @@ function EmployeeComponent({id, mode, employee}){
         setShowPasswordChangeFrame(true)
     }
 
+    async function loadAllSkills(){
+        let allSkillsLoad = []
+        const response = await fetch(serverIp + "/" + endpointGetAllSkills)
+        const skills = await response.json();
+
+        skills.forEach((s) => {
+            allSkillsLoad.push(s)
+        })
+
+        return allSkillsLoad;
+    }
+
     // Zmiana umiejętności
-    const setSkills = () => {
+    const setSkills = async () => {
         setSkillsComponent(<></>)
 
-        // To jeszcze trzeba załadować z endpointu
-        const allSkills = ["GROOVY", "C++", "SQL", "WORD", "EXCEL","PHP", "JAVA", "C#"]
+        // Ładowanie z endpointu
+        let allSkills = await loadAllSkills();
+
         let detailsOne = []
 
-        for(const availableSkill in allSkills){
+        for (const availableSkill in allSkills) {
             let hasSkill = false;
 
-            if(mode === "edit") {
+            if (mode === "edit") {
                 for (const property in skillsData) {
                     if (allSkills[availableSkill].includes(skillsData[property])) {
                         hasSkill = true;
@@ -202,7 +214,7 @@ function EmployeeComponent({id, mode, employee}){
                 }
             }
             detailsOne.push(
-                <div key={"skill"+availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
+                <div key={"skill" + availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
                     <p>{allSkills[availableSkill]}</p>
                     <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
                 </div>
@@ -232,7 +244,6 @@ function EmployeeComponent({id, mode, employee}){
                 newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0) {
 
                 // Tutaj pomyslimy jakie wartosci sprawdzic
-
                 if (newPassword.toString() === newRepeatPassword.toString()) {
                     setPassword(newPassword)
 

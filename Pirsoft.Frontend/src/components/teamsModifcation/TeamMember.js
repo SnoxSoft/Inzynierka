@@ -48,7 +48,7 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
         showAllEmployees.push(
             <div key={"team-member"+value.id} className={"flex flex-col gap-1"}
                  onClick={() => {setButtonsVisible()}}>
-                <input id={"dhbjhbs"} className={"grow border text-black rounded-md text-center h-6 w-96 hover:cursor-pointer hover:bg-weekend"} type={"text"}
+                <input id={"team-member-name-"+value.id} className={"grow border text-black rounded-md text-center h-6 w-96 hover:cursor-pointer hover:bg-weekend"} type={"text"}
                        value={value.firstandlastname} disabled={true}>
                 </input>
                 <TeamEmployeeEditButton showOptions={showOptions}

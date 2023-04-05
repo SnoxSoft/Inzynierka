@@ -5,6 +5,7 @@ import GradeListItem from "../../components/grades/GradeListItem";
 import TeamsList from "../../components/employees/search/fields/TeamsList";
 import FirstNameAndLastName from "../../components/grades/FirstNameAndLastName";
 import ReusableButton from "../../components/base/ReusableButton";
+import {endpointGetEmployedYears, endpointGetGivenGrades} from "../../EndpointAppConfig";
 
 function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGradesVisible}){
     document.title = pageNameGivenGrades;
@@ -19,7 +20,7 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
     const[loadedGrades, setLoadedGrades] = useState(undefined)
 
     if(years === undefined) {
-        fetch(serverIp + "/getYears/" + sessionStorage.getItem('USER'))
+        fetch(serverIp + "/" + endpointGetEmployedYears + "/" + sessionStorage.getItem('USER'))
             .then((response) => {
                 response.json()
                     .then((response) => {
@@ -49,7 +50,7 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
         console.log(firstNameAndLastName)
         console.log(pickedTeam)
         // Pobranie listy ocen na podstawie wybranego roku
-        fetch(serverIp + "/getGivenGrades/" + sessionStorage.getItem('USER') + "/" + pickedYear)
+        fetch(serverIp + "/" + endpointGetGivenGrades + "/" + sessionStorage.getItem('USER') + "/" + pickedYear)
             .then((response) => {response.json()
                 .then((response) => {
                     setCurrentGradesList(response)

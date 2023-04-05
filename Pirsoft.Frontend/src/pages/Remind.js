@@ -22,6 +22,7 @@ import {
     labelVerificationCode, pageNameRemind,
     serverIp
 } from "../GlobalAppConfig";
+import {endpointGetVerifyCode, endpointPostChangePassword, endpointPostSendVerifyCode} from "../EndpointAppConfig";
 
 function Remind(){
     document.title = pageNameRemind;
@@ -51,7 +52,7 @@ function Remind(){
     const verifyCode = () => {
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@')) {
             if (code !== undefined && code.toString().length > 0) {
-                fetch(serverIp+"/verifyCode/"+email+"/"+code)
+                fetch( + "/" + endpointGetVerifyCode + "/" + email + "/" + code)
                     .then((response) => {
                         if(response.status === 200){
                             setCodeNotVerified(false)
@@ -83,7 +84,7 @@ function Remind(){
             // Tutaj do pomyślenia jakie wartosci sprawdzic
 
             if(newPassword.toString() === newRepeatPassword.toString()){
-                fetch(serverIp+"/changePassword/"+email+"/"+newPassword)
+                fetch(serverIp + "/" + endpointPostChangePassword + "/" + email + "/" + newPassword, {method: 'POST'})
                     .then((response) => {
                         console.log(response.status)
                         if(response.status === 200){
@@ -111,7 +112,7 @@ function Remind(){
 
     const sendVerifyEmail = () => {
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@')) {
-            fetch(serverIp+"/sendVerifyCode/"+email, {
+            fetch(serverIp + "/" + endpointPostSendVerifyCode + "/" + email, {
                 method: 'POST'
             })
                 .then((response) => {
