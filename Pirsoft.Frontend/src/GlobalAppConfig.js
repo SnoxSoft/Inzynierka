@@ -31,6 +31,8 @@ const pageNameGiveGradesWindowGive = appName + ": Ocenianie pracownika";
 const pageNameRequest = appName + ": Wniosek";
 const pageNameRequests = appName + ": Wnioski pracowników";
 
+const pageNameNotifications = appName + ": Powiadomienia";
+
 
 
 // Strona powitalna, logowanie
@@ -169,6 +171,10 @@ const labelSwapInformation = "Osoby zostaną wymienione pomiędzy zespołami po 
 const labelPersonChangedWith = "zamieniona z osobą";
 const labelAllPeopleChangedBetweenTeams = "Zamienione osoby pomędzy zespołami";
 
+// Powiadomienia
+
+const labelNotifications = "Powiadomienia";
+
 
 // Wiadomości informacyjne w oknie przypominania hasła
 const alertMessageSent = "Wiadomość została wysłana";
@@ -182,10 +188,12 @@ const alertOldPasswordIsIncompatible = "Wpisane stare hasło jest błędne";
 export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
 
+    labelNotifications,
+
     pageNameRemind, pageNameEmployeeRegister, pageNameGiveGradesWindowGive, pageNameGiveGradesWindowView, pageNameTeamEdit, pageNameTeamCreate,
     pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
     pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
-    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams,
+    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications,
 
     calendarLabelFrom, calendarLabelTo,
     labelRequest, labelShowProfile,

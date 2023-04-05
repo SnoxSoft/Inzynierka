@@ -111,6 +111,13 @@ const endpointGetAvailableQuartets = "getAvailableQuartets";
 
 
 
+// Powiadomienia //
+const endpointGetNotifications = "getNotifications";
+
+// Usunięcie wyskakującego powiadomienia
+const endpointDeleteNotification = "deleteNotification";
+
+
 export {
     endpointGetEmployeesRequests, endpointGetRequestsStatuses,
     endpointGetRequestsColors, endpointGetRequestsTypes,
@@ -133,7 +140,8 @@ export {
 
     endpointGetEmployedYears, endpointGetReceivedYearGrades, endpointGetGivenGrades, endpointGetAvailableQuartets,
 
-    endpointGetEmployeeData
+    endpointGetEmployeeData,
 
+    endpointGetNotifications, endpointDeleteNotification
 
     }
