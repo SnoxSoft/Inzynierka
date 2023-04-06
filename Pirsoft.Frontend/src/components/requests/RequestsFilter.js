@@ -26,7 +26,7 @@ function RequestsFilter({
 
     return (
     <div className={"flex flex-col gap-2 p-4"}>
-        <div className={"flex justify-evenly items-center flex-wrap gap-2"}>
+        <div className={"flex justify-evenly items-center flex-wrap gap-2 hover:cursor-default"}>
             <div>
                 {firstnameLabel} <input className={"text-black rounded"} onChange={handleNameChange} value={userName}/>
             </div>

@@ -40,7 +40,7 @@ const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false}) => {
     return (
         <div className={"content-center"}>
             <div className={"flex flex-row gap-4 place-self-center justify-left "}>
-                <p className={""}>{calendarLabelFrom}<input
+                <p className={"hover:cursor-default"}>{calendarLabelFrom}<input
                     type={"date"}
                     className={"text-black rounded-md disabled:text-black disabled:bg-workday"}
                     value={from}
@@ -52,7 +52,7 @@ const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false}) => {
                     }}
                     onBlur={() => validateDate(from, "from")}
                 /></p>
-                <p className={""}>{calendarLabelTo}<input
+                <p className={"hover:cursor-default"}>{calendarLabelTo}<input
                     type={"date"}
                     className={"text-black rounded-md disabled:text-black disabled:bg-workday"}
                     value={to}

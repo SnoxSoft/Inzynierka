@@ -160,7 +160,7 @@ function Absences(){
     return(
         <>
         {absencesVisible ?
-        <div id={"absences"} className={"every-page-on-scroll flex flex-col text-workday"}
+        <div id={"absences"} className={"every-page-on-scroll flex flex-col text-workday hover:cursor-default"}
         style={{minWidth: 800}}>
             <div className={"flex p-4 gap-4 text-center flex-col"}>
                 <div className={"grow grid grid-cols-1 grid-rows-1 place-items-end"}>

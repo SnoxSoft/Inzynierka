@@ -142,7 +142,7 @@ function CompanySchedule(){
         days.forEach((day) => {
             allTeamsLoad.push(
                 <div key={"top-weekdays-"+day.dayOfMonth}
-                     className={"row-start-1 col-start-"+colDayOfWeek+" text-workday text-center w-8 h-12"}>
+                     className={"hover:cursor-default row-start-1 col-start-"+colDayOfWeek+" text-workday text-center w-8 h-12"}>
                     <div>
                         {getTextWeekday(day.date)}
                     </div>
@@ -241,7 +241,7 @@ function CompanySchedule(){
         <>
         {teamsLoaded && allTeamsAreLoadedInDivs ?
             <>
-                <div id={"company-schedule-parent"} className={"every-page-on-scroll overflow-y-hidden"}
+                <div id={"company-schedule-parent"} className={"every-page-on-scroll overflow-y-hidden hover:cursor-default"}
                      style={{minWidth: 800}}>
                     <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>

@@ -42,7 +42,7 @@ const NotificationItem = ({employeeNotification, employeeNotifications, setEmplo
     }
 
     return (
-        <div className={"text-start items-center rounded-md flex"}
+        <div className={"text-start items-center rounded-md flex hover:cursor-default hover:bg-dayoffmonth"}
              // bg-brown-menu border-2 hover:border-workday hover:cursor-pointer"}
              // onMouseOver={showOptions} onMouseLeave={hideOptions}
         >
