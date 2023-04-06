@@ -2,11 +2,12 @@ import EmployeesList from "../components/employees/EmployeesList";
 import TeamsList from "../components/employees/search/fields/TeamsList";
 import PositionsList from "../components/employees/search/fields/PositionsList";
 import FirstnameAndLastname from "../components/employees/search/fields/FirstnameAndLastname";
-import {useState} from "react";
+import React, {useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
 import SortingButton from "../components/employees/search/fields/SortingButton";
 import {headerEmployees, labelFind, labelFirstNameAndLastName, pageNameEmployees, serverIp} from "../GlobalAppConfig";
 import {endpointGetAllEmployees, endpointGetEmployees} from "../EndpointAppConfig";
+import AddEmployeeAnAbsence from "./AddEmployeeAnAbsence";
 
 function Employees(){
     document.title = pageNameEmployees;
@@ -65,7 +66,15 @@ function Employees(){
             })
     }
 
+    const[showAddEmployeeAnAbsence, setShowAddEmployeeAnAbsence] = useState(false)
+    const[pickedEmployeeData, setPickedEmployeeData] = useState()
+
     return(
+        <>
+        {showAddEmployeeAnAbsence ?
+                <AddEmployeeAnAbsence setShowAddEmployeeAnAbsence={setShowAddEmployeeAnAbsence}
+                                      //setEmployeeDataShow={setEmployeeDataShow}
+                                      forEmployee={pickedEmployeeData}/> :
         <div
             className={"every-page-on-scroll rounded-md border-2 border-b-workday text-workday overflow-y-hidden hover:cursor-default"}
             style={{minWidth: 800}}>
@@ -94,10 +103,12 @@ function Employees(){
             </div>
             <hr/>
             <div id={"employee-list"} className={"rounded-md overflow-y-auto h-full"}>
-                {employeesList ? <EmployeesList values={[employeesList][0]}/> : <p />}
+                {employeesList ? <EmployeesList values={[employeesList][0]} action={setPickedEmployeeData} showRequest={setShowAddEmployeeAnAbsence} /> : <p />}
             </div>
 
         </div>
+        }
+        </>
     );
 }
 

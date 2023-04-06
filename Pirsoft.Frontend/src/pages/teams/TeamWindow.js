@@ -115,11 +115,11 @@ const TeamWindow = ({id,mode, title}) => {
     }
 
     function setExchangeInformation(idToDeleteFromList = null) {
-        setSwapEmployeesBetweenTeamsInformation(<div>{labelAllPeopleChangedBetweenTeams}</div>)
+        setSwapEmployeesBetweenTeamsInformation(<></>)
         let loadSwapInformation = []
 
         if (swapTeamsBetweenTheseEmployee.length > 0) {
-            loadSwapInformation.push(<div>{}</div>)
+            loadSwapInformation.push(<div>{labelAllPeopleChangedBetweenTeams}</div>)
         }
 
         let ifAnyChangeOnCurrentSwappedEmployeeList = []
