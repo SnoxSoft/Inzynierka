@@ -169,7 +169,7 @@ const labelEmployeeFinderExchanceEmployeesBetween = "Wymień aktualnego i wybran
 const headerEmployees = "Wyszukaj pracownika";
 const labelSwapInformation = "Osoby zostaną wymienione pomiędzy zespołami po zapisaniu zmian w aktualnie edytowanym zespole";
 const labelPersonChangedWith = "zamieniona z osobą";
-const labelAllPeopleChangedBetweenTeams = "Zamienione osoby pomędzy zespołami";
+const labelAllPeopleChangedBetweenTeams = "Zamienione osoby pomiędzy zespołami";
 
 // Powiadomienia
 
