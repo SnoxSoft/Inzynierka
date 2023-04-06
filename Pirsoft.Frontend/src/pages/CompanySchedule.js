@@ -7,6 +7,8 @@ import TeamRow from "../components/companySchedule/TeamRow";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 import {legendLabel, legendToday, months, pageNameCompanySchedule, serverIp, weekdays} from "../GlobalAppConfig";
 import {endpointGetAllCompanyMonthDaysOff, endpointGetAllEmployees, endpointGetAllTeams} from "../EndpointAppConfig";
+import {Popup} from "semantic-ui-react";
+import Legend from "../components/legend/Legend";
 
 function CompanySchedule(){
     document.title = pageNameCompanySchedule;
@@ -237,6 +239,24 @@ function CompanySchedule(){
         //FunctionForResizeScheduleWidth()
     }, );
 
+    const users = [
+        {
+            name: 'Elliot Fu',
+            bio: 'Elliot has been a member since July 2012',
+            avatar: '/images/avatar/small/elliot.jpg',
+        },
+        {
+            name: 'Stevie Feliciano',
+            bio: 'Stevie has been a member since August 2013',
+            avatar: '/images/avatar/small/stevie.jpg',
+        },
+        {
+            name: 'Matt',
+            bio: 'Matt has been a member since July 2014',
+            avatar: '/images/avatar/small/matt.jpg',
+        },
+    ]
+
     return(
         <>
         {teamsLoaded && allTeamsAreLoadedInDivs ?
@@ -265,8 +285,12 @@ function CompanySchedule(){
                         </div>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
-                                <ReusableButton value={legendLabel}
-                                     onClick={() => console.log("tu bedzie legenda:)")}/>
+                                <Popup
+                                    content={<Legend/>}
+                                    position={"bottom left"}
+                                    trigger={<ReusableButton value={legendLabel}
+                                                             onClick={() => console.log("tu bedzie legenda:)")}/>}
+                                />
                             </div>
                         </div>
                     </div>

@@ -13,6 +13,8 @@ import {
     serverIp, weekdays
 } from "../GlobalAppConfig";
 import {endpointGetEmployeeMonthDaysOff} from "../EndpointAppConfig";
+import Legend from "../components/legend/Legend";
+import {Popup} from "semantic-ui-react";
 
 function Schedule(){
     document.title = pageNameSchedule;
@@ -389,8 +391,12 @@ function Schedule(){
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <div>
-                            <ReusableButton value={legendLabel}
-                                            onClick={() => console.log("tu bedzie legenda:)")}/>
+                            <Popup
+                                content={<Legend bigLegend={true}/>}
+                                position={"bottom left"}
+                                trigger={<ReusableButton value={legendLabel}
+                                                         onClick={() => console.log("tu bedzie legenda:)")}/>}
+                            />
                         </div>
                     </div>
                 </div>
