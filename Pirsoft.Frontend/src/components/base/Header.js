@@ -25,22 +25,12 @@ const Header = () => {
 
                 {sessionStorage.getItem('USER') ?
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-
-                        {/*<Popup trigger={<ReusableButton*/}
-                        {/*         onClick={() => setIsOpen(true)}*/}
-                        {/*         value={<HiOutlineExclamationCircle size={40}/>}/>}*/}
-                        {/*         position='top left'*/}
-                        {/*       open={isOpen}*/}
-                        {/*       style={{minWidth: 400, maxWidth: 600, borderRadius: 0}}*/}
-                        {/*       onClose={() => setIsOpen(false)}*/}
-                        {/*    >*/}
-                        {/*    <Notifications onClose={handleClose}/>*/}
-                        {/*</Popup>*/}
-
+                        
                         <ReusableButton
                                  onClick={() => setIsOpen(true)}
                                  value={<HiOutlineExclamationCircle size={40}/>}
                                  link={'/notifications'}/>
+
 
                         <ReusableButton value={
                             sessionStorage.getItem('AVATAR') !== null ?

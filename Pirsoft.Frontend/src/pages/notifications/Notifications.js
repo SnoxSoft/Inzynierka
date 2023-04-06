@@ -49,7 +49,7 @@ const Notifications = (props) => {
     }, [employeeNotifications])
 
     return <>
-        <div className={"every-page-on-scroll bg-blue-menu rounded-xl flex flex-col hover:cursor-default"}
+        <div className={"every-page-on-scroll bg-blue-menu rounded-xl flex flex-col"}
              // style={{minHeight:300, maxHeight: 800, height: 800}}
         >
                 <div className={"row-start-1 place-self-center text-workday font-bold p-4"}>
