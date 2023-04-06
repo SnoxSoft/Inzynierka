@@ -163,6 +163,8 @@ const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
 const months = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
     "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
 
+const quartets = ["Q1","Q2","Q3","Q4"];
+
 const headerEmployeesFinder = "Wyszukiwarka pracowników";
 const headerEmployeesFinderList = "Imie i nazwisko, Zespół, Stanowisko, Umiejętności"
 const labelEmployeeFinderExchanceEmployeesBetween = "Wymień aktualnego i wybranego pracownika pomiędzy zespołami";
@@ -223,7 +225,7 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     monthsOfYourWorkLabel,
     legendLabel, legendToday,
 
-    weekdays, months,
+    weekdays, months, quartets,
 
     requestStatusLabel, requestActionLabel, requestDescriptionLabel,
     labelRequestType, labelRequestNoPay, labelRequestApprovers,

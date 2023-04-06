@@ -3,7 +3,7 @@ import {
     labelApprove,
     labelClose,
     labelDisapprove, pageNameGiveGradesWindowGive,
-    pageNameGiveGradesWindowView,
+    pageNameGiveGradesWindowView, quartets,
     serverIp
 } from "../../GlobalAppConfig";
 import ReusableButton from "../../components/base/ReusableButton";
@@ -38,25 +38,25 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
     const[gradeMessage, setGradeMessage] = useState("")
     const[gradeRating, setGradeRating] = useState("")
 
-    const[availableQuartets, setAvailableQuartets] = useState(["Q1","Q2","Q3","Q4"])
+    const[availableQuartets, setAvailableQuartets] = useState(quartets)
 
     async function loadAvailableQuartets(){
         let availableQuartetsLoad = []
         if(pickedPersonId !== ""){
             const response = await fetch(serverIp + "/" + endpointGetAvailableQuartets + "/" + pickedPersonId)
-            console.log("cccccc")
-            console.log(response)
             const quarters = await response.json();
-
              quarters.forEach((q) => {
                  availableQuartetsLoad.push(q.value)
              })
-
-            console.log("sdsdss")
-            console.log(availableQuartets)
         }
 
-        setAvailableQuartets(availableQuartetsLoad)
+        if(pickedPersonId !== ""){
+            setAvailableQuartets(availableQuartetsLoad)
+        }
+        else {
+            setAvailableQuartets(quartets)
+        }
+
     }
 
     useEffect(() => {
