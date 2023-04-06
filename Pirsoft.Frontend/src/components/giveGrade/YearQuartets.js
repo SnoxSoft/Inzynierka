@@ -26,7 +26,7 @@ const YearQuartets = ({onChange, value, createMode = false,
         }
     }
 
-    return <div className={"flex flex-col gap-2"}>
+    return <div className={"flex flex-col gap-2 hover:cursor-default"}>
         <div>{labelQuartet}</div>
         <div className={"flex flex-row gap-8 place-self-center"}>
             {quartets}

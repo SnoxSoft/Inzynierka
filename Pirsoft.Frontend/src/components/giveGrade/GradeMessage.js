@@ -2,7 +2,7 @@ import {gradeMessageLabel} from "../../GlobalAppConfig";
 
 const GradeMessage = ({onChange, value, enable = false}) => {
 
-        return <div className={"flex flex-col gap-2 place-items-center"}>
+        return <div className={"flex flex-col gap-2 place-items-center hover:cursor-default"}>
         <div>{gradeMessageLabel}</div>
         <textarea className={"w-96 text-black rounded-sm text-center"}
             value={value} disabled={!enable}

@@ -67,7 +67,7 @@ function Employees(){
 
     return(
         <div
-            className={"every-page-on-scroll rounded-md border-2 border-b-workday text-workday overflow-y-hidden"}
+            className={"every-page-on-scroll rounded-md border-2 border-b-workday text-workday overflow-y-hidden hover:cursor-default"}
             style={{minWidth: 800}}>
             <div className={"p-4 gap-4 grid grid-cols-2 items-center"}>
 

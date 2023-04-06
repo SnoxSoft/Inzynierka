@@ -41,7 +41,7 @@ const ApprovalOrRejectionRequest = ({setRequestsVisible, requestPickedData, requ
 
     return(
         <div id={"ApprovalOrRejectionRequest"}
-             className={"every-page-on-scroll flex p-4 gap-2 text-center flex-col bg-blue-menu text-workday"}
+             className={"every-page-on-scroll flex p-4 gap-2 text-center flex-col bg-blue-menu text-workday hover:cursor-default"}
              style={{minWidth: 800}}>
             <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
                 <div className={"col-start-1 row-start-1 place-self-center"}>

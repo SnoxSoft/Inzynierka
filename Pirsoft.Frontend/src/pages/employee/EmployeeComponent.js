@@ -280,7 +280,7 @@ function EmployeeComponent({id, mode, employee}){
         <>
         {employeeDataShow ?
         <div id={"employee-info"}
-             className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto"}
+             className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default"}
              style={{minWidth:800} }>
             <div className={"grow flex flex-row"}>
                 <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>

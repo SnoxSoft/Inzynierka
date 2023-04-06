@@ -44,11 +44,16 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
         let availableQuartetsLoad = []
         if(pickedPersonId !== ""){
             const response = await fetch(serverIp + "/" + endpointGetAvailableQuartets + "/" + pickedPersonId)
+            console.log("cccccc")
+            console.log(response)
             const quarters = await response.json();
 
              quarters.forEach((q) => {
                  availableQuartetsLoad.push(q.value)
              })
+
+            console.log("sdsdss")
+            console.log(availableQuartets)
         }
 
         setAvailableQuartets(availableQuartetsLoad)
@@ -85,7 +90,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
              className={"every-page-on-scroll flex p-4 gap-2 text-center flex-col bg-blue-menu text-workday"}
              style={{minWidth: 800}}>
             <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
-                <div className={"col-start-1 row-start-1 place-self-center"}>
+                <div className={"col-start-1 row-start-1 place-self-center hover:cursor-default"}>
                     {gradeMenu}
                 </div>
                 <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>

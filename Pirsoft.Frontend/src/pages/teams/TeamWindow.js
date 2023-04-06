@@ -185,7 +185,7 @@ const TeamWindow = ({id,mode, title}) => {
                     /> :
             teamDataLoaded || mode === 'create' ?
                 <div id={"teams-add"}
-                     className={"every-page-on-scroll text-workday bg-blue-menu"}
+                     className={"every-page-on-scroll text-workday bg-blue-menu hover:cursor-default"}
                      style={{minWidth: 800}}
                 >
                     <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 p-4"}>

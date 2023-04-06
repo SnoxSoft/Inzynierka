@@ -215,7 +215,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     return (
         <>
             {skillsNotShows ?
-                <div className={"every-page-on-scroll text-workday bg-blue-menu"}
+                <div className={"every-page-on-scroll text-workday bg-blue-menu hover:cursor-default"}
                 style={{minWidth: 800}}>
                     <div id={"body-team-edit"} className={"flex flex-col place-items-center gap-4 p-4"}>
                         <div>{headerEmployeesFinder}</div>

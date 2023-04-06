@@ -99,7 +99,7 @@ const Request = ({setAbsencesVisible}) =>{
 
     return(
         <div id={"Request"}
-             className={"every-page-on-scroll flex text-center flex-col bg-blue-menu text-workday p-4"}
+             className={"every-page-on-scroll flex text-center flex-col bg-blue-menu text-workday p-4 hover:cursor-default"}
              style={{minWidth: 800}}>
             <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
                 <div className={"col-start-1 row-start-1 place-self-center"}>
