@@ -22,7 +22,7 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpPost("create/new/employee")]
-    public IApiModel CreateNewEmployee(string firstName, string lastName, string email, string password,  string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths,
+    public void CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths,
          double grossSalary, bool isActive, bool passwordReset, DateTime employmentStartDate, DateTime dateOfBirth, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
@@ -32,8 +32,11 @@ public class EmployeeController : ControllerBase
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
             bankAccountNumber = "Missing data";
 
-        return new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, departmentId,seniorityInMonths, grossSalary, isActive, passwordReset, employmentStartDate,
+        EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, departmentId,seniorityInMonths, grossSalary, isActive, passwordReset, employmentStartDate,
             dateOfBirth, companyRole, contractType, seniorityLevel).CreateModel();
+
+        _crudHandler.Create(newEmployee);
+        _crudHandler.PushChangesToDatabase();
     }
 
     [HttpGet("/get/employees")]
