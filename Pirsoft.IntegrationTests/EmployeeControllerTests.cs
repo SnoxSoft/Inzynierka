@@ -21,13 +21,16 @@ public class EmployeeControllerTests
             password = "123qwe",
             pesel = "00112212345",
             bank_account_number = "12345678901234567890123456",
-            DepartmentId = 1,
             seniority_in_months = 10,
             employment_start_date = (2020, 10, 10),
-            is_active = Convert.ToSByte(true),
-            password_reset = Convert.ToSByte(false),
+            is_active = Convert.ToByte(true),
+            password_reset = Convert.ToByte(false),
             birth_date = (2000, 10, 10),
             salary_gross = 10000d,
+            employee_contract_type_id = 1,
+            employee_department_id = 1,
+            employee_seniority_level_id = 1,
+            employee_company_role_id = 1,
         };
 
         var response = _client.PostAsJsonAsync("https://localhost:7120/create/new/employee", employeeModel);
@@ -47,13 +50,16 @@ public class EmployeeControllerTests
             password = "123qwe",
             pesel = "1",
             bank_account_number = "12345678901234567890123456",
-            DepartmentId = 1,
             seniority_in_months = 10,
             employment_start_date = (2020, 10, 10),
-            is_active = Convert.ToSByte(true),
-            password_reset = Convert.ToSByte(false),
+            is_active = Convert.ToByte(true),
+            password_reset = Convert.ToByte(false),
             birth_date = (2000, 10, 10),
             salary_gross = 10000d,
+            employee_contract_type_id = 1,
+            employee_department_id = 1,
+            employee_seniority_level_id = 1,
+            employee_company_role_id = 1,
         };
 
         var response = _client.PostAsJsonAsync("https://localhost:7120/create/new/employee", employeeModel);
@@ -73,13 +79,16 @@ public class EmployeeControllerTests
             password = "123qwe",
             pesel = "00112212345",
             bank_account_number = "1",
-            DepartmentId = 1,
             seniority_in_months = 10,
             employment_start_date = (2020, 10, 10),
-            is_active = Convert.ToSByte(true),
-            password_reset = Convert.ToSByte(false),
+            is_active = Convert.ToByte(true),
+            password_reset = Convert.ToByte(false),
             birth_date = (2000, 10, 10),
             salary_gross = 10000d,
+            employee_contract_type_id = 1,
+            employee_department_id = 1,
+            employee_seniority_level_id = 1,
+            employee_company_role_id = 1,
         };
 
         var response = _client.PostAsJsonAsync("https://localhost:7120/create/new/employee", employeeModel);
