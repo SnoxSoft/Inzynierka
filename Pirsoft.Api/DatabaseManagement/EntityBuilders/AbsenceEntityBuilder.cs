@@ -1,16 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Pirsoft.Api.Models;
 
 namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
 {
-    public class AbsenceEntityBuilder : IEntityBuilder
+    public class AbsenceEntityBuilder : EntityBuilderBase<AbsenceModel>
     {
-        private readonly ModelBuilder _modelBuilder = null!;
+        public AbsenceEntityBuilder(ModelBuilder modelBuilder) : base(modelBuilder) { }
 
-        public AbsenceEntityBuilder(ModelBuilder modelBuilder) => _modelBuilder = modelBuilder;
-
-        public ModelBuilder Build()
+        public override ModelBuilder Build()
             => _modelBuilder.Entity<AbsenceModel>(entity =>
             {
                 entity.HasKey(e => e.absence_id).HasName("PRIMARY");
@@ -28,22 +25,5 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_absence_employee");
             });
-
-        public string GetEntityPrimaryKey(ModelBuilder builder)
-        {
-            IMutableEntityType? matchingEntity = builder.Model.GetEntityTypes()
-                .Where(e => e.Name.Equals(typeof(AbsenceModel).FullName))
-                .FirstOrDefault();
-
-            string primaryKey = (matchingEntity?.FindPrimaryKey()?.Properties.FirstOrDefault()?.Name) ?? string.Empty;
-
-            return primaryKey;
-        }
-    }
-
-    public interface IEntityBuilder
-    {
-        ModelBuilder Build();
-        string GetEntityPrimaryKey(ModelBuilder modelBuilder);
     }
 }
