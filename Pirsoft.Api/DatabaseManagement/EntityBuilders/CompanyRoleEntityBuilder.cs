@@ -8,8 +8,12 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
         public CompanyRoleEntityBuilder(ModelBuilder modelBuilder) : base(modelBuilder) { }
 
         public override ModelBuilder Build()
-        {
-            throw new NotImplementedException();
-        }
+            => _modelBuilder.Entity<CompanyRoleModel>(entity =>
+            {
+                entity.HasKey(e => e.role_id).HasName("PRIMARY");
+                entity.HasIndex(e => e.role_id, "id_UNIQUE").IsUnique();
+                entity.HasIndex(e => e.role_name, "roleName_UNIQUE").IsUnique();
+                entity.Property(e => e.role_name).HasMaxLength(45);
+            });
     }
 }
