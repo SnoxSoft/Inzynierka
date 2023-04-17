@@ -239,24 +239,6 @@ function CompanySchedule(){
         //FunctionForResizeScheduleWidth()
     }, );
 
-    const users = [
-        {
-            name: 'Elliot Fu',
-            bio: 'Elliot has been a member since July 2012',
-            avatar: '/images/avatar/small/elliot.jpg',
-        },
-        {
-            name: 'Stevie Feliciano',
-            bio: 'Stevie has been a member since August 2013',
-            avatar: '/images/avatar/small/stevie.jpg',
-        },
-        {
-            name: 'Matt',
-            bio: 'Matt has been a member since July 2014',
-            avatar: '/images/avatar/small/matt.jpg',
-        },
-    ]
-
     return(
         <>
         {teamsLoaded && allTeamsAreLoadedInDivs ?

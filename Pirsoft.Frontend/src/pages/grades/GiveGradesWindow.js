@@ -3,13 +3,13 @@ import {
     labelApprove,
     labelClose,
     labelDisapprove, pageNameGiveGradesWindowGive,
-    pageNameGiveGradesWindowView, quartets,
+    pageNameGiveGradesWindowView, quarters,
     serverIp
 } from "../../GlobalAppConfig";
 import ReusableButton from "../../components/base/ReusableButton";
 import {CgClose} from "react-icons/cg";
 import PersonData from "../../components/giveGrade/PersonData";
-import YearQuartets from "../../components/giveGrade/YearQuartets";
+import YearQuarters from "../../components/giveGrade/YearQuarters";
 import GradeTitle from "../../components/giveGrade/GradeTitle";
 import GradeMessage from "../../components/giveGrade/GradeMessage";
 import GradeRating from "../../components/grades/GradeRating";
@@ -38,7 +38,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
     const[gradeMessage, setGradeMessage] = useState("")
     const[gradeRating, setGradeRating] = useState("")
 
-    const[availableQuartets, setAvailableQuartets] = useState(quartets)
+    const[availableQuartets, setAvailableQuartets] = useState(quarters)
 
     async function loadAvailableQuartets(){
         let availableQuartetsLoad = []
@@ -54,7 +54,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
             setAvailableQuartets(availableQuartetsLoad)
         }
         else {
-            setAvailableQuartets(quartets)
+            setAvailableQuartets(quarters)
         }
 
     }
@@ -105,7 +105,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
                         onChange={setPickedPersonName}
                         setHideFinder={setHideFinder}
                         setPersonId={setPickedPersonId}/>
-            <YearQuartets createMode={mode === "create"}
+            <YearQuarters createMode={mode === "create"}
                           value={pickedGradeData ? pickedGradeData.quartet : pickedQuartet}
                           onChange={setPickedQuartet}
                           availableQuartets={availableQuartets}/>

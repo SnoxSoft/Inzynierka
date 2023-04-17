@@ -225,16 +225,6 @@ function EmployeeComponent({id, mode, employee}){
             );
         }
 
-        // detailsOne.push(
-        //     <div key={"skill_add"} className={"grid grid-rows-1 gap-4 p-4 h-9 items-center bg-absent"}>
-        //         <ReusableButton value={<HiPlus/>}
-        //                         color={""}
-        //                         onClick={() => console.log("ssss")}
-        //                         formatting={"hover:bg-gray-500 hover:border-2 hover:border-gray-400 w-96 h-6 rounded-md flex flex-col items-center place-content-center"}
-        //         />
-        //     </div>
-        // )
-
         setSkillsComponent(detailsOne)
         setEmployeeDataShow(false);
         setShowSkillsFrame(true)
