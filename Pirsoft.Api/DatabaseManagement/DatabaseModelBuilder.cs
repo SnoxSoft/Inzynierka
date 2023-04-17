@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pirsoft.Api.DatabaseManagement.EntityBuilders;
 
 namespace Pirsoft.Api.DatabaseManagement
 {
@@ -6,8 +7,25 @@ namespace Pirsoft.Api.DatabaseManagement
     {
         public ModelBuilder BuildModel(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            foreach (IEntityBuilder builder in getEntityBuilders(modelBuilder))
+            {
+                builder.Build();
+            }
+
+            return modelBuilder;
         }
+
+        private IEntityBuilder[] getEntityBuilders(ModelBuilder modelBuilder)
+            => new IEntityBuilder[]
+            {
+                new AbsenceEntityBuilder(modelBuilder),
+                new CompanyRoleEntityBuilder(modelBuilder),
+                new ContractTypeEntityBuilder(modelBuilder),
+                new DepartmentEntityBuilder(modelBuilder),
+                new EmployeeEntityBuilder(modelBuilder),
+                new SeniorityLevelEntityBuilder(modelBuilder),
+                new SkillEntityBuilder(modelBuilder),
+            };
     }
 
     public interface IDatabaseModelBuilder
