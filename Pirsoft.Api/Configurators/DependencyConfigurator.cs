@@ -18,7 +18,10 @@ namespace Pirsoft.Api.Configurators
         }
 
         private void configureDatabaseManagement()
-            => _services.AddSingleton<ICrudHandler, CrudHandler>();
+        {
+            _services.AddSingleton<ICrudHandler, CrudHandler>();
+            _services.AddSingleton<IDatabaseModelBuilder, DatabaseModelBuilder>();
+        }
 
         private void configureValidators()
         {
