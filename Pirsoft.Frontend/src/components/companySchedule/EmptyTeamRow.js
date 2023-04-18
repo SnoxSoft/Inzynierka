@@ -1,9 +1,9 @@
 
 import React from "react";
 
-const EmptyTeamRow = ({team, day, row, colTeam}) => {
+const EmptyTeamRow = ({row, colTeam, id}) => {
 
-    return <div key={"empty-column-for-team-"+day.dayOfMonth+"-"+team.value}
+    return <div id={id} key={id}
                 className={"row-start-"+row+" col-start-"+colTeam+" text-workday"}>
     </div>
 }

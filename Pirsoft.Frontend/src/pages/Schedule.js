@@ -393,7 +393,7 @@ function Schedule(){
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <div>
                             <Popup
-                                content={<Legend bigLegend={true}/>}
+                                content={<Legend id={"schedule-legend-window"} bigLegend={true}/>}
                                 position={"bottom left"}
                                 trigger={<ReusableButton id={"schedule-legend"}
                                     value={legendLabel}/>}
