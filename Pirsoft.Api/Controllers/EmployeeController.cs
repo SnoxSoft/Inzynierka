@@ -41,6 +41,17 @@ public class EmployeeController : ControllerBase
 
     [HttpGet("/get/employees")]
     public IEnumerable<employeeDTO> GetListOfAllEmployees() => _crudHandler.ReadAll<EmployeeModel>().Select(p => new employeeDTO(p));
+
+    [HttpGet("/get/filtered/employees/{name}/{departmentId}/{positionId}")]
+    public IEnumerable<EmployeeModel> GetFilteredEmployees(string name, int departmentId, int positionId)
+    {
+        var fullName = name.Split(' ');
+
+        return _crudHandler.ReadAll<EmployeeModel>().Where(p => p.first_name.Equals(fullName[0]))
+            .Where(p => p.last_name.Equals(fullName[1]))
+            .Where(p => p.employee_department.department_id.Equals(departmentId))
+            .Where(p => p.employee_company_role_id.Equals(positionId));
+    }   
     
     public struct employeeDTO
     {

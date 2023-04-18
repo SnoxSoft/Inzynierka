@@ -106,4 +106,24 @@ public class EmployeeControllerTests
         response.Result.IsSuccessStatusCode.Should().BeTrue();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
+
+    [Test]
+    public void GetFilteredEmployees_IsReturningSuccessCodeWithResponse_ForExisingParameters()
+    {
+        var response = _client.GetAsync("https://localhost:7120/get/filtered/employees/");
+        
+        response.Result.Content.Should().NotBeNull();
+        response.Result.IsSuccessStatusCode.Should().BeTrue();
+        response.IsCompletedSuccessfully.Should().BeTrue();
+    }
+
+    [Test]
+    public void GetFilteredEmployees_IsReturningEmptyResponse_ForNonExistingParameters()
+    {
+        var response = _client.GetAsync("https://localhost:7120/get/filtered/employees/janusz/100/100");
+        
+        response.Result.Content.Should().BeNull();
+        response.Result.IsSuccessStatusCode.Should().BeTrue();
+        response.IsCompletedSuccessfully.Should().BeTrue();
+    }
 }
