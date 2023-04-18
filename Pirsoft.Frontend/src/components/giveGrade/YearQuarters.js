@@ -1,6 +1,6 @@
-import {labelQuartet} from "../../GlobalAppConfig";
+import {labelQuarter} from "../../GlobalAppConfig";
 
-const YearQuartets = ({onChange, value, createMode = false,
+const YearQuarters = ({onChange, value, createMode = false,
                       availableQuartets = []}) => {
 
     let quartets = []
@@ -26,12 +26,12 @@ const YearQuartets = ({onChange, value, createMode = false,
         }
     }
 
-    return <div className={"flex flex-col gap-2"}>
-        <div>{labelQuartet}</div>
+    return <div className={"flex flex-col gap-2 hover:cursor-default"}>
+        <div>{labelQuarter}</div>
         <div className={"flex flex-row gap-8 place-self-center"}>
             {quartets}
         </div>
     </div>
 
 }
-export default YearQuartets;
+export default YearQuarters;

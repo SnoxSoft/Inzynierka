@@ -1,6 +1,6 @@
 
 // Adres ip aplikacji
-const serverIp = "http://127.0.0.1:3001";
+const serverIp = "http://127.0.0.1:3001";//localhost:7120
 
 // Nazwa aplikacji
 const appName = "PIRSOFT";
@@ -140,7 +140,7 @@ const labelStartDate = "Rozpoczęcie pracy";
 const labelGivenGrades = "Wystawione oceny";
 const labelReceivedGrades = "Otrzymane oceny";
 
-const labelQuartet = "Kwartał";
+const labelQuarter = "Kwartał";
 
 // Edycja/ tworzenie/ wyświetlenie zespołu
 const labelTeamName = "Nazwa zespołu";
@@ -163,13 +163,15 @@ const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
 const months = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
     "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
 
+const quarters = ["Q1","Q2","Q3","Q4"];
+
 const headerEmployeesFinder = "Wyszukiwarka pracowników";
 const headerEmployeesFinderList = "Imie i nazwisko, Zespół, Stanowisko, Umiejętności"
 const labelEmployeeFinderExchanceEmployeesBetween = "Wymień aktualnego i wybranego pracownika pomiędzy zespołami";
 const headerEmployees = "Wyszukaj pracownika";
 const labelSwapInformation = "Osoby zostaną wymienione pomiędzy zespołami po zapisaniu zmian w aktualnie edytowanym zespole";
 const labelPersonChangedWith = "zamieniona z osobą";
-const labelAllPeopleChangedBetweenTeams = "Zamienione osoby pomędzy zespołami";
+const labelAllPeopleChangedBetweenTeams = "Zamienione osoby pomiędzy zespołami";
 
 // Powiadomienia
 
@@ -223,7 +225,7 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     monthsOfYourWorkLabel,
     legendLabel, legendToday,
 
-    weekdays, months,
+    weekdays, months, quarters,
 
     requestStatusLabel, requestActionLabel, requestDescriptionLabel,
     labelRequestType, labelRequestNoPay, labelRequestApprovers,
@@ -239,7 +241,7 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     alertNewPasswordsAreIncompatible,
     alertOldPasswordIsIncompatible,
 
-    labelReceivedGrades, labelGivenGrades, labelQuartet,
+    labelReceivedGrades, labelGivenGrades, labelQuarter,
 
     headerEmployeesFinder, headerEmployeesFinderList, labelEmployeeFinderExchanceEmployeesBetween,
 

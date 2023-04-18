@@ -2,7 +2,7 @@ import {gradeTitleLabel} from "../../GlobalAppConfig";
 
 const GradeTitle = ({onChange, value, enable = false}) => {
 
-        return <div className={"flex flex-col gap-2"}>
+        return <div className={"flex flex-col gap-2 hover:cursor-default"}>
         <div>{gradeTitleLabel}</div>
         <div>
         <input className={"w-96 text-black rounded-sm text-center"} type={"text"}

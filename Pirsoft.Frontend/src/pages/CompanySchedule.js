@@ -7,6 +7,8 @@ import TeamRow from "../components/companySchedule/TeamRow";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 import {legendLabel, legendToday, months, pageNameCompanySchedule, serverIp, weekdays} from "../GlobalAppConfig";
 import {endpointGetAllCompanyMonthDaysOff, endpointGetAllEmployees, endpointGetAllTeams} from "../EndpointAppConfig";
+import {Popup} from "semantic-ui-react";
+import Legend from "../components/legend/Legend";
 
 function CompanySchedule(){
     document.title = pageNameCompanySchedule;
@@ -142,7 +144,7 @@ function CompanySchedule(){
         days.forEach((day) => {
             allTeamsLoad.push(
                 <div key={"top-weekdays-"+day.dayOfMonth}
-                     className={"row-start-1 col-start-"+colDayOfWeek+" text-workday text-center w-8 h-12"}>
+                     className={"hover:cursor-default row-start-1 col-start-"+colDayOfWeek+" text-workday text-center w-8 h-12"}>
                     <div>
                         {getTextWeekday(day.date)}
                     </div>
@@ -241,7 +243,7 @@ function CompanySchedule(){
         <>
         {teamsLoaded && allTeamsAreLoadedInDivs ?
             <>
-                <div id={"company-schedule-parent"} className={"every-page-on-scroll overflow-y-hidden"}
+                <div id={"company-schedule-parent"} className={"every-page-on-scroll overflow-y-hidden hover:cursor-default"}
                      style={{minWidth: 800}}>
                     <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
@@ -265,8 +267,12 @@ function CompanySchedule(){
                         </div>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
-                                <ReusableButton value={legendLabel}
-                                     onClick={() => console.log("tu bedzie legenda:)")}/>
+                                <Popup
+                                    content={<Legend/>}
+                                    position={"bottom left"}
+                                    trigger={<ReusableButton value={legendLabel}
+                                                             onClick={() => console.log("tu bedzie legenda:)")}/>}
+                                />
                             </div>
                         </div>
                     </div>

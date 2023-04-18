@@ -3,13 +3,13 @@ import {
     labelApprove,
     labelClose,
     labelDisapprove, pageNameGiveGradesWindowGive,
-    pageNameGiveGradesWindowView,
+    pageNameGiveGradesWindowView, quarters,
     serverIp
 } from "../../GlobalAppConfig";
 import ReusableButton from "../../components/base/ReusableButton";
 import {CgClose} from "react-icons/cg";
 import PersonData from "../../components/giveGrade/PersonData";
-import YearQuartets from "../../components/giveGrade/YearQuartets";
+import YearQuarters from "../../components/giveGrade/YearQuarters";
 import GradeTitle from "../../components/giveGrade/GradeTitle";
 import GradeMessage from "../../components/giveGrade/GradeMessage";
 import GradeRating from "../../components/grades/GradeRating";
@@ -38,20 +38,25 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
     const[gradeMessage, setGradeMessage] = useState("")
     const[gradeRating, setGradeRating] = useState("")
 
-    const[availableQuartets, setAvailableQuartets] = useState(["Q1","Q2","Q3","Q4"])
+    const[availableQuartets, setAvailableQuartets] = useState(quarters)
 
     async function loadAvailableQuartets(){
         let availableQuartetsLoad = []
         if(pickedPersonId !== ""){
             const response = await fetch(serverIp + "/" + endpointGetAvailableQuartets + "/" + pickedPersonId)
             const quarters = await response.json();
-
              quarters.forEach((q) => {
                  availableQuartetsLoad.push(q.value)
              })
         }
 
-        setAvailableQuartets(availableQuartetsLoad)
+        if(pickedPersonId !== ""){
+            setAvailableQuartets(availableQuartetsLoad)
+        }
+        else {
+            setAvailableQuartets(quarters)
+        }
+
     }
 
     useEffect(() => {
@@ -85,7 +90,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
              className={"every-page-on-scroll flex p-4 gap-2 text-center flex-col bg-blue-menu text-workday"}
              style={{minWidth: 800}}>
             <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
-                <div className={"col-start-1 row-start-1 place-self-center"}>
+                <div className={"col-start-1 row-start-1 place-self-center hover:cursor-default"}>
                     {gradeMenu}
                 </div>
                 <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
@@ -100,7 +105,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
                         onChange={setPickedPersonName}
                         setHideFinder={setHideFinder}
                         setPersonId={setPickedPersonId}/>
-            <YearQuartets createMode={mode === "create"}
+            <YearQuarters createMode={mode === "create"}
                           value={pickedGradeData ? pickedGradeData.quartet : pickedQuartet}
                           onChange={setPickedQuartet}
                           availableQuartets={availableQuartets}/>

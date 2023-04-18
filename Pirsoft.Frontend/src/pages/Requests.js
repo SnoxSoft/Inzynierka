@@ -182,7 +182,7 @@ function Requests(){
                 filtrRequests={filtrRequests}
             />
 
-            <div className={"text-start ml-4 mr-8 items-center h-6 rounded-md flex bg-brown-menu border-2 border-workday text-workday font-bold"}>
+            <div className={"text-start ml-4 mr-8 items-center h-6 rounded-md flex bg-brown-menu border-2 border-workday text-workday font-bold hover:cursor-default"}>
                 <div className={"p-2 flex rounded-md basis-8/12"}>
                     {requestDescriptionLabel}
                 </div>

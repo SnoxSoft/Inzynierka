@@ -27,7 +27,7 @@ import {
     firstnameLabel,
     headerPasswordChange,
     labelApprove,
-    labelBack, labelBankAccount, labelBirthDate,
+    labelBack, labelBankAccount, labelBirthDate, labelChange,
     labelClose, labelContractType,
     labelCreate,
     labelDelete,
@@ -46,6 +46,7 @@ import {
     skillsLabel
 } from "../../GlobalAppConfig";
 import {endpointGetAllSkills, endpointGetAvailableQuartets} from "../../EndpointAppConfig";
+import {HiPlus} from "react-icons/hi";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -214,12 +215,16 @@ function EmployeeComponent({id, mode, employee}){
                 }
             }
             detailsOne.push(
-                <div key={"skill" + availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
+                <>
+                <div key={"skill" + availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
                     <p>{allSkills[availableSkill]}</p>
                     <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
                 </div>
+                    <hr />
+                </>
             );
         }
+
         setSkillsComponent(detailsOne)
         setEmployeeDataShow(false);
         setShowSkillsFrame(true)
@@ -280,7 +285,7 @@ function EmployeeComponent({id, mode, employee}){
         <>
         {employeeDataShow ?
         <div id={"employee-info"}
-             className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto"}
+             className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default"}
              style={{minWidth:800} }>
             <div className={"grow flex flex-row"}>
                 <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>
@@ -400,7 +405,7 @@ function EmployeeComponent({id, mode, employee}){
             <>
                 {showSkillsFrame ?
                     <div id={"skills"}
-                         className={"every-page-on-scroll grid grid-cols-1 bg-blue-menu text-workday text-center"}
+                         className={"every-page-on-scroll grid grid-cols-1 bg-blue-menu text-workday text-center hover:cursor-default"}
                          style={{minWidth: 800}}>
 
                         <div id={"skills-edit"} className={"flex flex-col justify-evenly"}>
@@ -416,7 +421,7 @@ function EmployeeComponent({id, mode, employee}){
 
                 {showPasswordChangeFrame ?
                 <div id={"password"}
-                     className={"every-page-on-scroll bg-blue-menu"}
+                     className={"every-page-on-scroll bg-blue-menu hover:cursor-default"}
                      style={{minWidth: 800}}>
                     <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
 

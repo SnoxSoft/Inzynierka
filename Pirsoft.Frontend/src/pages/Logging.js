@@ -62,7 +62,7 @@ function Logging(){
     return <>
         {sessionStorage.getItem('USER') === null ?
         <div id={"home-logging-in"}
-             className={"every-page-on-scroll"}
+             className={"every-page-on-scroll hover:cursor-default"}
              style={{ height: wantedHeightsForList } }>
             <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                 <div>
@@ -91,7 +91,7 @@ function Logging(){
             </div>
         </div> :
             <div id={"home-logged-in"}
-                 className={"every-page-on-scroll"}
+                 className={"every-page-on-scroll hover:cursor-default"}
                  style={{ height: wantedHeightsForList } }>
                 <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                     <div>

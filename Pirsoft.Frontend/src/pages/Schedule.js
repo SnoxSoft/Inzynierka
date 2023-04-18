@@ -13,6 +13,8 @@ import {
     serverIp, weekdays
 } from "../GlobalAppConfig";
 import {endpointGetEmployeeMonthDaysOff} from "../EndpointAppConfig";
+import Legend from "../components/legend/Legend";
+import {Popup} from "semantic-ui-react";
 
 function Schedule(){
     document.title = pageNameSchedule;
@@ -161,7 +163,7 @@ function Schedule(){
             border = 'outline-dashed outline-4'
         }
 
-        return <div className={'flex flex-row justify-evenly border-workday border-2 hover:cursor-pointer '+color+' m-2 rounded-md text-black '+border+' '}>
+        return <div className={'flex flex-row justify-evenly border-workday border-2 hover:cursor-default '+color+' m-2 rounded-md text-black '+border+' '}>
             {day.dayOfMonth}
         </div>
     }
@@ -362,7 +364,7 @@ function Schedule(){
         <>
         {showHidePickedMonth ?
             <div id={"schedule-month"}
-             className={"every-page-on-scroll overflow-y-hidden"}
+             className={"every-page-on-scroll overflow-y-hidden hover:cursor-default"}
             style={{minWidth: 800}}>
                 <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
@@ -389,8 +391,12 @@ function Schedule(){
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <div>
-                            <ReusableButton value={legendLabel}
-                                            onClick={() => console.log("tu bedzie legenda:)")}/>
+                            <Popup
+                                content={<Legend bigLegend={true}/>}
+                                position={"bottom left"}
+                                trigger={<ReusableButton value={legendLabel}
+                                                         onClick={() => console.log("tu bedzie legenda:)")}/>}
+                            />
                         </div>
                     </div>
                 </div>
@@ -406,7 +412,7 @@ function Schedule(){
                 </div>
             </div> :
             <div id={"schedule"}
-                 className={"every-page-on-scroll overflow-y-hidden"}
+                 className={"every-page-on-scroll overflow-y-hidden hover:cursor-default"}
             style={{minWidth: 800}}>
                 <div className={"p-4 flex flex-wrap flex-col text-center text-workday gap-4"}>
                     <p>{monthsOfYourWorkLabel}</p>

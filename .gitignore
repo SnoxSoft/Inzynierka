@@ -351,3 +351,5 @@ MigrationBackup/
 
 #Idea jetbrains folder
 .idea
+Pirsoft.Api/appsettings.json
+Pirsoft.Frontend/src/GlobalAppConfig.js
