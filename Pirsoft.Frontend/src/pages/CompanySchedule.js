@@ -132,23 +132,23 @@ function CompanySchedule(){
 
         // Naglowek miesiaca dwa puste pola
         allTeamsLoad.push(
-            <div
+            <div id={"empty-team-header"} key={"empty-team-header"}
                 className={"row-start-1 col-start-1"}>
             </div>)
         allTeamsLoad.push(
-            <div
+            <div id={"empty-employee-header"} key={"empty-employee-header"}
                 className={"row-start-2 col-start-1"}>
             </div>)
 
         let colDayOfWeek = 2
-        days.forEach((day) => {
+        days.forEach((day, id) => {
             allTeamsLoad.push(
-                <div key={"top-weekdays-"+day.dayOfMonth}
+                <div id={"header-month-days-"+id} key={"header-month-days-"+id}
                      className={"hover:cursor-default row-start-1 col-start-"+colDayOfWeek+" text-workday text-center w-8 h-12"}>
-                    <div>
+                    <div id={"header-month-week-"+id} key={"header-month-week-"+id}>
                         {getTextWeekday(day.date)}
                     </div>
-                    <div>
+                    <div id={"header-month-day-"+id} key={"header-month-day-"+id}>
                         {day.dayOfMonth}
                     </div>
                 </div>)
@@ -156,11 +156,11 @@ function CompanySchedule(){
         });
 
         let row = 1
-        teams.forEach((team) => {
+        teams.forEach((team, id) => {
             // dodanie zespołów
             row = row + 1
             allTeamsLoad.push(
-                <TeamRow team={team} row={row} days={days}
+                <TeamRow id={"company-schedule-team-"+id} team={team} row={row} days={days}
                     employees={employees} currentMonthDaysOff={currentMonthDaysOff}/>)
 
         });
@@ -220,23 +220,8 @@ function CompanySchedule(){
         }
     }
 
-    function FunctionForResizeScheduleWidth(){
-
-        //const leftMenuComponent = document.getElementById("left-menu");
-
-        const scheduleParentComponent = document.getElementById("company-schedule-parent");
-
-        //const currentComponent = document.getElementById("schedule-company-list");
-        if(scheduleParentComponent){//leftMenuComponent != null && currentComponent != null){
-            const currentComponentPosition = scheduleParentComponent.getBoundingClientRect();
-            //setWantedWidthForList(window.outerWidth - currentComponentPosition.x)
-            setWantedWidthForList(currentComponentPosition.width)
-        }
-    }
-
     useEffect(() => {
         FunctionForResize("schedule-company-list", {setWantedHeightForList});
-        //FunctionForResizeScheduleWidth()
     }, );
 
     return(
@@ -248,18 +233,20 @@ function CompanySchedule(){
                     <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
-                                <ReusableButton value={legendToday} onClick={() => loadWholeMonthDataForCompany(new Date())}/>
+                                <ReusableButton id={"company-schedule-today"} value={legendToday} onClick={() => loadWholeMonthDataForCompany(new Date())}/>
                             </div>
                         </div>
                         <div className={"col-start-1 row-start-1 place-self-center"}>
                             <div className={"text-workday flex flex-row gap-8"}>
-                                <div className={"flex place-self-center hover:cursor-pointer"}
+                                <div id={"company-schedule-previous-month"}
+                                     className={"flex place-self-center hover:cursor-pointer"}
                                      onClick={() => changeMonth("previous")}>
                                     <MdOutlineArrowBackIosNew size={30}/></div>
                                 <div className={"flex font-bold 20 w-40 place-content-center"}>
                                     {pickedMonthText !== undefined ? pickedMonthText.text : ''}
                                 </div>
-                                <div className={"flex place-self-center hover:cursor-pointer"}
+                                <div id={"company-schedule-next-month"}
+                                     className={"flex place-self-center hover:cursor-pointer"}
                                      onClick={() => changeMonth("next")}>
                                     <MdOutlineArrowForwardIos size={30}/>
                                 </div>
@@ -268,10 +255,11 @@ function CompanySchedule(){
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
                                 <Popup
-                                    content={<Legend/>}
+                                    content={<Legend id={"company-schedule-legend-window"}/>}
                                     position={"bottom left"}
-                                    trigger={<ReusableButton value={legendLabel}
-                                                             onClick={() => console.log("tu bedzie legenda:)")}/>}
+                                    trigger={<ReusableButton
+                                        id={"company-schedule-legend"}
+                                        value={legendLabel}/>}
                                 />
                             </div>
                         </div>

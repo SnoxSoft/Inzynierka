@@ -1,6 +1,6 @@
 import React from "react";
 
-function Legend({bigLegend = false}){
+function Legend({bigLegend = false, id}){
 
     let legendItem = [
         {color: "bg-workday", text: "Dzień pracujący"},
@@ -27,7 +27,9 @@ function Legend({bigLegend = false}){
     });
 
     return(
-        <div className={"every-page-on-scroll bg-brown-menu overflow-y-hidden text-workday flex flex-col gap-1 p-2"}>
+        <div
+            id={id}
+            className={"every-page-on-scroll bg-brown-menu overflow-y-hidden text-workday flex flex-col gap-1 p-2"}>
             {legendComponent}
         </div>
     )
