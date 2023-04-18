@@ -46,7 +46,7 @@ function Remind(){
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
     useEffect(() => {
-        FunctionForResize("password-reminder", {setWantedHeightForList});
+        FunctionForResize("password-reminder-page", {setWantedHeightForList});
     }, []);
 
     const verifyCode = () => {
@@ -135,7 +135,7 @@ function Remind(){
         }
     }
 
-    return <div id={"password-reminder"}
+    return <div id={"password-reminder-page"}
              className={"every-page-on-scroll hover:cursor-default"}
              style={{ height: wantedHeightsForList } }>
             <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
@@ -179,7 +179,8 @@ function Remind(){
                 {codeNotVerified ?
                     <>
                         <div className={"self-center"}>
-                            <ReusableButton value={labelSendVerificationEmail} onClick={() => sendVerifyEmail()}/>
+                            <ReusableButton value={labelSendVerificationEmail}
+                                            onClick={() => sendVerifyEmail()}/>
                         </div>
                         <br/>
                         <div className={"bg-blue-menu self-center"}>

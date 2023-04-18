@@ -70,7 +70,7 @@ function Schedule(){
         let localList = []
         for (let i = diff - 1; i >= 0; i--) {
             const newDateFrom = new Date(from);
-            const newDate = new Date(newDateFrom.setMonth(newDateFrom.getMonth()+i))//.toLocaleDateString("sv", options);
+            const newDate = new Date(newDateFrom.setMonth(newDateFrom.getMonth()+i))
             localList.push(
                 {
                     text: months[ newDate.getMonth()]+" "+newDate.getFullYear(),
@@ -135,7 +135,6 @@ function Schedule(){
     }
 
     function appendDay(day) {
-        //m-2 flex self-end place-self-center text-workday
         let color = 'bg-dayoffmonth'
 
         if(day.isCurrentMonth){
@@ -146,7 +145,6 @@ function Schedule(){
         }
 
         if(day.reason !== undefined){
-            //console.log(day.reason)
             if(day.reason === 'absent'){
                 color = 'bg-absent'
             }
@@ -369,7 +367,8 @@ function Schedule(){
                 <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <div>
-                            <button className={"flex bg-d flex-row self-center gap-2"} onClick={() => setShowHidePickedMonth(false)}>
+                            <button id={"button-close-month"} className={"flex bg-d flex-row self-center gap-2"}
+                                    onClick={() => setShowHidePickedMonth(false)}>
                                 <div className={"flex flex-row self-center"}><MdOutlineArrowBackIosNew /></div>
                                 <div>{labelBack}</div>
                             </button>
@@ -377,13 +376,15 @@ function Schedule(){
                     </div>
                     <div className={"col-start-1 row-start-1 place-self-center"}>
                         <div className={"text-workday flex flex-row gap-8"}>
-                            <div className={"flex place-self-center hover:cursor-pointer"}
+                            <div id={"schedule-previous-month"}
+                                className={"flex place-self-center hover:cursor-pointer"}
                                  onClick={() => changeMonth("previous")}>
                                 <MdOutlineArrowBackIosNew size={30}/></div>
                             <div className={"flex font-bold 20 w-40 place-content-center"}>
                                 {pickedMonthText !== undefined ? pickedMonthText.text : ''}
                             </div>
-                            <div className={"flex place-self-center hover:cursor-pointer"}
+                            <div id={"schedule-next-month"}
+                                className={"flex place-self-center hover:cursor-pointer"}
                                  onClick={() => changeMonth("next")}>
                                 <MdOutlineArrowForwardIos size={30}/>
                             </div>
@@ -394,14 +395,15 @@ function Schedule(){
                             <Popup
                                 content={<Legend bigLegend={true}/>}
                                 position={"bottom left"}
-                                trigger={<ReusableButton value={legendLabel}
-                                                         onClick={() => console.log("tu bedzie legenda:)")}/>}
+                                trigger={<ReusableButton id={"schedule-legend"}
+                                    value={legendLabel}/>}
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className={"text-workday text-center"}>
+                <div id={"schedule-alert-message"}
+                    className={"text-workday text-center"}>
                     {showingAlert ? 'Nie możesz przejść poza zakres' : ' ... '}
                 </div>
                 <div id={"schedule-month-list"}
@@ -420,7 +422,7 @@ function Schedule(){
                         <div className={"flex flex-row gap-4 place-self-center"}>
                             <p className={""}>{calendarLabelFrom}</p>
                             <input className={"grow border text-left text-black rounded-md h-6 w-52"}
-                                   id="month-year-from"
+                                   id="schedule-month-year-from"
                                    type="month"
                                    name="month"
                                    value={from}
@@ -441,7 +443,7 @@ function Schedule(){
                         <div className={"flex flex-row gap-4 place-self-center"}>
                             <p className={""}>{calendarLabelTo}</p>
                             <input className={"grow border text-left text-black rounded-md h-6 w-52"}
-                                   id="month-year-to"
+                                   id="schedule-month-year-to"
                                    type="month"
                                    name="month"
                                    value={to}
@@ -457,16 +459,18 @@ function Schedule(){
                                    } }
                             />
                         </div>
-                        <div className={"grow"}><ReusableButton value={labelFilter}
-                                                                onClick={() => filtrSchedule()}/></div>
+                        <div className={"grow"}>
+                            <ReusableButton value={labelFilter}
+                                            id={"schedule-filter-button"}
+                                            onClick={() => filtrSchedule()}/></div>
                     </div>
                 </div>
                 <hr/>
                 <div id={"schedule-list"} className={"rounded-md overflow-y-auto h-full"}>
                     <ul>
-                        {monthList.map((p) =>
+                        {monthList.map((p, id) =>
                             <ScheduleListItem key={p.value} text={p.text} date={p.date}
-                                              loadWholeMonthData={loadWholeMonthData}/>
+                                              loadWholeMonthData={loadWholeMonthData} listId={id}/>
                         )}
                     </ul>
                 </div>
