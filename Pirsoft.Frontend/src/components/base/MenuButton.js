@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
-const MenuButton = ({value, link}) => {
+const MenuButton = ({id, value, link}) => {
     return (
-        <Link className={"text-workday text-center font-bold border-y-2 p-2 hover:bg-gray-600 hover:bg-opacity-40"}
+        <Link id={id} className={"text-workday text-center font-bold border-y-2 p-2 hover:bg-gray-600 hover:bg-opacity-40"}
               to={link}>{value}
         </Link>
     );

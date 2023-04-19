@@ -14,14 +14,14 @@ function LeftMenu(){
 
             {sessionStorage.getItem('USER') ?
                 <>
-            <MenuButton link={"/employees"} value={employeesMenu}/>
-            <MenuButton link={'/employee/-1'} value={employeeRegisterMenu}/>
-            <MenuButton link={"/schedule"} value={scheduleMenu}/>
-            <MenuButton link={"/company-schedule"} value={companyScheduleMenu}/>
-            <MenuButton link={"/teams"} value={teamsMenu}/>
-            <MenuButton link={"/absences"} value={absencesMenu}/>
-            <MenuButton link={"/requests"} value={requestsMenu}/>
-            <MenuButton link={"/grades"} value={gradesMenu}/>
+            <MenuButton id={"menu-employees"} link={"/employees"} value={employeesMenu}/>
+            <MenuButton id={"menu-employee-register"} link={'/employee/-1'} value={employeeRegisterMenu}/>
+            <MenuButton id={"menu-schedule"} link={"/schedule"} value={scheduleMenu}/>
+            <MenuButton id={"menu-company-schedule"} link={"/company-schedule"} value={companyScheduleMenu}/>
+            <MenuButton id={"menu-teams"} link={"/teams"} value={teamsMenu}/>
+            <MenuButton id={"menu-absences"} link={"/absences"} value={absencesMenu}/>
+            <MenuButton id={"menu-requests"} link={"/requests"} value={requestsMenu}/>
+            <MenuButton id={"menu-grades"} link={"/grades"} value={gradesMenu}/>
                     </>
                 :
                 <></>}
