@@ -91,7 +91,7 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
 
                 </div>
                 <div className={"flex flex-col items-center gap-2"}>
-                    <FirstNameAndLastName className={""} onChange={setFirstNameAndLastName} />
+                    <FirstNameAndLastName id={""} className={""} onChange={setFirstNameAndLastName} />
                     <div className={"flex flex-row gap-2 w-full place-content-end"}>
                         <ReusableButton value={labelFind} onClick={getGrades} />
                     </div>

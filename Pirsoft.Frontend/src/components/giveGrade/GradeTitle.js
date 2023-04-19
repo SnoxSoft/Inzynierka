@@ -1,11 +1,11 @@
 import {gradeTitleLabel} from "../../GlobalAppConfig";
 
-const GradeTitle = ({onChange, value, enable = false}) => {
+const GradeTitle = ({id, onChange, value, enable = false}) => {
 
         return <div className={"flex flex-col gap-2 hover:cursor-default"}>
         <div>{gradeTitleLabel}</div>
         <div>
-        <input className={"w-96 text-black rounded-sm text-center"} type={"text"}
+        <input id={id} className={"w-96 text-black rounded-sm text-center"} type={"text"}
                onChange={(e) => onChange(e.target.value)} value={value} disabled={!enable}></input>
         </div>
     </div>

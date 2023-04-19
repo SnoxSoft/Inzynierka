@@ -1,6 +1,6 @@
 import {labelQuarter} from "../../GlobalAppConfig";
 
-const YearQuarters = ({onChange, value, createMode = false,
+const YearQuarters = ({id, onChange, value, createMode = false,
                       availableQuartets = []}) => {
 
     let quartets = []
@@ -9,7 +9,7 @@ const YearQuarters = ({onChange, value, createMode = false,
             quartets.push(
                 <div key={"Q" + (i + 1)} className={"flex flex-col"}>
                     {"Q" + (i + 1)}
-                    <input type={"radio"} checked={true} name={"quartet-group"}/>
+                    <input id={id + "-Q" + (i + 1)} type={"radio"} checked={true} name={"quartet-group"}/>
                 </div>
             )
         }
@@ -18,7 +18,7 @@ const YearQuarters = ({onChange, value, createMode = false,
                 quartets.push(
                     <div key={"Q" + (i + 1)} className={"flex flex-col"}>
                         {"Q" + (i + 1)}
-                        <input type={"radio"} name={"quartet-group"} value={"Q" + (i + 1)}
+                        <input id={id + "-Q" + (i + 1)} type={"radio"} name={"quartet-group"} value={"Q" + (i + 1)}
                                onClick={(e) => onChange(e.target.value)}/>
                     </div>
                 )
@@ -26,7 +26,7 @@ const YearQuarters = ({onChange, value, createMode = false,
         }
     }
 
-    return <div className={"flex flex-col gap-2 hover:cursor-default"}>
+    return <div id={id} className={"flex flex-col gap-2 hover:cursor-default"}>
         <div>{labelQuarter}</div>
         <div className={"flex flex-row gap-8 place-self-center"}>
             {quartets}

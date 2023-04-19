@@ -48,7 +48,8 @@ const Grades = () =>{
                                 {labelReceivedGrades}
                             </a>
                         </li>
-                        <ReusableButton value={"Wystaw ocenę"} onClick={() => {
+                        <ReusableButton id={"grades-give-grade"}
+                            value={"Wystaw ocenę"} onClick={() => {
                             setGradeMode("create");
                             setPickedGradeData(undefined);
                             setGradesVisible(false)}}/>
@@ -56,18 +57,18 @@ const Grades = () =>{
                     <div id={"tabs-component"} className={"flex flex-col bg-brown-menu rounded-b-md rounded-tr-md border-2 border-workday"}
                     style={{height:wantedHeightsForList-18}}>
                         <div className="flex-auto">
-                                <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                                    <GivenGrades heightFromParent={wantedHeightsForList-18}
-                                        setGradeMode={setGradeMode}
-                                        setPickedGradeData={setPickedGradeData}
-                                        setGradesVisible={setGradesVisible}/>
-                                </div>
-                                <div className={openTab === 2 ? "block" : "hidden"} id="link2">
-                                    <ReceivedGrades heightFromParent={wantedHeightsForList-18}
-                                        setGradeMode={setGradeMode}
-                                        setPickedGradeData={setPickedGradeData}
-                                        setGradesVisible={setGradesVisible}/>
-                                </div>
+                            <div className={openTab === 1 ? "block" : "hidden"} id="link1">
+                                <GivenGrades heightFromParent={wantedHeightsForList-18}
+                                    setGradeMode={setGradeMode}
+                                    setPickedGradeData={setPickedGradeData}
+                                    setGradesVisible={setGradesVisible}/>
+                            </div>
+                            <div className={openTab === 2 ? "block" : "hidden"} id="link2">
+                                <ReceivedGrades heightFromParent={wantedHeightsForList-18}
+                                    setGradeMode={setGradeMode}
+                                    setPickedGradeData={setPickedGradeData}
+                                    setGradesVisible={setGradesVisible}/>
+                            </div>
                         </div>
                     </div>
                 </div>
