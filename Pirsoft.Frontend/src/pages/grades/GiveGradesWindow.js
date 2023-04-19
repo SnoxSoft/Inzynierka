@@ -94,30 +94,32 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
                     {gradeMenu}
                 </div>
                 <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                    <ReusableButton value={<CgClose  size={30}/>}
-                                    onClick={() => setGradesVisible(true)}
-                                    formatting={""} color={""}/>
+                    <ReusableButton
+                        id={"give-grade-close-corner"}
+                        value={<CgClose  size={30}/>}
+                        onClick={() => setGradesVisible(true)}
+                        formatting={""} color={""}/>
                 </div>
             </div>
 
-            <PersonData find={mode === "create"}
+            <PersonData id={"give-grade-person"} find={mode === "create"}
                         value={pickedGradeData ? pickedGradeData.personName : pickedPersonName}
                         onChange={setPickedPersonName}
                         setHideFinder={setHideFinder}
                         setPersonId={setPickedPersonId}/>
-            <YearQuarters createMode={mode === "create"}
+            <YearQuarters id={"give-grade-quarters"} createMode={mode === "create"}
                           value={pickedGradeData ? pickedGradeData.quartet : pickedQuartet}
                           onChange={setPickedQuartet}
                           availableQuartets={availableQuartets}/>
-            <GradeTitle enable={mode === "create"}
+            <GradeTitle id={"give-grade-title"} enable={mode === "create"}
                         value={pickedGradeData ? pickedGradeData.title : gradeTitle}
                         onChange={setGradeTitle}
             />
-            <GradeMessage enable={mode === "create"}
+            <GradeMessage id={"give-grade-message"} enable={mode === "create"}
                           value={pickedGradeData ? pickedGradeData.message : gradeMessage}
                           onChange={setGradeMessage}
             />
-            <GradeRating placing={"place-self-center"}
+            <GradeRating id={"give-grade-rating"} placing={"place-self-center"}
                          value={pickedGradeData ? pickedGradeData.grade : gradeRating}
                          onChange={setGradeRating}
                          createMode={mode === "create"}
@@ -127,10 +129,16 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
                 {
                     mode === "create" ?
                         <>
-                            <ReusableButton value={labelDisapprove} onClick={() => closeGradeWindow()}/>
-                            <ReusableButton value={labelApprove} onClick={() => giveGrade()}/>
+                            <ReusableButton
+                                id={"give-grade-disapprove"}
+                                value={labelDisapprove} onClick={() => closeGradeWindow()}/>
+                            <ReusableButton
+                                id={"give-grade-approve"}
+                                value={labelApprove} onClick={() => giveGrade()}/>
                         </> :
-                            <ReusableButton value={labelClose} onClick={() => setGradesVisible(true)}/>
+                            <ReusableButton
+                                id={"give-grade-close"}
+                                value={labelClose} onClick={() => setGradesVisible(true)}/>
                 }
             </div>
         </div> :
