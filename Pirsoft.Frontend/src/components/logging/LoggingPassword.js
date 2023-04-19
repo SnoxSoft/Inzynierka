@@ -21,7 +21,7 @@ const LoggingPassword = ({onChange, value, showHide = true, id = "\"logging-pass
                    type={"password"}
                   onChange={(e) => onChange(e.target.value)} value={value}></input>
             {showHide ?
-                <button className={"flex self-center"} onClick={changeVisibilityForPassword}>{changeVisibilityIcon}</button> :
+                <button id={"password-show-hide"} className={"flex self-center"} onClick={changeVisibilityForPassword}>{changeVisibilityIcon}</button> :
                 <></>
             }
         </>

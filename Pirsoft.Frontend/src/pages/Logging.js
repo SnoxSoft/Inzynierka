@@ -82,11 +82,11 @@ function Logging(){
                     </div>
                 </div>
                 <div>
-                    <Link to={"/remind"} className={"text-weekend"}>Nie pamiętasz hasła?</Link>
+                    <Link id={"logging-remind-password"} to={"/remind"} className={"text-weekend"}>Nie pamiętasz hasła?</Link>
                 </div>
                 <br/>
                 <div className={"self-center"}>
-                    <ReusableButton value={labelLogIn} onClick={() => logIn()}/>
+                    <ReusableButton id={"logging-log-in"} value={labelLogIn} onClick={() => logIn()}/>
                 </div>
             </div>
         </div> :
