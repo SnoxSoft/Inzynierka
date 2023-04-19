@@ -28,14 +28,16 @@ function RequestsFilter({
     <div className={"flex flex-col gap-2 p-4"}>
         <div className={"flex justify-evenly items-center flex-wrap gap-2 hover:cursor-default"}>
             <div>
-                {firstnameLabel} <input className={"text-black rounded"} onChange={handleNameChange} value={userName}/>
+                {firstnameLabel} <input id={"requests-firstname"}
+                                        className={"text-black rounded"} onChange={handleNameChange} value={userName}/>
             </div>
             <div>
-                {lastnameLabel} <input className={"text-black rounded"} onChange={handleSurnameChange} value={userSurname}/>
+                {lastnameLabel} <input id={"requests-lastname"}
+                                       className={"text-black rounded"} onChange={handleSurnameChange} value={userSurname}/>
             </div>
             <div className={"flex gap-x-2 items-center"}>
                 {teamLabel}
-                <TeamsList className={""} onChange={setUserTeam}/>
+                <TeamsList id={"requests-teams-list"} className={""} onChange={setUserTeam}/>
             </div>
         </div>
         <div className={"flex items-center justify-center gap-4"}>
@@ -46,30 +48,30 @@ function RequestsFilter({
             </div>
             <div className={"flex flex-col"}>
                 <label>{requestStatusApprovedLabel}</label>
-                <input type="checkbox" defaultChecked={true}
+                <input id={"requests-approved"} type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
             </div>
             <div className={"flex flex-col"}>
                 <label>{requestStatusDisapprovedLabel}</label>
-                <input type="checkbox" defaultChecked={true}
+                <input id={"requests-disapproved"} type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckOdrzucone(e.target.checked)}/>
             </div>
             <div className={"flex flex-col"}>
                 <label>{requestStatusCreatedByMeLabel}</label>
-                <input type="checkbox" defaultChecked={true}
+                <input id={"requests-created-by-me"} type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckCreatedByCurrent(e.target.checked)}/>
             </div>
             <div className={"flex flex-col"}>
                 <label>{requestStatusCreatedNotByMeLabel}</label>
-                <input type="checkbox" defaultChecked={true}
+                <input id={"requests-created-not-by-me"} type="checkbox" defaultChecked={true}
                        onChange={(e) => setCheckNotCreatedByCurrent(e.target.checked)}/>
             </div>
         </div>
         <div className={"flex justify-center"}>
-            <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
+            <Calendar id={"requests"} setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
         </div>
         <div className={"flex justify-center"}>
-            <ReusableButton value={labelFilter} formatting={"h-7 border-2 border-workday"} onClick={() => filtrRequests()}/>
+            <ReusableButton id={"requests-filter"} value={labelFilter} formatting={"h-7 border-2 border-workday"} onClick={() => filtrRequests()}/>
         </div>
     </div>
     )

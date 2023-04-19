@@ -114,7 +114,7 @@ const Request = ({setAbsencesVisible}) =>{
             <br/>
             <div className={"flex p-4 gap-8 text-center flex-col"}>
                 <div className={"flex justify-center"}>
-                    <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
+                    <Calendar id={"request"} setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
                 </div>
                 <div className={"flex "}>
                     <p className={"basis-1/3 text-end pr-4"}>

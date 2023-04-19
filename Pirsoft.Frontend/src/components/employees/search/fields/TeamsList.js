@@ -4,7 +4,7 @@ import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
 import {serverIp, teamAdditionalRow} from "../../../../GlobalAppConfig";
 import {endpointGetAllTeams} from "../../../../EndpointAppConfig";
 
-const TeamsList = ({onChange}) => {
+const TeamsList = ({onChange, id}) => {
 
     const [teams, setTeams] = useState(Object);
 
@@ -21,7 +21,8 @@ const TeamsList = ({onChange}) => {
             })
     }
 
-    return <Select className={"w-96 text-black"}
+    return <Select id={id}
+        className={"w-96 text-black"}
                    defaultValue={{ value: '', label: teamAdditionalRow }}
                    options={teams}
                    onChange={(e) => onChange(e.value)}/>
