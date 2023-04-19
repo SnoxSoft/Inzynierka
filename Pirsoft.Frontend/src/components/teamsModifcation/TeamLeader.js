@@ -3,7 +3,7 @@ import ReusableButton from "../base/ReusableButton";
 import {useState} from "react";
 import TeamEmployeeEditButton from "./TeamEmployeeEditButtons";
 
-const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShowing}) => {
+const TeamLeader = ({disableChange, mode, value, setLeaderData, setEmployeesFinderShowing}) => {
     const [showOptions, setShowOptions] = useState(false)
 
     const setButtonsVisible = () => {
@@ -23,7 +23,7 @@ const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShow
         <>
         {value === undefined || (value.length !== undefined && value.length === 0) ?
             !disableChange ?
-                <ReusableButton value={<HiPlus/>}
+                <ReusableButton id={"team-leader-add"} value={<HiPlus/>}
                                 color={""}
                                 formatting={"hover:bg-gray-500 hover:border-2 hover:border-gray-400 w-96 h-6 rounded-md flex flex-col items-center place-content-center"}
                                 onClick={() => setValuesForPickerAndOpenIt()}
@@ -41,7 +41,7 @@ const TeamLeader = ({disableChange, value, setLeaderData, setEmployeesFinderShow
                           value={value.firstandlastname} disabled={true}
                        >
                 </input>
-                    <TeamEmployeeEditButton showOptions={showOptions}
+                    <TeamEmployeeEditButton id={"team-leader-"} mode={mode} showOptions={showOptions}
                                             changeMethod={setValuesForPickerAndOpenIt}
 
                                             deleteMethod={setLeaderData}

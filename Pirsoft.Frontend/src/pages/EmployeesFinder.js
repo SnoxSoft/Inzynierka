@@ -65,9 +65,9 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
             .then((response) => {
                 let employeeLoad = []
 
-                response.forEach((e) => {
+                response.forEach((employee, employeeId) => {
                     employeeLoad.push(
-                        <EmployeePickerListItem employee={e}
+                        <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee}
                           pickOneOrMore={(methodToUse === 'employee' && isSwapPossible)
                               || methodToUse === 'leader'
                               || methodToUse === 'grade'}
@@ -221,19 +221,19 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                         <div>{headerEmployeesFinder}</div>
                         <div className={"flex flex-row place-items-center gap-2"}>
                             <div className={"flex flex-col place-self-start m-2 gap-2"}>
-                                <FirstnameAndLastname  className={""} onChange={setFirstnameAndLastname}/>
+                                <FirstnameAndLastname id={"finder-firstname-lastname"} className={""} onChange={setFirstnameAndLastname}/>
                                 {methodToUse !== 'grade' ?
                                     <>
-                                        <SkillsPicker setSkills={setSkillsPicked} setSkillsNotShows={setSkillsNotShows}/>
-                                        <SkillsList skillList={skillsPicked}/>
+                                        <SkillsPicker id={"finder-skill-picker"} setSkills={setSkillsPicked} setSkillsNotShows={setSkillsNotShows}/>
+                                        <SkillsList id={"finder-skill-list"} skillList={skillsPicked}/>
                                     </>:
                                     <></>
                                 }
                             </div>
 
-                            <ReusableButton value={labelFind}
+                            <ReusableButton id={"finder-find"} value={labelFind}
                                 onClick={() => loadAllEmployeesByFilter()}/>
-                            <SortingButton setOrder={setOrder}/>
+                            <SortingButton id={"finder-sort"} setOrder={setOrder}/>
                         </div>
                     </div>
 
@@ -245,7 +245,9 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                     </div>
 
                     <div id={"bottom-picker"} className={"flex flex-row gap-2 justify-between p-4"} >
-                        <ReusableButton value={labelClose} onClick={() => {
+                        <ReusableButton
+                            id={"finder-close"}
+                            value={labelClose} onClick={() => {
                             setTitle(title)
                             setEmployeesFinderShowing(false)
                         }}/>
@@ -253,11 +255,13 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                             {methodToUse !== 'grade' ?
                                 <>
                                     <div className={"flex text-end"}>{labelEmployeeFinderExchanceEmployeesBetween}</div>
-                                    <input type={"checkbox"} className={"w-6 h-6"} disabled={!isSwapPossible} onChange={(e) => setSwapOption(e.target.checked)}/>
+                                    <input id={"finder-swap-members"} type={"checkbox"} className={"w-6 h-6"} disabled={!isSwapPossible} onChange={(e) => setSwapOption(e.target.checked)}/>
                                 </> :
                                 <></>
                             }
-                            <ReusableButton value={labelApprove} onClick={() => finderAcceptChanges()}/>
+                            <ReusableButton
+                                id={"finder-approve"}
+                                value={labelApprove} onClick={() => finderAcceptChanges()}/>
                         </div>
                     </div>
                 </div> :
@@ -270,8 +274,12 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                         {skillsComponent}
                         <br/>
                         <div className={"p-4 flex flex-row justify-evenly"}>
-                            <ReusableButton value={labelApprove} onClick={() => choseSkills()}/>
-                            <ReusableButton value={labelClose} onClick={() => {setSkillsNotShows(true)}}/>
+                            <ReusableButton
+                                id={"finder-skills-approve"}
+                                value={labelApprove} onClick={() => choseSkills()}/>
+                            <ReusableButton
+                                id={"finder-skills-close"}
+                                value={labelClose} onClick={() => {setSkillsNotShows(true)}}/>
                         </div>
                     </div>
                 </div>

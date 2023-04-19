@@ -62,10 +62,10 @@ function Teams(){
         let allTeamsLoad = []
 
         let row = 2
-        teams.forEach((team) => {
+        teams.forEach((team, teamId) => {
             // Dodanie zespołów
             row = row + 1
-            allTeamsLoad.push(<TeamAndEmployees row={row} team={team} employees={employees}/>)
+            allTeamsLoad.push(<TeamAndEmployees id={"team-"+teamId} row={row} team={team} employees={employees}/>)
 
         });
 
@@ -90,7 +90,7 @@ function Teams(){
              className={"every-page-on-scroll overflow-y-hidden"}
             style={{minWidth: 800}}>
                 <div className={"flex flex-cols justify-end p-4"}>
-                    <ReusableButton value={labelCreateTeam} link={"/team-create"}/>
+                    <ReusableButton id={"teams-create-team"} value={labelCreateTeam} link={"/team-create"}/>
                 </div>
                 <hr/>
                 <div id={"schedule-company-list"}

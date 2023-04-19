@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 
-const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, setPickedEmployeeData, methodToUse}) => {
+const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, setPickedEmployeeData, methodToUse, id}) => {
     let skillList = []
     employee.skills.forEach((s) => {
         skillList.push(<div>{s}</div>)
@@ -42,14 +42,14 @@ const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, se
         }
     }
 
-    return <div row={employee.firstname+"-"+employee.id}
+    return <div id={id} row={id}
                 className={"flex flex-row m-2 p-2 gap-2 hover:bg-dayoffmonth bg-brown-menu border-2 border-workday hover:cursor-default hover:bg-opacity-80 rounded-md hover:border-b-workday hover:border-2"}>
                 <div className={"grow-0 flex flex-row items-center justify-end gap-2"}>
                     {pickOneOrMore ?
-                        <input id={"employee_checkbox_"+employee.id} type={"radio"} name={"shetty-group"} className={"w-5 h-5 hover:cursor-pointer"}
+                        <input id={id + "-check"} type={"radio"} name={"shetty-group"} className={"w-5 h-5 hover:cursor-pointer"}
                                onChange={(e) => pickedEmployeesAction(e.target.checked, employee)}/>
                         :
-                        <input id={"employee_checkbox_"+employee.id} type={"checkbox"} className={"w-5 h-5 hover:cursor-pointer"}
+                        <input id={id + "-check"} type={"checkbox"} className={"w-5 h-5 hover:cursor-pointer"}
                                onChange={(e) => pickedEmployeesAction(e.target.checked, employee)}/>
                     }
                 </div>

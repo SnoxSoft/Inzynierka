@@ -194,12 +194,13 @@ const TeamWindow = ({id,mode, title}) => {
                         <div>{labelStrongSkills}</div>
                         <TeamMembersSkills value={employeeSkillData}/>
                         <div>{labelTeamManager}</div>
-                        <TeamLeader disableChange={(mode === 'view')}
+                        <TeamLeader mode={mode} disableChange={(mode === 'view')}
                             value={leaderData} setLeaderData={setLeaderData}
                             setEmployeesFinderShowing={setEmployeesFinderShowing}
                             />
                         <div>{labelTeamMembers}</div>
                         <TeamMembers
+                            mode={mode}
                             disableChange={(mode === 'view')}
                             employeeData={employeeData} setEmployeeData={setEmployeeData}
                             employeeSkillData={employeeSkillData} setEmployeeSkillData={setEmployeeSkillData}
@@ -208,13 +209,13 @@ const TeamWindow = ({id,mode, title}) => {
                             setSwapTeamsBetweenTheseEmployee={setSwapTeamsBetweenTheseEmployee}/>
                         <div className={"text-center"}>{swapEmployeesBetweenTeamsInformation}</div>
                         <div className={"flex flex-row gap-2"}>
-                            <ReusableButton value={labelClose} onClick={() => navigate(-1)}/>
+                            <ReusableButton id={"team-close"} value={labelClose} onClick={() => navigate(-1)}/>
                             {mode === 'create' ?
-                                <ReusableButton value={labelCreate} onClick={() => saveOrCreate()}/> :
+                                <ReusableButton id={"team-create"} value={labelCreate} onClick={() => saveOrCreate()}/> :
                                 <></>
                             }
                             {mode === 'edit' ?
-                                <ReusableButton value={labelSave} onClick={() => saveOrCreate()}/> :
+                                <ReusableButton id={"team-save"} value={labelSave} onClick={() => saveOrCreate()}/> :
                                 <></>
                             }
                         </div>
