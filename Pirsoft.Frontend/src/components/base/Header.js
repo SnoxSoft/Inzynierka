@@ -3,19 +3,9 @@ import {FiLogOut} from "react-icons/fi";
 import { useNavigate } from  'react-router-dom';
 import {HiOutlineExclamationCircle} from "react-icons/hi";
 import {appName, avatarAlterText, employeeRegisterMenu} from "../../GlobalAppConfig";
-import {useRef, useState} from "react";
-import {Button, Grid, Popup} from "semantic-ui-react";
-import Notifications from "../../pages/notifications/Notifications";
-import MenuButton from "./MenuButton";
 
 const Header = () => {
     const navigate = useNavigate();
-    const contextRef = useRef();
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleClose = () => {
-        setIsOpen(false);
-    };
 
     return <>
         <div className={"grid grid-cols-1 grid-rows-1 place-items-end items-center min-h-min max-h-min p-2"}>
@@ -28,7 +18,6 @@ const Header = () => {
                         
                         <ReusableButton
                             id={"header-notifications"}
-                            onClick={() => setIsOpen(true)}
                             value={<HiOutlineExclamationCircle size={40}/>}
                             link={'/notifications'}/>
 
@@ -39,7 +28,11 @@ const Header = () => {
                                     <img src={"data:image/png;base64," + sessionStorage.getItem('AVATAR')}
                                          alt="Avatar img" className={"w-10 rounded-2xl"}/>
                                     : avatarAlterText
-                            } link={'/employee/'+sessionStorage.getItem('USER')} onClick={() => window.location.reload()}/>
+                            }
+                            onClick={() => {
+                                navigate('/employee/'+sessionStorage.getItem('USER'), { replace: true });
+                                window.location.reload()}
+                            }/>
 
                         <ReusableButton
                             id={"header-log-out"}
