@@ -1,7 +1,7 @@
 import {BiHide, BiShow} from "react-icons/bi";
 import {useState} from "react";
 
-const LoggingPassword = ({onChange, value, showHide = true}) => {
+const LoggingPassword = ({onChange, value, showHide = true, id = "\"logging-password\""}) => {
 
     const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<BiHide/>);
     function changeVisibilityForPassword() {
@@ -16,7 +16,7 @@ const LoggingPassword = ({onChange, value, showHide = true}) => {
     }
 
     return <>
-            <input id={"logging-password"}
+            <input id={id}
                    className={"border text-black rounded-md text-center h-6 w-72 self-center"}
                    type={"password"}
                   onChange={(e) => onChange(e.target.value)} value={value}></input>

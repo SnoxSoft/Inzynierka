@@ -38,7 +38,10 @@ function EmployeePreRender(){
                 <EmployeeComponent id={id} mode={'edit'} employee={employee}/> :
                     id === '-1' ?
                 <EmployeeComponent id={id} mode={'create'} employee={employee}/> :
-                <>LOADER TUTAJ ustawic key frames i wstawic komponent na sztywno</>
+
+                <div id={"employee-load"}
+                     className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default"}
+                     style={{minWidth:800} } />
             }
         </>
     )

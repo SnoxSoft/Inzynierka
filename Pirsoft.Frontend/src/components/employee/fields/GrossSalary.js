@@ -1,7 +1,7 @@
 import TextInputEmployee from "./models/TextInputEmployee";
 
-const GrossSalary = ({onChange, value, disableChange}) => {
-    return <TextInputEmployee onChange={onChange} value={value} disableChange={disableChange}/>
+const GrossSalary = ({id, onChange, value, disableChange}) => {
+    return <TextInputEmployee id={id} onChange={onChange} value={value} disableChange={disableChange}/>
 }
 
 export default GrossSalary;

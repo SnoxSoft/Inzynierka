@@ -45,7 +45,7 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
                     {labelRequest}
                 </div>
                 <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                    <ReusableButton value={<CgClose  size={30}/>}
+                    <ReusableButton id={"absence-add-close"} value={<CgClose  size={30}/>}
                                     onClick={() => {
                                         setShowAddEmployeeAnAbsence(false);
                                         setEmployeeDataShow(true);
@@ -64,7 +64,7 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
                         {labelRequestType}
                     </p>
                     <div className={"bg-workday text-black basis-1/3"}>
-                        <Select options={absenceOptions} defaultValue={{ value: '', label: 'Urlop wypoczynkowy'}}
+                        <Select id={"absence-add-type"} options={absenceOptions} defaultValue={{ value: '', label: 'Urlop wypoczynkowy'}}
                                 className={"h-6"}/>
                     </div>
                 </div>
@@ -72,12 +72,12 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
                     <p className={"text-end pr-4"}>
                         {labelRequestNoPay}
                     </p>
-                    <input type={"checkbox"} className={"h-5 w-5 checked:decoration-workday self-center"}/>
+                    <input id={"absence-add-type-no-pay"} type={"checkbox"} className={"h-5 w-5 checked:decoration-workday self-center"}/>
                 </div>
             </div>
             <br/><br/>
             <div className={"flex justify-evenly"} >
-                <ReusableButton value={labelApprove} onClick={() => {
+                <ReusableButton id={"absence-add-approve"} value={labelApprove} onClick={() => {
                     setShowAddEmployeeAnAbsence(false);
                     setEmployeeDataShow(true);
                 }}/>
