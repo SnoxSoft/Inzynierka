@@ -48,16 +48,18 @@ const ApprovalOrRejectionRequest = ({setRequestsVisible, requestPickedData, requ
                     {labelRequest}
                 </div>
                 <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                    <ReusableButton value={<CgClose  size={30}/>}
-                                    onClick={() => setRequestsVisible(true)}
-                                    formatting={""} color={""}/>
+                    <ReusableButton
+                        id={"approval-or-rejection-close"}
+                        value={<CgClose  size={30}/>}
+                        onClick={() => setRequestsVisible(true)}
+                        formatting={""} color={""}/>
                 </div>
             </div>
             <div>{requestPickedData.name}</div>
             <br/>
             <div className={"flex p-4 gap-8 text-center flex-col "}>
                 <div className={"flex justify-center"}>
-                    <Calendar from={requestPickedData.from} to={requestPickedData.to} disabled={true}/>
+                    <Calendar id={"approval-or-rejection"} from={requestPickedData.from} to={requestPickedData.to} disabled={true}/>
                 </div>
                 <div className={"flex "}>
                     <p className={"basis-1/3 text-end pr-4"}>
@@ -76,8 +78,10 @@ const ApprovalOrRejectionRequest = ({setRequestsVisible, requestPickedData, requ
             </div>
             <br/><br/>
             <div id={"schedule-list"} className={"flex justify-evenly"}>
-                <ReusableButton value={labelDisapprove} onClick={() => rejectRequest()}/>
-                <ReusableButton value={labelApprove} onClick={() => approveRequest()}/>
+                <ReusableButton id={"approval-or-rejection-disapprove"}
+                                value={labelDisapprove} onClick={() => rejectRequest()}/>
+                <ReusableButton id={"approval-or-rejection-approve"}
+                                value={labelApprove} onClick={() => approveRequest()}/>
             </div>
         </div>
     )

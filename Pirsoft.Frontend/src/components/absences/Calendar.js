@@ -1,6 +1,6 @@
 import React from "react";
 import {calendarLabelFrom, calendarLabelTo} from "../../GlobalAppConfig";
-const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false}) => {
+const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false, id}) => {
 
     const options = {
         year: "numeric",
@@ -40,30 +40,36 @@ const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false}) => {
     return (
         <div className={"content-center"}>
             <div className={"flex flex-row gap-4 place-self-center justify-left "}>
-                <p className={"hover:cursor-default"}>{calendarLabelFrom}<input
-                    type={"date"}
-                    className={"text-black rounded-md disabled:text-black disabled:bg-workday"}
-                    value={from}
-                    disabled={disabled}
-                    required
-                    pattern="[0-9]{4}-[0-9]{2}"
-                    onChange={(e) => {
-                        setDateFrom(e.target.value)
-                    }}
-                    onBlur={() => validateDate(from, "from")}
-                /></p>
-                <p className={"hover:cursor-default"}>{calendarLabelTo}<input
-                    type={"date"}
-                    className={"text-black rounded-md disabled:text-black disabled:bg-workday"}
-                    value={to}
-                    disabled={disabled}
-                    required
-                    pattern="[0-9]{4}-[0-9]{2}"
-                    onChange={(e) => {
-                        setDateTo(e.target.value)
-                    }}
-                    onBlur={() => validateDate(to, "to")}
-                /></p>
+                <p className={"hover:cursor-default"}>{calendarLabelFrom}
+                    <input
+                        id={id+"-date-from"}
+                        type={"date"}
+                        className={"text-black rounded-md disabled:text-black disabled:bg-workday"}
+                        value={from}
+                        disabled={disabled}
+                        required
+                        pattern="[0-9]{4}-[0-9]{2}"
+                        onChange={(e) => {
+                            setDateFrom(e.target.value)
+                        }}
+                        onBlur={() => validateDate(from, "from")}
+                    />
+                </p>
+                <p className={"hover:cursor-default"}>{calendarLabelTo}
+                    <input
+                        id={id+"-date-to"}
+                        type={"date"}
+                        className={"text-black rounded-md disabled:text-black disabled:bg-workday"}
+                        value={to}
+                        disabled={disabled}
+                        required
+                        pattern="[0-9]{4}-[0-9]{2}"
+                        onChange={(e) => {
+                            setDateTo(e.target.value)
+                        }}
+                        onBlur={() => validateDate(to, "to")}
+                    />
+                </p>
             </div>
         </div>
     );

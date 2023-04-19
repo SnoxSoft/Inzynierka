@@ -83,7 +83,7 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
             style={{minWidth: 800, height:heightFromParent}}>
             <div className={"flex flex-row p-2 gap-4 place-content-evenly"}>
                 <div className={"flex flex-col items-center gap-2"}>
-                    <TeamsList onChange={setPickedTeam}/>
+                    <TeamsList id={"given-grades-teams-list"} onChange={setPickedTeam}/>
                     <Select className={"w-96 text-black"}
                             defaultValue={{ value: 0, label: yearAdditionalRow }}
                             options={years}

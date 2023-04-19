@@ -140,11 +140,11 @@ function Requests(){
     // Tworzenie listy wniosków urlopowych, wnioski już przestarzałe są w szarym kolorze
     if (employeeRequests[0] !== undefined && requestsList.length === 0){
         let requestsListLoad = [];
-        let row = 1;
+        let row = 0;
         for (const i of employeeRequests) {
             if (i.from > new Date().toLocaleDateString("sv", options)) {
                 requestsListLoad.push(
-                    <RequestsListItem employeeRequest={i} key={row} setRequestsVisible={setRequestsVisible}
+                    <RequestsListItem id={"request-list-item-"+row} employeeRequest={i} key={row} setRequestsVisible={setRequestsVisible}
                                       setRequestPickedData={setRequestPickedData}
                                       requestsTypes={requestsTypes}
                                       requestsStatus={requestsStatus}
@@ -153,7 +153,7 @@ function Requests(){
                 row++;
             } else {
                 requestsListLoad.push(
-                    <RequestsListItem employeeRequest={i} key={row} old={true}
+                    <RequestsListItem id={"request-list-item-"+row} employeeRequest={i} key={row} old={true}
                                       requestsTypes={requestsTypes}
                                       requestsStatus={requestsStatus}
                                       requestsColors={requestsColors}/>

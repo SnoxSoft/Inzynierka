@@ -173,7 +173,7 @@ function Absences(){
                     </div>
                 </div>
                 <div className={"flex justify-center"}>
-                    <Calendar setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
+                    <Calendar id={"absences"} setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
                 </div>
                 <div className={"flex justify-center"}>
                     <div className={"gap-2 flex items-center justify-center"}>

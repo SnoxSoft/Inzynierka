@@ -4,7 +4,7 @@ import {labelDelete, labelFromTimeOfRequest, labelRequest, labelShowProfile} fro
 
 
 const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, setRequestPickedData,
-                              requestsTypes, requestsStatus, requestsColors}) => {
+                              requestsTypes, requestsStatus, requestsColors, id}) => {
 
     const[showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -46,7 +46,7 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
     }
 
     return <>
-        <div className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday hover:cursor-default ' + (old &&  "text-weekend")}
+        <div id={id} className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday hover:cursor-default ' + (old &&  "text-weekend")}
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
             <div className={"p-2 flex rounded-md basis-8/12 "}>
                 {employeeRequest.name}, {employeeRequest.team}, {labelFromTimeOfRequest} {employeeRequest.from} - {employeeRequest.to}, {employeeRequest.applicant}, {requestType}
@@ -60,10 +60,10 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
                         {!old ?
                             <>
                         {employeeRequest.state === "accepted" &&
-                            <ReusableButton value={labelDelete} onClick={() => deleteAbsence()}/>
+                            <ReusableButton id={id + "-delete"} value={labelDelete} onClick={() => deleteAbsence()}/>
                         }
                         {employeeRequest.state === "waiting" &&
-                            <ReusableButton value={labelRequest} onClick={() => {
+                            <ReusableButton id={id + "-request"} value={labelRequest} onClick={() => {
                                 setRequestPickedData(employeeRequest)
                                 setRequestsVisible(false);
                             }}/>
@@ -71,7 +71,7 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
                             </> :
                         <></>
                     }
-                    <ReusableButton value={labelShowProfile} link={`/employee/${employeeRequest.id}`}/>
+                    <ReusableButton id={"-profile"} value={labelShowProfile} link={`/employee/${employeeRequest.id}`}/>
                     </>
                 )
                 }

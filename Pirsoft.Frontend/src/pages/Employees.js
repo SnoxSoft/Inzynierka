@@ -88,7 +88,7 @@ function Employees(){
                     </div>
                     <div className={"flex flex-row gap-2 flex-wrap"}>
                         <div>
-                            <TeamsList className={""} onChange={setTeamsList}/>
+                            <TeamsList id={"employees-teams-list"} className={""} onChange={setTeamsList}/>
                         </div>
 
                         <div>
