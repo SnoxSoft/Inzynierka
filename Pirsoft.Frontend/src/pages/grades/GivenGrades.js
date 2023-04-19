@@ -62,12 +62,14 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
 
         let temporaryGradesList = []
         if(currentGradesList !== undefined) {
+            let gradeId = 0;
             for (const i of currentGradesList) {
                 temporaryGradesList.push(
-                    <GradeListItem grade={i}
+                    <GradeListItem id={"given-grade-list-item-" + gradeId} grade={i}
                        setGradeMode={setGradeMode}
                        setPickedGradeData={setPickedGradeData}
-                       setGradesVisible={setGradesVisible}/>)
+                       setGradesVisible={setGradesVisible}/>);
+                gradeId++;
             }
         }
         setLoadedGrades(temporaryGradesList)
@@ -84,16 +86,18 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
             <div className={"flex flex-row p-2 gap-4 place-content-evenly"}>
                 <div className={"flex flex-col items-center gap-2"}>
                     <TeamsList id={"given-grades-teams-list"} onChange={setPickedTeam}/>
-                    <Select className={"w-96 text-black"}
-                            defaultValue={{ value: 0, label: yearAdditionalRow }}
-                            options={years}
-                            onChange={(e) => setPickedYear(e.value)}/>
+                    <Select
+                        id={"given-grades-years"}
+                        className={"w-96 text-black"}
+                        defaultValue={{ value: 0, label: yearAdditionalRow }}
+                        options={years}
+                        onChange={(e) => setPickedYear(e.value)}/>
 
                 </div>
                 <div className={"flex flex-col items-center gap-2"}>
-                    <FirstNameAndLastName id={""} className={""} onChange={setFirstNameAndLastName} />
+                    <FirstNameAndLastName id={"given-grades-firstname-lastname"} className={""} onChange={setFirstNameAndLastName} />
                     <div className={"flex flex-row gap-2 w-full place-content-end"}>
-                        <ReusableButton value={labelFind} onClick={getGrades} />
+                        <ReusableButton id={"given-grades-find"} value={labelFind} onClick={getGrades} />
                     </div>
                 </div>
 
