@@ -134,11 +134,11 @@ function Absences(){
     if (employeeAbsences[0] !== undefined && absencesList.length === 0){
         let absencesListLoad = [];
 
-        let row = 1;
+        let row = 0;
         for (const i of employeeAbsences) {
             if (i.from > new Date().toLocaleDateString("sv", options)) {
                 absencesListLoad.push(
-                    <AbsencesListItem key={row} employeeAbsence={i}
+                    <AbsencesListItem id={"absences-list-item-"+row} key={row} employeeAbsence={i}
                                       absencesTypes={absencesTypes}
                                       absencesStatus={absencesStatus}
                                       absencesColors={absencesColors}/>
@@ -146,7 +146,7 @@ function Absences(){
                 row++;
             } else {
                 absencesListLoad.push(
-                    <AbsencesListItem key={row} employeeAbsence={i} old={true}
+                    <AbsencesListItem id={"absences-list-item-"+row} key={row} employeeAbsence={i} old={true}
                                       absencesTypes={absencesTypes}
                                       absencesStatus={absencesStatus}
                                       absencesColors={absencesColors}/>
@@ -168,7 +168,7 @@ function Absences(){
                         {headerAbsencesEndOfDaysOff}: {leaveDays}, {headerAbsencesDaysNoPayLeft}: {onDemandDays}
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                        <ReusableButton value={labelRequest} color={"bg-blue-menu"}
+                        <ReusableButton id={"request"} value={labelRequest} color={"bg-blue-menu"}
                             onClick={() => setAbsencesVisible(false)}/>
                     </div>
                 </div>
@@ -179,21 +179,31 @@ function Absences(){
                     <div className={"gap-2 flex items-center justify-center"}>
                         <div className={"flex flex-col"}>
                             <label>{requestStatusWaitingLabel}</label>
-                            <input type="checkbox" defaultChecked={true}
-                                   onChange={(e) => setCheckOczekujace(e.target.checked)}/>
+                            <input
+                                id={"absences-waiting"}
+                                type="checkbox" defaultChecked={true}
+                               onChange={(e) => setCheckOczekujace(e.target.checked)}/>
                         </div>
                         <div className={"flex flex-col"}>
                             <label>{requestStatusApprovedLabel}</label>
-                            <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
+                            <input
+                                id={"absences-approved"}
+                                type="checkbox" defaultChecked={true}
+                                onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
                         </div>
                         <div className={"flex flex-col"}>
                             <label>{requestStatusDisapprovedLabel}</label>
-                            <input type="checkbox" defaultChecked={true} onChange={(e) => setCheckodrzucone(e.target.checked)}/>
+                            <input
+                                id={"absences-disapproved"}
+                                type="checkbox" defaultChecked={true}
+                                onChange={(e) => setCheckodrzucone(e.target.checked)}/>
                         </div>
                     </div>
                 </div>
                 <div className={"flex justify-center"}>
-                    <ReusableButton value={labelFilter} formatting={"h-7 border-2 border-workday"} onClick={() => filtrAbsences()}/>
+                    <ReusableButton
+                        id={"absences-filter"}
+                        value={labelFilter} formatting={"h-7 border-2 border-workday"} onClick={() => filtrAbsences()}/>
                 </div>
             </div>
             <div className={"text-start ml-4 mr-8 items-center h-6 bg-brown-menu rounded-md flex text-workday border-2 border-workday font-bold"}>
