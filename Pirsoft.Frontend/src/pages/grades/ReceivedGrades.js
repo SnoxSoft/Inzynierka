@@ -54,12 +54,14 @@ function ReceivedGrades({heightFromParent, setGradeMode, setPickedGradeData, set
 
         let temporaryGradesList = []
         if(currentGradesList !== undefined) {
+            let gradeId = 0;
             for (const i of currentGradesList) {
                 temporaryGradesList.push(
-                    <GradeListItem grade={i}
+                    <GradeListItem id={"received0grades-list-item-" + gradeId} grade={i}
                        setGradeMode={setGradeMode}
                        setPickedGradeData={setPickedGradeData}
-                       setGradesVisible={setGradesVisible}/>)
+                       setGradesVisible={setGradesVisible}/>);
+                gradeId++;
             }
         }
         setLoadedGrades(temporaryGradesList)
@@ -74,11 +76,11 @@ function ReceivedGrades({heightFromParent, setGradeMode, setPickedGradeData, set
             className={"every-page-on-scroll border-b-2 border-0 bg-brown-menu text-workday overflow-y-hidden"}
             style={{minWidth: 800, height:heightFromParent}}>
             <div className={"flex flex-row p-2 gap-4 place-content-center"}>
-                <Select className={"w-96 text-black"}
+                <Select id={"received-grades-year"} className={"w-96 text-black"}
                         defaultValue={{ value: 0, label: yearAdditionalRow }}
                         options={years}
                         onChange={(e) => setPickedYear(e.value)}/>
-                <ReusableButton value={labelFind}
+                <ReusableButton id={"received-grades-find"} value={labelFind}
                                 onClick={() => {
                                     if(pickedYear){
                                     getGrades();
