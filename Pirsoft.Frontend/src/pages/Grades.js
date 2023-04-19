@@ -29,7 +29,7 @@ const Grades = () =>{
                 <div className="w-full">
                     <ul className="flex list-none flex-wrap flex-row">
                         <li className="flex-auto text-center">
-                            <a className={"font-bold py-4 rounded-t-md block border-t-2 border-l-2 border-workday hover:bg-brown-menu "+
+                            <a id={"grades-open-given-grades"} className={"font-bold py-4 rounded-t-md block border-t-2 border-l-2 border-workday hover:bg-brown-menu "+
                                     (openTab === 1
                                         ? "bg-brown-menu border-r-2"
                                         : "bg-dayoffmonth")}
@@ -39,7 +39,7 @@ const Grades = () =>{
                             </a>
                         </li>
                         <li className="mr-2 flex-auto text-center">
-                            <a className={"font-bold py-4 rounded-t-md block border-t-2 border-r-2  border-workday hover:bg-brown-menu " +
+                            <a id={"grades-open-received-grades"} className={"font-bold py-4 rounded-t-md block border-t-2 border-r-2  border-workday hover:bg-brown-menu " +
                                     (openTab === 2
                                         ? "bg-brown-menu border-l-2"
                                         : "bg-dayoffmonth")}
