@@ -46,12 +46,21 @@ public class EmployeeController : ControllerBase
     public IEnumerable<EmployeeModel> GetFilteredEmployees(string? name, int? departmentId, int? positionId)
     {
         var fullName = name?.Split(' ');
-
-        return _crudHandler.ReadAll<EmployeeModel>().Where(p => p.first_name.Equals(fullName?[0]))
-            .Where(p => p.last_name.Equals(fullName?[1]))
-            .Where(p => p.employee_department.department_id.Equals(departmentId))
-            .Where(p => p.employee_company_role_id.Equals(positionId));
-    }   
+        if (fullName != null && fullName.Length == 2)
+        {
+            return _crudHandler.ReadAll<EmployeeModel>()
+                .Where(p => p.first_name.Equals(fullName[0]))
+                .Where(p => p.last_name.Equals(fullName[1]))
+                .Where(p => departmentId == null || p.employee_department.department_id.Equals(departmentId))
+                .Where(p => positionId == null || p.employee_company_role_id.Equals(positionId));
+        }
+        else
+        {
+            return _crudHandler.ReadAll<EmployeeModel>()
+                .Where(p => departmentId == null || p.employee_department.department_id.Equals(departmentId))
+                .Where(p => positionId == null || p.employee_company_role_id.Equals(positionId));
+        }
+    }
     
     public struct employeeDTO
     {
