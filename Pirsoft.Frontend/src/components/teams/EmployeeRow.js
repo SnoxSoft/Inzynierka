@@ -5,7 +5,7 @@ import ReusableButton from "../base/ReusableButton";
 import {MdOpenInNew} from "react-icons/md";
 import {FiSettings} from "react-icons/fi";
 
-const EmployeeRow = ({employee, row, team}) => {
+const EmployeeRow = ({employee, row, team, id}) => {
 
     const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleRight/>);
 
@@ -21,14 +21,14 @@ const EmployeeRow = ({employee, row, team}) => {
 
     const[optionsEditVisible,setOptionsEditVisible] = useState(false)
 
-    return <div key={"employee-teams-" + row}
+    return <div id={id} key={id}
                 className={"hover:cursor-default w-44 row-start-"+row+" col-start-1 text-workday flex flex-row place-content-end gap-1"}
                 onMouseOver={() => setOptionsEditVisible(true)} onMouseLeave={() => setOptionsEditVisible(false)}>
         <div>
             {employee.firstname + ' ' + employee.lastname}
         </div>
         {optionsEditVisible ?
-                <ReusableButton value={<MdOpenInNew/>}
+                <ReusableButton id={id + "-open-employee"} value={<MdOpenInNew/>}
                                 formatting={""} color={""}
                                 link={"/employee/"+employee.id}/>
                 : <></>

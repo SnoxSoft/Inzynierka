@@ -2,11 +2,11 @@ import {HiPlus} from "react-icons/hi";
 import ReusableButton from "../base/ReusableButton";
 import TeamMember from "./TeamMember";
 const TeamMembers = ({disableChange, employeeData, setEmployeeData, setEmployeesFinderShowing,
-                         swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee}) => {
+                         swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee, mode}) => {
     let showAllEmployees = []
 
-    employeeData.forEach((v) => {
-        showAllEmployees.push(<TeamMember value={v} disableChange={disableChange}
+    employeeData.forEach((employee, employeeId) => {
+        showAllEmployees.push(<TeamMember id={"team-employee-" + employeeId} mode={mode} value={employee} disableChange={disableChange}
           employeeData={employeeData} setEmployeeData={setEmployeeData}
           setEmployeesFinderShowing={setEmployeesFinderShowing}
           swapTeamsBetweenTheseEmployee={swapTeamsBetweenTheseEmployee}
@@ -22,7 +22,7 @@ const TeamMembers = ({disableChange, employeeData, setEmployeeData, setEmployees
             {showAllEmployees}
 
             {!disableChange ?
-                <ReusableButton value={<HiPlus/>}
+                <ReusableButton id={"team-member-add"} value={<HiPlus/>}
                     color={""}
                     onClick={() => setValuesForPickerAndOpenIt()}
                     formatting={"hover:bg-gray-500 hover:border-2 hover:border-gray-400 w-96 h-6 rounded-md flex flex-col items-center place-content-center"}
