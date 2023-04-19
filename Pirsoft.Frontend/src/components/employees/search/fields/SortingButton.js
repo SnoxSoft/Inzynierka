@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {AiOutlineSortAscending, AiOutlineSortDescending} from "react-icons/ai";
 
-const SortingButton = ({setOrder}) => {
+const SortingButton = ({setOrder, id}) => {
 
     const[orderingButton, setOrderingButton] = useState(<AiOutlineSortAscending size={70}/>)
 
@@ -16,7 +16,7 @@ const SortingButton = ({setOrder}) => {
         }
     }
     return(
-    <button onClick={changeOrdering} className={"h-auto w-9"}>
+    <button id={id} onClick={changeOrdering} className={"h-auto w-9"}>
         {orderingButton}
     </button>
     );

@@ -84,7 +84,7 @@ function Employees(){
                     <p>{headerEmployees}</p>
                     <div>
                         <p className={""}>{labelFirstNameAndLastName}</p>
-                        <FirstnameAndLastname className={""} onChange={setFirstnameAndLastname}/>
+                        <FirstnameAndLastname id={"employees-firstname-lastname"} className={""} onChange={setFirstnameAndLastname}/>
                     </div>
                     <div className={"flex flex-row gap-2 flex-wrap"}>
                         <div>
@@ -92,18 +92,20 @@ function Employees(){
                         </div>
 
                         <div>
-                            <PositionsList className={""} onChange={setPositionsList}/>
+                            <PositionsList id={"employees-positions-list"} className={""} onChange={setPositionsList}/>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <SortingButton setOrder={setOrder}/>
-                    <ReusableButton value={labelFind} onClick={findEmployees}/>
+                    <SortingButton id={"employees-sort"} setOrder={setOrder}/>
+                    <ReusableButton id={"employees-find"} value={labelFind} onClick={findEmployees}/>
                 </div>
             </div>
             <hr/>
             <div id={"employee-list"} className={"rounded-md overflow-y-auto h-full"}>
-                {employeesList ? <EmployeesList values={[employeesList][0]} action={setPickedEmployeeData} showRequest={setShowAddEmployeeAnAbsence} /> : <p />}
+                {employeesList ?
+                    <EmployeesList values={[employeesList][0]} action={setPickedEmployeeData}
+                                   showRequest={setShowAddEmployeeAnAbsence} /> : <p />}
             </div>
 
         </div>
