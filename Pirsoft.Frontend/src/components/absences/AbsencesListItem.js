@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 import {labelDelete, labelFromTimeOfAbsence} from "../../GlobalAppConfig";
 
-const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absencesStatus, absencesColors}) => {
+const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absencesStatus, absencesColors, id}) => {
 
     const [showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -46,7 +46,7 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
     }
 
     return <>
-        <div className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
+        <div id={id} className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
             <div className={"p-2 flex rounded-md basis-8/12"}>
                 {labelFromTimeOfAbsence} {employeeAbsence.from} - {employeeAbsence.to}, {absenceType}
@@ -61,7 +61,7 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
                             <>
                                 {employeeAbsence.state === "accepted" ||
                                     employeeAbsence.state === "waiting" ?
-                                    <ReusableButton value={labelDelete} onClick={() => deleteAbsence()}/> :
+                                    <ReusableButton id={id + "-delete"} value={labelDelete} onClick={() => deleteAbsence()}/> :
                                     <></>
                                 }
                             </> :
