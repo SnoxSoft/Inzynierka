@@ -4,7 +4,7 @@ import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
 import {positionAdditionalRow, serverIp} from "../../../../GlobalAppConfig";
 import {endpointGetAllPositions} from "../../../../EndpointAppConfig";
 
-const PositionsList = ({onChange}) => {
+const PositionsList = ({onChange, id}) => {
     const [positions, setPositions] = useState(Object);
 
     if (positions[0] === undefined) {
@@ -20,7 +20,7 @@ const PositionsList = ({onChange}) => {
             })
     }
 
-    return <Select className={"w-96 text-black"}
+    return <Select id={id} className={"w-96 text-black"}
                    defaultValue={{ value: '', label: positionAdditionalRow }}
                    options={positions}
                    onChange={(e) => onChange(e.value)}/>

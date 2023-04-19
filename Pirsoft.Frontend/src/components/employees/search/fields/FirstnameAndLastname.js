@@ -1,8 +1,8 @@
 
-const FirstnameAndLastname = ({onChange, value}) => {
+const FirstnameAndLastname = ({onChange, value, id}) => {
 
     return <div>
-        <input className={"w-96 text-black rounded-sm"} type={"text"}
+        <input id={id} className={"w-96 text-black rounded-sm"} type={"text"}
                onChange={(e) => onChange(e.target.value)} value={value}></input>
     </div>
 
