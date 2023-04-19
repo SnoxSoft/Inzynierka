@@ -142,7 +142,10 @@ function Remind(){
 
                 <div>
                     <div className={"grow-0 p-4 flex flex-row justify-start"}>
-                        <button onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />{labelBack}</button>
+                        <button id={"remind-back"}
+                            onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />
+                            {labelBack}
+                        </button>
                     </div>
                     <p>{labelRemindPassword}</p>
                 </div>
@@ -183,17 +186,21 @@ function Remind(){
                 {codeNotVerified ?
                     <>
                         <div className={"self-center"}>
-                            <ReusableButton value={labelSendVerificationEmail}
-                                            onClick={() => sendVerifyEmail()}/>
+                            <ReusableButton id={"remind-send-verification-email"}
+                                formatting={"border-2 border-b-workday min-w-min h-12"}
+                                value={labelSendVerificationEmail}
+                                onClick={() => sendVerifyEmail()}/>
                         </div>
                         <br/>
                         <div className={"bg-blue-menu self-center"}>
-                            <ReusableButton value={labelApprove} onClick={() => verifyCode()}/>
+                            <ReusableButton id={"remind-verify-code-approve"}
+                                value={labelApprove} onClick={() => verifyCode()}/>
                         </div>
                     </>
                     :
                     <div className={"bg-blue-menu self-center"}>
-                        <ReusableButton value={labelApprove} onClick={() => changePassword()}/>
+                        <ReusableButton id={"remind-change-password-approve"}
+                            value={labelApprove} onClick={() => changePassword()}/>
                     </div>
                 }
 

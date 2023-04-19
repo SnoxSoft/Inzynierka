@@ -384,7 +384,7 @@ function EmployeeComponent({id, mode, employee}){
                 sessionStorage.getItem('USER') !== id ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
                     <button
-                        id={"employee-close"}
+                        id={"employee-back"}
                         onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />{labelBack}</button>
                 </div>
                 : <></>
