@@ -27,15 +27,17 @@ const Notifications = (props) => {
 
     function reloadNotifications(){
         let notificationsListLoad = [];
+        let notificationItemId = 0;
         for (const i of employeeNotifications) {
             notificationsListLoad.push(
                 <>
-                    <NotificationItem employeeNotification={i}
+                    <NotificationItem id={"notifications-list-item-" + notificationItemId} employeeNotification={i}
                                       employeeNotifications={employeeNotifications}
                                       setEmployeeNotifications={setEmployeeNotifications} />
                     <hr />
                 </>
-            )
+            );
+            notificationItemId++;
         }
         setNotificationsList(notificationsListLoad);
     }
@@ -60,7 +62,7 @@ const Notifications = (props) => {
                 {/*                    onClick={props.onClose} formatting={""} color={""}/>*/}
                 {/*</div>*/}
 
-            <div className={"flex flex-col col-start-1 col-span-2 gap-2 p-2"}>
+            <div id={"notifications-list"} className={"flex flex-col col-start-1 col-span-2 gap-2 p-2"}>
 
             {/*max-h-full overflow-y-auto"}>*/}
                 {notificationsList}

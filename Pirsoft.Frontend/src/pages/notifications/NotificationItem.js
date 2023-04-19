@@ -5,7 +5,7 @@ import {serverIp} from "../../GlobalAppConfig";
 import {endpointDeleteNotification, endpointGetNotifications} from "../../EndpointAppConfig";
 import {useNavigate} from "react-router-dom";
 
-const NotificationItem = ({employeeNotification, employeeNotifications, setEmployeeNotifications}) => {
+const NotificationItem = ({id, employeeNotification, employeeNotifications, setEmployeeNotifications}) => {
     const navigate = useNavigate()
 
     const[showHideButtons, setShowHideButtons] = useState(true);
@@ -42,7 +42,7 @@ const NotificationItem = ({employeeNotification, employeeNotifications, setEmplo
     }
 
     return (
-        <div className={"text-start items-center rounded-md flex hover:cursor-default hover:bg-dayoffmonth"}
+        <div id={id} className={"text-start items-center rounded-md flex hover:cursor-default hover:bg-dayoffmonth"}
              // bg-brown-menu border-2 hover:border-workday hover:cursor-pointer"}
              // onMouseOver={showOptions} onMouseLeave={hideOptions}
         >
@@ -52,6 +52,7 @@ const NotificationItem = ({employeeNotification, employeeNotifications, setEmplo
             <div className={"flex justify-center basis-1/12"}>
                 {showHideButtons && (
                     <ReusableButton
+                        id={id + "-delete"}
                         value={<AiTwotoneDelete />}
                         onClick={() => deleteNotification(employeeNotification.id)}
                         formatting={"border-2 border-b-workday min-w-min w-8 h-8"}/>
