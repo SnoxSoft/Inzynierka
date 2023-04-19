@@ -1,7 +1,7 @@
 import TextInputEmployee from "./models/TextInputEmployee";
 
-const BankAccountNumber = ({onChange, value, disableChange}) => {
-    return <TextInputEmployee onChange={onChange} value={value} disableChange={disableChange}/>
+const BankAccountNumber = ({id, onChange, value, disableChange}) => {
+    return <TextInputEmployee id={id} onChange={onChange} value={value} disableChange={disableChange}/>
 }
 
 export default BankAccountNumber;

@@ -1,7 +1,7 @@
 import TextInputEmployee from "./models/TextInputEmployee";
 
-const LastName = ({onChange, value, disableChange}) => {
-    return <TextInputEmployee onChange={onChange} value={value} disableChange={disableChange}/>
+const LastName = ({id, onChange, value, disableChange}) => {
+    return <TextInputEmployee id={id} onChange={onChange} value={value} disableChange={disableChange}/>
 }
 
 export default LastName;

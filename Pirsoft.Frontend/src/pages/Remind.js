@@ -163,13 +163,17 @@ function Remind(){
                         <div className={"flex flex-col gap-4"}>
                             <label>{labelGiveNewPassword}</label>
                             <div className={"flex flex-col gap-4 self-center"}>
-                                <LoggingPassword value={newPassword} onChange={setNewPassword} showHide={false}/>
+                                <LoggingPassword
+                                    id={"remind-new-password"}
+                                    value={newPassword} onChange={setNewPassword} showHide={false}/>
                             </div>
                         </div>
                         <div className={"flex flex-col gap-4"}>
                             <label>{labelGiveNewPasswordAgain}</label>
                             <div className={"flex flex-col gap-4 self-center"}>
-                                <LoggingPassword value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
+                                <LoggingPassword
+                                    id={"remind-repeat-password"}
+                                    value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
                             </div>
                         </div>
                     </>

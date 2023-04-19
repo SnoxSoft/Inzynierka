@@ -121,7 +121,7 @@ const Request = ({setAbsencesVisible}) =>{
                         {labelRequestType}
                     </p>
                     <div className={"bg-workday text-black basis-1/3"}>
-                        <Select options={option} isOptionDisabled={(option) => option.value} defaultValue={{ value: '', label: 'Urlop wypoczynkowy'}}
+                        <Select id={"request-type"} options={option} isOptionDisabled={(option) => option.value} defaultValue={{ value: '', label: 'Urlop wypoczynkowy'}}
                                 className={"h-6"}/>
                     </div>
                 </div>
@@ -129,7 +129,7 @@ const Request = ({setAbsencesVisible}) =>{
                     <p className={"basis-1/3 text-end pr-4"}>
                         {labelRequestNoPay}
                     </p>
-                    <input type={"checkbox"} className={"h-5 w-5 checked:decoration-workday"} checked={leaveDaysLeft} disabled={true}/>
+                    <input id={"request-type-no-pay"} type={"checkbox"} className={"h-5 w-5 checked:decoration-workday"} checked={leaveDaysLeft} disabled={true}/>
                 </div>
                 <div id={"schedule-list"} className={"flex"}>
                     <p className={"text-end basis-1/3 pr-4"}>

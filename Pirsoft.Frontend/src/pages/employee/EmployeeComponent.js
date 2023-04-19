@@ -204,6 +204,7 @@ function EmployeeComponent({id, mode, employee}){
 
         let detailsOne = []
 
+        let skillId = 0;
         for (const availableSkill in allSkills) {
             let hasSkill = false;
 
@@ -216,13 +217,17 @@ function EmployeeComponent({id, mode, employee}){
             }
             detailsOne.push(
                 <>
-                <div key={"skill" + availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
+                <div id={"employee-skill-list-item-" + skillId} key={"skill" + availableSkill}
+                     className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
                     <p>{allSkills[availableSkill]}</p>
-                    <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
+                    <input
+                        id={"employee-skill-list-item-" + skillId + "-checkbox"}
+                        className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
                 </div>
                     <hr />
                 </>
             );
+            skillId++;
         }
 
         setSkillsComponent(detailsOne)
@@ -291,28 +296,32 @@ function EmployeeComponent({id, mode, employee}){
                 <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {firstnameLabel} </label>
-                        <FirstName value={firstName} onChange={setFirstName} disableChange={disableData}/>
+                        <FirstName id={"employee-firstname"} value={firstName} onChange={setFirstName} disableChange={disableData}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {lastnameLabel} </label>
-                        <LastName value={lastName} onChange={setLastName} disableChange={disableData}/>
+                        <LastName id={"employee-lastname"} value={lastName} onChange={setLastName} disableChange={disableData}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelEmail} </label>
-                        <Email value={email} onChange={setEmail} disableChange={mode !== 'create'}/>
+                        <Email id={"employee-email"} value={email} onChange={setEmail} disableChange={mode !== 'create'}/>
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ? <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelPassword} </label>
                             <div className={"flex flex-row justify-end gap-4 grow"}>
-                                <Password value={password} onChange={setPassword}
+                                <Password id={"employee-password"} value={password} onChange={setPassword}
                                           showHide={sessionStorage.getItem('USER') === id || mode === 'create'}
                                           disableChange={mode !== 'create'}/>
                                 {sessionStorage.getItem('USER') === id ?
-                                    <button className={""} onClick={() => setNewPasswordFunction()}><FiSettings/></button> :
+                                    <button id={"employee-password-change"}
+                                            className={""}
+                                            onClick={() => setNewPasswordFunction()}>
+                                        <FiSettings/>
+                                    </button> :
                                     <></>
                                 }
                             </div>
@@ -321,49 +330,49 @@ function EmployeeComponent({id, mode, employee}){
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelBankAccount} </label>
-                            <BankAccountNumber value={bank} onChange={setBank} disableChange={disableData}/>
+                            <BankAccountNumber id={"employee-bank-number"} value={bank} onChange={setBank} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelBirthDate} </label>
-                            <DateOfBirth value={birth} onChange={setBirth} disableChange={disableData}/>
+                            <DateOfBirth id={"employee-birth-date"} value={birth} onChange={setBirth} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelPESEL} </label>
-                            <Pesel value={pesel} onChange={setPesel} disableChange={disableData}/>
+                            <Pesel id={"employee-pesel"} value={pesel} onChange={setPesel} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelSalary} </label>
-                            <GrossSalary value={salary} onChange={setSalary} disableChange={disableData}/>
+                            <GrossSalary id={"employee-salary"} value={salary} onChange={setSalary} disableChange={disableData}/>
                         </div>
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelContractType} </label>
-                            <Contract value={contract} onChange={setContract} disableChange={disableData}/>
+                            <Contract id={"employee-contract"} value={contract} onChange={setContract} disableChange={disableData}/>
                         </div>
 
                     </> : <></>}
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelPosition} </label>
-                        <PositionType value={position} onChange={setPosition} disableChange={disableData}/>
+                        <PositionType id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData}/>
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelStartDate} </label>
-                            <EmploymentStartDate value={start} onChange={setStart} disableChange={disableData}/>
+                            <EmploymentStartDate id={"employee-start-date"} value={start} onChange={setStart} disableChange={disableData}/>
                         </div>
                         : <></>}
                 </div>
 
                 <div className={"flex flex-col p-4"}>
-                    <ProfilePicture picture={avatarData}/>
-                    <SkillsList skillList={skillsData} />
+                    <ProfilePicture id={"employee-profile-picture"} picture={avatarData}/>
+                    <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
                         {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' && sessionStorage.getItem('USER') === id || mode === 'create' ?
-                            <ReusableButton value={employee !== undefined &&
+                            <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
                                             onClick={ () => setSkills()}/>
                             :
@@ -374,7 +383,9 @@ function EmployeeComponent({id, mode, employee}){
             {mode !== 'create' &&
                 sessionStorage.getItem('USER') !== id ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
-                    <button onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />{labelBack}</button>
+                    <button
+                        id={"employee-close"}
+                        onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />{labelBack}</button>
                 </div>
                 : <></>
             }
@@ -384,9 +395,9 @@ function EmployeeComponent({id, mode, employee}){
                     <>
                         {mode === 'edit' && sessionStorage.getItem('USER') === id ?
                             <>
-                                <ReusableButton value={labelDelete} link={""} />
-                                <ReusableButton value={labelSave} onClick={() => saveEmployee()}/>
-                                <ReusableButton value={labelRequest} onClick={() => {
+                                <ReusableButton id={"employee-delete"} value={labelDelete} link={""} />
+                                <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
+                                <ReusableButton id={"employee-request"} value={labelRequest} onClick={() => {
                                     setShowAddEmployeeAnAbsence(true);
                                     setEmployeeDataShow(false);
                                 }}/>
@@ -394,7 +405,7 @@ function EmployeeComponent({id, mode, employee}){
                             : <></>
                         }
                         {mode === 'create' ?
-                            <ReusableButton value={labelCreate} onClick={() => saveEmployee()}/>
+                            <ReusableButton id={"employee-create"} value={labelCreate} onClick={() => saveEmployee()}/>
                             : <></>
                         }
                     </>
@@ -412,8 +423,10 @@ function EmployeeComponent({id, mode, employee}){
                             <div>{skillsLabel}</div>
                             {skillsComponent}
                             <div className={"p-4 flex flex-row justify-evenly"}>
-                                <ReusableButton value={labelApprove} onClick={() => saveSkills()}/>
-                                <ReusableButton value={labelClose} onClick={() => {setEmployeeDataShow(true); setShowSkillsFrame(false)}}/>
+                                <ReusableButton id={"employee-skills-approve"}
+                                        value={labelApprove} onClick={() => saveSkills()}/>
+                                <ReusableButton id={"employee-skills-close"}
+                                        value={labelClose} onClick={() => {setEmployeeDataShow(true); setShowSkillsFrame(false)}}/>
                             </div>
                         </div>
                     </div> :
@@ -432,20 +445,23 @@ function EmployeeComponent({id, mode, employee}){
 
                         <div className={"flex flex-col gap-4"}>
                             <label>{labelGiveOldPassword}</label>
-                            <LoggingPassword value={oldPassword} onChange={setOldPassword} showHide={false}/>
+                            <LoggingPassword id={"employee-password-change-old-password"}
+                                     value={oldPassword} onChange={setOldPassword} showHide={false}/>
                         </div>
                         <br/>
 
                         <div className={"flex flex-col gap-4"}>
                             <label>{labelGiveNewPassword}</label>
                             <div className={"flex flex-col gap-4 self-center"}>
-                                <LoggingPassword value={newPassword} onChange={setNewPassword} showHide={false}/>
+                                <LoggingPassword id={"employee-password-change-new-password"}
+                                     value={newPassword} onChange={setNewPassword} showHide={false}/>
                             </div>
                         </div>
                         <div className={"flex flex-col gap-4"}>
                             <label>{labelGiveNewPasswordAgain}</label>
                             <div className={"flex flex-col gap-4 self-center"}>
-                                <LoggingPassword value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
+                                <LoggingPassword id={"employee-password-change-repeat-password"}
+                                     value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
                             </div>
                         </div>
 
@@ -453,7 +469,9 @@ function EmployeeComponent({id, mode, employee}){
 
                         <div className={"flex flex-row justify-evenly"}>
                             <div className={"self-center"}>
-                                <ReusableButton value={labelClose}
+                                <ReusableButton
+                                    id={"employee-change-password-close"}
+                                    value={labelClose}
                                     onClick={() => {
                                         setOldPassword('');
                                         setNewPassword('');
@@ -462,7 +480,8 @@ function EmployeeComponent({id, mode, employee}){
                                         setShowPasswordChangeFrame(false)}}/>
                             </div>
                             <div className={"bg-blue-menu self-center"}>
-                                <ReusableButton value={labelApprove} onClick={() => changePassword()}/>
+                                <ReusableButton id={"employee-change-password-approve"} value={labelApprove}
+                                                onClick={() => changePassword()}/>
                             </div>
                         </div>
 

@@ -1,5 +1,5 @@
 
-const ProfilePicture = ({picture}) => {
+const ProfilePicture = ({id, picture}) => {
 
     let image = "";
 
@@ -15,7 +15,7 @@ const ProfilePicture = ({picture}) => {
 
     return <div className={"mb-2 space-x-4"}>
         {image !== "" ?
-        <img src={"data:image/png;base64," + image} alt="Card image cap"
+        <img id={id} src={"data:image/png;base64," + image} alt="Card image cap"
                       className={"card-img-top mx-auto text-center h-auto max-h-96 rounded-md"}/> : null }
     </div>
 
