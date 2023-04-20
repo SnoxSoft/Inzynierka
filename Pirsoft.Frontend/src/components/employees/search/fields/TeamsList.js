@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
-import {serverIp, teamAdditionalRow} from "../../../../GlobalAppConfig";
+import {positionAdditionalRow, serverIp, teamAdditionalRow} from "../../../../GlobalAppConfig";
 import {endpointGetAllTeams} from "../../../../EndpointAppConfig";
 
 const TeamsList = ({onChange, id}) => {
@@ -12,8 +12,8 @@ const TeamsList = ({onChange, id}) => {
         fetch(serverIp + "/" + endpointGetAllTeams)
             .then((response) => response.json())
             .then((response) => {
-                response.push({ value: '', label: teamAdditionalRow })
-                response.sort(FunctionForSortingJson("value", "ascending"))
+                response.push({ department_id: 0, department_name: teamAdditionalRow })
+                response.sort(FunctionForSortingJson("department_id", "ascending"))
                 setTeams(response)
             })
             .catch((err) => {
@@ -23,9 +23,14 @@ const TeamsList = ({onChange, id}) => {
 
     return <Select id={id}
         className={"w-96 text-black"}
-                   defaultValue={{ value: '', label: teamAdditionalRow }}
+                   defaultValue={{ department_id: 0, department_name: teamAdditionalRow }}
                    options={teams}
+                   getOptionLabel={option =>
+                       `${option.department_name}`
+                   }
+                   getOptionValue={option => `${option.department_id}`}
                    onChange={(e) => onChange(e.value)}/>
+
 
 }
 export default TeamsList;

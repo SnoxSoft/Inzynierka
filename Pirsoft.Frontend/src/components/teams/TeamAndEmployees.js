@@ -13,11 +13,12 @@ const TeamAndEmployees = ({row, team, employees, id}) => {
            setEmployeesVisible={setEmployeesVisible}/>)
 
     employees.forEach((employee, employeeId) => {
-        if(employee.team.toString().toUpperCase() === (team.value+'').toString().toUpperCase()){
+        if(employee.employee_department_id === (team.department_id+'')){
             row = row + 1
             createTeamsComponent.push(
                 employeesVisible ?
-                <EmployeeRow id={id + "-employee-" + employeeId} employee={employee} row={row} team={team.value}/> :
+                <EmployeeRow id={id + "-employee-" + employeeId}
+                     employee={employee} row={row}/> :
                     <></>
             )
 

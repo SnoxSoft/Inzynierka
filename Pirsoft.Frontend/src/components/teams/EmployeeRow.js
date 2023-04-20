@@ -5,7 +5,7 @@ import ReusableButton from "../base/ReusableButton";
 import {MdOpenInNew} from "react-icons/md";
 import {FiSettings} from "react-icons/fi";
 
-const EmployeeRow = ({employee, row, team, id}) => {
+const EmployeeRow = ({employee, row, id}) => {
 
     const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleRight/>);
 
