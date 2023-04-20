@@ -192,7 +192,7 @@ const TeamWindow = ({id,mode, title}) => {
                         <div>{labelTeamName}</div>
                         <TeamName disableChange={(mode === 'view')} value={teamData} onChange={setTeamData} />
                         <div>{labelStrongSkills}</div>
-                        <TeamMembersSkills value={employeeSkillData}/>
+                        <TeamMembersSkills skills={employeeSkillData}/>
                         <div>{labelTeamManager}</div>
                         <TeamLeader mode={mode} disableChange={(mode === 'view')}
                             value={leaderData} setLeaderData={setLeaderData}
