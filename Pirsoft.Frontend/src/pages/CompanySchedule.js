@@ -27,7 +27,7 @@ function CompanySchedule(){
         fetch(serverIp + "/" + endpointGetAllTeams)
             .then((response) => response.json())
             .then((response) => {
-                response.sort(FunctionForSortingJson("value", "ascending"))
+                response.sort(FunctionForSortingJson("department_id", "ascending"))
                 setTeams(response)
                 setTeamsLoaded(true)
             })

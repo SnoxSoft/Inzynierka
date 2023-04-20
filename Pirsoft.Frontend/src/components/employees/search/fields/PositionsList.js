@@ -11,8 +11,10 @@ const PositionsList = ({onChange, id}) => {
         fetch(serverIp + "/" + endpointGetAllPositions)
             .then((response) => response.json())
             .then((response) => {
-                response.push({ value: '', label: positionAdditionalRow })
-                response.sort(FunctionForSortingJson("value", "ascending"))
+
+                console.log(response)
+                response.push({ role_id: 0, role_name: positionAdditionalRow })
+                response.sort(FunctionForSortingJson("role_id", "ascending"))
                 setPositions(response)
             })
             .catch((err) => {
@@ -21,7 +23,11 @@ const PositionsList = ({onChange, id}) => {
     }
 
     return <Select id={id} className={"w-96 text-black"}
-                   defaultValue={{ value: '', label: positionAdditionalRow }}
+                   defaultValue={{ role_id: 0, role_name: positionAdditionalRow }}
+                   getOptionLabel={option =>
+                       `${option.role_name}`
+                   }
+                   getOptionValue={option => `${option.role_id}`}
                    options={positions}
                    onChange={(e) => onChange(e.value)}/>
 

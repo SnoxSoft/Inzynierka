@@ -49,7 +49,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
     });
 
     employees.forEach((employee, employeeId) => {
-        if(employee.team.toString().toUpperCase() === (team.value+'').toString().toUpperCase()){
+        if(employee.employee_department_id === (team.department_id+'')){
             row = row + 1
             allTeamsDataLoad.push(
                 <EmployeeRow id={id+"-employee-"+employeeId} employee={employee} row={row}/>)
@@ -80,7 +80,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
                     onClick={() => changeVisibilityForTeamData()}
                     className={"hover:cursor-pointer row-start-"+row+" col-start-1 w-max text-workday text-left"}>
                 <button>{changeVisibilityIcon}</button>
-                {team.value}
+                {team.department_name}
             </div>
             {showHideEmployeesSchedule ?
                 allTeamsDataLoad :

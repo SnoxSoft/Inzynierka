@@ -27,7 +27,7 @@ const TeamRow = ({team, row, setEmployeesVisible, id}) => {
                 className={"hover:cursor-pointer row-start-"+row+" col-start-1 text-workday text-left gap-2 flex flex-row"}>
             <div id={id + "-open"} key={id + "-open"} className={"flex flex-row"} onClick={() => changeVisibilityForPassword()}>
                 <button>{changeVisibilityIcon}</button>
-                <div>{team.value}</div>
+                <div>{team.department_name}</div>
             </div>
             {optionsEditVisible ?
                 <>
