@@ -1,31 +1,30 @@
-import {useState} from "react";
 import FunctionForSortingJson from "../base/FunctionForSortingJson";
 
-const TeamMembersSkills = ({value}) => {
+const TeamMembersSkills = ({skills}) => {
 
     let randomNumber = 0;
     let colors = ["bg-red-500", "bg-blue-400", "bg-green-700", "bg-orange-400"]
 
     let skillComponents = []
 
-    if(value[0] !== undefined && value !== []) {
-        value.sort(FunctionForSortingJson("value", "ascending"))
+    if(skills[0] !== undefined && skills !== []) {
+        skills.sort(FunctionForSortingJson("value", "ascending"))
 
-        let currentValue = value[0].value
+        let currentValue = skills[0].value
 
-        value.forEach((s , sId) => {
+        skills.forEach((skill , skillId) => {
 
-            if (parseInt(s.value) !== parseInt(currentValue)) {
+            if (parseInt(skill.value) !== parseInt(currentValue)) {
                 if (randomNumber < 3) {
                     randomNumber = randomNumber + 1
                 } else randomNumber = 0
-                currentValue = s.value
+                currentValue = skill.value
             }
             skillComponents.push(
                 <>
-                    <div id={"skill-name-" + sId} key={s.name + "" + s.value} className={"col-start-1 text-center"}>{s.name}</div>
-                    <div id={"skill-grade-" + sId} key={s.value + "" + s.name}
-                         className={"col-start-2 text-center " + colors[randomNumber] + " rounded-md"}>{s.value}</div>
+                    <div id={"skill-name-" + skillId} key={skill.name + "" + skill.value} className={"col-start-1 text-center"}>{skill.name}</div>
+                    <div id={"skill-grade-" + skillId} key={skill.value + "" + skill.name}
+                         className={"col-start-2 text-center " + colors[randomNumber] + " rounded-md"}>{skill.value}</div>
                 </>)
 
         })
