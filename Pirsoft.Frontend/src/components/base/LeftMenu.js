@@ -7,11 +7,16 @@ import {
     scheduleMenu,
     teamsMenu
 } from "../../GlobalAppConfig";
-function LeftMenu(){
+function LeftMenu({hideLeftPanel = false}){
+
+    let styleForLeftMenu = "left-menu-style";
+    if(hideLeftPanel){
+        styleForLeftMenu = ""
+    }
+
     return(
         <div id={"left-menu"}
-             className={"left-menu-style"}>
-
+             className={styleForLeftMenu}>
             {sessionStorage.getItem('USER') ?
                 <>
             <MenuButton id={"menu-employees"} link={"/employees"} value={employeesMenu}/>
