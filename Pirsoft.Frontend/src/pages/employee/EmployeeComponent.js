@@ -38,7 +38,7 @@ import {
     labelGiveOldPassword,
     labelPassword, labelPESEL,
     labelPick,
-    labelPosition,
+    labelPosition, labelPositionLevel,
     labelRequest, labelSalary,
     labelSave,
     labelStartDate,
@@ -47,6 +47,8 @@ import {
 } from "../../GlobalAppConfig";
 import {endpointGetAllSkills, endpointGetAvailableQuartets} from "../../EndpointAppConfig";
 import {HiPlus} from "react-icons/hi";
+import PositionsList from "../../components/employees/search/fields/PositionsList";
+import PositionLevel from "../../components/employee/fields/PositionLevel";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -86,6 +88,7 @@ function EmployeeComponent({id, mode, employee}){
     const[salary, setSalary] = useState(employee !== undefined && employee !== null ? employee.salary : '');
     const[contract, setContract] = useState(employee !== undefined && employee !== null ? employee.contract : '');
     const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.position : '');
+    const[positionLevel, setPositionLevel] = useState(employee !== undefined && employee !== null ? employee.position : '');
     const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.start : '');
 
     // Reszta danych pracownika
@@ -356,7 +359,12 @@ function EmployeeComponent({id, mode, employee}){
                     </> : <></>}
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelPosition} </label>
-                        <PositionType id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData}/>
+                        <PositionsList id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData} formatting={"rounded-full text-left grow "}/>
+                    </div>
+
+                    <div className={"flex flex-row justify-between text-right gap-4"}>
+                        <label className={"basis-1/3"}> {labelPositionLevel} </label>
+                        <PositionLevel id={"employee-position-level"} value={positionLevel} onChange={setPositionLevel} disableChange={disableData} />
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?

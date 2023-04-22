@@ -91,9 +91,12 @@ const endpointGetTeamData = "getTeamData";
 
 // Zwraca listę wszystkich rodzai zatrudnień w firmie
 const endpointGetAllPositions = "getAllPositions";
+// Zwraca listę umów
+const endpointGetAllContracts = "getAllContracts";
 
 
-
+//Zwraca listę wszystkich poziomów zatrudnień
+const endpointGetAllPositionsLevels = "getAllPositionsLevels";
 
 // Oceny kwartalne //
 
@@ -132,7 +135,7 @@ export {
 
     endpointGetEmployeeMonthDaysOff, endpointGetAllCompanyMonthDaysOff,
 
-    endpointGetAllSkills, endpointGetAllPositions,
+    endpointGetAllSkills, endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllContracts,
 
     endpointGetAllEmployeesForFinder, endpointGetAllEmployees, endpointGetEmployees,
 
