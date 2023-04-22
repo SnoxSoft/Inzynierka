@@ -74,6 +74,10 @@ const labelSave = "Zapisz";
 // Rekordy uzupełniające listy
 const teamAdditionalRow = "Wybierz zespół...";
 const positionAdditionalRow = "Wybierz stanowisko...";
+const positionLevelAdditionalRow = "Wybierz poziom stanowiska...";
+
+const contractAdditionalRow = "Wybierz rodzaj umowy...";
+
 const yearAdditionalRow = "Wybierz rok...";
 
 // Wybieranie wniosku urlopowego komponenty
@@ -133,6 +137,8 @@ const labelPESEL = " PESEL";
 const labelSalary = "Wynagrodzenie brutto";
 const labelContractType = "Typ umowy";
 const labelPosition = "Stanowisko";
+
+const labelPositionLevel = "Poziom stanowiska";
 const labelStartDate = "Rozpoczęcie pracy";
 
 
@@ -200,7 +206,7 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     calendarLabelFrom, calendarLabelTo,
     labelRequest, labelShowProfile,
     labelFromTimeOfAbsence, labelFromTimeOfRequest,
-    teamAdditionalRow, positionAdditionalRow, yearAdditionalRow,
+    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow,
     employeesMenu,
     employeeRegisterMenu,
     scheduleMenu,
@@ -211,7 +217,7 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     gradesMenu,
     gradeMenu,
 
-    labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition,labelBankAccount,labelContractType,
+    labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition, labelPositionLevel,labelBankAccount,labelContractType,
 
     skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
     employeeGradeText,
