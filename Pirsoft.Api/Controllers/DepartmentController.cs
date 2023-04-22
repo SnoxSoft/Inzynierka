@@ -13,6 +13,6 @@ public class DepartmentController : ControllerBase
 
     [HttpGet("/get/departments")]
     public IEnumerable<DepartmentModel> GetListOfAllDepartments() => 
-        _crudHandler.ReadAll<DepartmentModel>().OrderBy(p => p.department_id);
+        _crudHandler.ReadAll<DepartmentModel>().OrderBy(departmentModel => departmentModel.department_id);
     
 }
