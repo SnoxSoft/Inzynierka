@@ -34,9 +34,12 @@ public class EmployeeModelValidator : IEmployeeModelValidator
     }
     public bool IsPasswordValid(string password)
     {
-        return true;
+        var regex = new Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{14,}$");
+
+        return regex.IsMatch(password) && password.Length >= 14;
+        //14 znakow, 1 znak specjalny, 1 duza litera, 1 mala litera
     }
-        //8 znakow, 1 znak specjalny, 1 duza litera, 1 mala litera
+
 }
 
 public interface IEmployeeModelValidator
