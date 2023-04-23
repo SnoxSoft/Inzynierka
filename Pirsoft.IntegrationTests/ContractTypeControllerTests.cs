@@ -9,7 +9,7 @@ public class ContractTypeControllerTests
     private readonly HttpClient _client = new();
     
     [Test]
-    public void GetAllContractTypesIsReturningSuccessCodeWithResponse()
+    public void GetAllContractTypes_IsReturning_SuccessCodeWithResponse()
     {
         var response = _client.GetAsync("https://localhost:7120/get/contracts");
 

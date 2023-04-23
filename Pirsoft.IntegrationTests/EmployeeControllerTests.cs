@@ -11,7 +11,7 @@ public class EmployeeControllerTests
     private readonly HttpClient _client = new();
 
     [Test]
-    public void CreateNewEmployeeEndpointIsReturningSuccessCodeWithValidParameters()
+    public void CreateNewEmployee_IsReturning_SuccessCodeWithValidParameters()
     {
         var employeeModel = new
         {
@@ -40,7 +40,7 @@ public class EmployeeControllerTests
     }
     
     [Test]
-    public void CreateNewEmployeeEndpointIsReturningFailCodeWithInvalidPesel()
+    public void CreateNewEmployee_IsReturning_FailCodeWithInvalidPesel()
     {
         var employeeModel = new
         {
@@ -69,7 +69,7 @@ public class EmployeeControllerTests
     }
     
     [Test]
-    public void CreateNewEmployeeEndpointIsReturningFailCodeWithInvalidBankAccountNumber()
+    public void CreateNewEmployee_IsReturning_FailCodeWithInvalidBankAccountNumber()
     {
         var employeeModel = new
         {
@@ -98,7 +98,7 @@ public class EmployeeControllerTests
     }
 
     [Test]
-    public void GetAllEmployeesIsReturningSuccessCodeWithResponse()
+    public void GetAllEmployees_IsReturning_SuccessCodeWithResponse()
     {
         var response = _client.GetAsync("https://localhost:7120/get/employees");
 

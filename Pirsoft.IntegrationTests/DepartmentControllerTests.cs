@@ -9,7 +9,7 @@ public class DepartmentControllerTests
     private readonly HttpClient _client = new();
     
     [Test]
-    public void GetAllDepartmentsIsReturningSuccessCodeWithResponse()
+    public void GetAllDepartments_IsReturning_SuccessCodeWithResponse()
     {
         var response = _client.GetAsync("https://localhost:7120/get/departments");
 
