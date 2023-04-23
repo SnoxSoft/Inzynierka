@@ -6,6 +6,9 @@ using Pirsoft.Api.Enums;
 using Pirsoft.Api.Models.ModelCreators;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
+using Pirsoft.Api.Security.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -16,11 +19,13 @@ public class EmployeeController : ControllerBase
 {
     private readonly ICrudHandler _crudHandler;
     private readonly IEmployeeModelValidator _validator;
+    private readonly IAuthenticationService _authenticationService;
 
-    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator)
+    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IAuthenticationService authenticationService)
     {
         _crudHandler = crudHandler;
         _validator = validator;
+        _authenticationService = authenticationService;
     }
 
     [HttpPost("create/new/employee")]
@@ -40,7 +45,7 @@ public class EmployeeController : ControllerBase
         _crudHandler.Create(newEmployee);
         _crudHandler.PushChangesToDatabase();
     }
-
+    [Authorize]
     [HttpGet("/get/employees")]
     public IEnumerable<employeeDTO> GetListOfAllEmployees() => _crudHandler.ReadAll<EmployeeModel>().Select(p => new employeeDTO(p));
 
@@ -62,15 +67,6 @@ public class EmployeeController : ControllerBase
                 .Where(p => departmentId == null || p.employee_department.department_id.Equals(departmentId))
                 .Where(p => positionId == null || p.employee_company_role_id.Equals(positionId));
         }
-    }
-
-    [HttpPost("/post/login")]
-    public ActionResult Login(string email, string password)
-    {
-        EmployeeModel employeeModel = _crudHandler.ReadAll<EmployeeModel>().FirstOrDefault(u => u.email_address.Equals(email) && u.password.Equals(password));
-        if (employeeModel == null)
-            return Content("bad");
-        return Content("good");
     }
 
     public struct employeeDTO
