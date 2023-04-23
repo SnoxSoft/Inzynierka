@@ -19,13 +19,11 @@ public class EmployeeController : ControllerBase
 {
     private readonly ICrudHandler _crudHandler;
     private readonly IEmployeeModelValidator _validator;
-    private readonly IAuthenticationService _authenticationService;
 
     public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IAuthenticationService authenticationService)
     {
         _crudHandler = crudHandler;
         _validator = validator;
-        _authenticationService = authenticationService;
     }
 
     [HttpPost("create/new/employee")]
@@ -45,6 +43,7 @@ public class EmployeeController : ControllerBase
         _crudHandler.Create(newEmployee);
         _crudHandler.PushChangesToDatabase();
     }
+
     [Authorize]
     [HttpGet("/get/employees")]
     public IEnumerable<employeeDTO> GetListOfAllEmployees() => _crudHandler.ReadAll<EmployeeModel>().Select(p => new employeeDTO(p));

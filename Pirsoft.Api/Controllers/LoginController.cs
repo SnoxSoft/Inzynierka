@@ -15,9 +15,6 @@ namespace Pirsoft.Api.Controllers
         }
 
         [HttpPost("authenticate", Name = "Authenticate")]
-        public async Task<ActionResult<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request)
-        {
-            return Ok(await _authenticationService.AuthenticateAsync(request));
+        public async Task<ActionResult<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request) => Ok(await _authenticationService.AuthenticateAsync(request));
         }
-    }
 }
