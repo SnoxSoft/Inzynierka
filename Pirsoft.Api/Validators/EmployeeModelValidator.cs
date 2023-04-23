@@ -32,6 +32,11 @@ public class EmployeeModelValidator : IEmployeeModelValidator
             return false;
         }
     }
+    public bool IsPasswordValid(string password)
+    {
+        return true;
+    }
+        //8 znakow, 1 znak specjalny, 1 duza litera, 1 mala litera
 }
 
 public interface IEmployeeModelValidator
