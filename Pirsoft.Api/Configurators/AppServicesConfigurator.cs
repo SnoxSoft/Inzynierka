@@ -38,7 +38,16 @@ namespace Pirsoft.Api.Configurators
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             _builder.Services
                 .AddEndpointsApiExplorer();
-
+            _builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
             SwaggerConfigurator.AddSwagger(_builder.Services);
         }
 
