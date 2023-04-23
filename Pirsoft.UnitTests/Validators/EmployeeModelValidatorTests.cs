@@ -41,7 +41,7 @@ public class EmployeeModelValidatorTests
 
     [Test]
     public void PasswordIsValidWithOneOrMoreCapitalLowercaseLetterSpecialCharacterNumber() =>
-        _sut.IsPasswordValid("TestoweHaslo1@").Should().BeTrue();
+        _sut.IsPasswordValid("SommerFerie123$").Should().BeTrue();
 
     [Test]
     public void PasswordIsInvalidWithoutCapitalLetter() =>
