@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using Azure;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -126,5 +127,33 @@ public class EmployeeControllerTests
         response.Result.IsSuccessStatusCode.Should().BeTrue();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
-    []
+    [Test]
+    public void SuccessfulLoginWithCorrectCredentials()
+    {
+        var loginModel = new
+        {
+            email_address = "janusz.test@gmail.com",
+            password = "SommerFerie1234$"
+        };
+
+        var response = _client.PostAsJsonAsync("https://localhost:7120/login", loginModel);
+
+        response.Result.IsSuccessStatusCode.Should().BeTrue();
+        response.IsCompletedSuccessfully.Should().BeTrue();
+    }
+
+    [Test]
+    public void UnsuccessfulLoginWithWrongPassword()
+    {
+        var loginModel = new
+        {
+            email_address = "janusz.test@gmail.com",
+            password = "gnsdo"
+        };
+
+        var response = _client.PostAsJsonAsync("https://localhost:7120/login", loginModel);
+
+        response.Result.IsSuccessStatusCode.Should().BeFalse();
+        response.IsCompletedSuccessfully.Should().BeTrue();
+    }
 }
