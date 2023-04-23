@@ -4,6 +4,8 @@ using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 using Pirsoft.Api.Enums;
 using Pirsoft.Api.Models.ModelCreators;
+using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -61,7 +63,16 @@ public class EmployeeController : ControllerBase
                 .Where(p => positionId == null || p.employee_company_role_id.Equals(positionId));
         }
     }
-    
+
+    [HttpPost("/post/login")]
+    public ActionResult Login(string email, string password)
+    {
+        EmployeeModel employeeModel = _crudHandler.ReadAll<EmployeeModel>().FirstOrDefault(u => u.email_address.Equals(email) && u.password.Equals(password));
+        if (employeeModel == null)
+            return Content("bad");
+        return Content("good");
+    }
+
     public struct employeeDTO
     {
         public employeeDTO(EmployeeModel employeeModel)
@@ -71,8 +82,8 @@ public class EmployeeController : ControllerBase
             last_name = employeeModel.last_name;
         }
 
-        private int employee_id { get;  }
-        private string first_name { get; } 
-        private string last_name { get; } 
+        private int employee_id { get; }
+        private string first_name { get; }
+        private string last_name { get; }
     }
 }
