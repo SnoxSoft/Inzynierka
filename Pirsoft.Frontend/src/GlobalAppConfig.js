@@ -89,6 +89,8 @@ const labelFromTimeOfAbsence = "W terminie";
 const labelFromTimeOfRequest = "w terminie";
 const labelShowProfile = "Pokaż profil";
 
+const alertCantGoFurther = "Nie możesz przejść poza zakres...";
+
 // Nazwy dotyczące komponentu kalendarza
 const calendarLabelFrom = "Od:";
 const calendarLabelTo = "Do:";
@@ -204,7 +206,7 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications,
 
     calendarLabelFrom, calendarLabelTo,
-    labelRequest, labelShowProfile,
+    labelRequest, labelShowProfile, alertCantGoFurther,
     labelFromTimeOfAbsence, labelFromTimeOfRequest,
     teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow,
     employeesMenu,
