@@ -127,13 +127,14 @@ public class EmployeeControllerTests
         response.Result.IsSuccessStatusCode.Should().BeTrue();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
+
     [Test]
     public void SuccessfulLoginWithCorrectCredentials()
     {
         var loginModel = new
         {
             email_address = "janusz.test@gmail.com",
-            password = "SommerFerie1234$"
+            password = "SommerFerie1234$",
         };
 
         var response = _client.PostAsJsonAsync("https://localhost:7120/login", loginModel);
@@ -148,7 +149,7 @@ public class EmployeeControllerTests
         var loginModel = new
         {
             email_address = "janusz.test@gmail.com",
-            password = "gnsdo"
+            password = "gnsdo",
         };
 
         var response = _client.PostAsJsonAsync("https://localhost:7120/login", loginModel);

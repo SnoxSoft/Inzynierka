@@ -7,6 +7,8 @@ using Pirsoft.Api.Security.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Pirsoft.Api.Enums;
+using Pirsoft.Api.Validators;
 using IAuthenticationService = Pirsoft.Api.Security.Interfaces.IAuthenticationService;
 
 namespace Pirsoft.Api.Security.Services
@@ -15,24 +17,36 @@ namespace Pirsoft.Api.Security.Services
     {
         private IUserManager<EmployeeModel> _userManager;
         private readonly JSONWebTokensSettings _jwtSettings;
+        private readonly IEmployeeModelValidator _employeeModelValidator;
         
-        public AuthenticationService(IUserManager<EmployeeModel> userManager,
-            IOptions<JSONWebTokensSettings> jwtSettings)
+        public AuthenticationService(IUserManager<EmployeeModel> userManager, IOptions<JSONWebTokensSettings> jwtSettings, IEmployeeModelValidator employeeModelValidator)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
+            _employeeModelValidator = employeeModelValidator;
         }
+
         public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
         {
+            if(!_employeeModelValidator.IsEmailAddressValid(request.Email))
+                return new AuthenticationResponse(){ StatusCode = ESecurityResponse.InvalidEmail};
+
             var user = await _userManager.FindByEmailAsync(request.Email);
 
+            if (user == null)
+                return new AuthenticationResponse(){ StatusCode = ESecurityResponse.EmailNotFound };
+            if(!_employeeModelValidator.IsPasswordValid(request.Password))
+                return new AuthenticationResponse(){ StatusCode = ESecurityResponse.InvalidPassword};
+            if (request.Password != user.password)
+                return new AuthenticationResponse() { StatusCode = ESecurityResponse.BadPassword };
 
             JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
-            AuthenticationResponse response = new AuthenticationResponse
+            AuthenticationResponse response = new AuthenticationResponse()
             {
                 Id = user.employee_id,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-                Email = user.email_address
+                Email = user.email_address,
+                StatusCode = ESecurityResponse.Success,
             };
 
             return response;
@@ -55,8 +69,7 @@ namespace Pirsoft.Api.Security.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, employee.email_address),
                 new Claim("uid", employee.employee_id.ToString()),
-                new Claim(ClaimTypes.Role, "user")
-
+                new Claim(ClaimTypes.Role, "user"),
             }
             .Union(userClaims)
             .Union(roleClaims);
@@ -70,6 +83,7 @@ namespace Pirsoft.Api.Security.Services
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
                 signingCredentials: signingCredentials);
+
             return jwtSecurityToken;
         }
     }
