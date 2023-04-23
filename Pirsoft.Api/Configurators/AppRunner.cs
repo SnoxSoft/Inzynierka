@@ -23,7 +23,7 @@ namespace Pirsoft.Api.Configurators
                 _app.UseSwagger();
                 _app.UseSwaggerUI();
             }
-
+            _app.UseCors("Open");
             _app.UseHttpsRedirection();
             _app.UseAuthentication();
             _app.UseAuthorization();
