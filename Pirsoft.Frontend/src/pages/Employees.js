@@ -17,10 +17,10 @@ function Employees(){
     const[positionsList, setPositionsList] = useState();
     const[order, setOrder] = useState(true); // true oznacza sortowanie od A->Z, a false od Z->A
 
-    const [employeesList, setEmployeesList] = useState(Array);
+    const [employeesList, setEmployeesList] = useState();
 
     // Pobranie listy wszystkich pracowników
-    if (employeesList[0] === undefined) {
+    if (employeesList === undefined) {
         fetch(serverIp + "/" + endpointGetAllEmployees)
             .then((response) => {response.json()
                 .then((response) => {
@@ -33,7 +33,6 @@ function Employees(){
     }
 
     const findEmployees = (e) => {
-        e.preventDefault()
 
         let firstnameValue = "";
         let teamValue = "";
@@ -92,7 +91,7 @@ function Employees(){
                         </div>
 
                         <div>
-                            <PositionsList id={"employees-positions-list"} className={""} onChange={setPositionsList}/>
+                            <PositionsList id={"employees-positions-list"} className={""} onChange={setPositionsList} placement={"bottom"}/>
                         </div>
                     </div>
                 </div>

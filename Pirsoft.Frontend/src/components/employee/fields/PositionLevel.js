@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../base/FunctionForSortingJson";
-import {positionLevelAdditionalRow, serverIp} from "../../../GlobalAppConfig";
+import {positionLevelAdditionalRow, serverIpProd} from "../../../GlobalAppConfig";
 import {endpointGetAllPositionsLevels} from "../../../EndpointAppConfig";
 
 const PositionLevel = ({value, onChange, id, disableChange = false}) => {
@@ -9,7 +9,10 @@ const PositionLevel = ({value, onChange, id, disableChange = false}) => {
     const [positionLevels, setPositionLevels] = useState();
 
     if (positionLevels === undefined) {
-        fetch(serverIp + "/" + endpointGetAllPositionsLevels)
+        fetch(serverIpProd + "/" + endpointGetAllPositionsLevels,
+            {
+                method: "GET"
+            })
             .then((response) => response.json())
             .then((response) => {
                 response.push({ seniority_level_id: 0, seniority_level_name: positionLevelAdditionalRow })

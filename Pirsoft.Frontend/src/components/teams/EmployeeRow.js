@@ -25,12 +25,12 @@ const EmployeeRow = ({employee, row, id}) => {
                 className={"hover:cursor-default w-44 row-start-"+row+" col-start-1 text-workday flex flex-row place-content-end gap-1"}
                 onMouseOver={() => setOptionsEditVisible(true)} onMouseLeave={() => setOptionsEditVisible(false)}>
         <div>
-            {employee.firstname + ' ' + employee.lastname}
+            {employee.first_name + ' ' + employee.last_name}
         </div>
         {optionsEditVisible ?
                 <ReusableButton id={id + "-open-employee"} value={<MdOpenInNew/>}
                                 formatting={""} color={""}
-                                link={"/employee/"+employee.id}/>
+                                link={"/employee/"+employee.employee_id}/>
                 : <></>
         }
     </div>

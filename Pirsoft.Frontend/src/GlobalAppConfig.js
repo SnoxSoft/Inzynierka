@@ -1,6 +1,8 @@
 
 // Adres ip aplikacji
-const serverIp = "http://127.0.0.1:3001";//localhost:7120
+const serverIp = "http://127.0.0.1:3001";
+
+const serverIpProd = "http://127.0.0.1:3001";//https://localhost:7120";
 
 // Nazwa aplikacji
 const appName = "PIRSOFT";
@@ -39,7 +41,10 @@ const pageNameNotifications = appName + ": Powiadomienia";
 const welcomeMessage = "Witaj, zaloguj się";
 const welcomeMessageShort = "Witaj, ";
 const labelEmail = "E-mail";
+
 const labelPassword = "Hasło";
+
+const labelChangePassword = "Zmień hasło";
 
 // Nazwa wyświetlająca się jak nie ma awataru
 const avatarAlterText = "Moje konto";
@@ -195,7 +200,7 @@ const alertPutNewPasswords = "Wpisz nowe hasła w pola";
 const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
 const alertOldPasswordIsIncompatible = "Wpisane stare hasło jest błędne";
 
-export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelSave, labelCreate,
+export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
 
     labelNotifications,

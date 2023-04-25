@@ -20,7 +20,7 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
         let copyEmployeeData = []
         let deleteRecord
         employeeData.forEach((e) => {
-            if(value.id === e.id){
+            if(value.employee_id === e.employee_id){
                 deleteRecord = e
             }
             else {
@@ -31,7 +31,7 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
 
         let swapTeamsDataWithoutCurrentEmployee = []
         swapTeamsBetweenTheseEmployee.forEach((e) => {
-            if (e[0].id !== value.id) {
+            if (e[0].employee_id !== value.employee_id) {
                 swapTeamsDataWithoutCurrentEmployee.push(e)
             } else {
             }
@@ -49,11 +49,11 @@ const TeamMember = ({value, disableChange, employeeData, setEmployeeData, setEmp
             <div id={id + "-member"} key={id + "-member"} className={"flex flex-col gap-1"}
                  onClick={() => {setButtonsVisible()}}>
                 <input id={id + "-firstname-lastname"} className={"grow border text-black rounded-md text-center h-6 w-96 hover:cursor-pointer hover:bg-weekend"} type={"text"}
-                       value={value.firstandlastname} disabled={true}>
+                       value={value.first_name + " " + value.last_name} disabled={true}>
                 </input>
                 <TeamEmployeeEditButton id={id} mode={mode} showOptions={showOptions}
                                         changeMethod={setValuesForPickerAndOpenIt}
-                                        changeValue={value.id}
+                                        changeValue={value.employee_id}
                                         deleteMethod={removeEmployeeFromList}
                                         />
             </div>

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
-import {positionAdditionalRow, serverIp, teamAdditionalRow} from "../../../../GlobalAppConfig";
+import {serverIpProd, teamAdditionalRow} from "../../../../GlobalAppConfig";
 import {endpointGetAllTeams} from "../../../../EndpointAppConfig";
 
 const TeamsList = ({onChange, id}) => {
@@ -9,7 +9,7 @@ const TeamsList = ({onChange, id}) => {
     const [teams, setTeams] = useState(Object);
 
     if (teams[0] === undefined) {
-        fetch(serverIp + "/" + endpointGetAllTeams)
+        fetch(serverIpProd + "/" + endpointGetAllTeams)
             .then((response) => response.json())
             .then((response) => {
                 response.push({ department_id: 0, department_name: teamAdditionalRow })

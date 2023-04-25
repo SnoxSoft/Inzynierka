@@ -48,7 +48,7 @@ const TeamWindow = ({id,mode, title}) => {
             .then((response) => {
                 response.json()
                     .then((response) => {
-                        setTeamData(response[0].name)
+                        setTeamData(response[0].department_name)
                         setLeaderData(response[0].leader)
                         setEmployeeData(response[0].employees)
                         setTeamDataLoaded(true)
@@ -69,16 +69,16 @@ const TeamWindow = ({id,mode, title}) => {
             e.skills.forEach((s) => {
                 let found = false
                 skillList.forEach(element => {
-                    if(element.name === s){
+                    if(element.name === s.skill_name){
                         found = true
                     }
                 });
                 if(!found){
-                    skillList.push({name:s, value:1})
+                    skillList.push({name:s.skill_name, value:1})
                 }
                 else {
                     skillList.forEach(element => {
-                        if(element.name === s){
+                        if(element.name === s.skill_name){
                             element.value = element.value + 1;
                         }
                     });
@@ -125,20 +125,20 @@ const TeamWindow = ({id,mode, title}) => {
         let ifAnyChangeOnCurrentSwappedEmployeeList = []
         swapTeamsBetweenTheseEmployee.forEach((s) => {
             if (idToDeleteFromList === null) {
-                loadSwapInformation.push(<div> {s[0].firstandlastname}, {labelPersonChangedWith}: {s.firstandlastname}</div>)
+                loadSwapInformation.push(<div> {s[0].first_name + " " + s[0].last_name}, {labelPersonChangedWith}: {s.first_name + " " + s.last_name}</div>)
                 ifAnyChangeOnCurrentSwappedEmployeeList.push(s)
             }
 
             if (idToDeleteFromList !== null) {
-                if (s[0].id !== idToDeleteFromList) {
+                if (s[0].employee_id !== idToDeleteFromList) {
                     //delete from swap list, no more swap if any change occur and get back previous employee to the list :)
-                    loadSwapInformation.push(<div> {s[0].firstandlastname}, {labelPersonChangedWith}: {s.firstandlastname}</div>)
+                    loadSwapInformation.push(<div> {s[0].first_name + " " + s[0].last_name}, {labelPersonChangedWith}: {s.first_name + " " + s.last_name}</div>)
                     ifAnyChangeOnCurrentSwappedEmployeeList.push(s)
                 } else {
                     let employeeDataWithReturnedChanges = []
                     employeeData.forEach((e) => {
-                        if(s[0].id === e.id){
-                            employeeDataWithReturnedChanges.push({id: s.id, firstandlastname: s.firstandlastname, skills: s.skills})
+                        if(s[0].employee_id === e.employee_id){
+                            employeeDataWithReturnedChanges.push({employee_id: s.employee_id, first_name: s.first_name, last_name:s.last_name, skills: s.skills})
                         }
                         else {
                             employeeDataWithReturnedChanges.push(e)

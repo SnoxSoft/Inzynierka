@@ -3,6 +3,8 @@ import {FiLogOut} from "react-icons/fi";
 import { useNavigate } from  'react-router-dom';
 import {HiOutlineExclamationCircle} from "react-icons/hi";
 import {appName, avatarAlterText, employeeRegisterMenu} from "../../GlobalAppConfig";
+import {BsPersonCircle} from "react-icons/bs";
+import React from "react";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -18,16 +20,17 @@ const Header = () => {
                         
                         <ReusableButton
                             id={"header-notifications"}
-                            value={<HiOutlineExclamationCircle size={40}/>}
+                            value={<HiOutlineExclamationCircle size={45}/>}
                             link={'/notifications'}/>
 
                         <ReusableButton
                             id={"header-profile"}
                             value={
-                            sessionStorage.getItem('AVATAR') !== null ?
-                                    <img src={"data:image/png;base64," + sessionStorage.getItem('AVATAR')}
-                                         alt="Avatar img" className={"w-10 rounded-2xl"}/>
-                                    : avatarAlterText
+                            // sessionStorage.getItem('AVATAR') !== null ?
+                            //         <img src={"data:image/png;base64," + sessionStorage.getItem('AVATAR')}
+                            //              alt="Avatar img" className={"w-10 rounded-2xl"}/>
+                            //         : avatarAlterText
+                                <BsPersonCircle fontSize={40}/>
                             }
                             onClick={() => {
                                 navigate('/employee/'+sessionStorage.getItem('USER'), { replace: true });
@@ -36,7 +39,7 @@ const Header = () => {
 
                         <ReusableButton
                             id={"header-log-out"}
-                            value={<FiLogOut  size={30}/>}
+                            value={<FiLogOut  size={35}/>}
                             onClick={() => {
                                             sessionStorage.removeItem('USER');
                                             navigate("/", { replace: true });

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../base/FunctionForSortingJson";
-import {contractAdditionalRow, serverIp} from "../../../GlobalAppConfig";
+import {contractAdditionalRow, serverIp, serverIpProd} from "../../../GlobalAppConfig";
 import {endpointGetAllContracts} from "../../../EndpointAppConfig";
 
 const Contract = ({value, onChange, id, disableChange = false}) => {
@@ -9,7 +9,10 @@ const Contract = ({value, onChange, id, disableChange = false}) => {
     const [contracts, setContracts] = useState();
 
     if (contracts === undefined) {
-        fetch(serverIp + "/" + endpointGetAllContracts)
+        fetch(serverIpProd + "/" + endpointGetAllContracts,
+            {
+            method: "GET"
+            })
             .then((response) => response.json())
             .then((response) => {
                 response.push({ contract_id: 0, contract_type_name: contractAdditionalRow })

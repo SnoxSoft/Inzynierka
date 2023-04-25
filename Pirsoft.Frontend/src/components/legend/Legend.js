@@ -9,7 +9,6 @@ function Legend({bigLegend = false, id}){
         {color: "bg-sick", text: "Dzień chorobowy", bigLegend: true},
         {color: "bg-weekend", text: "Weekend"},
         {color: "bg-absent", text: "Nieobecność"}
-
     ]
 
     let legendComponent = []
