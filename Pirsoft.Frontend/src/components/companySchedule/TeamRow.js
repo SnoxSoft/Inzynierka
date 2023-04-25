@@ -57,7 +57,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
             // szukanie dni wolnych danego pracownika
             let daysOffOfThisEmployee = []
             currentMonthDaysOff.forEach((e) => {
-                if(e.employee === employee.id){
+                if(e.employee === employee.employee_id){
                     daysOffOfThisEmployee = e.daysoff
                 }
             })

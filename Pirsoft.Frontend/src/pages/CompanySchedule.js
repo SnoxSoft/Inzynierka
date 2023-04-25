@@ -60,7 +60,7 @@ function CompanySchedule(){
         fetch(serverIp + "/" + endpointGetAllEmployees)
             .then((response) => response.json())
             .then((response) => {
-                response.sort(FunctionForSortingJson("lastname", "ascending"))
+                response.sort(FunctionForSortingJson("last_name", "ascending"))
                 setEmployees(response)
                 setEmployeesLoaded(true)
             })

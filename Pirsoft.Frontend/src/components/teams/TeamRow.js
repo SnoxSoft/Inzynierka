@@ -33,11 +33,11 @@ const TeamRow = ({team, row, setEmployeesVisible, id}) => {
                 <>
                     <ReusableButton id={id + "-view-team"} value={<MdOpenInNew/>}
                             formatting={""} color={""}
-                            link={"/team-view/"+team.id}/>
+                            link={"/team-view/"+team.department_id}/>
 
                     <ReusableButton id={id + "-edit-team"} value={<FiSettings/>}
                             formatting={""} color={""}
-                            link={"/team-edit/"+team.id}/>
+                            link={"/team-edit/"+team.department_id}/>
                 </> : <></>
             }
         </div>

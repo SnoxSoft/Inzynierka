@@ -1,17 +1,20 @@
 import React, {useState} from 'react'
 import Select from 'react-select'
 import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
-import {positionAdditionalRow, serverIp} from "../../../../GlobalAppConfig";
+import {positionAdditionalRow, serverIpProd} from "../../../../GlobalAppConfig";
 import {endpointGetAllPositions} from "../../../../EndpointAppConfig";
 
-const PositionsList = ({value, onChange, id, disableChange = false, formatting = "w-96"}) => {
+const PositionsList = ({value, onChange, id, disableChange = false, formatting = "w-96", placement = "top"}) => {
 
     const [positions, setPositions] = useState();
     let defaultValue = { role_id: 0, role_name: positionAdditionalRow };
 
     if (positions === undefined) {
-        fetch(serverIp + "/" + endpointGetAllPositions)
-            .then((response) => response.json())
+        fetch(serverIpProd + "/" + endpointGetAllPositions,
+            {
+                method: "GET"
+            })
+            .then((response) => response.json())//response.json())
             .then((response) => {
                 response.push({role_id: 0, role_name: positionAdditionalRow})
                 response.sort(FunctionForSortingJson("role_id", "ascending"))
@@ -41,7 +44,7 @@ const PositionsList = ({value, onChange, id, disableChange = false, formatting =
                                 getOptionLabel={option =>
                                     `${option.role_name}`
                                 }
-                                menuPlacement="top"
+                                menuPlacement={placement}
                                 getOptionValue={option => `${option.role_id}`}
                                 options={positions}
                                 onChange={(e) => onChange(e.value)}
