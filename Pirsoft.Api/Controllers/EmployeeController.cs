@@ -15,7 +15,7 @@ namespace Pirsoft.Api.Controllers;
 //[Authorize]
 [ApiController]
 //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
-public class EmployeeController : ControllerBase
+public class EmployeeController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     private readonly IEmployeeModelValidator _validator;
