@@ -70,11 +70,8 @@ const endpointGetAllSkills = "get/skills";
 
 // Szukacze list pracowników
 
-// Szukacz pracowników do wybierania dla zespołów i ocen kwartalnych
-const endpointGetAllEmployeesForFinder = "get/employeesp"
-
 // Wyszukanie całej listy pracowników w firmie
-const endpointGetAllEmployees = "get/employeesp";
+const endpointGetAllEmployees = "get/employees";
 
 // Wyszukanie listy pracowników według wybranego filtra
 const endpointGetEmployees = "getEmployees";
@@ -137,7 +134,7 @@ export {
 
     endpointGetAllSkills, endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllContracts,
 
-    endpointGetAllEmployeesForFinder, endpointGetAllEmployees, endpointGetEmployees,
+    endpointGetAllEmployees, endpointGetEmployees,
 
     endpointGetAllTeams, endpointGetTeamData,
 

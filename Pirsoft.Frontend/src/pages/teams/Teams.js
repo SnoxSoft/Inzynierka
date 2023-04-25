@@ -65,7 +65,9 @@ function Teams(){
         teams.forEach((team, teamId) => {
             // Dodanie zespołów
             row = row + 1
-            allTeamsLoad.push(<TeamAndEmployees id={"team-"+teamId} row={row} team={team} employees={employees}/>)
+            allTeamsLoad.push(
+                <TeamAndEmployees id={"team-"+teamId} row={row} team={team} employees={employees}/>
+            )
 
         });
 

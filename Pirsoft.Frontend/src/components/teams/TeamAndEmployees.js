@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {VscTriangleDown,VscTriangleRight} from "react-icons/vsc";
 import TeamRow from "./TeamRow";
 import EmployeeRow from "./EmployeeRow";
 

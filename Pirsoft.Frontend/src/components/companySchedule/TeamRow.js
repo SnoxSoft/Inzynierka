@@ -1,21 +1,21 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {VscTriangleDown,VscTriangleRight} from "react-icons/vsc";
 import EmptyTeamRow from "./EmptyTeamRow";
 import EmployeeRow from "./EmployeeRow";
 
 const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
 
-    const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleDown/>);
-    const [showHideEmployeesSchedule, setShowHideEmployeesSchedule] = useState(false)
+    const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleRight/>);
+    const [showHideEmployeesSchedule, setShowHideEmployeesSchedule] =
+        useState(false)
 
-    function changeVisibilityForTeamData() {
+    function changeVisibilityForPassword() {
         if (changeVisibilityIcon.type === VscTriangleDown) {
-            setChangeVisibilityIcon(<VscTriangleRight />);
-            setShowHideEmployeesSchedule(true);
+            setChangeVisibilityIcon(<VscTriangleRight key={"team-"+id+"-up"}/>);
         } else {
-            setChangeVisibilityIcon(<VscTriangleDown />);
-            setShowHideEmployeesSchedule(false);
+            setChangeVisibilityIcon(<VscTriangleDown key={"team-"+id+"-down"}/>);
         }
+        setShowHideEmployeesSchedule(changeVisibilityIcon.type !== VscTriangleDown)
     }
 
     function appendDay(day, row, col, daysOff, employeeId, dayId) {
@@ -77,7 +77,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
     return (
         <>
             <div id={id} key={id}
-                    onClick={() => changeVisibilityForTeamData()}
+                    onClick={() => changeVisibilityForPassword()}
                     className={"hover:cursor-pointer row-start-"+row+" col-start-1 w-max text-workday text-left"}>
                 <button>{changeVisibilityIcon}</button>
                 {team.department_name}
