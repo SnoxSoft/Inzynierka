@@ -5,7 +5,7 @@ using Pirsoft.Api.Models;
 namespace Pirsoft.Api.Controllers;
 
 [ApiController]
-public class SeniorityLevelController
+public class SeniorityLevelController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     

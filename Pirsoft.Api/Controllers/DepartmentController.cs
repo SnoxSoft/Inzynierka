@@ -5,7 +5,7 @@ using Pirsoft.Api.Models;
 namespace Pirsoft.Api.Controllers;
 
 [ApiController]
-public class DepartmentController : ControllerBase
+public class DepartmentController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     

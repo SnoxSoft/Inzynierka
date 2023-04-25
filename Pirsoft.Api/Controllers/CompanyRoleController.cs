@@ -5,7 +5,7 @@ using Pirsoft.Api.Models;
 namespace Pirsoft.Api.Controllers;
 
 [ApiController]
-public class CompanyRoleController
+public class CompanyRoleController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     
