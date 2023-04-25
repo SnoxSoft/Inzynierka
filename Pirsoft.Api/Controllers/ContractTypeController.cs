@@ -5,7 +5,7 @@ using Pirsoft.Api.Models;
 namespace Pirsoft.Api.Controllers;
 
 [ApiController]
-public class ContractTypeController
+public class ContractTypeController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     
