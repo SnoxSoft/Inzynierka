@@ -201,30 +201,30 @@ function EmployeeComponent({id, mode, employee}){
         let detailsOne = []
 
         let skillId = 0;
-        for (const availableSkill in allSkills) {
+        allSkills.map((skill) => {
             let hasSkill = false;
 
-            if (mode === "edit") {
-                for (const property in skillsData) {
-                    if (allSkills[availableSkill].includes(skillsData[property])) {
-                        hasSkill = true;
-                    }
+
+            for (const property in skillsData) {
+                if (skill.skill_name.includes(skillsData[property])) {
+                    hasSkill = true;
                 }
             }
+
             detailsOne.push(
                 <>
-                <div id={"employee-skill-list-item-" + skillId} key={"skill" + availableSkill}
-                     className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
-                    <p>{allSkills[availableSkill]}</p>
-                    <input
-                        id={"employee-skill-list-item-" + skillId + "-checkbox"}
-                        className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
-                </div>
+                    <div id={"employee-skill-list-item-" + skillId} key={"skill" + skill.skill_id}
+                         className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
+                        <p>{skill.skill_name}</p>
+                        <input
+                            id={"employee-skill-list-item-" + skillId + "-checkbox"}
+                            className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
+                    </div>
                     <hr />
                 </>
             );
             skillId++;
-        }
+        });
 
         setSkillsComponent(detailsOne)
         setEmployeeDataShow(false);

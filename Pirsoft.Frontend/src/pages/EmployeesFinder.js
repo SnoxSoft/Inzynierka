@@ -15,10 +15,10 @@ import {
     serverIp,
     skillsLabel
 } from "../GlobalAppConfig";
-import {endpointGetAllEmployeesForFinder, endpointGetAllSkills, endpointGetEmployeeData} from "../EndpointAppConfig";
+import {endpointGetAllEmployees, endpointGetAllSkills} from "../EndpointAppConfig";
 
 
-const EmployeesFinder = async ({
+const EmployeesFinder = ({
                                    mode, title, setTitle, setEmployeesFinderShowing,
                                    methodToUse, isSwapPossible, idOfCurrentPickedEmployee, multipleChoice,
                                    leaderData, setLeaderData, employeeData, setEmployeeData,
@@ -44,26 +44,24 @@ const EmployeesFinder = async ({
 
     const [swapOption, setSwapOption] = useState(false)
 
+    async function loadAllSkills(){
+        let allSkillsLoad = []
+        const response = await fetch(serverIp + "/" + endpointGetAllSkills)
+        const skills = await response.json();
 
-    // if (skills === undefined) {
-    //     fetch(serverIp + "/" + endpointGetAllSkills)
-    //         .then((response) => response.json())
-    //         .then((response) => {
-    //             setSkills(response)
-    //             console.log(skills)
-    //             setSkillsLoaded(true)
-    //         })
-    //         .catch((err) => {
-    //             console.log(err.message);
-    //         })
-    // }
+        skills.forEach((s) => {
+            allSkillsLoad.push(s)
+        })
 
-    const response = await fetch(serverIp + "/" + endpointGetAllSkills);
-    const skills = await response.json();
-    console.log("hmm")
-    console.log(skills)
-    //setSkills(newData);
+        return allSkillsLoad;
+    }
 
+    if(skillsLoaded === false){
+        loadAllSkills().then((result)=>{
+            pickSkills(result)
+            setSkillsLoaded(true)
+        });
+    }
 
     const [employeePickerData, setEmployeePickerData] = useState()
     const [employeePickerDataLoad, setEmployeePickedDataLoad] = useState([])
@@ -71,7 +69,7 @@ const EmployeesFinder = async ({
     function loadAllEmployeesByFilter(){
         setEmployeePickerDataLoaded(false)
 
-        fetch(serverIp + "/" + endpointGetAllEmployeesForFinder)
+        fetch(serverIp + "/" + endpointGetAllEmployees)
             .then((response) => response.json())
             .then((response) => {
                 let employeeLoad = []
@@ -162,37 +160,29 @@ const EmployeesFinder = async ({
         }
     }
 
-    if(skillsLoaded){
-        pickSkills()
-        setSkillsLoaded(false)
-    }
-    function pickSkills(){
+
+    let loadedSkills = undefined
+    function pickSkills(skills){
+        loadedSkills = skills
             setSkillsComponent(<></>)
 
             let detailsOne = []
-
-        console.log("umiejetnosci")
-        console.log(skills)
-            skills.map((s) => {
-                console.log(s)
-            });
-
-            for(const availableSkill in skills){
+            skills.map((skill, skillId) => {
                 let hasSkill = false;
-
                 for (const property in skillsPicked) {
-                    if (skills[availableSkill].includes(skillsPicked[property])) {
+                    if (skill.skill_name.includes(skillsPicked[property])) {
                         hasSkill = true;
                     }
                 }
 
                 detailsOne.push(
-                    <div id={"skill"+availableSkill} key={"skill"+availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
-                        <p>{skills[availableSkill]}</p>
+                    <div id={"skill"+skillId} key={"skill"+skillId} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
+                        <p>{skill.skill_name}</p>
                         <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
                     </div>
                 );
-            }
+            });
+
             setSkillsComponent(detailsOne)
             setSkillsNotShows(true)
     }
@@ -226,7 +216,9 @@ const EmployeesFinder = async ({
     }, []);
 
     useEffect(() => {
-        pickSkills()
+        loadAllSkills().then((result)=>{
+            pickSkills(result)
+        });
     }, [skillsPicked]);
 
     return (

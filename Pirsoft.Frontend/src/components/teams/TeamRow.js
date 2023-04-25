@@ -7,21 +7,21 @@ import ReusableButton from "../base/ReusableButton";
 
 const TeamRow = ({team, row, setEmployeesVisible, id}) => {
 
-    const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleRight/>);
+    const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleRight key={"team-"+id+"-down"}/>);
 
     function changeVisibilityForPassword() {
         if (changeVisibilityIcon.type === VscTriangleDown) {
-            setChangeVisibilityIcon(<VscTriangleRight />);
+            setChangeVisibilityIcon(<VscTriangleRight key={"team-"+id+"-up"}/>);
             setEmployeesVisible(false)
         } else {
-            setChangeVisibilityIcon(<VscTriangleDown />);
+            setChangeVisibilityIcon(<VscTriangleDown key={"team-"+id+"-down"}/>);
             setEmployeesVisible(true)
         }
     }
 
     const[optionsEditVisible,setOptionsEditVisible] = useState(false)
 
-    return <div id={id + "-hover"} key={id + "-hover"}
+    return <div id={id + "-hover"} key={id + "-hover-key"}
                 onMouseOver={() => setOptionsEditVisible(true)}
                 onMouseLeave={() => setOptionsEditVisible(false)}
                 className={"hover:cursor-pointer row-start-"+row+" col-start-1 text-workday text-left gap-2 flex flex-row"}>
