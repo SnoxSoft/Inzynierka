@@ -11,14 +11,8 @@ const endpointGetEmployeesRequests = "getEmployeesRequests";
 
 // Zwraca wszystkie rodzaje statusów wniosków urlopowych
 const endpointGetRequestsStatuses = "getRequestsStatus";
-const endpointGetAbsencesStatuses = "getAbsencesStatus";
-
-// Zwraca kolory przypisane do statusów wniosków urlopowych
-const endpointGetRequestsColors = "getRequestsColors";
-const endpointGetAbsencesColors = "getAbsencesColors";
 
 // Zwraca rodzaje dni nieobecności / wniosków urlopowych
-const endpointGetRequestsTypes = "getRequestsTypes";
 const endpointGetAbsencesTypes = "getAbsencesTypes";
 
 // Wystawianie wniosku urlopowego //
@@ -120,9 +114,8 @@ const endpointDeleteNotification = "deleteNotification";
 
 export {
     endpointGetEmployeesRequests, endpointGetRequestsStatuses,
-    endpointGetRequestsColors, endpointGetRequestsTypes,
-    endpointGetEmployeeAbsences, endpointGetAbsencesStatuses,
-    endpointGetAbsencesColors, endpointGetAbsencesTypes,
+    endpointGetEmployeeAbsences,
+    endpointGetAbsencesTypes,
 
     endpointGetRequestApprovers,
 

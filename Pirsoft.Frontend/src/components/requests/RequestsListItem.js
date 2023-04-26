@@ -4,7 +4,7 @@ import {labelDelete, labelFromTimeOfRequest, labelRequest, labelShowProfile} fro
 
 
 const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, setRequestPickedData,
-                              requestsTypes, requestsStatus, requestsColors, id}) => {
+                              requestsTypes, requestsStatus, id}) => {
 
     const[showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -13,8 +13,6 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
     const hideOptions = () => {
         setShowHideButtons(false);
     }
-
-    const [requestColor, setRequestColor] = useState("")
 
     const [requestType, setRequestType] = useState("")
     if (requestType === "" && requestsTypes !== undefined) {
@@ -30,13 +28,6 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
         requestsStatus.map((item) => {
             if (employeeRequest.state === item.key) {
                 setRequestStatus(item.value)
-                if(requestColor === "" && requestsColors !== undefined) {
-                    requestsColors.map((itemColor) => {
-                        if (item.key === itemColor.type) {
-                            setRequestColor(itemColor.color)
-                        }
-                    })
-                }
             }
         })
     }
@@ -51,7 +42,7 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
             <div className={"p-2 flex rounded-md basis-8/12 "}>
                 {employeeRequest.name}, {employeeRequest.team}, {labelFromTimeOfRequest} {employeeRequest.from} - {employeeRequest.to}, {employeeRequest.applicant}, {requestType}
             </div>
-            <div className={"flex basis-1/12 place-content-center rounded-md " + (!old && requestColor )}>
+            <div className={"flex basis-1/12 place-content-center rounded-md "}>
                 {requestStatus}
             </div>
             <div className={"flex justify-evenly basis-3/12"}>

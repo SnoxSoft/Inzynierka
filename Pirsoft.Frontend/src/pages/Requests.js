@@ -11,9 +11,9 @@ import {
 } from "../GlobalAppConfig";
 import RequestsFilter from "../components/requests/RequestsFilter";
 import {
+    endpointGetAbsencesTypes,
     endpointGetEmployeesRequests,
-    endpointGetRequestsColors,
-    endpointGetRequestsStatuses, endpointGetRequestsTypes
+    endpointGetRequestsStatuses
 } from "../EndpointAppConfig";
 
 function Requests(){
@@ -84,7 +84,6 @@ function Requests(){
 
     // Zmienne do ładowania statusów i typów nieobecności
     const [requestsStatus, setRequestsStatus] = useState(undefined);
-    const [requestsColors, setRequestsColors] = useState(undefined);
     const [requestsTypes, setRequestsTypes] = useState(undefined);
 
     // Załadowanie statusów wniosków
@@ -100,22 +99,9 @@ function Requests(){
             })
     }
 
-    // Załadowanie kolorów nieobecności
-    if(requestsColors === undefined) {
-        fetch(serverIp + "/" + endpointGetRequestsColors + "/")
-            .then((response) => {response.json()
-                .then((response) => {
-                    setRequestsColors(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
-
     // Załadowanie typów nieobecnośći
     if(requestsTypes === undefined) {
-        fetch(serverIp + "/" + endpointGetRequestsTypes + "/")
+        fetch(serverIp + "/" + endpointGetAbsencesTypes + "/")
             .then((response) => {response.json()
                 .then((response) => {
                     setRequestsTypes(response)
@@ -142,24 +128,14 @@ function Requests(){
         let requestsListLoad = [];
         let row = 0;
         for (const i of employeeRequests) {
-            if (i.from > new Date().toLocaleDateString("sv", options)) {
-                requestsListLoad.push(
-                    <RequestsListItem id={"request-list-item-"+row} employeeRequest={i} key={row} setRequestsVisible={setRequestsVisible}
-                                      setRequestPickedData={setRequestPickedData}
-                                      requestsTypes={requestsTypes}
-                                      requestsStatus={requestsStatus}
-                                      requestsColors={requestsColors}/>
-                )
-                row++;
-            } else {
-                requestsListLoad.push(
-                    <RequestsListItem id={"request-list-item-"+row} employeeRequest={i} key={row} old={true}
-                                      requestsTypes={requestsTypes}
-                                      requestsStatus={requestsStatus}
-                                      requestsColors={requestsColors}/>
-                )
-                row++;
-            }
+            requestsListLoad.push(
+                <RequestsListItem id={"request-list-item-"+row} employeeRequest={i} key={row} setRequestsVisible={setRequestsVisible}
+                                  old={i.from <= new Date().toLocaleDateString("sv", options)}
+                                  setRequestPickedData={setRequestPickedData}
+                                  requestsTypes={requestsTypes}
+                                  requestsStatus={requestsStatus}/>
+            )
+            row++;
         }
         setRequestsList(requestsListLoad)
     }
