@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -106,7 +107,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void ReadAll_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task ReadAll_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
             IEnumerable<TModel> testData = prepareTestData(testEntity);
@@ -117,7 +118,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
                 .Returns(mockSet.Object);
 
             //Act
-            IEnumerable<TModel> result = _sut.ReadAll<TModel>();
+            IEnumerable<TModel> result = await _sut.ReadAllAsync<TModel>();
 
             //Assert
             result.Should().BeEquivalentTo(testData);

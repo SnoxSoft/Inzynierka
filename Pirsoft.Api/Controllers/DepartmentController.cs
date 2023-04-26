@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.Models;
 
@@ -12,7 +13,9 @@ public class DepartmentController : Controller
     public DepartmentController(ICrudHandler crudHandler) => _crudHandler = crudHandler;
 
     [HttpGet("/get/departments")]
-    public IEnumerable<DepartmentModel> GetListOfAllDepartments() => 
-        _crudHandler.ReadAll<DepartmentModel>().OrderBy(departmentModel => departmentModel.department_id);
-    
+    public async Task<IEnumerable<DepartmentModel>> GetListOfAllDepartments()
+    {
+        var query = await _crudHandler.ReadAllAsync<DepartmentModel>();
+        return await query.OrderBy(departmentModel => departmentModel.department_id).ToListAsync();
+    }
 }
