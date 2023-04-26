@@ -46,7 +46,7 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
             const response = await fetch(serverIp + "/" + endpointGetAvailableQuartets + "/" + pickedPersonId)
             const quarters = await response.json();
              quarters.forEach((q) => {
-                 availableQuartetsLoad.push(q.value)
+                 availableQuartetsLoad.push(q.quarter_name)
              })
         }
 
@@ -68,12 +68,6 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
     }
 
     function giveGrade(){
-        // console.log(pickedPersonName)
-        // console.log(pickedQuartet)
-        // console.log(gradeTitle)
-        // console.log(gradeMessage)
-        // console.log(gradeRating)
-
         if(pickedPersonId !== ""){
             setGradesVisible(true);
 
@@ -103,24 +97,24 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
             </div>
 
             <PersonData id={"give-grade-person"} find={mode === "create"}
-                        value={pickedGradeData ? pickedGradeData.personName : pickedPersonName}
+                        value={pickedGradeData ? pickedGradeData.grade_creator_name : pickedPersonName}
                         onChange={setPickedPersonName}
                         setHideFinder={setHideFinder}
                         setPersonId={setPickedPersonId}/>
             <YearQuarters id={"give-grade-quarters"} createMode={mode === "create"}
-                          value={pickedGradeData ? pickedGradeData.quartet : pickedQuartet}
+                          value={pickedGradeData ? pickedGradeData.quarter_name : pickedQuartet}
                           onChange={setPickedQuartet}
                           availableQuartets={availableQuartets}/>
             <GradeTitle id={"give-grade-title"} enable={mode === "create"}
-                        value={pickedGradeData ? pickedGradeData.title : gradeTitle}
+                        value={pickedGradeData ? pickedGradeData.grade_title : gradeTitle}
                         onChange={setGradeTitle}
             />
             <GradeMessage id={"give-grade-message"} enable={mode === "create"}
-                          value={pickedGradeData ? pickedGradeData.message : gradeMessage}
+                          value={pickedGradeData ? pickedGradeData.grade_message : gradeMessage}
                           onChange={setGradeMessage}
             />
             <GradeRating id={"give-grade-rating"} placing={"place-self-center"}
-                         value={pickedGradeData ? pickedGradeData.grade : gradeRating}
+                         value={pickedGradeData ? pickedGradeData.quarter_grade : gradeRating}
                          onChange={setGradeRating}
                          createMode={mode === "create"}
             />
