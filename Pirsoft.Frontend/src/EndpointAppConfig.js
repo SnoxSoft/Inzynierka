@@ -1,7 +1,7 @@
 // Opis endpointów
 
 // Dane pracownika //
-const endpointGetEmployeeData = "employee";
+const endpointGetEmployeeData = "get/employee";
 
 
 // Listy wniosków urlopowych //
@@ -64,17 +64,14 @@ const endpointGetAllCompanyMonthDaysOff = "allCompanyMonthDays";
 // Umiejętności pracownika //
 
 // Zwraca listę wszystkich umiejętności istniejących w firmie
-const endpointGetAllSkills = "getAllSkills";
+const endpointGetAllSkills = "get/skills";
 
 
 
 // Szukacze list pracowników
 
-// Szukacz pracowników do wybierania dla zespołów i ocen kwartalnych
-const endpointGetAllEmployeesForFinder = "getAllEmployeesForPicked"
-
 // Wyszukanie całej listy pracowników w firmie
-const endpointGetAllEmployees = "getAllEmployees";
+const endpointGetAllEmployees = "get/employees";
 
 // Wyszukanie listy pracowników według wybranego filtra
 const endpointGetEmployees = "getEmployees";
@@ -84,16 +81,19 @@ const endpointGetEmployees = "getEmployees";
 // Lista zespołów //
 
 // Zwraca listę wszystkich zespołów w firmie
-const endpointGetAllTeams = "getAllTeams";
+const endpointGetAllTeams = "get/departments";
 
 // Zwraca pełne informacje na temat wybranego zespołu
-const endpointGetTeamData = "getTeamData";
+const endpointGetTeamData = "get/department";
 
 // Zwraca listę wszystkich rodzai zatrudnień w firmie
-const endpointGetAllPositions = "getAllPositions";
+const endpointGetAllPositions = "get/company/roles";
+// Zwraca listę umów
+const endpointGetAllContracts = "get/contracts";
 
 
-
+//Zwraca listę wszystkich poziomów zatrudnień
+const endpointGetAllPositionsLevels = "get/seniority/levels";
 
 // Oceny kwartalne //
 
@@ -132,9 +132,9 @@ export {
 
     endpointGetEmployeeMonthDaysOff, endpointGetAllCompanyMonthDaysOff,
 
-    endpointGetAllSkills, endpointGetAllPositions,
+    endpointGetAllSkills, endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllContracts,
 
-    endpointGetAllEmployeesForFinder, endpointGetAllEmployees, endpointGetEmployees,
+    endpointGetAllEmployees, endpointGetEmployees,
 
     endpointGetAllTeams, endpointGetTeamData,
 

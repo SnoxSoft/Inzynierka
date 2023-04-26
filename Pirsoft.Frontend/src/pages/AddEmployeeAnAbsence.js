@@ -53,7 +53,7 @@ const AddEmployeeAnAbsence = ({setShowAddEmployeeAnAbsence, setEmployeeDataShow,
                     formatting={""} color={""}/>
                 </div>
             </div>
-            <div>{forEmployee.firstname} {forEmployee.lastname}</div>
+            <div>{forEmployee.first_name} {forEmployee.lastname}</div>
             <br/>
             <div className={"flex p-4 gap-8 text-center flex-col"}>
                 <div className={"flex justify-center"}>

@@ -5,6 +5,7 @@ import ScheduleListItem from "../components/schedule/ScheduleListItem";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
 import {
+    alertCantGoFurther,
     calendarLabelFrom,
     calendarLabelTo, labelBack,
     labelFilter,
@@ -404,7 +405,7 @@ function Schedule(){
 
                 <div id={"schedule-alert-message"}
                     className={"text-workday text-center"}>
-                    {showingAlert ? 'Nie możesz przejść poza zakres' : ' ... '}
+                    {showingAlert ? alertCantGoFurther : ' ... '}
                 </div>
                 <div id={"schedule-month-list"}
                      className={"grid grid-cols-7 overflow-y-auto"}

@@ -9,13 +9,10 @@ import {MdOutlineArrowBackIosNew} from "react-icons/md";
 import FirstName from "../../components/employee/fields/FirstName";
 import LastName from "../../components/employee/fields/LastName";
 import Email from "../../components/employee/fields/Email";
-import Password from "../../components/employee/fields/Password";
-import {FiSettings} from "react-icons/fi";
 import BankAccountNumber from "../../components/employee/fields/BankAccountNumber";
 import DateOfBirth from "../../components/employee/fields/DateOfBirth";
 import Pesel from "../../components/employee/fields/Pesel";
 import GrossSalary from "../../components/employee/fields/GrossSalary";
-import PositionType from "../../components/employee/fields/PositionType";
 import EmploymentStartDate from "../../components/employee/fields/EmploymentStartDate";
 import LoggingPassword from "../../components/logging/LoggingPassword";
 import Contract from "../../components/employee/fields/Contract";
@@ -27,7 +24,7 @@ import {
     firstnameLabel,
     headerPasswordChange,
     labelApprove,
-    labelBack, labelBankAccount, labelBirthDate, labelChange,
+    labelBack, labelBankAccount, labelBirthDate, labelChange, labelChangePassword,
     labelClose, labelContractType,
     labelCreate,
     labelDelete,
@@ -38,7 +35,7 @@ import {
     labelGiveOldPassword,
     labelPassword, labelPESEL,
     labelPick,
-    labelPosition,
+    labelPosition, labelPositionLevel,
     labelRequest, labelSalary,
     labelSave,
     labelStartDate,
@@ -47,6 +44,8 @@ import {
 } from "../../GlobalAppConfig";
 import {endpointGetAllSkills, endpointGetAvailableQuartets} from "../../EndpointAppConfig";
 import {HiPlus} from "react-icons/hi";
+import PositionsList from "../../components/employees/search/fields/PositionsList";
+import PositionLevel from "../../components/employee/fields/PositionLevel";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -76,28 +75,27 @@ function EmployeeComponent({id, mode, employee}){
     const [showPasswordChangeFrame, setShowPasswordChangeFrame] = useState(false);
 
     // Dane pracownika
-    const[firstName, setFirstName] = useState(employee !== undefined && employee !== null ? employee.firstname : '');
-    const[lastName, setLastName] = useState(employee !== undefined && employee !== null? employee.lastname : '');
-    const[email, setEmail] = useState(employee !== undefined && employee !== null ? employee.email : '');
-    const[password, setPassword] = useState(employee !== undefined && employee !== null ? employee.password : '');
-    const[bank, setBank] = useState(employee !== undefined && employee !== null ? employee.bank : '');
-    const[birth, setBirth] = useState(employee !== undefined && employee !== null ? employee.birth : '');
+    const[firstName, setFirstName] = useState(employee !== undefined && employee !== null ? employee.first_name : '');
+    const[lastName, setLastName] = useState(employee !== undefined && employee !== null? employee.last_name : '');
+    const[email, setEmail] = useState(employee !== undefined && employee !== null ? employee.email_address : '');
+    const[bank, setBank] = useState(employee !== undefined && employee !== null ? employee.bank_account_number : '');
+    const[birth, setBirth] = useState(employee !== undefined && employee !== null ? employee.birth_date : '');
     const[pesel, setPesel] = useState(employee !== undefined && employee !== null ? employee.pesel : '');
-    const[salary, setSalary] = useState(employee !== undefined && employee !== null ? employee.salary : '');
-    const[contract, setContract] = useState(employee !== undefined && employee !== null ? employee.contract : '');
-    const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.position : '');
-    const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.start : '');
+    const[salary, setSalary] = useState(employee !== undefined && employee !== null ? employee.salary_gross : '');
+    const[contract, setContract] = useState(employee !== undefined && employee !== null ? employee.employee_contract_type_id : '');
+    const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.employee_company_role_id : '');
+    const[positionLevel, setPositionLevel] = useState(employee !== undefined && employee !== null ? employee.employee_seniority_level_id : '');
+    const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.employment_start_date : '');
 
     // Reszta danych pracownika
-    const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? employee.avatar : undefined);
+    const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? undefined : undefined); //employee.avatar
     const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
     useEffect(() => {
         if(employee !== undefined && employee !== null && id !== '-1'){
-            setFirstName(employee.firstname);
+            setFirstName(employee.first_name);
             setLastName(employee.lastname);
             setEmail(employee.email);
-            setPassword(employee.password);
             setBank(employee.bank);
             setBirth(employee.birth);
             setPesel(employee.pesel);
@@ -114,7 +112,6 @@ function EmployeeComponent({id, mode, employee}){
             setFirstName('');
             setLastName('');
             setEmail('');
-            setPassword('');
             setBank('');
             setBirth('');
             setPesel('');
@@ -137,7 +134,6 @@ function EmployeeComponent({id, mode, employee}){
             firstName + ", \n" +
             lastName + ", \n" +
             email + ", \n" +
-            password + ", \n" +
             bank + ", \n" +
             birth + ", \n" +
             pesel + ", \n" +
@@ -205,30 +201,30 @@ function EmployeeComponent({id, mode, employee}){
         let detailsOne = []
 
         let skillId = 0;
-        for (const availableSkill in allSkills) {
+        allSkills.map((skill) => {
             let hasSkill = false;
 
-            if (mode === "edit") {
-                for (const property in skillsData) {
-                    if (allSkills[availableSkill].includes(skillsData[property])) {
-                        hasSkill = true;
-                    }
+
+            for (const property in skillsData) {
+                if (skill.skill_name.includes(skillsData[property])) {
+                    hasSkill = true;
                 }
             }
+
             detailsOne.push(
                 <>
-                <div id={"employee-skill-list-item-" + skillId} key={"skill" + availableSkill}
-                     className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
-                    <p>{allSkills[availableSkill]}</p>
-                    <input
-                        id={"employee-skill-list-item-" + skillId + "-checkbox"}
-                        className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
-                </div>
+                    <div id={"employee-skill-list-item-" + skillId} key={"skill" + skill.skill_id}
+                         className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
+                        <p>{skill.skill_name}</p>
+                        <input
+                            id={"employee-skill-list-item-" + skillId + "-checkbox"}
+                            className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
+                    </div>
                     <hr />
                 </>
             );
             skillId++;
-        }
+        });
 
         setSkillsComponent(detailsOne)
         setEmployeeDataShow(false);
@@ -249,13 +245,12 @@ function EmployeeComponent({id, mode, employee}){
     const [notTheSame, setNotTheSame] = useState(false)
 
     const changePassword = () => {
-        if(oldPassword !== undefined && oldPassword.toString().length > 0 && oldPassword.toString() === password) {
+        if(oldPassword !== undefined && oldPassword.toString().length > 0) {
             if (newPassword !== undefined && newRepeatPassword !== undefined &&
                 newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0) {
 
                 // Tutaj pomyslimy jakie wartosci sprawdzic
                 if (newPassword.toString() === newRepeatPassword.toString()) {
-                    setPassword(newPassword)
 
                     setOldPassword('')
                     setNewPassword('')
@@ -311,24 +306,6 @@ function EmployeeComponent({id, mode, employee}){
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ? <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> {labelPassword} </label>
-                            <div className={"flex flex-row justify-end gap-4 grow"}>
-                                <Password id={"employee-password"} value={password} onChange={setPassword}
-                                          showHide={sessionStorage.getItem('USER') === id || mode === 'create'}
-                                          disableChange={mode !== 'create'}/>
-                                {sessionStorage.getItem('USER') === id ?
-                                    <button id={"employee-password-change"}
-                                            className={""}
-                                            onClick={() => setNewPasswordFunction()}>
-                                        <FiSettings/>
-                                    </button> :
-                                    <></>
-                                }
-                            </div>
-                        </div>
-
-
-                        <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelBankAccount} </label>
                             <BankAccountNumber id={"employee-bank-number"} value={bank} onChange={setBank} disableChange={disableData}/>
                         </div>
@@ -356,7 +333,12 @@ function EmployeeComponent({id, mode, employee}){
                     </> : <></>}
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelPosition} </label>
-                        <PositionType id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData}/>
+                        <PositionsList id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData} formatting={"rounded-full text-left grow "}/>
+                    </div>
+
+                    <div className={"flex flex-row justify-between text-right gap-4"}>
+                        <label className={"basis-1/3"}> {labelPositionLevel} </label>
+                        <PositionLevel id={"employee-position-level"} value={positionLevel} onChange={setPositionLevel} disableChange={disableData} />
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
@@ -397,6 +379,11 @@ function EmployeeComponent({id, mode, employee}){
                             <>
                                 <ReusableButton id={"employee-delete"} value={labelDelete} link={""} />
                                 <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
+                                {sessionStorage.getItem('USER') === id &&
+                                <ReusableButton id={"employee-password-change"} value={labelChangePassword}
+                                        onClick={() => {setNewPasswordFunction()
+                                }}/>}
+
                                 <ReusableButton id={"employee-request"} value={labelRequest} onClick={() => {
                                     setShowAddEmployeeAnAbsence(true);
                                     setEmployeeDataShow(false);

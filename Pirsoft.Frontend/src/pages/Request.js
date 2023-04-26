@@ -87,12 +87,14 @@ const Request = ({setAbsencesVisible}) =>{
 
     if (approvers[0] !== undefined && approversList.length === 0){
         let approversListLoad = [];
+        let approverId = 1;
         for (const i of approvers) {
             approversListLoad.push(
-                <div className={"text-black"}>
+                <div key={"approver-item-" + approverId} className={"text-black"}>
                     {i.name}, {i.role}
                 </div>
             )
+            approverId++;
         }
         setApproversList(approversListLoad)
     }
