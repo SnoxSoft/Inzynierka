@@ -20,8 +20,10 @@ namespace Pirsoft.Api.DatabaseManagement
             _dbContext.Set<TModel>().Add(entity);
         }
 
-        public TModel? Read<TModel>(int entityId) where TModel : class, IApiModel
-            => _dbContext.Set<TModel>().Find(entityId);
+        public async Task<TModel?> ReadAsync<TModel>(int entityId) where TModel : class, IApiModel
+        {
+            return await _dbContext.Set<TModel>().FindAsync(entityId);
+        }
 
         public async Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel =>
             await Task.FromResult(_dbContext.Set<TModel>());
@@ -55,7 +57,7 @@ namespace Pirsoft.Api.DatabaseManagement
     public interface ICrudHandler
     {
         void Create<TModel>(TModel entity) where TModel : class, IApiModel;
-        TModel? Read<TModel>(int entityId) where TModel : class, IApiModel;
+        Task<TModel?> ReadAsync<TModel>(int entityId) where TModel : class, IApiModel;
         Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel;
         void Update<TModel>(TModel entity) where TModel : class, IApiModel;
         void Delete<TModel>(TModel entity) where TModel : class, IApiModel;

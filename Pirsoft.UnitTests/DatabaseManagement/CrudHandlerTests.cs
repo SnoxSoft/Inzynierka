@@ -59,7 +59,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Read_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task Read_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
             IEnumerable<TModel> testData = prepareTestData(testEntity);
@@ -74,7 +74,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
                 .Returns(mockSet.Object);
 
             //Act
-            TModel? result = _sut.Read<TModel>(0);
+            TModel? result = await _sut.ReadAsync<TModel>(0);
 
             //Assert
             result.Should().BeEquivalentTo(testEntity);
@@ -83,7 +83,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Read_ReturnsNull_WhenEntityNotFound<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task Read_ReturnsNull_WhenEntityNotFound<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
             IEnumerable<TModel> testData = prepareTestData(testEntity);
@@ -98,7 +98,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
                 .Returns(mockSet.Object);
 
             //Act
-            TModel? result = _sut.Read<TModel>(0);
+            TModel? result = await _sut.ReadAsync<TModel>(0);
 
             //Assert
             mockSet.Verify(m => m.Find(It.IsAny<int>()), Times.Once);
@@ -147,7 +147,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Update_ShouldThrowException_WhenEntityIdDfferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public void Update_ShouldThrowException_WhenEntityIdDifferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Act
             Action act = () => _sut.Update(testEntity);
