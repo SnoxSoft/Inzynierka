@@ -17,7 +17,6 @@ import {
 } from "../GlobalAppConfig";
 import {endpointGetAllEmployees, endpointGetAllSkills} from "../EndpointAppConfig";
 
-
 const EmployeesFinder = ({
                                    mode, title, setTitle, setEmployeesFinderShowing,
                                    methodToUse, isSwapPossible, idOfCurrentPickedEmployee, multipleChoice,
@@ -146,7 +145,6 @@ const EmployeesFinder = ({
                     swapTeamsBetweenTheseEmployee.forEach((e) => {
                         if (e.employee_id !== idOfCurrentPickedEmployee) {
                             employeeDataWithoutCurrentEmployee.push(e)
-                        } else {
                         }
                     })
 
@@ -159,7 +157,6 @@ const EmployeesFinder = ({
             //alert("wybierz pracownika lub zamknij okno")
         }
     }
-
 
     let loadedSkills = undefined
     function pickSkills(skills){

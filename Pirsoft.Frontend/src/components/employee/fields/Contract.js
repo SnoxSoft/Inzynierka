@@ -35,7 +35,5 @@ const Contract = ({value, onChange, id, disableChange = false}) => {
                    getOptionValue={option => `${option.contract_id}`}
                    onChange={(e) => onChange(e.value)}
                    isDisabled={disableChange}/>
-
-
 }
 export default Contract;

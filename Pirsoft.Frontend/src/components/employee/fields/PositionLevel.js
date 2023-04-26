@@ -35,7 +35,5 @@ const PositionLevel = ({value, onChange, id, disableChange = false}) => {
                    getOptionValue={option => `${option.seniority_level_id}`}
                    onChange={(e) => onChange(e.value)}
                    isDisabled={disableChange}/>
-
-
 }
 export default PositionLevel;
