@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.Models;
 
@@ -12,6 +13,9 @@ public class CompanyRoleController : Controller
     public CompanyRoleController(ICrudHandler crudHandler) => _crudHandler = crudHandler;
 
     [HttpGet("/get/company/roles")]
-    public IEnumerable<CompanyRoleModel> GetListOfAllCompanyRoles() =>
-        _crudHandler.ReadAll<CompanyRoleModel>().OrderBy(companyRoleModel => companyRoleModel.role_id);
+    public async Task<IEnumerable<CompanyRoleModel>> GetListOfAllCompanyRoles()
+    {
+        var query = await _crudHandler.ReadAllAsync<CompanyRoleModel>();
+        return await query.OrderBy(companyRoleModel => companyRoleModel.role_id).ToListAsync();
+    }
 }

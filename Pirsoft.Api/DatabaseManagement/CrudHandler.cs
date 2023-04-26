@@ -1,4 +1,5 @@
-﻿using Pirsoft.Api.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Pirsoft.Api.Models;
 
 namespace Pirsoft.Api.DatabaseManagement
 {
@@ -22,8 +23,10 @@ namespace Pirsoft.Api.DatabaseManagement
         public TModel? Read<TModel>(int entityId) where TModel : class, IApiModel
             => _dbContext.Set<TModel>().Find(entityId);
 
-        public IEnumerable<TModel> ReadAll<TModel>() where TModel : class, IApiModel
-            => _dbContext.Set<TModel>().AsEnumerable();
+        public async Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel =>
+            await Task.FromResult(_dbContext.Set<TModel>());
+        
+        
 
         public void Update<TModel>(TModel entity) where TModel : class, IApiModel
         {
@@ -53,7 +56,7 @@ namespace Pirsoft.Api.DatabaseManagement
     {
         void Create<TModel>(TModel entity) where TModel : class, IApiModel;
         TModel? Read<TModel>(int entityId) where TModel : class, IApiModel;
-        IEnumerable<TModel> ReadAll<TModel>() where TModel : class, IApiModel;
+        Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel;
         void Update<TModel>(TModel entity) where TModel : class, IApiModel;
         void Delete<TModel>(TModel entity) where TModel : class, IApiModel;
         int PushChangesToDatabase();
