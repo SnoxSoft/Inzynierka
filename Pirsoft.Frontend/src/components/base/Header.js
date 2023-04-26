@@ -18,10 +18,10 @@ const Header = () => {
                 {sessionStorage.getItem('USER') ?
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         
-                        <ReusableButton
-                            id={"header-notifications"}
-                            value={<HiOutlineExclamationCircle size={45}/>}
-                            link={'/notifications'}/>
+                        {/*<ReusableButton*/}
+                        {/*    id={"header-notifications"}*/}
+                        {/*    value={<HiOutlineExclamationCircle size={45}/>}*/}
+                        {/*    link={'/notifications'}/>*/}
 
                         <ReusableButton
                             id={"header-profile"}
