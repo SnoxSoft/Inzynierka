@@ -34,7 +34,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
         return <div id={id+"-employee-"+employeeId+"-day-"+dayId}
                     key={id+"-employee-"+employeeId+"-day-"+dayId}
             className={
-                "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-7 h-6 "+color+" rounded-md"}>
+                "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-6 h-6 "+color+" rounded-md"}>
             {/*{day.dayOfMonth}*/}
         </div>
     }

@@ -274,7 +274,7 @@ function CompanySchedule(){
                              // maxWidth: wantedWidthForList,
                              // width: wantedWidthForList,
                              minWidth: 800}}
-                         className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2 content-start"}>
+                         className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" gap-y-4 content-start"}>
                         {allTeams}
                     </div>
                 </div>
