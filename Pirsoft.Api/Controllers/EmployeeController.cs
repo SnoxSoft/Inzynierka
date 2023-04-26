@@ -9,6 +9,7 @@ using System.Net.Mail;
 using Pirsoft.Api.Security.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -46,25 +47,31 @@ public class EmployeeController : Controller
 
     [Authorize]
     [HttpGet("/get/employees")]
-    public IEnumerable<employeeDTO> GetListOfAllEmployees() => _crudHandler.ReadAll<EmployeeModel>().Select(p => new employeeDTO(p));
+    public async Task<IEnumerable<employeeDTO>> GetListOfAllEmployees()
+    {
+        var query = await _crudHandler.ReadAllAsync<EmployeeModel>();
+        return await query.Select(employeeModel => new employeeDTO(employeeModel)).ToListAsync();
+    }
 
     [HttpGet("/get/filtered/employees/{name?}/{departmentId?}/{positionId?}")]
-    public IEnumerable<EmployeeModel> GetFilteredEmployees(string? name, int? departmentId, int? positionId)
+    public async Task<IEnumerable<EmployeeModel>> GetFilteredEmployees(string? name, int? departmentId, int? positionId)
     {
+        var query = await _crudHandler.ReadAllAsync<EmployeeModel>();
         var fullName = name?.Split(' ');
+        
         if (fullName != null && fullName.Length == 2)
         {
-            return _crudHandler.ReadAll<EmployeeModel>()
+            return await query
                 .Where(p => p.first_name.Equals(fullName[0]))
                 .Where(p => p.last_name.Equals(fullName[1]))
                 .Where(p => departmentId == null || p.employee_department.department_id.Equals(departmentId))
-                .Where(p => positionId == null || p.employee_company_role_id.Equals(positionId));
+                .Where(p => positionId == null || p.employee_company_role_id.Equals(positionId)).ToListAsync();
         }
         else
         {
-            return _crudHandler.ReadAll<EmployeeModel>()
+            return await query
                 .Where(p => departmentId == null || p.employee_department.department_id.Equals(departmentId))
-                .Where(p => positionId == null || p.employee_company_role_id.Equals(positionId));
+                .Where(p => positionId == null || p.employee_company_role_id.Equals(positionId)).ToListAsync();
         }
     }
 

@@ -12,11 +12,11 @@ namespace Pirsoft.Api.Security.Managers
 
         public UserManager(ICrudHandler crudHandler) => _crudHandler = crudHandler;
 
-        public Task<EmployeeModel> FindByEmailAsync(string email)
+        public async Task<EmployeeModel> FindByEmailAsync(string email)
         {
-            var user = _crudHandler.ReadAll<EmployeeModel>().FirstOrDefault(u => u.email_address.ToLowerInvariant().Equals(email.ToLowerInvariant()));
-
-            return Task.FromResult(user);
+            var users = await _crudHandler.ReadAllAsync<EmployeeModel>();
+            var user = users.FirstOrDefault(u => u.email_address.ToLowerInvariant().Equals(email.ToLowerInvariant()));
+            return user;
         }
 
         public Task<List<Claim>> GetClaimsAsync(EmployeeModel employee) 
