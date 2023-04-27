@@ -65,8 +65,8 @@ namespace Pirsoft.Api.Configurators
 
                 _builder.Services.AddDbContext<DatabaseContext>(
                     options => options.UseMySQL(connectionString),
-                    contextLifetime: ServiceLifetime.Singleton,
-                    optionsLifetime: ServiceLifetime.Singleton);
+                    contextLifetime: ServiceLifetime.Transient,
+                    optionsLifetime: ServiceLifetime.Transient);
 
                 Debug.Print("DbContext registered successfully.");
 

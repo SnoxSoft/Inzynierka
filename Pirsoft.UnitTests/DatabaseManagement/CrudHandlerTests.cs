@@ -26,7 +26,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Create_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task Create_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
             IEnumerable<TModel> testData = prepareTestData(testEntity);
@@ -37,7 +37,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
                 .Returns(mockSet.Object);
 
             //Act
-            _sut.Create(testEntity);
+            await _sut.CreateAsync(testEntity);
 
             //Assert
             mockSet.Verify(m => m.Add(It.IsAny<TModel>()), Times.Once);
@@ -45,16 +45,17 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Create_ShouldThrowException_WhenEntityIdDifferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task Create_ShouldThrowException_WhenEntityIdDifferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
             testEntity.ApiInternalId = 1;
 
             //Act
-            Action act = () => _sut.Create(testEntity);
+            Func<Task> act = async () => await _sut.CreateAsync(testEntity);
 
             //Assert
-            act.Should().Throw<ArgumentException>();
+            await act.Should().ThrowAsync<ArgumentException>()
+                .WithMessage($"Passed model object with '{nameof(testEntity.ApiInternalId)}' property set, use {nameof(CrudHandler)}.{nameof(CrudHandler.UpdateAsync)} instead.");
         }
 
         [Test]
@@ -127,7 +128,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Update_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task Update_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
             testEntity.ApiInternalId = 1;
@@ -139,7 +140,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
                 .Returns(mockSet.Object);
 
             //Act
-            _sut.Update(testEntity);
+            await _sut.UpdateAsync(testEntity);
 
             //Assert
             mockSet.Verify(m => m.Update(It.IsAny<TModel>()), Times.Once);
@@ -147,18 +148,22 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Update_ShouldThrowException_WhenEntityIdDifferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task Update_ShouldThrowException_WhenEntityIdDifferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
+            //Arrange
+            testEntity.ApiInternalId = 0;
+
             //Act
-            Action act = () => _sut.Update(testEntity);
+            Func<Task> act = async () => await _sut.UpdateAsync(testEntity);
 
             //Assert
-            act.Should().Throw<ArgumentException>();
+            await act.Should().ThrowAsync<ArgumentException>()
+                .WithMessage($"Passed model object with '{nameof(testEntity.ApiInternalId)}' property value less than 1*");
         }
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Delete_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task Delete_InvokesSuccessfully<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
             //Arrange
             testEntity.ApiInternalId = 1;
@@ -170,7 +175,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
                 .Returns(mockSet.Object);
 
             //Act
-            _sut.Delete(testEntity);
+            await _sut.DeleteAsync(testEntity);
 
             //Assert
             mockSet.Verify(m => m.Remove(It.IsAny<TModel>()), Times.Once);
@@ -178,13 +183,17 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
         [Test]
         [TestCaseSource(nameof(GetTestData))]
-        public void Delete_ShouldThrowException_WhenEntityIdDfferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
+        public async Task DeleteAsync_ShouldThrowException_WhenEntityIdDifferentThan0<TModel>(TModel testEntity) where TModel : class, IApiModel
         {
+            //Arrange
+            testEntity.ApiInternalId = 0;
+
             //Act
-            Action act = () => _sut.Delete(testEntity);
+            Func<Task> act = async () => await _sut.DeleteAsync(testEntity);
 
             //Assert
-            act.Should().Throw<ArgumentException>();
+            await act.Should().ThrowAsync<ArgumentException>()
+                .WithMessage($"Passed model object with '{nameof(testEntity.ApiInternalId)}' property value less than 1*");
         }
 
         [Test]
