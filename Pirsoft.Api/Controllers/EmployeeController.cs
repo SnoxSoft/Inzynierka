@@ -28,7 +28,7 @@ public class EmployeeController : Controller
     }
 
     [HttpPost("create/new/employee")]
-    public void CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths,
+    public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths,
          double grossSalary, bool isActive, bool passwordReset, DateTime employmentStartDate, DateTime dateOfBirth, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
@@ -41,7 +41,7 @@ public class EmployeeController : Controller
         EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, departmentId,seniorityInMonths, grossSalary, isActive, passwordReset, employmentStartDate,
             dateOfBirth, companyRole, contractType, seniorityLevel).CreateModel();
 
-        _crudHandler.Create(newEmployee);
+        await _crudHandler.CreateAsync(newEmployee);
         _crudHandler.PushChangesToDatabase();
     }
 
