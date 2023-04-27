@@ -23,15 +23,13 @@ const NotificationItem = ({id, employeeNotification, employeeNotifications, setE
             .catch((err) => {
                 console.log(err.message);
             })
-        console.log(employeeNotifications)
 
         let employeeNotificationsCopy = [];
         employeeNotifications.forEach((n) => {
-           if(id !== n.id){
+           if(id !== n.notification_id){
                employeeNotificationsCopy.push(n)
            }
         });
-        console.log(employeeNotificationsCopy)
         setEmployeeNotifications(employeeNotificationsCopy)
 
         if(employeeNotificationsCopy.length === 0){
@@ -47,7 +45,7 @@ const NotificationItem = ({id, employeeNotification, employeeNotifications, setE
              // onMouseOver={showOptions} onMouseLeave={hideOptions}
         >
             <div className={"p-2 flex rounded-md basis-11/12 text-workday"}>
-                {employeeNotification.name}
+                {employeeNotification.notification_name}
             </div>
             <div className={"flex justify-center basis-1/12"}>
                 {showHideButtons && (

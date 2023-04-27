@@ -26,7 +26,7 @@ function LeftMenu({hideLeftPanel = false}){
             <MenuButton id={"menu-teams"} link={"/teams"} value={teamsMenu}/>
             <MenuButton id={"menu-absences"} link={"/absences"} value={absencesMenu}/>
             <MenuButton id={"menu-requests"} link={"/requests"} value={requestsMenu}/>
-            <MenuButton id={"menu-grades"} link={"/grades"} value={gradesMenu}/>
+            {/*<MenuButton id={"menu-grades"} link={"/grades"} value={gradesMenu}/>*/}
                     </>
                 :
                 <></>}

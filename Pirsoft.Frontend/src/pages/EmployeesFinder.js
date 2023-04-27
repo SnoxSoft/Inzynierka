@@ -17,7 +17,10 @@ import {
 } from "../GlobalAppConfig";
 import {endpointGetAllEmployees, endpointGetAllSkills} from "../EndpointAppConfig";
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e64e4e3b0caf45d6129b5bc93816f458bae16902
 const EmployeesFinder = ({
                                    mode, title, setTitle, setEmployeesFinderShowing,
                                    methodToUse, isSwapPossible, idOfCurrentPickedEmployee, multipleChoice,
@@ -146,7 +149,6 @@ const EmployeesFinder = ({
                     swapTeamsBetweenTheseEmployee.forEach((e) => {
                         if (e.employee_id !== idOfCurrentPickedEmployee) {
                             employeeDataWithoutCurrentEmployee.push(e)
-                        } else {
                         }
                     })
 
@@ -160,7 +162,10 @@ const EmployeesFinder = ({
         }
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e64e4e3b0caf45d6129b5bc93816f458bae16902
     let loadedSkills = undefined
     function pickSkills(skills){
         loadedSkills = skills

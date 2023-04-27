@@ -3,6 +3,7 @@ import Select from 'react-select'
 import FunctionForSortingJson from "../../base/FunctionForSortingJson";
 import {contractAdditionalRow, serverIp, serverIpProd} from "../../../GlobalAppConfig";
 import {endpointGetAllContracts} from "../../../EndpointAppConfig";
+<<<<<<< HEAD
 
 const Contract = ({value, onChange, id, disableChange = false}) => {
 
@@ -37,5 +38,39 @@ const Contract = ({value, onChange, id, disableChange = false}) => {
                    isDisabled={disableChange}/>
 
 
+=======
+
+const Contract = ({value, onChange, id, disableChange = false}) => {
+
+    const [contracts, setContracts] = useState();
+
+    if (contracts === undefined) {
+        fetch(serverIpProd + "/" + endpointGetAllContracts,
+            {
+            method: "GET"
+            })
+            .then((response) => response.json())
+            .then((response) => {
+                response.push({ contract_id: 0, contract_type_name: contractAdditionalRow })
+                response.sort(FunctionForSortingJson("contract_id", "ascending"))
+                setContracts(response)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
+    return <Select id={id}
+                   className={"text-black rounded-full text-left grow"}
+                   defaultValue={{ contract_id: 0, contract_type_name: contractAdditionalRow }}
+                   options={contracts}
+                   getOptionLabel={option =>
+                       `${option.contract_type_name}`
+                   }
+                   menuPlacement="top"
+                   getOptionValue={option => `${option.contract_id}`}
+                   onChange={(e) => onChange(e.value)}
+                   isDisabled={disableChange}/>
+>>>>>>> e64e4e3b0caf45d6129b5bc93816f458bae16902
 }
 export default Contract;

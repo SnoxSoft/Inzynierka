@@ -29,8 +29,6 @@ namespace Pirsoft.Api.DatabaseManagement
         public async Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel =>
             await Task.FromResult(_dbContext.Set<TModel>());
         
-        
-
         public async Task UpdateAsync<TModel>(TModel entity) where TModel : class, IApiModel
         {
             if (entity.ApiInternalId < 1)

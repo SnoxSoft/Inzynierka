@@ -108,6 +108,7 @@ const gradeMessageLabel = "Treść";
 const gradeTitleLabel = "Tytuł";
 const gradePersonLabel = "Osoba";
 const employeeGradeText = "Ocena pracownika:";
+const employeeGradedText = "Ocenił pracownik:";
 
 // Filtr wniosków urlopowych
 const firstnameLabel = "Imie";
@@ -227,7 +228,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition, labelPositionLevel,labelBankAccount,labelContractType,
 
     skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
-    employeeGradeText,
+    employeeGradeText, employeeGradedText,
     firstnameLabel, lastnameLabel, teamLabel,
     requestStatusWaitingLabel,
     requestStatusApprovedLabel,

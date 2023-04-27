@@ -38,8 +38,8 @@ root.render(
                     <Route exact path={"employee/:id"} element={<EmployeePreRender />}/>
                     <Route path={"absences"} element={<Absences />}/>
                     <Route path={"requests"} element={<Requests />}/>
-                    <Route path={"grades"} element={<Grades />}/>
-                    <Route path={"notifications"} element={<Notifications />}/>
+                    {/*<Route path={"grades"} element={<Grades />}/>*/}
+                    {/*<Route path={"notifications"} element={<Notifications />}/>*/}
                 </Route>
             </Routes>
         </BrowserRouter>
