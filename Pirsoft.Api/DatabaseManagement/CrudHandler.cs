@@ -27,7 +27,7 @@ namespace Pirsoft.Api.DatabaseManagement
         }
 
         public async Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel =>
-            await Task.FromResult(_dbContext.Set<TModel>().AsNoTracking());
+            await Task.FromResult(_dbContext.Set<TModel>());
         
         
 
@@ -63,7 +63,7 @@ namespace Pirsoft.Api.DatabaseManagement
         Task<TModel?> ReadAsync<TModel>(int entityId) where TModel : class, IApiModel;
         Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel;
         Task UpdateAsync<TModel>(TModel entity) where TModel : class, IApiModel;
-        Task  DeleteAsync<TModel>(TModel entity) where TModel : class, IApiModel;
+        Task DeleteAsync<TModel>(TModel entity) where TModel : class, IApiModel;
         int PushChangesToDatabase();
     }
 }
