@@ -19,7 +19,7 @@ namespace Pirsoft.Api.Configurators
 
         private void configureDatabaseManagement()
         {
-            _services.AddSingleton<ICrudHandler, CrudHandler>();
+            _services.AddTransient<ICrudHandler, CrudHandler>();
             _services.AddSingleton<IDatabaseModelBuilder, DatabaseModelBuilder>();
         }
 
