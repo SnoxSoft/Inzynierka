@@ -35,6 +35,8 @@ const pageNameRequests = appName + ": Wnioski pracowników";
 const pageNameNotifications = appName + ": Powiadomienia";
 const pageSkillPicker = appName + ": Wybór umiejętności";
 
+const pagePasswordEdit = appName + ": Edycja hasła";
+
 
 // Strona powitalna, logowanie
 const welcomeMessage = "Witaj, zaloguj się";
@@ -199,6 +201,7 @@ const alertUnexpectedError = "Wystapił nieoczekiwany błąd, spróbuj ponownie 
 const alertPutNewPasswords = "Wpisz nowe hasła w pola";
 const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
 const alertOldPasswordIsIncompatible = "Wpisane stare hasło jest błędne";
+const alertOldPasswordIsMissing = "Wpisz stare hasło";
 
 export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
@@ -208,7 +211,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     pageNameRemind, pageNameEmployeeRegister, pageNameGiveGradesWindowGive, pageNameGiveGradesWindowView, pageNameTeamEdit, pageNameTeamCreate,
     pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
     pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
-    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker,
+    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker, pagePasswordEdit,
 
     calendarLabelFrom, calendarLabelTo,
     labelRequest, labelShowProfile, alertCantGoFurther,
@@ -253,6 +256,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     alertPutNewPasswords,
     alertNewPasswordsAreIncompatible,
     alertOldPasswordIsIncompatible,
+    alertOldPasswordIsMissing,
 
     labelReceivedGrades, labelGivenGrades, labelQuarter,
 

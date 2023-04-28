@@ -19,8 +19,6 @@ function SkillPicker({parent, loadedAllSkills, skillsData, setSkillsData,
                          actionSetTrue = undefined, actionSetFalse}) {
     document.title = pageSkillPicker;
 
-    console.log(loadedAllSkills)
-
     const saveSkills = () => {
         const element = document.getElementById('skills-edit');
         const elements = element.getElementsByTagName("div");

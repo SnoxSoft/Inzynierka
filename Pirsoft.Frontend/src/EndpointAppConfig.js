@@ -36,6 +36,9 @@ const endpointGetVerifyCode = "verifyCode";
 // Zmiana hasła po potwierdzeniu kodu weryfikacyjnego
 const endpointPostChangePassword = "changePassword";
 
+// Edycja hasła pracownika w profilu
+const endpointEmployeeChangePassword = "changePassword"
+
 
 
 // Logowanie sie //
@@ -119,7 +122,7 @@ export {
 
     endpointGetRequestApprovers,
 
-    endpointPostSendVerifyCode, endpointGetVerifyCode, endpointPostChangePassword,
+    endpointPostSendVerifyCode, endpointGetVerifyCode, endpointPostChangePassword, endpointEmployeeChangePassword,
 
     endpointGetLogIn,
 
