@@ -1,5 +1,4 @@
 import ProfilePicture from "../../components/employee/fields/ProfilePicture";
-
 import SkillsList from "../../components/employee/fields/SkillsList";
 import {useEffect, useState} from "react";
 import React from "react";
@@ -33,19 +32,18 @@ import {
     labelGiveNewPassword,
     labelGiveNewPasswordAgain,
     labelGiveOldPassword,
-    labelPassword, labelPESEL,
+    labelPESEL,
     labelPick,
     labelPosition, labelPositionLevel,
     labelRequest, labelSalary,
     labelSave,
     labelStartDate,
-    lastnameLabel, pageNameEmployeeData, pageNameEmployeeRegister, pageNameEmployeeView, serverIp,
-    skillsLabel
+    lastnameLabel, pageNameEmployeeData, pageNameEmployeeRegister, pageNameEmployeeView, serverIp
 } from "../../GlobalAppConfig";
-import {endpointGetAllSkills, endpointGetAvailableQuartets} from "../../EndpointAppConfig";
-import {HiPlus} from "react-icons/hi";
+import {endpointGetAllSkills} from "../../EndpointAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
+import SkillPicker from "../SkillPicker";
 function EmployeeComponent({id, mode, employee}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -54,6 +52,9 @@ function EmployeeComponent({id, mode, employee}){
         document.title = pageNameEmployeeData;
     }
     else document.title = pageNameEmployeeView;
+
+    console.log("dane pracownika")
+    console.log(employee)
 
     // Możliwe rodzaje parametru mode:
     // create - do tworzenia
@@ -69,10 +70,17 @@ function EmployeeComponent({id, mode, employee}){
     // Uprawnienia edycji oraz przeglądania danych konta pracownika według zalogowanego konta
     sessionStorage.setItem("PRIVILEDGE", 'UNAUTHORIED')
 
-    // Do pokazania danych pracownika
+    // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
+    let disableData = sessionStorage.getItem('USER') !== id && mode !== 'create'
+
+    // Do pokazania/ukrycia danych pracownika
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
+    // Do pokazania/ukrycia okna do wyboru umiejętności
     const [showSkillsFrame, setShowSkillsFrame] = useState(false);
+    // Do pokazania/ukrycia okna do zmiany hasła
     const [showPasswordChangeFrame, setShowPasswordChangeFrame] = useState(false);
+    // Do pokazania/Ukrycia okna do wystawiania wniosku urlopowego
+    const [showAddEmployeeAnAbsence, setShowAddEmployeeAnAbsence] = useState(false)
 
     // Dane pracownika
     const[firstName, setFirstName] = useState(employee !== undefined && employee !== null ? employee.first_name : '');
@@ -94,19 +102,19 @@ function EmployeeComponent({id, mode, employee}){
     useEffect(() => {
         if(employee !== undefined && employee !== null && id !== '-1'){
             setFirstName(employee.first_name);
-            setLastName(employee.lastname);
-            setEmail(employee.email);
-            setBank(employee.bank);
-            setBirth(employee.birth);
+            setLastName(employee.last_name);
+            setEmail(employee.email_address);
+            setBank(employee.bank_account_number);
+            setBirth(employee.birth_date);
             setPesel(employee.pesel);
-            setSalary(employee.salary);
-            setContract(employee.contract);
-            setPosition(employee.position);
-            setStart(employee.start);
+            setSalary(employee.salary_gross);
+            setContract(employee.employee_contract_type_id);
+            setPosition(employee.employee_company_role_id);
+            setPositionLevel(employee.employee_seniority_level_id);
+            setStart(employee.employment_start_date);
 
             setAvatarData(employee.avatar);
             setSkillsData(employee.skills);
-
         }
         else {
             setFirstName('');
@@ -118,6 +126,7 @@ function EmployeeComponent({id, mode, employee}){
             setSalary('');
             setContract('');
             setPosition('');
+            setPositionLevel('');
             setStart('');
 
             setAvatarData(undefined);
@@ -126,6 +135,26 @@ function EmployeeComponent({id, mode, employee}){
         setEmployeeDataShow(true)
 
     }, [id]);
+
+    useEffect(() => {
+        if(employee !== undefined && employee !== null && id !== '-1'){
+            setFirstName(firstName);
+            setLastName(lastName);
+            setEmail(email);
+            setBank(bank);
+            setBirth(birth);
+            setPesel(pesel);
+            setSalary(salary);
+            setContract(contract);
+            setPosition(position);
+            setPositionLevel(positionLevel);
+            setStart(start);
+
+            setAvatarData(avatarData);
+            setSkillsData(skillsData);
+        }
+
+    }, [employeeDataShow]);
 
     const saveEmployee = () => {
         console.log(
@@ -140,6 +169,7 @@ function EmployeeComponent({id, mode, employee}){
             salary + ", \n" +
             contract + ", \n" +
             position + ", \n" +
+            positionLevel + ", \n" +
             start + " \n \n" +
             " skills: \n" +
             skillsData +
@@ -148,92 +178,10 @@ function EmployeeComponent({id, mode, employee}){
         )
     }
 
-    const saveSkills = () => {
-        const element = document.getElementById('skills-edit');
-        const elements = element.getElementsByTagName("div");
-
-        let skillsList = [];
-        try {
-            for(const ele in elements){
-                const p = elements[ele].getElementsByTagName("p")[0];
-                const input = elements[ele].getElementsByTagName("input")[0];
-
-                if(p !== undefined && input !== undefined && input.checked){
-                    skillsList.push(p.textContent+"");
-                }
-            }
-        }catch (e) {
-        }
-        const myObjStr = JSON.stringify(skillsList);
-
-        setSkillsData(skillsList)
-        setEmployeeDataShow(true)
-        setShowSkillsFrame(false)
-    }
-
-    // Komponent do pokazywania umiejętności pod awatarem
-    const [skillsComponent, setSkillsComponent] = useState(<></>);
-
     const setNewPasswordFunction = () => {
         setEmployeeDataShow(false);
         setShowPasswordChangeFrame(true)
     }
-
-    async function loadAllSkills(){
-        let allSkillsLoad = []
-        const response = await fetch(serverIp + "/" + endpointGetAllSkills)
-        const skills = await response.json();
-
-        skills.forEach((s) => {
-            allSkillsLoad.push(s)
-        })
-
-        return allSkillsLoad;
-    }
-
-    // Zmiana umiejętności
-    const setSkills = async () => {
-        setSkillsComponent(<></>)
-
-        // Ładowanie z endpointu
-        let allSkills = await loadAllSkills();
-
-        let detailsOne = []
-
-        let skillId = 0;
-        allSkills.map((skill) => {
-            let hasSkill = false;
-
-
-            for (const property in skillsData) {
-                if (skill.skill_name.includes(skillsData[property])) {
-                    hasSkill = true;
-                }
-            }
-
-            detailsOne.push(
-                <>
-                    <div id={"employee-skill-list-item-" + skillId} key={"skill" + skill.skill_id}
-                         className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
-                        <p>{skill.skill_name}</p>
-                        <input
-                            id={"employee-skill-list-item-" + skillId + "-checkbox"}
-                            className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
-                    </div>
-                    <hr />
-                </>
-            );
-            skillId++;
-        });
-
-        setSkillsComponent(detailsOne)
-        setEmployeeDataShow(false);
-        setShowSkillsFrame(true)
-    }
-
-    // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
-    let disableData = sessionStorage.getItem('USER') !== id && mode !== 'create'
-
 
     // Poniżej znajdą się wszystkie dane i funkcje dla okienka zmiany hasła w danych pracownika
     const [oldPassword, setOldPassword] = useState();
@@ -279,7 +227,20 @@ function EmployeeComponent({id, mode, employee}){
         }
     }
 
-    const [showAddEmployeeAnAbsence, setShowAddEmployeeAnAbsence] = useState(false)
+    // Ładowanie umiejętności dla okna wyboru umiejętności
+    const [loadedAllSkills, setLoadedAllSkills] = useState([])
+    async function loadAllSkills(){
+        setLoadedAllSkills([])
+        let allSkillsLoad = []
+        const response = await fetch(serverIp + "/" + endpointGetAllSkills)
+        const skills = await response.json();
+
+        skills.forEach((s) => {
+            allSkillsLoad.push(s)
+        })
+
+        setLoadedAllSkills(allSkillsLoad)
+    }
 
     return(
         <>
@@ -356,8 +317,12 @@ function EmployeeComponent({id, mode, employee}){
                         {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' && sessionStorage.getItem('USER') === id || mode === 'create' ?
                             <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
-                                            onClick={ () => setSkills()}/>
-                            :
+                                onClick={ () => {
+                                    loadAllSkills().then(r => {
+                                        setEmployeeDataShow(false);
+                                        setShowSkillsFrame(true)
+                                    })
+                                }}/> :
                             <></>}
                     </div>
                 </div>
@@ -402,21 +367,12 @@ function EmployeeComponent({id, mode, employee}){
         :
             <>
                 {showSkillsFrame ?
-                    <div id={"skills"}
-                         className={"every-page-on-scroll grid grid-cols-1 bg-blue-menu text-workday text-center hover:cursor-default"}
-                         style={{minWidth: 800}}>
-
-                        <div id={"skills-edit"} className={"flex flex-col justify-evenly"}>
-                            <div>{skillsLabel}</div>
-                            {skillsComponent}
-                            <div className={"p-4 flex flex-row justify-evenly"}>
-                                <ReusableButton id={"employee-skills-approve"}
-                                        value={labelApprove} onClick={() => saveSkills()}/>
-                                <ReusableButton id={"employee-skills-close"}
-                                        value={labelClose} onClick={() => {setEmployeeDataShow(true); setShowSkillsFrame(false)}}/>
-                            </div>
-                        </div>
-                    </div> :
+                    <SkillPicker parent={"employee"}
+                                 loadedAllSkills={loadedAllSkills}
+                                 skillsData={skillsData}
+                                 setSkillsData={setSkillsData}
+                                 actionSetTrue={setEmployeeDataShow}
+                                 actionSetFalse={setShowSkillsFrame} /> :
                     <></>}
 
                 {showPasswordChangeFrame ?

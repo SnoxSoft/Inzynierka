@@ -16,6 +16,7 @@ import {
     skillsLabel
 } from "../GlobalAppConfig";
 import {endpointGetAllEmployees, endpointGetAllSkills} from "../EndpointAppConfig";
+import SkillPicker from "./SkillPicker";
 
 const EmployeesFinder = ({
                                    mode, title, setTitle, setEmployeesFinderShowing,
@@ -43,24 +44,24 @@ const EmployeesFinder = ({
 
     const [swapOption, setSwapOption] = useState(false)
 
-    async function loadAllSkills(){
-        let allSkillsLoad = []
-        const response = await fetch(serverIp + "/" + endpointGetAllSkills)
-        const skills = await response.json();
+    // async function loadAllSkills(){
+    //     let allSkillsLoad = []
+    //     const response = await fetch(serverIp + "/" + endpointGetAllSkills)
+    //     const skills = await response.json();
+    //
+    //     skills.forEach((s) => {
+    //         allSkillsLoad.push(s)
+    //     })
+    //
+    //     return allSkillsLoad;
+    // }
 
-        skills.forEach((s) => {
-            allSkillsLoad.push(s)
-        })
-
-        return allSkillsLoad;
-    }
-
-    if(skillsLoaded === false){
-        loadAllSkills().then((result)=>{
-            pickSkills(result)
-            setSkillsLoaded(true)
-        });
-    }
+    // if(skillsLoaded === false){
+    //     loadAllSkills().then((result)=>{
+    //         pickSkills(result)
+    //         setSkillsLoaded(true)
+    //     });
+    // }
 
     const [employeePickerData, setEmployeePickerData] = useState()
     const [employeePickerDataLoad, setEmployeePickedDataLoad] = useState([])
@@ -158,65 +159,80 @@ const EmployeesFinder = ({
         }
     }
 
-    let loadedSkills = undefined
-    function pickSkills(skills){
-        loadedSkills = skills
-            setSkillsComponent(<></>)
+    // let loadedSkills = undefined
+    // function pickSkills(skills){
+    //     loadedSkills = skills
+    //         setSkillsComponent(<></>)
+    //
+    //         let detailsOne = []
+    //         skills.map((skill, skillId) => {
+    //             let hasSkill = false;
+    //             for (const property in skillsPicked) {
+    //                 if (skill.skill_name.includes(skillsPicked[property])) {
+    //                     hasSkill = true;
+    //                 }
+    //             }
+    //
+    //             detailsOne.push(
+    //                 <div id={"skill"+skillId} key={"skill"+skillId} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
+    //                     <p>{skill.skill_name}</p>
+    //                     <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
+    //                 </div>
+    //             );
+    //         });
+    //
+    //         setSkillsComponent(detailsOne)
+    //         setSkillsNotShows(true)
+    // }
 
-            let detailsOne = []
-            skills.map((skill, skillId) => {
-                let hasSkill = false;
-                for (const property in skillsPicked) {
-                    if (skill.skill_name.includes(skillsPicked[property])) {
-                        hasSkill = true;
-                    }
-                }
+    // function choseSkills(){
+    //     const element = document.getElementById('skills-picker');
+    //     const elements = element.getElementsByTagName("div");
+    //
+    //     let skillsList = [];
+    //
+    //     for(const ele in elements){
+    //         if(elements[ele].id !== undefined && elements[ele].id.includes("skill")) {
+    //             const p = elements[ele].getElementsByTagName("p")[0];
+    //             const input = elements[ele].getElementsByTagName("input")[0];
+    //
+    //             if (p !== undefined && input !== undefined && input.checked) {
+    //                 skillsList.push(p.textContent + "");
+    //             }
+    //         }
+    //     }
+    //
+    //     const myObjStr = JSON.stringify(skillsList);
+    //
+    //     setSkillsPicked(skillsList)
+    //     setSkillsNotShows(true)
+    // }
 
-                detailsOne.push(
-                    <div id={"skill"+skillId} key={"skill"+skillId} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
-                        <p>{skill.skill_name}</p>
-                        <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
-                    </div>
-                );
-            });
+    const [loadedAllSkills, setLoadedAllSkills] = useState([])
+    async function loadAllSkills(){
+        setLoadedAllSkills([])
+        let allSkillsLoad = []
+        const response = await fetch(serverIp + "/" + endpointGetAllSkills)
+        const skills = await response.json();
 
-            setSkillsComponent(detailsOne)
-            setSkillsNotShows(true)
+        skills.forEach((s) => {
+            allSkillsLoad.push(s)
+        })
+
+        setLoadedAllSkills(allSkillsLoad)
     }
 
-    function choseSkills(){
-        const element = document.getElementById('skills-picker');
-        const elements = element.getElementsByTagName("div");
-
-        let skillsList = [];
-
-        for(const ele in elements){
-            if(elements[ele].id !== undefined && elements[ele].id.includes("skill")) {
-                const p = elements[ele].getElementsByTagName("p")[0];
-                const input = elements[ele].getElementsByTagName("input")[0];
-
-                if (p !== undefined && input !== undefined && input.checked) {
-                    skillsList.push(p.textContent + "");
-                }
-            }
-        }
-
-        const myObjStr = JSON.stringify(skillsList);
-
-        setSkillsPicked(skillsList)
-        setSkillsNotShows(true)
-    }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
         FunctionForResize("employee-picker", {setWantedHeightForList});
     }, []);
 
-    useEffect(() => {
-        loadAllSkills().then((result)=>{
-            pickSkills(result)
-        });
-    }, [skillsPicked]);
+    // useEffect(() => {
+    //     loadAllSkills().then((result)=>{
+    //         pickSkills(result)
+    //     });
+    // }, [skillsPicked]);
 
     return (
         <>
@@ -230,8 +246,12 @@ const EmployeesFinder = ({
                                 <FirstnameAndLastname id={"finder-firstname-lastname"} className={""} onChange={setFirstnameAndLastname}/>
                                 {methodToUse !== 'grade' ?
                                     <>
-                                        <SkillsPicker id={"finder-skill-picker"} setSkills={setSkillsPicked} setSkillsNotShows={setSkillsNotShows}/>
-                                        <SkillsList id={"finder-skill-list"} skillList={skillsPicked}/>
+                                        <SkillsPicker id={"finder-skill-picker"}
+                                                      loadAllSkills={loadAllSkills}
+                                                      setSkills={setSkillsPicked}
+                                                      setSkillsNotShows={setSkillsNotShows}/>
+                                        <SkillsList id={"finder-skill-list"}
+                                                    skillList={skillsPicked}/>
                                     </>:
                                     <></>
                                 }
@@ -271,24 +291,11 @@ const EmployeesFinder = ({
                         </div>
                     </div>
                 </div> :
-                <div id={"skills-finder"}
-                     className={"every-page-on-scroll grid grid-cols-1"}
-                     style={{minWidth: 800}}
-                >
-                    <div id={"skills-picker"} className={"flex flex-col justify-evenly text-workday text-center p-4"}>
-                        <div>{skillsLabel}</div>
-                        {skillsComponent}
-                        <br/>
-                        <div className={"p-4 flex flex-row justify-evenly"}>
-                            <ReusableButton
-                                id={"finder-skills-approve"}
-                                value={labelApprove} onClick={() => choseSkills()}/>
-                            <ReusableButton
-                                id={"finder-skills-close"}
-                                value={labelClose} onClick={() => {setSkillsNotShows(true)}}/>
-                        </div>
-                    </div>
-                </div>
+                <SkillPicker parent={"finder"}
+                             loadedAllSkills={loadedAllSkills}
+                             skillsData={skillsPicked}
+                             setSkillsData={setSkillsPicked}
+                             actionSetTrue={setSkillsNotShows} />
             }
         </>
     )
