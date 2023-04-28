@@ -32,9 +32,8 @@ const pageNameGiveGradesWindowView = appName + ": Ocena pracownika";
 const pageNameGiveGradesWindowGive = appName + ": Ocenianie pracownika";
 const pageNameRequest = appName + ": Wniosek";
 const pageNameRequests = appName + ": Wnioski pracowników";
-
 const pageNameNotifications = appName + ": Powiadomienia";
-
+const pageSkillPicker = appName + ": Wybór umiejętności";
 
 
 // Strona powitalna, logowanie
@@ -209,7 +208,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     pageNameRemind, pageNameEmployeeRegister, pageNameGiveGradesWindowGive, pageNameGiveGradesWindowView, pageNameTeamEdit, pageNameTeamCreate,
     pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
     pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
-    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications,
+    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker,
 
     calendarLabelFrom, calendarLabelTo,
     labelRequest, labelShowProfile, alertCantGoFurther,
