@@ -24,8 +24,8 @@ function SkillPicker({parent, loadedAllSkills, skillsData, setSkillsData,
         const elements = element.getElementsByTagName("div");
 
         let skillsList = [];
-        try {
-            for (const ele in elements) {
+        for (const ele in elements) {
+            if(elements[ele].tagName  === 'DIV'){
                 const p = elements[ele].getElementsByTagName("p")[0];
                 const input = elements[ele].getElementsByTagName("input")[0];
 
@@ -33,8 +33,8 @@ function SkillPicker({parent, loadedAllSkills, skillsData, setSkillsData,
                     skillsList.push(p.textContent + "");
                 }
             }
-        } catch (e) {
         }
+
         const myObjStr = JSON.stringify(skillsList);
 
         setSkillsData(skillsList)
