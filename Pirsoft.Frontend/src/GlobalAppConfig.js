@@ -34,8 +34,8 @@ const pageNameRequest = appName + ": Wniosek";
 const pageNameRequests = appName + ": Wnioski pracowników";
 const pageNameNotifications = appName + ": Powiadomienia";
 const pageSkillPicker = appName + ": Wybór umiejętności";
-
 const pagePasswordEdit = appName + ": Edycja hasła";
+const pagePasswordChange = appName + ": Zmiana hasła";
 
 
 // Strona powitalna, logowanie
@@ -171,7 +171,7 @@ const labelVerificationCode = "Kod weryfikacyjny";
 const labelGiveOldPassword = "Podaj stare hasło";
 const labelGiveNewPassword = "Podaj nowe hasło";
 const labelGiveNewPasswordAgain = "Powtórz nowe hasło";
-const labelSendVerificationEmail = "Wyślij email weryfikacyjny";
+const labelSendVerificationEmail = "Wyślij email do zmiany hasła";
 const headerPasswordChange = "Zmiana hasła";
 
 const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
@@ -195,7 +195,7 @@ const labelNotifications = "Powiadomienia";
 
 // Wiadomości informacyjne w oknie przypominania hasła
 const alertMessageSent = "Wiadomość została wysłana";
-const alertVerficationCodeIsIncompatible = "Kod weryfikacyjny jest niezgodny";
+const alertPasswordChanged = "Hasło zostało zmienione. \nZa chwilę nastąpi przekierowanie";
 const alertWrongEmail = "Wprowadzony email jest błędny";
 const alertUnexpectedError = "Wystapił nieoczekiwany błąd, spróbuj ponownie za chwilę";
 const alertPutNewPasswords = "Wpisz nowe hasła w pola";
@@ -212,6 +212,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
     pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
     pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker, pagePasswordEdit,
+    pagePasswordChange,
 
     calendarLabelFrom, calendarLabelTo,
     labelRequest, labelShowProfile, alertCantGoFurther,
@@ -250,7 +251,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     labelVerificationCode, labelGiveNewPassword, labelGiveNewPasswordAgain, labelGiveOldPassword, headerPasswordChange,
 
     alertMessageSent,
-    alertVerficationCodeIsIncompatible,
+    alertPasswordChanged,
     alertWrongEmail,
     alertUnexpectedError,
     alertPutNewPasswords,

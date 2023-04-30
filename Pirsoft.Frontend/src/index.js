@@ -7,7 +7,7 @@ import store from "./store/store";
 import Logging from "./pages/Logging";
 import Employees from "./pages/Employees";
 import EmployeePreRender from "./pages/employee/EmployeePreRender";
-import Remind from "./pages/Remind";
+import RemindSendMail from "./pages/RemindSendMail";
 import Schedule from "./pages/Schedule";
 import CompanySchedule from "./pages/CompanySchedule";
 import Teams from "./pages/teams/Teams";
@@ -18,6 +18,7 @@ import TeamCreate from "./pages/teams/TeamCreate";
 import Requests from "./pages/Requests";
 import Grades from "./pages/Grades";
 import Notifications from "./pages/notifications/Notifications";
+import RemindChangePassword from "./pages/RemindChangePassword";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -27,7 +28,8 @@ root.render(
             <Routes>
                 <Route path={"/"} element={<Layout />}>
                     <Route index element={<Logging />}/>
-                    <Route path={"remind"} element={<Remind />}/>
+                    <Route path={"remind"} element={<RemindSendMail />}/>
+                    <Route path={"change-password/:code"} element={<RemindChangePassword />}/>
                     <Route path={"employees"} element={<Employees />}/>
                     <Route path={"schedule"} element={<Schedule />}/>
                     <Route path={"company-schedule"} element={<CompanySchedule />}/>
