@@ -328,6 +328,7 @@ function EmployeeComponent({id, mode, employee}){
 
                 {showPasswordChangeFrame ?
                     <EditPasswordWindow
+                        employee={employee}
                         setEmployeeDataShow={setEmployeeDataShow}
                         setShowPasswordChangeFrame={setShowPasswordChangeFrame}/> :
                     <></>}
