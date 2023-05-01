@@ -6,6 +6,8 @@ namespace Pirsoft.Api.Configurators
     {
         private WebApplication _app = null!;
 
+        public bool CanRun { get; private set; } = false;
+
         public void Init(WebApplicationBuilder builder)
         {
             _app = builder.Build();
@@ -13,7 +15,15 @@ namespace Pirsoft.Api.Configurators
             configureAppBuild();
         }
 
-        public void Run() => _app.Run();
+        public void Run()
+        {
+            if (CanRun == false)
+            {
+                throw new InvalidOperationException("App build failed or was not configured properly.");
+            }
+
+            _app.Run();
+        }
 
         private void configureAppBuild()
         {
@@ -23,11 +33,13 @@ namespace Pirsoft.Api.Configurators
                 _app.UseSwagger();
                 _app.UseSwaggerUI();
             }
-
+            _app.UseCors();
             _app.UseHttpsRedirection();
             _app.UseAuthentication();
             _app.UseAuthorization();
             _app.MapControllers();
+
+            CanRun = true;
         }
     }
 }

@@ -1,17 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.Models;
 
 namespace Pirsoft.Api.Controllers;
 
 [ApiController]
-public class ContractTypeController
+public class ContractTypeController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     
     public ContractTypeController(ICrudHandler crudHandler) => _crudHandler = crudHandler;
-    
+
     [HttpGet("/get/contracts")]
-    public IEnumerable<ContractTypeModel> GetListOfAllContracts() =>
-        _crudHandler.ReadAll<ContractTypeModel>().OrderBy(contractType => contractType.contract_id);
+    public async Task<IEnumerable<ContractTypeModel>> GetListOfAllContracts()
+    {
+        var query = await _crudHandler.ReadAllAsync<ContractTypeModel>();
+        return await query.OrderBy(contractTypeModel => contractTypeModel.contract_id).ToListAsync();
+    }
 }

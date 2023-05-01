@@ -9,16 +9,15 @@ function Legend({bigLegend = false, id}){
         {color: "bg-sick", text: "Dzień chorobowy", bigLegend: true},
         {color: "bg-weekend", text: "Weekend"},
         {color: "bg-absent", text: "Nieobecność"}
-
     ]
 
     let legendComponent = []
 
-    legendItem.forEach((l) => {
+    legendItem.forEach((l, lId) => {
         if(l.bigLegend === undefined ||
         l.bigLegend === bigLegend) {
             legendComponent.push(
-                <div className={"flex flex-row gap-1"}>
+                <div key={"legend-item-" + lId} className={"flex flex-row gap-1"}>
                     <div className={"h-6 w-6 " + l.color + " rounded-md border-2"}></div>
                     <div>{l.text}</div>
                 </div>

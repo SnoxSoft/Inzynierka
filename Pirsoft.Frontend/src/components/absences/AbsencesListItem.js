@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 import {labelDelete, labelFromTimeOfAbsence} from "../../GlobalAppConfig";
 
-const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absencesStatus, absencesColors, id}) => {
+const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absencesStatus, id}) => {
 
     const [showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -18,8 +18,6 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
         // Przeładowanie dni wolnych
     }
 
-    const [absenceColor, setAbsenceColor] = useState("")
-
     const [absenceType, setAbsenceType] = useState("")
     if (absenceType === "" && absencesTypes !== undefined) {
         absencesTypes.map((item) => {
@@ -34,13 +32,6 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
         absencesStatus.map((item) => {
             if (employeeAbsence.state === item.key) {
                 setAbsenceStatus(item.value)
-                if(absenceColor === "" && absencesColors !== undefined) {
-                    absencesColors.map((itemColor) => {
-                        if (item.key === itemColor.type) {
-                            setAbsenceColor(itemColor.color)
-                        }
-                    })
-                }
             }
         })
     }
@@ -51,7 +42,7 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
             <div className={"p-2 flex rounded-md basis-8/12"}>
                 {labelFromTimeOfAbsence} {employeeAbsence.from} - {employeeAbsence.to}, {absenceType}
             </div>
-            <div className={"flex basis-1/12 place-content-center rounded-md " + (!old && absenceColor )}>
+            <div className={"flex basis-1/12 place-content-center rounded-md "}>
                 {absenceStatus}
             </div>
             <div className={"flex justify-evenly basis-3/12"}>

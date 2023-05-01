@@ -1,6 +1,8 @@
 
 // Adres ip aplikacji
-const serverIp = "http://127.0.0.1:3001";//localhost:7120
+const serverIp = "http://127.0.0.1:3001";
+
+const serverIpProd = "http://127.0.0.1:3001";//https://localhost:7120";
 
 // Nazwa aplikacji
 const appName = "PIRSOFT";
@@ -30,16 +32,20 @@ const pageNameGiveGradesWindowView = appName + ": Ocena pracownika";
 const pageNameGiveGradesWindowGive = appName + ": Ocenianie pracownika";
 const pageNameRequest = appName + ": Wniosek";
 const pageNameRequests = appName + ": Wnioski pracowników";
-
 const pageNameNotifications = appName + ": Powiadomienia";
+const pageSkillPicker = appName + ": Wybór umiejętności";
 
+const pagePasswordEdit = appName + ": Edycja hasła";
 
 
 // Strona powitalna, logowanie
 const welcomeMessage = "Witaj, zaloguj się";
 const welcomeMessageShort = "Witaj, ";
 const labelEmail = "E-mail";
+
 const labelPassword = "Hasło";
+
+const labelChangePassword = "Zmień hasło";
 
 // Nazwa wyświetlająca się jak nie ma awataru
 const avatarAlterText = "Moje konto";
@@ -74,6 +80,10 @@ const labelSave = "Zapisz";
 // Rekordy uzupełniające listy
 const teamAdditionalRow = "Wybierz zespół...";
 const positionAdditionalRow = "Wybierz stanowisko...";
+const positionLevelAdditionalRow = "Wybierz poziom stanowiska...";
+
+const contractAdditionalRow = "Wybierz rodzaj umowy...";
+
 const yearAdditionalRow = "Wybierz rok...";
 
 // Wybieranie wniosku urlopowego komponenty
@@ -84,6 +94,8 @@ const labelRequest = "Wniosek";
 const labelFromTimeOfAbsence = "W terminie";
 const labelFromTimeOfRequest = "w terminie";
 const labelShowProfile = "Pokaż profil";
+
+const alertCantGoFurther = "Nie możesz przejść poza zakres...";
 
 // Nazwy dotyczące komponentu kalendarza
 const calendarLabelFrom = "Od:";
@@ -97,6 +109,7 @@ const gradeMessageLabel = "Treść";
 const gradeTitleLabel = "Tytuł";
 const gradePersonLabel = "Osoba";
 const employeeGradeText = "Ocena pracownika:";
+const employeeGradedText = "Ocenił pracownik:";
 
 // Filtr wniosków urlopowych
 const firstnameLabel = "Imie";
@@ -133,6 +146,8 @@ const labelPESEL = " PESEL";
 const labelSalary = "Wynagrodzenie brutto";
 const labelContractType = "Typ umowy";
 const labelPosition = "Stanowisko";
+
+const labelPositionLevel = "Poziom stanowiska";
 const labelStartDate = "Rozpoczęcie pracy";
 
 
@@ -186,8 +201,9 @@ const alertUnexpectedError = "Wystapił nieoczekiwany błąd, spróbuj ponownie 
 const alertPutNewPasswords = "Wpisz nowe hasła w pola";
 const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
 const alertOldPasswordIsIncompatible = "Wpisane stare hasło jest błędne";
+const alertOldPasswordIsMissing = "Wpisz stare hasło";
 
-export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelSave, labelCreate,
+export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
 
     labelNotifications,
@@ -195,12 +211,12 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     pageNameRemind, pageNameEmployeeRegister, pageNameGiveGradesWindowGive, pageNameGiveGradesWindowView, pageNameTeamEdit, pageNameTeamCreate,
     pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
     pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
-    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications,
+    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker, pagePasswordEdit,
 
     calendarLabelFrom, calendarLabelTo,
-    labelRequest, labelShowProfile,
+    labelRequest, labelShowProfile, alertCantGoFurther,
     labelFromTimeOfAbsence, labelFromTimeOfRequest,
-    teamAdditionalRow, positionAdditionalRow, yearAdditionalRow,
+    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow,
     employeesMenu,
     employeeRegisterMenu,
     scheduleMenu,
@@ -211,10 +227,10 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     gradesMenu,
     gradeMenu,
 
-    labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition,labelBankAccount,labelContractType,
+    labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition, labelPositionLevel,labelBankAccount,labelContractType,
 
     skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
-    employeeGradeText,
+    employeeGradeText, employeeGradedText,
     firstnameLabel, lastnameLabel, teamLabel,
     requestStatusWaitingLabel,
     requestStatusApprovedLabel,
@@ -240,6 +256,7 @@ export {serverIp, appName, avatarAlterText, welcomeMessage, welcomeMessageShort,
     alertPutNewPasswords,
     alertNewPasswordsAreIncompatible,
     alertOldPasswordIsIncompatible,
+    alertOldPasswordIsMissing,
 
     labelReceivedGrades, labelGivenGrades, labelQuarter,
 

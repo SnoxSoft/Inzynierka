@@ -1,7 +1,7 @@
 // Opis endpointów
 
 // Dane pracownika //
-const endpointGetEmployeeData = "employee";
+const endpointGetEmployeeData = "get/employee";
 
 
 // Listy wniosków urlopowych //
@@ -11,14 +11,8 @@ const endpointGetEmployeesRequests = "getEmployeesRequests";
 
 // Zwraca wszystkie rodzaje statusów wniosków urlopowych
 const endpointGetRequestsStatuses = "getRequestsStatus";
-const endpointGetAbsencesStatuses = "getAbsencesStatus";
-
-// Zwraca kolory przypisane do statusów wniosków urlopowych
-const endpointGetRequestsColors = "getRequestsColors";
-const endpointGetAbsencesColors = "getAbsencesColors";
 
 // Zwraca rodzaje dni nieobecności / wniosków urlopowych
-const endpointGetRequestsTypes = "getRequestsTypes";
 const endpointGetAbsencesTypes = "getAbsencesTypes";
 
 // Wystawianie wniosku urlopowego //
@@ -42,6 +36,9 @@ const endpointGetVerifyCode = "verifyCode";
 // Zmiana hasła po potwierdzeniu kodu weryfikacyjnego
 const endpointPostChangePassword = "changePassword";
 
+// Edycja hasła pracownika w profilu
+const endpointEmployeeChangePassword = "changePassword"
+
 
 
 // Logowanie sie //
@@ -64,17 +61,14 @@ const endpointGetAllCompanyMonthDaysOff = "allCompanyMonthDays";
 // Umiejętności pracownika //
 
 // Zwraca listę wszystkich umiejętności istniejących w firmie
-const endpointGetAllSkills = "getAllSkills";
+const endpointGetAllSkills = "get/skills";
 
 
 
 // Szukacze list pracowników
 
-// Szukacz pracowników do wybierania dla zespołów i ocen kwartalnych
-const endpointGetAllEmployeesForFinder = "getAllEmployeesForPicked"
-
 // Wyszukanie całej listy pracowników w firmie
-const endpointGetAllEmployees = "getAllEmployees";
+const endpointGetAllEmployees = "get/employees";
 
 // Wyszukanie listy pracowników według wybranego filtra
 const endpointGetEmployees = "getEmployees";
@@ -84,16 +78,19 @@ const endpointGetEmployees = "getEmployees";
 // Lista zespołów //
 
 // Zwraca listę wszystkich zespołów w firmie
-const endpointGetAllTeams = "getAllTeams";
+const endpointGetAllTeams = "get/departments";
 
 // Zwraca pełne informacje na temat wybranego zespołu
-const endpointGetTeamData = "getTeamData";
+const endpointGetTeamData = "get/department";
 
 // Zwraca listę wszystkich rodzai zatrudnień w firmie
-const endpointGetAllPositions = "getAllPositions";
+const endpointGetAllPositions = "get/company/roles";
+// Zwraca listę umów
+const endpointGetAllContracts = "get/contracts";
 
 
-
+//Zwraca listę wszystkich poziomów zatrudnień
+const endpointGetAllPositionsLevels = "get/seniority/levels";
 
 // Oceny kwartalne //
 
@@ -120,21 +117,20 @@ const endpointDeleteNotification = "deleteNotification";
 
 export {
     endpointGetEmployeesRequests, endpointGetRequestsStatuses,
-    endpointGetRequestsColors, endpointGetRequestsTypes,
-    endpointGetEmployeeAbsences, endpointGetAbsencesStatuses,
-    endpointGetAbsencesColors, endpointGetAbsencesTypes,
+    endpointGetEmployeeAbsences,
+    endpointGetAbsencesTypes,
 
     endpointGetRequestApprovers,
 
-    endpointPostSendVerifyCode, endpointGetVerifyCode, endpointPostChangePassword,
+    endpointPostSendVerifyCode, endpointGetVerifyCode, endpointPostChangePassword, endpointEmployeeChangePassword,
 
     endpointGetLogIn,
 
     endpointGetEmployeeMonthDaysOff, endpointGetAllCompanyMonthDaysOff,
 
-    endpointGetAllSkills, endpointGetAllPositions,
+    endpointGetAllSkills, endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllContracts,
 
-    endpointGetAllEmployeesForFinder, endpointGetAllEmployees, endpointGetEmployees,
+    endpointGetAllEmployees, endpointGetEmployees,
 
     endpointGetAllTeams, endpointGetTeamData,
 

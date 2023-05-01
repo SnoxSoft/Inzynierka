@@ -27,7 +27,7 @@ function CompanySchedule(){
         fetch(serverIp + "/" + endpointGetAllTeams)
             .then((response) => response.json())
             .then((response) => {
-                response.sort(FunctionForSortingJson("value", "ascending"))
+                response.sort(FunctionForSortingJson("department_id", "ascending"))
                 setTeams(response)
                 setTeamsLoaded(true)
             })
@@ -60,7 +60,7 @@ function CompanySchedule(){
         fetch(serverIp + "/" + endpointGetAllEmployees)
             .then((response) => response.json())
             .then((response) => {
-                response.sort(FunctionForSortingJson("lastname", "ascending"))
+                response.sort(FunctionForSortingJson("last_name", "ascending"))
                 setEmployees(response)
                 setEmployeesLoaded(true)
             })
@@ -155,8 +155,11 @@ function CompanySchedule(){
             colDayOfWeek = colDayOfWeek + 1
         });
 
+        console.clear()
+
         let row = 1
         teams.forEach((team, id) => {
+            console.log("ładuje na nowo")
             // dodanie zespołów
             row = row + 1
             allTeamsLoad.push(
@@ -271,7 +274,7 @@ function CompanySchedule(){
                              // maxWidth: wantedWidthForList,
                              // width: wantedWidthForList,
                              minWidth: 800}}
-                         className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" p-2 gap-2 content-start"}>
+                         className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" gap-y-4 content-start"}>
                         {allTeams}
                     </div>
                 </div>

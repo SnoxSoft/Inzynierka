@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
+import {BsPersonCircle} from "react-icons/bs";
 
 const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, setPickedEmployeeData, methodToUse, id}) => {
     let skillList = []
     employee.skills.forEach((s) => {
-        skillList.push(<div>{s}</div>)
+        skillList.push(<div>{s.skill_name}</div>)
     })
 
     function pickedEmployeesAction(e, employee){
@@ -12,10 +13,10 @@ const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, se
 
         if(pickOneOrMore){
             if(methodToUse === 'leader'){
-                setPickedEmployeeData({id: employee.id, firstandlastname: employee.firstname + ' ' + employee.lastname})
+                setPickedEmployeeData({employee_id: employee.employee_id, first_name: employee.first_name, last_name: employee.last_name})
             }
             if(methodToUse === 'employee' || methodToUse === 'grade'){
-                setPickedEmployeeData({id: employee.id, firstandlastname: employee.firstname + ' ' + employee.lastname, skills: employee.skills})
+                setPickedEmployeeData({employee_id: employee.employee_id, first_name: employee.first_name, last_name: employee.last_name, skills: employee.skills})
             }
         }
         else {
@@ -23,20 +24,19 @@ const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, se
             // if picked true then adding to list
             if(e){
                 pickedEmployeeDataCopy.push(
-                    {id: employee.id, firstandlastname: employee.firstname + ' ' + employee.lastname, skills: employee.skills}
+                    {employee_id: employee.employee_id, first_name: employee.first_name, last_name: employee.last_name, skills: employee.skills}
                 )
                 setPickedEmployeeData(pickedEmployeeDataCopy)
             }else{
                 // if unpicked then delete from list
                 let newListOfPickedEmployee = []
                 pickedEmployeeDataCopy.forEach((e) => {
-                    if(employee.id !== e.id){
-                        newListOfPickedEmployee.push({id: e.id, firstandlastname: e.firstandlastname,
+                    if(employee.employee_id !== e.employee_id){
+                        newListOfPickedEmployee.push({employee_id: e.employee_id, first_name: employee.first_name, last_name: employee.last_name,
                             skills: e.skills}
                         )
                     }
                 })
-
                 setPickedEmployeeData(newListOfPickedEmployee)
             }
         }
@@ -54,13 +54,14 @@ const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, se
                     }
                 </div>
                 <div className={"grow-0"}>
-                {employee.avatar ?
-                    <img src={"data:image/png;base64," + employee.avatar} alt="Avatar image cap" className={"w-10 rounded-2xl"}/>
-                    : null}
+                {/*{employee.avatar ?*/}
+                {/*    <img src={"data:image/png;base64," + employee.avatar} alt="Avatar image cap" className={"w-10 rounded-2xl"}/>*/}
+                {/*    : null}*/}
+                    <BsPersonCircle fontSize={40}/>
                 </div>
                 <div className={"flex flex-row gap-2 grow items-center place-content-between"}>
                     <div>
-                        {employee.firstname} {employee.lastname}, {employee.team}, {employee.position}
+                        {employee.first_name} {employee.last_name}, {employee.employee_department_id}, {employee.employee_company_role_id}
                     </div>
                     <div className={"flex flex-row gap-2 flex-wrap"}>
                         {skillList}

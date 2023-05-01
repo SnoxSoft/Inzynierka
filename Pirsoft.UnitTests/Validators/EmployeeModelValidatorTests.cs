@@ -38,4 +38,28 @@ public class EmployeeModelValidatorTests
     [Test]
     public void EmailAdressIsInvalidWithPlainText() =>
         _sut.IsEmailAddressValid("pjatkedupl").Should().BeFalse();
+
+    [Test]
+    public void PasswordIsValidWithOneOrMoreCapitalLowercaseLetterSpecialCharacterNumber() =>
+        _sut.IsPasswordValid("SommerFerie123$").Should().BeTrue();
+
+    [Test]
+    public void PasswordIsInvalidWithoutCapitalLetter() =>
+        _sut.IsPasswordValid("estoweaslo#1").Should().BeFalse();
+
+    [Test]
+    public void PasswordIsInvalidWithoutLowercaseLetter() =>
+        _sut.IsPasswordValid("MAGICZNEHASLO$1").Should().BeFalse();
+
+    [Test]
+    public void PasswordIsInvalidWithoutSpecialCharacter() =>
+        _sut.IsPasswordValid("SuperHaslo4").Should().BeFalse();
+
+    [Test]
+    public void PasswordIsInvalidWithoutNumber() =>
+        _sut.IsPasswordValid("SuperHaslo$").Should().BeFalse();
+
+    [Test]
+    public void PasswordIsInvalidWhenIsShorterThan14Characters() =>
+        _sut.IsPasswordValid("gD2#").Should().BeFalse();
 }

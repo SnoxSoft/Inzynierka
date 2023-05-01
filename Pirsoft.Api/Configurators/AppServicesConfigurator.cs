@@ -1,9 +1,17 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Pirsoft.Api.DatabaseManagement;
+using Pirsoft.Api.Models;
 using Pirsoft.Api.PatternsAbstraction;
+using Pirsoft.Api.Security.Interfaces;
+using Pirsoft.Api.Security.Managers;
+using Pirsoft.Api.Security.Models;
+using Pirsoft.Api.Security.Services;
 
 namespace Pirsoft.Api.Configurators
 {
@@ -23,17 +31,24 @@ namespace Pirsoft.Api.Configurators
         private void configureServices()
         {
             registerDatabaseContext();
+            SecurityConfigurator.addJwtConfiguration(_builder);
 
-            _builder.Services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(_builder.Configuration.GetSection("AzureAd"));
             _builder.Services
                 .AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             _builder.Services
                 .AddEndpointsApiExplorer();
-            _builder.Services
-                .AddSwaggerGen();
+            _builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+            SwaggerConfigurator.AddSwagger(_builder.Services);
         }
 
         private void registerDatabaseContext()
@@ -50,8 +65,8 @@ namespace Pirsoft.Api.Configurators
 
                 _builder.Services.AddDbContext<DatabaseContext>(
                     options => options.UseMySQL(connectionString),
-                    contextLifetime: ServiceLifetime.Singleton,
-                    optionsLifetime: ServiceLifetime.Singleton);
+                    contextLifetime: ServiceLifetime.Transient,
+                    optionsLifetime: ServiceLifetime.Transient);
 
                 Debug.Print("DbContext registered successfully.");
 

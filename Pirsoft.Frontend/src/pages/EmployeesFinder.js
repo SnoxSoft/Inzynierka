@@ -15,15 +15,17 @@ import {
     serverIp,
     skillsLabel
 } from "../GlobalAppConfig";
-import {endpointGetAllEmployeesForFinder, endpointGetAllSkills} from "../EndpointAppConfig";
+import {endpointGetAllEmployees, endpointGetAllSkills} from "../EndpointAppConfig";
+import SkillPicker from "./SkillPicker";
 
-
-const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
-                             methodToUse, isSwapPossible, idOfCurrentPickedEmployee, multipleChoice,
-                         leaderData, setLeaderData, employeeData, setEmployeeData,
-                             swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee,
-                             setPickedPersonId,
-                             setPickedPersonName}) => {
+const EmployeesFinder = ({
+                                   mode, title, setTitle, setEmployeesFinderShowing,
+                                   methodToUse, isSwapPossible, idOfCurrentPickedEmployee, multipleChoice,
+                                   leaderData, setLeaderData, employeeData, setEmployeeData,
+                                   swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee,
+                                   setPickedPersonId,
+                                   setPickedPersonName
+                               }) => {
 
     document.title = pageNameEmployeesFinder;
 
@@ -31,28 +33,35 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
 
     // Opcje do filtrowania
     const [skillsPicked, setSkillsPicked] = useState([])
-    const[order, setOrder] = useState(true);
-    const[firstnameAndLastname, setFirstnameAndLastname] = useState();
+    const [order, setOrder] = useState(true);
+    const [firstnameAndLastname, setFirstnameAndLastname] = useState();
 
     const [skillsNotShows, setSkillsNotShows] = useState(true)
 
     const [skillsComponent, setSkillsComponent] = useState(<></>)
-    const [skills, setSkills] = useState(Object);
+    //const [skills, setSkills] = useState();
     const [skillsLoaded, setSkillsLoaded] = useState(false)
 
     const [swapOption, setSwapOption] = useState(false)
 
-    if (skills[0] === undefined) {
-        fetch(serverIp + "/" + endpointGetAllSkills)
-            .then((response) => response.json())
-            .then((response) => {
-                setSkills(response)
-                setSkillsLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
+    // async function loadAllSkills(){
+    //     let allSkillsLoad = []
+    //     const response = await fetch(serverIp + "/" + endpointGetAllSkills)
+    //     const skills = await response.json();
+    //
+    //     skills.forEach((s) => {
+    //         allSkillsLoad.push(s)
+    //     })
+    //
+    //     return allSkillsLoad;
+    // }
+
+    // if(skillsLoaded === false){
+    //     loadAllSkills().then((result)=>{
+    //         pickSkills(result)
+    //         setSkillsLoaded(true)
+    //     });
+    // }
 
     const [employeePickerData, setEmployeePickerData] = useState()
     const [employeePickerDataLoad, setEmployeePickedDataLoad] = useState([])
@@ -60,7 +69,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     function loadAllEmployeesByFilter(){
         setEmployeePickerDataLoaded(false)
 
-        fetch(serverIp + "/" + endpointGetAllEmployeesForFinder)
+        fetch(serverIp + "/" + endpointGetAllEmployees)
             .then((response) => response.json())
             .then((response) => {
                 let employeeLoad = []
@@ -88,8 +97,8 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
     function finderAcceptChanges(){
         if(pickedEmployeeData.length !== 0) {
             if(methodToUse === 'grade'){
-                setPickedPersonId(pickedEmployeeData.id)
-                setPickedPersonName(pickedEmployeeData.firstandlastname)
+                setPickedPersonId(pickedEmployeeData.employee_id)
+                setPickedPersonName(pickedEmployeeData.first_name + " " + pickedEmployeeData.last_name)
                 setEmployeesFinderShowing(false)
             }
             if (methodToUse === 'leader') {
@@ -105,7 +114,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                 if (!swapOption) {
                     let employeeDataWithoutCurrentEmployee = []
                     employeeData.forEach((e) => {
-                        if (e.id !== idOfCurrentPickedEmployee) {
+                        if (e.employee_id !== idOfCurrentPickedEmployee) {
                             employeeDataWithoutCurrentEmployee.push(e)
                         }
                     })
@@ -118,7 +127,7 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
 
                     let changedEmployeeDataArray = []
                     employeeData.forEach((e) => {
-                        if (e.id !== idOfCurrentPickedEmployee) {
+                        if (e.employee_id !== idOfCurrentPickedEmployee) {
                             employeeDataWithoutCurrentEmployee.push(e)
                         } else {
                             changedEmployeeDataArray.push(e)
@@ -135,9 +144,8 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                     let swapTeamsBetweenTheseEmployeeTemp = swapTeamsBetweenTheseEmployee
                     swapTeamsBetweenTheseEmployeeTemp.push(createRecordForChangedEmployeeData)
                     swapTeamsBetweenTheseEmployee.forEach((e) => {
-                        if (e.id !== idOfCurrentPickedEmployee) {
+                        if (e.employee_id !== idOfCurrentPickedEmployee) {
                             employeeDataWithoutCurrentEmployee.push(e)
-                        } else {
                         }
                     })
 
@@ -151,66 +159,80 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
         }
     }
 
-    if(skillsLoaded){
-        pickSkills()
-        setSkillsLoaded(false)
+    // let loadedSkills = undefined
+    // function pickSkills(skills){
+    //     loadedSkills = skills
+    //         setSkillsComponent(<></>)
+    //
+    //         let detailsOne = []
+    //         skills.map((skill, skillId) => {
+    //             let hasSkill = false;
+    //             for (const property in skillsPicked) {
+    //                 if (skill.skill_name.includes(skillsPicked[property])) {
+    //                     hasSkill = true;
+    //                 }
+    //             }
+    //
+    //             detailsOne.push(
+    //                 <div id={"skill"+skillId} key={"skill"+skillId} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
+    //                     <p>{skill.skill_name}</p>
+    //                     <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
+    //                 </div>
+    //             );
+    //         });
+    //
+    //         setSkillsComponent(detailsOne)
+    //         setSkillsNotShows(true)
+    // }
+
+    // function choseSkills(){
+    //     const element = document.getElementById('skills-picker');
+    //     const elements = element.getElementsByTagName("div");
+    //
+    //     let skillsList = [];
+    //
+    //     for(const ele in elements){
+    //         if(elements[ele].id !== undefined && elements[ele].id.includes("skill")) {
+    //             const p = elements[ele].getElementsByTagName("p")[0];
+    //             const input = elements[ele].getElementsByTagName("input")[0];
+    //
+    //             if (p !== undefined && input !== undefined && input.checked) {
+    //                 skillsList.push(p.textContent + "");
+    //             }
+    //         }
+    //     }
+    //
+    //     const myObjStr = JSON.stringify(skillsList);
+    //
+    //     setSkillsPicked(skillsList)
+    //     setSkillsNotShows(true)
+    // }
+
+    const [loadedAllSkills, setLoadedAllSkills] = useState([])
+    async function loadAllSkills(){
+        setLoadedAllSkills([])
+        let allSkillsLoad = []
+        const response = await fetch(serverIp + "/" + endpointGetAllSkills)
+        const skills = await response.json();
+
+        skills.forEach((s) => {
+            allSkillsLoad.push(s)
+        })
+
+        setLoadedAllSkills(allSkillsLoad)
     }
-    function pickSkills(){
-            setSkillsComponent(<></>)
 
-            let detailsOne = []
-
-            for(const availableSkill in skills){
-                let hasSkill = false;
-
-                for (const property in skillsPicked) {
-                    if (skills[availableSkill].includes(skillsPicked[property])) {
-                        hasSkill = true;
-                    }
-                }
-
-                detailsOne.push(
-                    <div id={"skill"+availableSkill} key={"skill"+availableSkill} className={"grid grid-cols-2 gap-4 p-4 h-9"}>
-                        <p>{skills[availableSkill]}</p>
-                        <input className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
-                    </div>
-                );
-            }
-            setSkillsComponent(detailsOne)
-            setSkillsNotShows(true)
-    }
-
-    function choseSkills(){
-        const element = document.getElementById('skills-picker');
-        const elements = element.getElementsByTagName("div");
-
-        let skillsList = [];
-
-        for(const ele in elements){
-            if(elements[ele].id !== undefined && elements[ele].id.includes("skill")) {
-                const p = elements[ele].getElementsByTagName("p")[0];
-                const input = elements[ele].getElementsByTagName("input")[0];
-
-                if (p !== undefined && input !== undefined && input.checked) {
-                    skillsList.push(p.textContent + "");
-                }
-            }
-        }
-
-        const myObjStr = JSON.stringify(skillsList);
-
-        setSkillsPicked(skillsList)
-        setSkillsNotShows(true)
-    }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
         FunctionForResize("employee-picker", {setWantedHeightForList});
     }, []);
 
-    useEffect(() => {
-        pickSkills()
-    }, [skillsPicked]);
+    // useEffect(() => {
+    //     loadAllSkills().then((result)=>{
+    //         pickSkills(result)
+    //     });
+    // }, [skillsPicked]);
 
     return (
         <>
@@ -224,8 +246,12 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                                 <FirstnameAndLastname id={"finder-firstname-lastname"} className={""} onChange={setFirstnameAndLastname}/>
                                 {methodToUse !== 'grade' ?
                                     <>
-                                        <SkillsPicker id={"finder-skill-picker"} setSkills={setSkillsPicked} setSkillsNotShows={setSkillsNotShows}/>
-                                        <SkillsList id={"finder-skill-list"} skillList={skillsPicked}/>
+                                        <SkillsPicker id={"finder-skill-picker"}
+                                                      loadAllSkills={loadAllSkills}
+                                                      setSkills={setSkillsPicked}
+                                                      setSkillsNotShows={setSkillsNotShows}/>
+                                        <SkillsList id={"finder-skill-list"}
+                                                    skillList={skillsPicked}/>
                                     </>:
                                     <></>
                                 }
@@ -265,24 +291,11 @@ const EmployeesFinder = ({mode, title, setTitle, setEmployeesFinderShowing,
                         </div>
                     </div>
                 </div> :
-                <div id={"skills-finder"}
-                     className={"every-page-on-scroll grid grid-cols-1"}
-                     style={{minWidth: 800}}
-                >
-                    <div id={"skills-picker"} className={"flex flex-col justify-evenly text-workday text-center p-4"}>
-                        <div>{skillsLabel}</div>
-                        {skillsComponent}
-                        <br/>
-                        <div className={"p-4 flex flex-row justify-evenly"}>
-                            <ReusableButton
-                                id={"finder-skills-approve"}
-                                value={labelApprove} onClick={() => choseSkills()}/>
-                            <ReusableButton
-                                id={"finder-skills-close"}
-                                value={labelClose} onClick={() => {setSkillsNotShows(true)}}/>
-                        </div>
-                    </div>
-                </div>
+                <SkillPicker parent={"finder"}
+                             loadedAllSkills={loadedAllSkills}
+                             skillsData={skillsPicked}
+                             setSkillsData={setSkillsPicked}
+                             actionSetTrue={setSkillsNotShows} />
             }
         </>
     )

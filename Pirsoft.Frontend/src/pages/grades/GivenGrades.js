@@ -68,7 +68,7 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
                     <GradeListItem id={"given-grade-list-item-" + gradeId} grade={i}
                        setGradeMode={setGradeMode}
                        setPickedGradeData={setPickedGradeData}
-                       setGradesVisible={setGradesVisible}/>);
+                       setGradesVisible={setGradesVisible} mode={"given"}/>);
                 gradeId++;
             }
         }

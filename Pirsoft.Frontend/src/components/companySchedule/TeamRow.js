@@ -1,21 +1,21 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {VscTriangleDown,VscTriangleRight} from "react-icons/vsc";
 import EmptyTeamRow from "./EmptyTeamRow";
 import EmployeeRow from "./EmployeeRow";
 
 const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
 
-    const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleDown/>);
-    const [showHideEmployeesSchedule, setShowHideEmployeesSchedule] = useState(false)
+    const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleRight/>);
+    const [showHideEmployeesSchedule, setShowHideEmployeesSchedule] =
+        useState(false)
 
-    function changeVisibilityForTeamData() {
+    function changeVisibilityForPassword() {
         if (changeVisibilityIcon.type === VscTriangleDown) {
-            setChangeVisibilityIcon(<VscTriangleRight />);
-            setShowHideEmployeesSchedule(true);
+            setChangeVisibilityIcon(<VscTriangleRight key={"team-"+id+"-up"}/>);
         } else {
-            setChangeVisibilityIcon(<VscTriangleDown />);
-            setShowHideEmployeesSchedule(false);
+            setChangeVisibilityIcon(<VscTriangleDown key={"team-"+id+"-down"}/>);
         }
+        setShowHideEmployeesSchedule(changeVisibilityIcon.type !== VscTriangleDown)
     }
 
     function appendDay(day, row, col, daysOff, employeeId, dayId) {
@@ -34,7 +34,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
         return <div id={id+"-employee-"+employeeId+"-day-"+dayId}
                     key={id+"-employee-"+employeeId+"-day-"+dayId}
             className={
-                "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-7 h-6 "+color+" rounded-md"}>
+                "row-start-"+row+" col-start-"+col+" text-workday text-center border-workday border-2 w-6 h-6 "+color+" rounded-md"}>
             {/*{day.dayOfMonth}*/}
         </div>
     }
@@ -49,7 +49,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
     });
 
     employees.forEach((employee, employeeId) => {
-        if(employee.team.toString().toUpperCase() === (team.value+'').toString().toUpperCase()){
+        if(employee.employee_department_id === (team.department_id+'')){
             row = row + 1
             allTeamsDataLoad.push(
                 <EmployeeRow id={id+"-employee-"+employeeId} employee={employee} row={row}/>)
@@ -57,7 +57,7 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
             // szukanie dni wolnych danego pracownika
             let daysOffOfThisEmployee = []
             currentMonthDaysOff.forEach((e) => {
-                if(e.employee === employee.id){
+                if(e.employee === employee.employee_id){
                     daysOffOfThisEmployee = e.daysoff
                 }
             })
@@ -77,10 +77,10 @@ const TeamRow = ({team, row, days, employees, currentMonthDaysOff, id}) => {
     return (
         <>
             <div id={id} key={id}
-                    onClick={() => changeVisibilityForTeamData()}
+                    onClick={() => changeVisibilityForPassword()}
                     className={"hover:cursor-pointer row-start-"+row+" col-start-1 w-max text-workday text-left"}>
                 <button>{changeVisibilityIcon}</button>
-                {team.value}
+                {team.department_name}
             </div>
             {showHideEmployeesSchedule ?
                 allTeamsDataLoad :

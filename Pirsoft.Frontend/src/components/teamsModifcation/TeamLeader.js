@@ -38,7 +38,7 @@ const TeamLeader = ({disableChange, mode, value, setLeaderData, setEmployeesFind
                 >
                 <input id={"team-leader"}
                           className={"grow border text-black rounded-md text-center h-6 w-96 hover:cursor-pointer hover:bg-weekend"} type={"text"}
-                          value={value.firstandlastname} disabled={true}
+                          value={value.first_name + " " + value.last_name} disabled={true}
                        >
                 </input>
                     <TeamEmployeeEditButton id={"team-leader-"} mode={mode} showOptions={showOptions}
