@@ -43,8 +43,8 @@ public class DepartmentControllerTests
     {
         var response = _client.GetAsync("https://localhost:7120/get/company/58462835682");
 
-        response.Result.Should().HaveStatusCode(HttpStatusCode.NoContent);
-        response.Result.IsSuccessStatusCode.Should().BeTrue();
+        response.Result.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        response.Result.IsSuccessStatusCode.Should().BeFalse();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
 }

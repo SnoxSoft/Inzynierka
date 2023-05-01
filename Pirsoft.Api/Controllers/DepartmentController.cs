@@ -18,4 +18,15 @@ public class DepartmentController : Controller
         var query = await _crudHandler.ReadAllAsync<DepartmentModel>();
         return await query.OrderBy(departmentModel => departmentModel.department_id).ToListAsync();
     }
+
+    [HttpGet("/get/department/{departmentId}")]
+    public async Task<DepartmentModel> GetDepartmentById(int departmentId)
+    {
+        var query = await _crudHandler.ReadAsync<DepartmentModel>(departmentId);
+
+        if (query != null)
+            return query;
+        else
+            return null;
+    }
 }
