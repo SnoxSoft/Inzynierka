@@ -19,6 +19,20 @@ namespace Pirsoft.Api.DatabaseManagement
         public virtual DbSet<EmployeeModel> employees { get; set; }
         public virtual DbSet<SeniorityLevelModel> seniority_levels { get; set; }
         public virtual DbSet<SkillModel> skills { get; set; }
+        public virtual DbSet<PasswordResetTokenModel> password_reset_tokens { get; set; }
+        
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        
+        public async Task AddPasswordResetTokenAsync(PasswordResetTokenModel passwordResetToken)
+        {
+            await password_reset_tokens.AddAsync(passwordResetToken);
+        }
+
+        public async Task RemovePasswordResetTokenAsync(PasswordResetTokenModel passwordResetToken)
+        {
+            password_reset_tokens.Remove(passwordResetToken);
+            await SaveChangesAsync();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,7 +40,5 @@ namespace Pirsoft.Api.DatabaseManagement
 
             OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
