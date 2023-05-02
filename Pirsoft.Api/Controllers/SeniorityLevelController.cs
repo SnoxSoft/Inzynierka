@@ -24,4 +24,15 @@ public class SeniorityLevelController : Controller
         var json = JsonSerializer.Serialize(query.OrderBy(seniorityLevelModel => seniorityLevelModel.seniority_level_id), options);
         return JsonSerializer.Deserialize<IEnumerable<SeniorityLevelModel>>(json, options)!;
     }
+
+    [HttpGet("/get/seniority/level/{seniorityLevelId}")]
+    public async Task<SeniorityLevelModel> GetSeniorityLevelById(int seniorityLevelId)
+    {
+        var query = await _crudHandler.ReadAsync<SeniorityLevelModel>(seniorityLevelId);
+
+        if (query != null)
+            return query;
+        else
+            return null;
+    }
 }
