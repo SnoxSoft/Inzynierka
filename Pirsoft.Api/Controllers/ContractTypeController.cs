@@ -18,4 +18,15 @@ public class ContractTypeController : Controller
         var query = await _crudHandler.ReadAllAsync<ContractTypeModel>();
         return await query.OrderBy(contractTypeModel => contractTypeModel.contract_id).ToListAsync();
     }
+
+    [HttpGet("/get/contract/{contractId}")]
+    public async Task<ContractTypeModel> GetContractTypeById(int contractId)
+    {
+        var query = await _crudHandler.ReadAsync<ContractTypeModel>(contractId);
+
+        if (query != null)
+            return query;
+        else
+            return null;
+    }
 }
