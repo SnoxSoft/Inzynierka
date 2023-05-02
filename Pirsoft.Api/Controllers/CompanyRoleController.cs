@@ -18,4 +18,15 @@ public class CompanyRoleController : Controller
         var query = await _crudHandler.ReadAllAsync<CompanyRoleModel>();
         return await query.OrderBy(companyRoleModel => companyRoleModel.role_id).ToListAsync();
     }
+
+    [HttpGet("/get/company/role/{companyRoleId}")]
+    public async Task<CompanyRoleModel> GetCompanyRoleById(int companyRoleId)
+    {
+        var query = await _crudHandler.ReadAsync<CompanyRoleModel>(companyRoleId);
+
+        if (query != null)
+            return query;
+        else
+            return null;
+    }
 }
