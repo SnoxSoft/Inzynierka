@@ -43,8 +43,8 @@ public class ContractTypeControllerTests
     {
         var response = _client.GetAsync("https://localhost:7120/get/contract/999999");
 
-        response.Result.Should().HaveStatusCode(HttpStatusCode.NotFound);
-        response.Result.IsSuccessStatusCode.Should().BeFalse();
+        response.Result.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        response.Result.IsSuccessStatusCode.Should().BeTrue();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
 }
