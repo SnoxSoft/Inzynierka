@@ -9,7 +9,7 @@ import {
 } from "./GlobalAppConfig";
 import {
     endpointGetAbsencesTypes,
-    endpointGetAllContracts,
+    endpointGetAllContracts, endpointGetAllEmployees,
     endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllSkills,
     endpointGetAllTeams,
     endpointGetEmployeeData, endpointGetEmployeesRequests, endpointGetRequestsStatuses
@@ -38,6 +38,18 @@ async function fetchGetEmployeeData(id, navigate) {
             redirectToMainWindow(navigate)
         }
     } else return undefined
+}
+
+async function fetchGetAllEmployees(navigate) {
+    const response = await fetch(serverIpProd + "/" + endpointGetAllEmployees)
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
+        return newData
+    }
+    else {
+        redirectToMainWindow(navigate)
+    }
 }
 
 async function fetchGetAllTeamsAndAddZeroRecordAndSort(navigate) {
@@ -168,6 +180,8 @@ async function fetchGetEmployeesRequests(navigate) {
 
 export {
     fetchGetEmployeeData,
+    fetchGetAllEmployees,
+
     fetchGetAllTeamsAndAddZeroRecordAndSort,
     fetchGetAllContractsAndAddZeroRecordAndSort,
     fetchGetAllPositionsAndAddZeroRecordAndSort,

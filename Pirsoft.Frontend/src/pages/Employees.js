@@ -16,6 +16,7 @@ import {
 import {endpointGetAllEmployees, endpointGetEmployees} from "../EndpointAppConfig";
 import AddEmployeeAnAbsence from "./AddEmployeeAnAbsence";
 import {
+    fetchGetAllEmployees,
     fetchGetAllPositionsAndAddZeroRecordAndSort,
     fetchGetAllTeamsAndAddZeroRecordAndSort
 } from "../DataFetcher";
@@ -33,30 +34,25 @@ function Employees(){
 
     const [employeesList, setEmployeesList] = useState();
 
-    // Pobranie listy wszystkich pracowników
-    if (employeesList === undefined) {
-        fetch(serverIp + "/" + endpointGetAllEmployees)
-            .then((response) => {response.json()
-                .then((response) => {
-                    setEmployeesList(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
-
     useEffect(() => {
+        // Załadowanie wszystkich zespołów do filtra
         if(teamsList === null) {
             setTeamsList(null);
             fetchGetAllTeamsAndAddZeroRecordAndSort(navigate)
                 .then(teamsList => setTeamsList(teamsList));
         }
 
+        //Załadowanie wszystkich pozycji dla filtra
         if(positionsList === null) {
             setPositionsList(null);
             fetchGetAllPositionsAndAddZeroRecordAndSort(navigate)
                 .then(positions => setPositionsList(positions));
+        }
+
+        // Pobranie listy wszystkich pracowników
+        if (employeesList === undefined) {
+            fetchGetAllEmployees(navigate)
+                .then(positions => setEmployeesList(positions));
         }
     });
 
