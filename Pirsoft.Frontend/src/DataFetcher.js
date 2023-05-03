@@ -11,7 +11,7 @@ import {
     endpointGetAbsencesTypes,
     endpointGetAllContracts, endpointGetAllEmployees,
     endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllSkills,
-    endpointGetAllTeams,
+    endpointGetAllTeams, endpointGetEmployeeAbsences,
     endpointGetEmployeeData, endpointGetEmployeesRequests, endpointGetRequestsStatuses
 } from "./EndpointAppConfig";
 import React from "react";
@@ -148,7 +148,7 @@ async function fetchGetRequestsStatuses(navigate) {
     }
 }
 
-async function fetchGetRequestsTypes(navigate) {
+async function fetchGetAbsencesTypes(navigate) {
     const response = await fetch(serverIp + "/" + endpointGetAbsencesTypes,
         {
             method: "GET"
@@ -163,14 +163,31 @@ async function fetchGetRequestsTypes(navigate) {
     }
 }
 
-async function fetchGetEmployeesRequests(navigate) {
-    const response = await fetch(serverIp + "/" + endpointGetEmployeesRequests + "/" + sessionStorage.getItem("USER"),
+async function fetchGetEmployeesRequests(navigate, id) {
+    const response = await fetch(serverIp + "/" + endpointGetEmployeesRequests + "/" + id,
         {
             method: "GET"
         })
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
+        newData.sort(FunctionForSortingJson("from", "descending"))
+        return newData
+    }
+    else {
+        redirectToMainWindow(navigate)
+    }
+}
+
+async function fetchGetEmployeesAbsences(navigate, id) {
+    const response = await fetch(serverIp + "/" + endpointGetEmployeeAbsences + "/" + id,
+        {
+            method: "GET"
+        })
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
+        newData.sort(FunctionForSortingJson("from", "descending"))
         return newData
     }
     else {
@@ -189,7 +206,8 @@ export {
     fetchGetAllSkillsAndSort,
 
     fetchGetRequestsStatuses,
-    fetchGetRequestsTypes,
-    fetchGetEmployeesRequests
+    fetchGetAbsencesTypes,
+    fetchGetEmployeesRequests,
+    fetchGetEmployeesAbsences
 
 }

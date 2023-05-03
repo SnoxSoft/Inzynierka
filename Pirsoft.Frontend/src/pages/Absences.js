@@ -14,13 +14,19 @@ import {
     serverIp
 } from "../GlobalAppConfig";
 import {
-    endpointGetAbsencesTypes,
-    endpointGetEmployeeAbsences, endpointGetRequestsStatuses
+    endpointGetEmployeeAbsences
 } from "../EndpointAppConfig";
+import {useNavigate} from "react-router-dom";
+import {
+    fetchGetRequestsStatuses,
+    fetchGetAbsencesTypes, fetchGetEmployeesAbsences
+} from "../DataFetcher";
 
 
 function Absences(){
     document.title = pageNameAbsences;
+
+    const navigate = useNavigate();
 
     // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
@@ -56,66 +62,43 @@ function Absences(){
     const [checkodrzucone, setCheckodrzucone] = useState(true);
 
     // Zmienne do ładowania statusów i typów nieobecności
-    const [absencesStatus, setAbsencesStatus] = useState(undefined);
-    const [absencesTypes, setAbsencesTypes] = useState(undefined);
-
-    // Załadowanie statusów nieobecnośći
-    if(absencesStatus === undefined) {
-        fetch(serverIp + "/" + endpointGetRequestsStatuses)
-            .then((response) => {response.json()
-                .then((response) => {
-                    setAbsencesStatus(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
-
-    // Załadowanie typów nieobecnośći
-    if(absencesTypes === undefined) {
-        fetch(serverIp + "/" + endpointGetAbsencesTypes)
-            .then((response) => {response.json()
-                .then((response) => {
-                    setAbsencesTypes(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
+    const [requestsStatus, setRequestsStatus] = useState(null);
+    const [absencesTypes, setAbsencesTypes] = useState(null);
 
     // Ładowanie nieobecności pracownika, statusów nieobecności oraz nazwa nieobecności
-    const [employeeAbsences, setEmployeeAbsences] = useState(Array);
-
-    const fetchingEmployeeAbsences = () => {
-        // Na endpoint należy wysłać body z danymi filtrowania
-        // checkodrzucone, checkZatwierdzone, checkOczekujace, dateFrom, dateTo
-        fetch(serverIp + "/" + endpointGetEmployeeAbsences + "/" + sessionStorage.getItem("USER"))
-            .then((response) => {response.json()
-                .then((response) => {
-                    response.sort(FunctionForSortingJson("from", "descending"))
-                    setEmployeeAbsences(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
+    const [employeeAbsences, setEmployeeAbsences] = useState(null);
 
     // Filtrowanie nieobecności
-    const filtrAbsences = () => {
-        fetchingEmployeeAbsences()
+    function filtrAbsences(id){
+        setEmployeeAbsences(null)
+        fetchGetEmployeesAbsences(navigate, id)
+            .then(employeeAbsences => setEmployeeAbsences(employeeAbsences));
     }
 
-    if (employeeAbsences[0] === undefined) {
-        fetchingEmployeeAbsences()
-    }
+    useEffect(() => {
+        // Załadowanie statusów wniosków
+        if (requestsStatus === null) {
+            setRequestsStatus(null);
+            fetchGetRequestsStatuses(navigate)
+                .then(requestStatus => setRequestsStatus(requestStatus));
+        }
 
-    // date from date to / type of day off / status
+        // Załadowanie typów nieobecności
+        if(absencesTypes === null) {
+            setAbsencesTypes(null)
+            fetchGetAbsencesTypes(navigate)
+                .then(absencesTypes => setAbsencesTypes(absencesTypes));
+        }
+
+        if(employeeAbsences === null) {
+            filtrAbsences()
+        }
+    })
+
+    // W tej zmiennej znajduje się cała lista wniosków do wyświetlenia
     const [absencesList, setAbsencesList] = useState([]);
 
-    if (employeeAbsences[0] !== undefined && absencesList.length === 0){
+    if (employeeAbsences !== null && absencesList.length === 0){
         let absencesListLoad = [];
 
         let row = 0;
@@ -124,7 +107,7 @@ function Absences(){
                 <AbsencesListItem id={"absences-list-item-"+row} key={row} employeeAbsence={i}
                                   old={i.from <= new Date().toLocaleDateString("sv", options)}
                                   absencesTypes={absencesTypes}
-                                  absencesStatus={absencesStatus}/>
+                                  absencesStatus={requestsStatus}/>
             )
             row++;
         }

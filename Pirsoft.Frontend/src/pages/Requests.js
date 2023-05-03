@@ -20,7 +20,7 @@ import {
     fetchGetAllTeamsAndAddZeroRecordAndSort,
     fetchGetEmployeesRequests,
     fetchGetRequestsStatuses,
-    fetchGetRequestsTypes
+    fetchGetAbsencesTypes
 } from "../DataFetcher";
 
 function Requests(){
@@ -77,7 +77,7 @@ function Requests(){
     // Zmienne do ładowania statusów i typów nieobecności
     const [employeeRequests, setEmployeeRequests] = useState(null);
     const [requestsStatus, setRequestsStatus] = useState(null);
-    const [requestsTypes, setRequestsTypes] = useState(null);
+    const [absencesTypes, setAbsencesTypes] = useState(null);
     const [teamsList, setTeamsList] = useState(null);
 
     useEffect(() => {
@@ -89,10 +89,10 @@ function Requests(){
         }
 
         // Załadowanie typów nieobecności
-        if(requestsTypes === null) {
-            setRequestsTypes(null)
-            fetchGetRequestsTypes(navigate)
-                .then(requestTypes => setRequestsTypes(requestTypes));
+        if(absencesTypes === null) {
+            setAbsencesTypes(null)
+            fetchGetAbsencesTypes(navigate)
+                .then(absencesTypes => setAbsencesTypes(absencesTypes));
         }
 
         if(teamsList === null) {
@@ -109,7 +109,7 @@ function Requests(){
     // Filtrowanie wniosków
     function filtrRequests(){
         setEmployeeRequests(null)
-        fetchGetEmployeesRequests(navigate)
+        fetchGetEmployeesRequests(navigate, sessionStorage.getItem("USER"))
             .then(employeeRequests => setEmployeeRequests(employeeRequests));
     }
 
@@ -125,7 +125,7 @@ function Requests(){
                 <RequestsListItem id={"request-list-item-"+row} employeeRequest={i} key={row} setRequestsVisible={setRequestsVisible}
                                   old={i.from <= new Date().toLocaleDateString("sv", options)}
                                   setRequestPickedData={setRequestPickedData}
-                                  requestsTypes={requestsTypes}
+                                  requestsTypes={absencesTypes}
                                   requestsStatus={requestsStatus}/>
             )
             row++;
@@ -169,7 +169,7 @@ function Requests(){
         :
             <ApprovalOrRejectionRequest setRequestsVisible={setRequestsVisible}
                                         requestPickedData={requestPickedData}
-                                        requestsTypes={requestsTypes}/>
+                                        requestsTypes={absencesTypes}/>
         }
             </>
     )
