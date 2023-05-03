@@ -14,7 +14,7 @@ import {
 function RequestsFilter({
                             handleNameChange, userName,
                             handleSurnameChange, userSurname,
-                            setUserTeam,
+                            setUserTeam, teamsList,
                             setCheckOczekujace,
                             setCheckZatwierdzone,
                             setCheckOdrzucone,
@@ -37,7 +37,7 @@ function RequestsFilter({
             </div>
             <div className={"flex gap-x-2 items-center"}>
                 {labelTeam}
-                <TeamsList id={"requests-teams-list"} className={""} onChange={setUserTeam}/>
+                <TeamsList id={"requests-teams-list"} className={""} onChange={setUserTeam} teams={teamsList}/>
             </div>
         </div>
         <div className={"flex items-center justify-center gap-4"}>

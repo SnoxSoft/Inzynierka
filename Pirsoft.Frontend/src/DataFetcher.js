@@ -8,10 +8,11 @@ import {
     teamAdditionalRow
 } from "./GlobalAppConfig";
 import {
+    endpointGetAbsencesTypes,
     endpointGetAllContracts,
     endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllSkills,
     endpointGetAllTeams,
-    endpointGetEmployeeData
+    endpointGetEmployeeData, endpointGetEmployeesRequests, endpointGetRequestsStatuses
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -88,7 +89,7 @@ async function fetchGetAllPositionsAndAddZeroRecordAndSort(navigate) {
 }
 
 async function fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate) {
-    const response = await fetch(serverIpProd + "/" + endpointGetAllPositionsLevels,
+    const response = await fetch(serverIp + "/" + endpointGetAllPositionsLevels,
         {
             method: "GET"
         })
@@ -120,12 +121,61 @@ async function fetchGetAllSkillsAndSort(navigate) {
     }
 }
 
+async function fetchGetRequestsStatuses(navigate) {
+    const response = await fetch(serverIp + "/" + endpointGetRequestsStatuses,
+        {
+            method: "GET"
+        })
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
+        return newData
+    }
+    else {
+        redirectToMainWindow(navigate)
+    }
+}
+
+async function fetchGetRequestsTypes(navigate) {
+    const response = await fetch(serverIp + "/" + endpointGetAbsencesTypes,
+        {
+            method: "GET"
+        })
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
+        return newData
+    }
+    else {
+        redirectToMainWindow(navigate)
+    }
+}
+
+async function fetchGetEmployeesRequests(navigate) {
+    const response = await fetch(serverIp + "/" + endpointGetEmployeesRequests + "/" + sessionStorage.getItem("USER"),
+        {
+            method: "GET"
+        })
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
+        return newData
+    }
+    else {
+        redirectToMainWindow(navigate)
+    }
+}
+
 export {
     fetchGetEmployeeData,
     fetchGetAllTeamsAndAddZeroRecordAndSort,
     fetchGetAllContractsAndAddZeroRecordAndSort,
     fetchGetAllPositionsAndAddZeroRecordAndSort,
     fetchGetAllPositionsLevelsAndAddZeroRecordAndSort,
-    fetchGetAllSkillsAndSort
+    fetchGetAllSkillsAndSort,
+
+    fetchGetRequestsStatuses,
+    fetchGetRequestsTypes,
+    fetchGetEmployeesRequests
 
 }

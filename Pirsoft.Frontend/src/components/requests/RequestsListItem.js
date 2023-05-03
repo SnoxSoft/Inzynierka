@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 import {labelDelete, labelFromTimeOfRequest, labelRequest, labelShowProfile} from "../../GlobalAppConfig";
 
-
 const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, setRequestPickedData,
                               requestsTypes, requestsStatus, id}) => {
 
@@ -15,7 +14,7 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
     }
 
     const [requestType, setRequestType] = useState("")
-    if (requestType === "" && requestsTypes !== undefined) {
+    if (requestType === "" && requestsTypes !== null) {
         requestsTypes.map((item) => {
             if (employeeRequest.type === item.key) {
                 setRequestType(item.value)
@@ -24,7 +23,7 @@ const RequestsListItem = ({employeeRequest, old = false, setRequestsVisible, set
     }
 
     const [requestStatus, setRequestStatus] = useState("")
-    if (requestStatus === "" && requestsStatus !== undefined) {
+    if (requestStatus === "" && requestsStatus !== null) {
         requestsStatus.map((item) => {
             if (employeeRequest.state === item.key) {
                 setRequestStatus(item.value)
