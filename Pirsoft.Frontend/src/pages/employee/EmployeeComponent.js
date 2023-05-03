@@ -38,14 +38,16 @@ import {
     labelRequest, labelSalary,
     labelSave,
     labelStartDate,
-    lastnameLabel, pageNameEmployeeData, pageNameEmployeeRegister, pageNameEmployeeView, serverIp
+    lastnameLabel, pageNameEmployeeData, pageNameEmployeeRegister, pageNameEmployeeView, serverIp, labelTeam
 } from "../../GlobalAppConfig";
 import {endpointGetAllSkills} from "../../EndpointAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
 import SkillPicker from "../SkillPicker";
 import EditPasswordWindow from "./EditPasswordWindow";
-function EmployeeComponent({id, mode, employee}){
+import TeamsList from "../../components/employees/search/fields/TeamsList";
+import {fetchGetAllSkillsAndSort} from "../../DataFetcher";
+function EmployeeComponent({id, mode, employee, teams, contracts, positions, positionsLevels}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
     }
@@ -88,6 +90,7 @@ function EmployeeComponent({id, mode, employee}){
     const[birth, setBirth] = useState(employee !== undefined && employee !== null ? employee.birth_date : '');
     const[pesel, setPesel] = useState(employee !== undefined && employee !== null ? employee.pesel : '');
     const[salary, setSalary] = useState(employee !== undefined && employee !== null ? employee.salary_gross : '');
+    const[department, setDepartment] = useState(employee !== undefined && employee !== null ? employee.employee_department_id : '');
     const[contract, setContract] = useState(employee !== undefined && employee !== null ? employee.employee_contract_type_id : '');
     const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.employee_company_role_id : '');
     const[positionLevel, setPositionLevel] = useState(employee !== undefined && employee !== null ? employee.employee_seniority_level_id : '');
@@ -106,6 +109,7 @@ function EmployeeComponent({id, mode, employee}){
             setBirth(employee.birth_date);
             setPesel(employee.pesel);
             setSalary(employee.salary_gross);
+            setDepartment(employee.employee_department_id);
             setContract(employee.employee_contract_type_id);
             setPosition(employee.employee_company_role_id);
             setPositionLevel(employee.employee_seniority_level_id);
@@ -122,6 +126,7 @@ function EmployeeComponent({id, mode, employee}){
             setBirth('');
             setPesel('');
             setSalary('');
+            setDepartment('');
             setContract('');
             setPosition('');
             setPositionLevel('');
@@ -143,6 +148,7 @@ function EmployeeComponent({id, mode, employee}){
             setBirth(birth);
             setPesel(pesel);
             setSalary(salary);
+            setDepartment(department)
             setContract(contract);
             setPosition(position);
             setPositionLevel(positionLevel);
@@ -165,6 +171,7 @@ function EmployeeComponent({id, mode, employee}){
             birth + ", \n" +
             pesel + ", \n" +
             salary + ", \n" +
+            department + ", \n" +
             contract + ", \n" +
             position + ", \n" +
             positionLevel + ", \n" +
@@ -187,7 +194,6 @@ function EmployeeComponent({id, mode, employee}){
         skills.forEach((s) => {
             allSkillsLoad.push(s)
         })
-
         setLoadedAllSkills(allSkillsLoad)
     }
 
@@ -237,18 +243,27 @@ function EmployeeComponent({id, mode, employee}){
 
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelContractType} </label>
-                            <Contract id={"employee-contract"} value={contract} onChange={setContract} disableChange={disableData}/>
+                            <Contract id={"employee-contract"} value={contract} onChange={setContract} disableChange={disableData}
+                                      contracts={contracts}/>
                         </div>
 
                     </> : <></>}
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelPosition} </label>
-                        <PositionsList id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData} formatting={"rounded-full text-left grow "}/>
+                        <PositionsList id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData}
+                                       positions={positions} formatting={"rounded-full text-left grow "}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelPositionLevel} </label>
-                        <PositionLevel id={"employee-position-level"} value={positionLevel} onChange={setPositionLevel} disableChange={disableData} />
+                        <PositionLevel id={"employee-position-level"} value={positionLevel} onChange={setPositionLevel}
+                                       disableChange={disableData} positionLevels={positionsLevels}/>
+                    </div>
+
+                    <div className={"flex flex-row justify-between text-right gap-4"}>
+                        <label className={"basis-1/3"}> {labelTeam} </label>
+                        <TeamsList id={"employee-team"} value={department} onChange={setDepartment} disableChange={disableData}
+                                   teams={teams} placement={'top'} formatting={"rounded-full text-left grow"}/>
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
@@ -267,7 +282,9 @@ function EmployeeComponent({id, mode, employee}){
                             <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
                                 onClick={ () => {
-                                    loadAllSkills().then(r => {
+                                    setLoadedAllSkills([])
+                                    fetchGetAllSkillsAndSort().then(skills => {
+                                        setLoadedAllSkills(skills)
                                         setEmployeeDataShow(false);
                                         setShowSkillsFrame(true)
                                     })

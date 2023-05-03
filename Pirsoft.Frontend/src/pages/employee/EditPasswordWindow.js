@@ -1,6 +1,6 @@
 import {
     alertNewPasswordsAreIncompatible,
-    alertOldPasswordIsIncompatible, alertOldPasswordIsMissing, alertPasswordChanged,
+    alertOldPasswordIsMissing, alertPasswordChanged,
     alertPutNewPasswords, alertUnexpectedError,
     headerPasswordChange, labelApprove, labelClose,
     labelGiveNewPassword,
@@ -10,7 +10,7 @@ import {
 import LoggingPassword from "../../components/logging/LoggingPassword";
 import ReusableButton from "../../components/base/ReusableButton";
 import React, {useState} from "react";
-import {endpointEmployeeChangePassword, endpointGetAllSkills} from "../../EndpointAppConfig";
+import {endpointEmployeeChangePassword} from "../../EndpointAppConfig";
 
 function EditPasswordWindow({setShowPasswordChangeFrame,
                                 setEmployeeDataShow, employee}) {

@@ -8,7 +8,7 @@ import {
     lastnameLabel,
     requestStatusApprovedLabel, requestStatusCreatedByMeLabel, requestStatusCreatedNotByMeLabel,
     requestStatusDisapprovedLabel, requestStatusWaitingLabel,
-    teamLabel
+    labelTeam
 } from "../../GlobalAppConfig";
 
 function RequestsFilter({
@@ -36,7 +36,7 @@ function RequestsFilter({
                                        className={"text-black rounded"} onChange={handleSurnameChange} value={userSurname}/>
             </div>
             <div className={"flex gap-x-2 items-center"}>
-                {teamLabel}
+                {labelTeam}
                 <TeamsList id={"requests-teams-list"} className={""} onChange={setUserTeam}/>
             </div>
         </div>

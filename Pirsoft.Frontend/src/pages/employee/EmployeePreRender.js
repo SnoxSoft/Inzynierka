@@ -1,12 +1,19 @@
 import {useEffect, useState} from "react";
 import React from "react";
-import {useParams} from "react-router-dom";
-import FunctionForResize from "../../components/base/FunctionForResize";
+import {useNavigate, useParams} from "react-router-dom";
 import EmployeeComponent from "./EmployeeComponent";
-import {serverIp} from "../../GlobalAppConfig";
-import {endpointGetEmployeeData} from "../../EndpointAppConfig";
+import {
+    fetchGetAllContractsAndAddZeroRecordAndSort,
+    fetchGetAllPositionsAndAddZeroRecordAndSort,
+    fetchGetAllPositionsLevelsAndAddZeroRecordAndSort,
+    fetchGetAllTeamsAndAddZeroRecordAndSort,
+    fetchGetEmployeeData
+} from "../../DataFetcher";
+import {alertUnexpectedError} from "../../GlobalAppConfig";
 
 function EmployeePreRender(){
+
+    const navigate = useNavigate();
 
     //możliwe rodzaje parametru mode:
     // view - jeśli osoba bez uprawnień przegląda
@@ -17,35 +24,51 @@ function EmployeePreRender(){
     const {id} = useParams();
 
     const [employee, setEmployee] = useState(null);
+    const [teams, setTeams] = useState(null);
+    const [positions, setPositions] = useState(null);
+    const [contracts, setContracts] = useState(null);
+    const [positionsLevels, setPositionsLevels] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            if(id !== '-1') {
-                const response = await fetch(serverIp + "/" + endpointGetEmployeeData + "/" + id);
-                const newData = await response.json();
-                setEmployee(newData[0]);
-            }
-            else setEmployee(undefined)
-        };
+        setEmployee(null);
+        fetchGetEmployeeData(id, navigate)
+            .then(employee => setEmployee(employee));
 
-        fetchData();
+        setTeams(null);
+        fetchGetAllTeamsAndAddZeroRecordAndSort(navigate)
+            .then(teams => setTeams(teams))
+
+        setContracts(null)
+        fetchGetAllContractsAndAddZeroRecordAndSort(navigate)
+            .then(contracts => setContracts(contracts))
+
+        setPositions(null)
+        fetchGetAllPositionsAndAddZeroRecordAndSort(navigate)
+            .then(positions => setPositions(positions))
+
+        setPositionsLevels(null)
+        fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate)
+            .then(positionsLevels => setPositionsLevels(positionsLevels))
     }, [id]);
 
     return(
         <>
-
-            {employee?
-                <EmployeeComponent id={id} mode={'edit'} employee={employee}/> :
-                    id === '-1' ?
-                <EmployeeComponent id={id} mode={'create'} employee={employee}/> :
-
+            {(id === '-1'? true : employee) && teams && contracts && positions && positionsLevels ?
+                <EmployeeComponent id={id}
+                                   mode={ id === '-1' ? 'create' : 'edit'}
+                                   employee={employee}
+                                   teams={teams}
+                                   contracts={contracts}
+                                   positions={positions}
+                                   positionsLevels={positionsLevels}/> :
                 <div id={"employee-load"}
-                     className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default"}
-                     style={{minWidth:800} } />
+                     className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default text-center"}
+                     style={{minWidth:800} }>
+                    {alertUnexpectedError}
+                </div>
             }
         </>
     )
-
 }
 
 export default EmployeePreRender;
