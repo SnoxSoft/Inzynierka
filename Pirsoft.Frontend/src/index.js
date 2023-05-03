@@ -16,8 +16,6 @@ import TeamView from "./pages/teams/TeamView";
 import TeamEdit from "./pages/teams/TeamEdit";
 import TeamCreate from "./pages/teams/TeamCreate";
 import Requests from "./pages/Requests";
-import Grades from "./pages/Grades";
-import Notifications from "./pages/notifications/Notifications";
 import RemindChangePassword from "./pages/RemindChangePassword";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

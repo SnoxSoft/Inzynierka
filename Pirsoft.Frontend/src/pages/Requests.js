@@ -15,9 +15,18 @@ import {
     endpointGetEmployeesRequests,
     endpointGetRequestsStatuses
 } from "../EndpointAppConfig";
+import {useNavigate} from "react-router-dom";
+import {
+    fetchGetAllTeamsAndAddZeroRecordAndSort,
+    fetchGetEmployeesRequests,
+    fetchGetRequestsStatuses,
+    fetchGetRequestsTypes
+} from "../DataFetcher";
 
 function Requests(){
     document.title = pageNameRequests;
+
+    const navigate = useNavigate();
 
     // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
@@ -65,66 +74,50 @@ function Requests(){
         setUserSurname(event.target.value);
     };
 
-    // Pobranie listy wniosków
-    const [employeeRequests, setEmployeeRequests] = useState(Array);
-    const fetchingEmployeesRequests = () => {
-        // Tutaj do dodanie do body całą
-
-        fetch(serverIp + "/" + endpointGetEmployeesRequests + "/" + sessionStorage.getItem("USER"))
-            .then((response) => {response.json()
-                .then((response) => {
-                    response.sort(FunctionForSortingJson("from", "descending"))
-                    setEmployeeRequests(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
-
     // Zmienne do ładowania statusów i typów nieobecności
-    const [requestsStatus, setRequestsStatus] = useState(undefined);
-    const [requestsTypes, setRequestsTypes] = useState(undefined);
+    const [employeeRequests, setEmployeeRequests] = useState(null);
+    const [requestsStatus, setRequestsStatus] = useState(null);
+    const [requestsTypes, setRequestsTypes] = useState(null);
+    const [teamsList, setTeamsList] = useState(null);
 
-    // Załadowanie statusów wniosków
-    if(requestsStatus === undefined) {
-        fetch(serverIp + "/" + endpointGetRequestsStatuses + "/")
-            .then((response) => {response.json()
-                .then((response) => {
-                    setRequestsStatus(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
+    useEffect(() => {
+        // Załadowanie statusów wniosków
+        if (requestsStatus === null) {
+            setRequestsStatus(null);
+            fetchGetRequestsStatuses(navigate)
+                .then(requestStatus => setRequestsStatus(requestStatus));
+        }
 
-    // Załadowanie typów nieobecnośći
-    if(requestsTypes === undefined) {
-        fetch(serverIp + "/" + endpointGetAbsencesTypes + "/")
-            .then((response) => {response.json()
-                .then((response) => {
-                    setRequestsTypes(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
+        // Załadowanie typów nieobecności
+        if(requestsTypes === null) {
+            setRequestsTypes(null)
+            fetchGetRequestsTypes(navigate)
+                .then(requestTypes => setRequestsTypes(requestTypes));
+        }
+
+        if(teamsList === null) {
+            setTeamsList(null);
+            fetchGetAllTeamsAndAddZeroRecordAndSort(navigate)
+                .then(teamsList => setTeamsList(teamsList));
+        }
+
+        if(employeeRequests === null) {
+            filtrRequests()
+        }
+    })
 
     // Filtrowanie wniosków
-    const filtrRequests = () => {
-        fetchingEmployeesRequests()
-    }
-    if (employeeRequests[0] === undefined) {
-        fetchingEmployeesRequests()
+    function filtrRequests(){
+        setEmployeeRequests(null)
+        fetchGetEmployeesRequests(navigate)
+            .then(employeeRequests => setEmployeeRequests(employeeRequests));
     }
 
-    // W tej zmiennej znajduje się cała lista wniosków
+    // W tej zmiennej znajduje się cała lista wniosków do wyświetlenia
     const [requestsList, setRequestsList] = useState([]);
 
     // Tworzenie listy wniosków urlopowych, wnioski już przestarzałe są w szarym kolorze
-    if (employeeRequests[0] !== undefined && requestsList.length === 0){
+    if (employeeRequests !== null && requestsList.length === 0){
         let requestsListLoad = [];
         let row = 0;
         for (const i of employeeRequests) {
@@ -148,7 +141,7 @@ function Requests(){
             <RequestsFilter
                 handleNameChange={handleNameChange} userName={userName}
                 handleSurnameChange={handleSurnameChange} userSurname={userSurname}
-                setUserTeam={setUserTeam}
+                setUserTeam={setUserTeam} teamsList={teamsList}
                 setCheckOczekujace={setCheckOczekujace}
                 setCheckZatwierdzone={setCheckZatwierdzone}
                 setCheckOdrzucone={setCheckOdrzucone}
