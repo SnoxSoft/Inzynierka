@@ -75,6 +75,21 @@ public class EmployeeController : Controller
         }
     }
 
+    [HttpGet("/get/employee/{employeeId}")]
+    public async Task<EmployeeModel> GetEmployeeById(int employeeId)
+    {
+        var query = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
+
+        if (query != null)
+        {
+            return query;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public struct employeeDTO
     {
         public employeeDTO(EmployeeModel employeeModel)

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using Azure;
 using FluentAssertions;
+using MySqlX.XDevAPI.Common;
 using NUnit.Framework;
 
 namespace Pirsoft.IntegrationTests;
@@ -161,27 +163,28 @@ public class EmployeeControllerTests
     [Test]
     public void GetEmployeeById_IsReturningNotFound()
     {
-        var response = _client.GetAsync("https://localhost:7120/get/employees/53252352");
+        var response = _client.GetAsync("https://localhost:7120/get/employee/53252352");
 
-        response.Result.IsSuccessStatusCode.Should().BeFalse();
+        response.Result.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        response.Result.IsSuccessStatusCode.Should().BeTrue();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
 
     [Test]
     public void GetEmployeeById_IsUnsuccessful_ForNonNumberId()
     {
-        var response = _client.GetAsync("https://localhost:7120/get/employees/hdffhd");
+        var response = _client.GetAsync("https://localhost:7120/get/employee/hdffhd");
 
         response.Result.IsSuccessStatusCode.Should().BeFalse();
-        response.Result.IsSuccessStatusCode.Should().BeTrue();
+        response.IsCompletedSuccessfully.Should().BeTrue();
     }
 
     [Test]
     public void GetEmployeeById_IsSuccessful_ForExistingEmployeeId()
     {
-        var response = _client.GetAsync("https://localhost:7120/get/employees/53252352");
+        var response = _client.GetAsync("https://localhost:7120/get/employee/1");
 
-        response.Result.Content.Should().BeNull();
+        response.Result.Content.Should().NotBeNull();
         response.Result.IsSuccessStatusCode.Should().BeTrue();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
