@@ -157,4 +157,32 @@ public class EmployeeControllerTests
         response.Result.IsSuccessStatusCode.Should().BeFalse();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
+
+    [Test]
+    public void GetEmployeeById_IsReturningNotFound()
+    {
+        var response = _client.GetAsync("https://localhost:7120/get/employees/53252352");
+
+        response.Result.IsSuccessStatusCode.Should().BeFalse();
+        response.IsCompletedSuccessfully.Should().BeTrue();
+    }
+
+    [Test]
+    public void GetEmployeeById_IsUnsuccessful_ForNonNumberId()
+    {
+        var response = _client.GetAsync("https://localhost:7120/get/employees/hdffhd");
+
+        response.Result.IsSuccessStatusCode.Should().BeFalse();
+        response.Result.IsSuccessStatusCode.Should().BeTrue();
+    }
+
+    [Test]
+    public void GetEmployeeById_IsSuccessful_ForExistingEmployeeId()
+    {
+        var response = _client.GetAsync("https://localhost:7120/get/employees/53252352");
+
+        response.Result.Content.Should().BeNull();
+        response.Result.IsSuccessStatusCode.Should().BeTrue();
+        response.IsCompletedSuccessfully.Should().BeTrue();
+    }
 }
