@@ -10,7 +10,7 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
         public override ModelBuilder Build()
             => _modelBuilder.Entity<EmployeeModel>(entity =>
             {
-                entity.HasKey(e => new { e.employee_id, e.employee_contract_type_id, e.employee_department_id, e.employee_seniority_level_id, e.employee_company_role_id }).HasName("PRIMARY");
+                entity.HasKey(e => new { e.employee_id}).HasName("PRIMARY");
 
                 entity.HasIndex(e => e.email_address, "email_UNIQUE").IsUnique();
                 entity.HasIndex(e => e.employee_company_role_id, "fk_employee_company_role_idx");

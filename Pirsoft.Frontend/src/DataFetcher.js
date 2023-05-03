@@ -20,9 +20,9 @@ import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
 function redirectToMainWindow(navigate){
     //przekierowanie do strony logowania - wystapil błąd albo do strony glownej
     setTimeout(function() {
-        sessionStorage.removeItem('USER');
+        sessionStorage.clear()
         navigate("/", { replace: true });
-        window.location.reload(false);
+        window.location.reload();
     }, 3000);
 }
 
