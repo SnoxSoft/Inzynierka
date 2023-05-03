@@ -45,7 +45,7 @@ public class EmployeeController : Controller
         _crudHandler.PushChangesToDatabase();
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("/get/employees")]
     public async Task<IEnumerable<employeeDTO>> GetListOfAllEmployees()
     {

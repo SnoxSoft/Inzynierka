@@ -159,7 +159,6 @@ function CompanySchedule(){
 
         let row = 1
         teams.forEach((team, id) => {
-            console.log("ładuje na nowo")
             // dodanie zespołów
             row = row + 1
             allTeamsLoad.push(

@@ -34,7 +34,8 @@ const Header = () => {
                             }
                             onClick={() => {
                                 navigate('/employee/'+sessionStorage.getItem('USER'), { replace: true });
-                                window.location.reload()}
+                                //window.location.reload()
+                            }
                             }/>
 
                         <ReusableButton

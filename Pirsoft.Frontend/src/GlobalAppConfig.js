@@ -114,7 +114,7 @@ const employeeGradedText = "Ocenił pracownik:";
 // Filtr wniosków urlopowych
 const firstnameLabel = "Imie";
 const lastnameLabel = "Nazwisko";
-const teamLabel = "Zespół"
+const labelTeam = "Zespół"
 
 // Nagłowek moich nieobecności urlopowych
 const headerAbsencesEndOfDaysOff = "Zostało dni urlopowych";
@@ -232,7 +232,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
 
     skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
     employeeGradeText, employeeGradedText,
-    firstnameLabel, lastnameLabel, teamLabel,
+    firstnameLabel, lastnameLabel, labelTeam,
     requestStatusWaitingLabel,
     requestStatusApprovedLabel,
     requestStatusDisapprovedLabel,
