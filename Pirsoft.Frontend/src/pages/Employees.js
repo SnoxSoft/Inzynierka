@@ -52,7 +52,7 @@ function Employees(){
         // Pobranie listy wszystkich pracowników
         if (employeesList === undefined) {
             fetchGetAllEmployees(navigate)
-                .then(positions => setEmployeesList(positions));
+                .then(employeesList => setEmployeesList(employeesList));
         }
     });
 
