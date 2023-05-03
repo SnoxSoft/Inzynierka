@@ -40,11 +40,13 @@ async function fetchGetEmployeeData(id, navigate) {
     } else return undefined
 }
 
-async function fetchGetAllEmployees(navigate) {
+async function fetchGetAllEmployees(navigate, sortForTeams = false) {
     const response = await fetch(serverIpProd + "/" + endpointGetAllEmployees)
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
+        if (sortForTeams)
+            newData.sort(FunctionForSortingJson("last_name", "ascending"))
         return newData
     }
     else {
@@ -52,12 +54,13 @@ async function fetchGetAllEmployees(navigate) {
     }
 }
 
-async function fetchGetAllTeamsAndAddZeroRecordAndSort(navigate) {
+async function fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, addRecord = true) {
     const response = await fetch(serverIpProd + "/" + endpointGetAllTeams)
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
-        newData.push({ department_id: 0, department_name: teamAdditionalRow })
+        if(addRecord)
+            newData.push({ department_id: 0, department_name: teamAdditionalRow })
         newData.sort(FunctionForSortingJson("department_id", "ascending"))
         return newData
     }
