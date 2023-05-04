@@ -33,6 +33,8 @@ const endpointPostSendEmailForPasswordChange = "sendVerifyCode";
 // Weryfikacja kodu przesłanego na dany email z podanym adresem email
 const endpointGetVerifyCode = "verifyCode";
 
+const endpointGetChangePassword = "get/change-password"
+
 // Zmiana hasła po potwierdzeniu kodu weryfikacyjnego
 const endpointPostChangePassword = "changePassword";
 
@@ -124,7 +126,8 @@ export {
 
     endpointGetRequestApprovers,
 
-    endpointPostSendEmailForPasswordChange, endpointGetVerifyCode, endpointPostChangePassword, endpointPutChangePassword, endpointEmployeeChangePassword,
+    endpointPostSendEmailForPasswordChange, endpointGetVerifyCode, endpointGetChangePassword,
+    endpointPostChangePassword, endpointPutChangePassword, endpointEmployeeChangePassword,
 
     endpointGetLogIn,
 

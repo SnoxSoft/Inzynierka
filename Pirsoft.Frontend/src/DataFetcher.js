@@ -16,14 +16,13 @@ import {
     endpointGetAllPositions,
     endpointGetAllPositionsLevels,
     endpointGetAllSkills,
-    endpointGetAllTeams,
+    endpointGetAllTeams, endpointGetChangePassword,
     endpointGetEmployeeAbsences,
     endpointGetEmployeeData,
     endpointGetEmployeeMonthDaysOff,
     endpointGetEmployeesRequests,
     endpointGetRequestApprovers,
     endpointGetRequestsStatuses,
-    endpointPostChangePassword,
     endpointPostSendEmailForPasswordChange,
     endpointPutChangePassword
 } from "./EndpointAppConfig";
@@ -34,8 +33,8 @@ function redirectToMainWindow(navigate){
     //przekierowanie do strony logowania - wystapil błąd albo do strony glownej
     setTimeout(function() {
         sessionStorage.clear()
-        //navigate("/", { replace: true });
-        //window.location.reload();
+        navigate("/", { replace: true });
+        window.location.reload();
     }, 3000);
 }
 
@@ -59,14 +58,14 @@ async function fetchPostSendEmailForPasswordChange(navigate, email) {
 }
 
 async function fetchGetChangePasswordData(navigate, code) {
-    const response = await fetch(serverIp + "/get/change-password/" + code,
-        {
-            method: "GET"
-        })
+    const response = await fetch(serverIp + "/" + endpointGetChangePassword + "/" + code,)
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
-        return newData[0]
+        return newData
+    }
+    else {
+        redirectToMainWindow(navigate)
     }
 }
 
@@ -81,7 +80,7 @@ async function fetchPutChangePassword(navigate, employeeId, newPassword, newRepe
         })
 }
 
-async function fetchGetEmployeeData(id, navigate) {
+async function fetchGetEmployeeDataById(id, navigate) {
     if (id !== '-1') {
         const response = await fetch(serverIpProd + "/" + endpointGetEmployeeData + "/" + id)
             .catch( err => console.error(err))
@@ -306,7 +305,7 @@ export {
     fetchGetChangePasswordData,
     fetchPutChangePassword,
 
-    fetchGetEmployeeData,
+    fetchGetEmployeeDataById,
     fetchGetAllEmployees,
 
     fetchGetAllTeamsAndAddZeroRecordAndSort,
