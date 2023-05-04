@@ -2,10 +2,13 @@ import React, {useEffect, useState} from "react";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import ReusableButton from "../../components/base/ReusableButton";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
-import {labelCreateTeam, pageNameTeams} from "../../GlobalAppConfig";
+import FunctionForSortingJson from "../../components/base/FunctionForSortingJson";
+import {labelCreateTeam, pageNameTeams, serverIp, serverIpProd} from "../../GlobalAppConfig";
+import {endpointGetAllEmployees, endpointGetAllTeams} from "../../EndpointAppConfig";
 import {
-    fetchGetAllEmployees,
-    fetchGetAllTeamsAndAddZeroRecordAndSort
+    fetchGetAbsencesTypes, fetchGetAllEmployees,
+    fetchGetAllTeamsAndAddZeroRecordAndSort,
+    fetchGetRequestsStatuses
 } from "../../DataFetcher";
 import {useNavigate} from "react-router-dom";
 
@@ -14,16 +17,23 @@ function Teams(){
 
     const navigate = useNavigate();
 
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+
     // Wszystkie zespoly ktore są potrzebne
-    const [teamsList, setTeamsList] = useState(null);
+    const [teams, setTeams] = useState(null);
+    const [teamsLoaded, setTeamsLoaded] = useState(false)
+
+    const [allTeams, setAllTeams] = useState([])
+
     const [employeesList, setEmployeesList] = useState(null);
+    const [employeesLoaded, setEmployeesLoaded] = useState(false)
 
     useEffect(() => {
         // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
-        if(teamsList === null) {
-            setTeamsList(null);
+        if(teams === null) {
+            setTeams(null);
             fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, false)
-                .then(teams => setTeamsList(teams));
+                .then(teams => setTeams(teams));
         }
 
         // Pobranie listy wszystkich pracowników
@@ -33,21 +43,25 @@ function Teams(){
         }
     })
 
-    // Wartości potrzebne do załadowania danych zespołów
+    const [currentMonthDaysOff, setCurrentMonthDaysOff] = useState(Object);
+    const [monthDaysOffLoaded, setMonthDaysOffLoaded] = useState(false)
+
     const [allTeamsAreLoadedInDivs, setAllTeamsAreLoadedInDivs] = useState(false)
-    const [allTeams, setAllTeams] = useState([])
 
     const loadWholeMonthDataForCompany = (today) => {
         setAllTeamsAreLoadedInDivs(false)
+        setMonthDaysOffLoaded(false)
+
         let allTeamsLoad = []
 
         let row = 2
-        teamsList.forEach((team, teamId) => {
+        teams.forEach((team, teamId) => {
             // Dodanie zespołów
             row = row + 1
             allTeamsLoad.push(
                 <TeamAndEmployees id={"team-"+teamId} row={row} team={team} employees={employeesList}/>
             )
+
         });
 
         // Ustawianie calego kalendarza i pokazanie go
@@ -55,11 +69,9 @@ function Teams(){
         setAllTeamsAreLoadedInDivs(true)
     }
 
-    if(teamsList && employeesList && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
+    if(teams && employeesList && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
         loadWholeMonthDataForCompany()
     }
-
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
     useEffect(() => {
         // Handler to call on window resize
@@ -68,12 +80,12 @@ function Teams(){
 
     return(
         <>
-        {teamsList && allTeamsAreLoadedInDivs ?
+        {teams && allTeamsAreLoadedInDivs ?
             <div
              className={"every-page-on-scroll overflow-y-hidden"}
             style={{minWidth: 800}}>
                 <div className={"flex flex-cols justify-end p-4"}>
-                    <ReusableButton id={"teamsList-create-team"} value={labelCreateTeam} link={"/team-create"}/>
+                    <ReusableButton id={"teams-create-team"} value={labelCreateTeam} link={"/team-create"}/>
                 </div>
                 <hr/>
                 <div id={"schedule-company-list"}
