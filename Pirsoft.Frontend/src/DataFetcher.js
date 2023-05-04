@@ -8,6 +8,7 @@ import {
     teamAdditionalRow
 } from "./GlobalAppConfig";
 import {
+    endpointEmployeeChangePassword,
     endpointGetAbsencesTypes,
     endpointGetAllCompanyMonthDaysOff,
     endpointGetAllContracts,
@@ -21,7 +22,7 @@ import {
     endpointGetEmployeeMonthDaysOff,
     endpointGetEmployeesRequests,
     endpointGetRequestApprovers,
-    endpointGetRequestsStatuses
+    endpointGetRequestsStatuses, endpointPostSendEmailForPasswordChange
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -33,6 +34,37 @@ function redirectToMainWindow(navigate){
         //navigate("/", { replace: true });
         //window.location.reload();
     }, 3000);
+}
+
+async function fetchPutEditOldPasswordInProfile(navigate, id, oldPassword, newPassword, newRepeatPassword) {
+    return await fetch(serverIp + "/" + endpointEmployeeChangePassword,
+        {
+            method: 'PUT',
+            body: JSON.stringify({
+                employee_id: id,
+                employee_old_password: oldPassword,
+                new_employee_password: newPassword,
+                repeat_new_employee_password: newRepeatPassword})
+        })
+}
+
+async function fetchPostSendEmailForPasswordChange(navigate, email) {
+    return await fetch(serverIp + "/" + endpointPostSendEmailForPasswordChange + "/" + email,
+        {
+            method: 'POST'
+        })
+}
+
+async function fetchGetChangePasswordData(navigate, code) {
+    const response = await fetch(serverIp + "/get/change-password/" + code,
+        {
+            method: "GET"
+        })
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
+        return newData[0]
+    }
 }
 
 async function fetchGetEmployeeData(id, navigate) {
@@ -255,6 +287,10 @@ async function fetchApproversForRequest(navigate, id) {
 }
 
 export {
+    fetchPutEditOldPasswordInProfile,
+    fetchPostSendEmailForPasswordChange,
+    fetchGetChangePasswordData,
+
     fetchGetEmployeeData,
     fetchGetAllEmployees,
 

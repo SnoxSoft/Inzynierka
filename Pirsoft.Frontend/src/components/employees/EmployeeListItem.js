@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 import {labelRequest, labelShowProfile} from "../../GlobalAppConfig";
 import {BsPersonCircle} from "react-icons/bs";
-import {fetchApproversForRequest} from "../../DataFetcher";
 
 const EmployeeListItem = ({employee, action, showRequest, id, teams, positions}) => {
     const[showHideButtons, setShowHideButtons] = useState(false);
