@@ -12,7 +12,7 @@ import {
     endpointGetAllContracts, endpointGetAllEmployees,
     endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllSkills,
     endpointGetAllTeams, endpointGetEmployeeAbsences,
-    endpointGetEmployeeData, endpointGetEmployeesRequests, endpointGetRequestsStatuses
+    endpointGetEmployeeData, endpointGetEmployeeMonthDaysOff, endpointGetEmployeesRequests, endpointGetRequestsStatuses
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -21,8 +21,8 @@ function redirectToMainWindow(navigate){
     //przekierowanie do strony logowania - wystapil błąd albo do strony glownej
     setTimeout(function() {
         sessionStorage.clear()
-        navigate("/", { replace: true });
-        window.location.reload();
+        //navigate("/", { replace: true });
+        //window.location.reload();
     }, 3000);
 }
 
@@ -198,6 +198,22 @@ async function fetchGetEmployeesAbsences(navigate, id) {
     }
 }
 
+async function fetchGetEmployeeMonthDaysOff(navigate, id, yearMonth) {
+    const response = await fetch(serverIp + "/" + endpointGetEmployeeMonthDaysOff + "/" + id + "/" + yearMonth,
+        {
+            method: "GET"
+        })
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
+        console.log(newData)
+        return newData
+    }
+    else {
+        return []
+    }
+}
+
 export {
     fetchGetEmployeeData,
     fetchGetAllEmployees,
@@ -211,6 +227,8 @@ export {
     fetchGetRequestsStatuses,
     fetchGetAbsencesTypes,
     fetchGetEmployeesRequests,
-    fetchGetEmployeesAbsences
+    fetchGetEmployeesAbsences,
+
+    fetchGetEmployeeMonthDaysOff
 
 }
