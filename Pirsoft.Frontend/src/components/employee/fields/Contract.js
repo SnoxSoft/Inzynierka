@@ -23,7 +23,7 @@ const Contract = ({value = undefined, onChange, id, disableChange = false, contr
                    }
                    menuPlacement="top"
                    getOptionValue={option => `${option.contract_id}`}
-                   onChange={(e) => onChange(e.value)}
+                   onChange={(e) => onChange(e.contract_id)}
                    isDisabled={disableChange}/>
 }
 export default Contract;

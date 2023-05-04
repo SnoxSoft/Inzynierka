@@ -49,13 +49,13 @@ async function fetchGetEmployeeData(id, navigate) {
     } else return undefined
 }
 
-async function fetchGetAllEmployees(navigate, sortForTeams = false) {
+async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirection = "ascending") {
     const response = await fetch(serverIp + "/" + endpointGetAllEmployees)
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
         if (sortForTeams)
-            newData.sort(FunctionForSortingJson("last_name", "ascending"))
+            newData.sort(FunctionForSortingJson("last_name", sortDirection))
         return newData
     }
     else {
