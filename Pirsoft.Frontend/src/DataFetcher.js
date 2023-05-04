@@ -37,11 +37,11 @@ function redirectToMainWindow(navigate){
 
 async function fetchGetEmployeeData(id, navigate) {
     if (id !== '-1') {
-        const response = await fetch(serverIp + "/" + endpointGetEmployeeData + "/" + id)
+        const response = await fetch(serverIpProd + "/" + endpointGetEmployeeData + "/" + id)
             .catch( err => console.error(err))
         if(response.status === 200){
             const newData = await response.json();
-            return newData[0]
+            return newData
         }
         else {
             redirectToMainWindow(navigate)
@@ -130,7 +130,7 @@ async function fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate) {
 }
 
 async function fetchGetAllSkillsAndSort(navigate) {
-    const response = await fetch(serverIp + "/" + endpointGetAllSkills,
+    const response = await fetch(serverIpProd + "/" + endpointGetAllSkills,
         {
             method: "GET"
         })
