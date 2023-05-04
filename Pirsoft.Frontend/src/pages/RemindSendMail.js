@@ -2,26 +2,18 @@ import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
 import {useNavigate} from "react-router-dom";
-import LoggingPassword from "../components/logging/LoggingPassword";
 import RemindEmail from "../components/base/remind/RemindEmail";
 import {MdOutlineArrowBackIosNew} from "react-icons/md";
 import {
     alertMessageSent,
-    alertNewPasswordsAreIncompatible,
-    alertPutNewPasswords,
     alertUnexpectedError,
-    alertVerficationCodeIsIncompatible,
     alertWrongEmail,
     labelBack,
     labelGiveEmail,
-    labelGiveNewPassword,
-    labelGiveNewPasswordAgain,
     labelRemindPassword,
     labelSendVerificationEmail,
-    labelVerificationCode, pageNameRemind,
-    serverIp
+    pageNameRemind
 } from "../GlobalAppConfig";
-import {endpointGetVerifyCode, endpointPostChangePassword, endpointPostSendEmailForPasswordChange} from "../EndpointAppConfig";
 import {fetchPostSendEmailForPasswordChange} from "../DataFetcher";
 
 function RemindSendMail(){

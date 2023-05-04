@@ -7,14 +7,12 @@ import {
     alertNewPasswordsAreIncompatible, alertPasswordChanged,
     alertPutNewPasswords,
     alertUnexpectedError,
-    labelApprove, labelBack, labelChangePassword,
+    labelApprove, labelChangePassword,
     labelGiveNewPassword,
     labelGiveNewPasswordAgain,
-    pagePasswordChange,
-    serverIp
+    pagePasswordChange
 } from "../GlobalAppConfig";
-import {endpointPostChangePassword} from "../EndpointAppConfig";
-import {fetchGetChangePasswordData} from "../DataFetcher";
+import {fetchGetChangePasswordData, fetchPutChangePassword} from "../DataFetcher";
 
 function Remind(){
     document.title = pagePasswordChange;
@@ -55,16 +53,8 @@ function Remind(){
         else if (newPassword !== undefined && newRepeatPassword !== undefined &&
             newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0) {
 
-            // Tutaj do pomyślenia jakie wartosci sprawdzic
             if(newPassword.toString() === newRepeatPassword.toString()){
-                fetch(serverIp + "/" + endpointPostChangePassword,
-                    {
-                        method: 'PUT',
-                        body: JSON.stringify({
-                            employee_id: employeeId,
-                            new_employee_password: newPassword,
-                            repeat_new_employee_password: newRepeatPassword})
-                    })
+                fetchPutChangePassword(navigate, employeeId, newPassword, newRepeatPassword)
                     .then((response) => {
                         if(response.status === 200){
                             setPasswordChangedSuccesfully(true);
