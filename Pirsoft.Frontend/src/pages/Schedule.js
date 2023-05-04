@@ -149,7 +149,7 @@ function Schedule(){
             if(day.reason === 'absent'){
                 color = 'bg-absent'
             }
-            if(day.reason === 'dayoff'){
+            if(day.reason === 'dayoff' || day.reason === 'demand'){
                 color = 'bg-dayoff'
             }
             if(day.reason === 'sick'){

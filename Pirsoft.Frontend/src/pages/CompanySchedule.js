@@ -4,101 +4,70 @@ import ReusableButton from "../components/base/ReusableButton";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
 import TeamRow from "../components/companySchedule/TeamRow";
-import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 import {legendLabel, legendToday, months, pageNameCompanySchedule, serverIp, weekdays} from "../GlobalAppConfig";
-import {endpointGetAllCompanyMonthDaysOff, endpointGetAllEmployees, endpointGetAllTeams} from "../EndpointAppConfig";
 import {Popup} from "semantic-ui-react";
 import Legend from "../components/legend/Legend";
+import {
+    fetchGetAllEmployees,
+    fetchGetAllTeamsAndAddZeroRecordAndSort, fetchGetCompanyMonthDaysOff
+} from "../DataFetcher";
+import {useNavigate} from "react-router-dom";
 
 function CompanySchedule(){
     document.title = pageNameCompanySchedule;
 
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-    const[wantedWidthForList, setWantedWidthForList] = useState(1000);
+    const navigate = useNavigate();
 
-    //wszystkie zespoly ktore potrzebuje
-    const [teams, setTeams] = useState(Object);
-    const [teamsLoaded, setTeamsLoaded] = useState(false)
-
-    const [allTeams, setAllTeams] = useState([])
-
-    // ładowanie raz zespołów po załądowaniu okna a nie na bieżąco
-    if (teams[0] === undefined) {
-        fetch(serverIp + "/" + endpointGetAllTeams)
-            .then((response) => response.json())
-            .then((response) => {
-                response.sort(FunctionForSortingJson("department_id", "ascending"))
-                setTeams(response)
-                setTeamsLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
+    const optionsForFormatDate = {
+        year: "numeric",
+        month: "2-digit",
     }
 
-    const [currentMonthDaysOff, setCurrentMonthDaysOff] = useState(Object);
-    const [monthDaysOffLoaded, setMonthDaysOffLoaded] = useState(false)
-    const loadMonthDaysOff = (data) => {
-        // ładowanie dni wolnych / wybranych / nieobecnych w wybranym miesiacu
-
-        fetch(serverIp + "/" + endpointGetAllCompanyMonthDaysOff + "/2022-02")
-            .then((response) => response.json())
-            .then((response) => {
-                setCurrentMonthDaysOff(response)
-                setMonthDaysOffLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
-
-    const [employees, setEmployees] = useState(Object);
-    const [employeesLoaded, setEmployeesLoaded] = useState(false)
-
-    // ładowanie wszystkich pracowników
-    if (employees[0] === undefined) {
-        fetch(serverIp + "/" + endpointGetAllEmployees)
-            .then((response) => response.json())
-            .then((response) => {
-                response.sort(FunctionForSortingJson("last_name", "ascending"))
-                setEmployees(response)
-                setEmployeesLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
-
+    // Zmienna pozwalająca wyświetlić cały komponent kalendarza
     const [allTeamsAreLoadedInDivs, setAllTeamsAreLoadedInDivs] = useState(false)
 
-    const [pickedMonthText, setPickedMonth] = useState('')
+    //wszystkie zespoly ktore potrzebuje
+    const [teams, setTeams] = useState(null);
+    const [employees, setEmployees] = useState(null);
 
-    const [daysOfWeek, setDaysOfWeek] = useState([])
-    const [calendarDays, setCalendarDays] = useState([])
+    useEffect(() => {
+        // Załadowanie wszystkich zespołów
+        if(teams === null) {
+            fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, false)
+                .then(teams => {
+                    setTeams(teams)
+                });
+        }
+
+        // Pobranie listy wszystkich pracowników
+        if (employees === null) {
+            fetchGetAllEmployees(navigate, true)
+                .then(employees => setEmployees(employees));
+        }
+
+        if(allTeamsAreLoadedInDivs === false && teams !== null && employees !== null){
+            fetchGetCompanyMonthDaysOff(navigate, new Date().toLocaleDateString("sv", optionsForFormatDate))
+                .then(companyMonthDaysOff => {
+                    loadWholeMonthDataForCompany(new Date(), companyMonthDaysOff)
+                })
+        }
+
+    });
+
+    // Zmienna wyświetlająca o wybranym miesiacu i roku
+    const [pickedMonthText, setPickedMonth] = useState('')
 
     const loadWholeMonthData = (pickedMonth) => {
         setPickedMonth(pickedMonth)
 
         const pickedMonthCurrently = parseInt(pickedMonth.date.substring(5,7))-1
         const pickedYearCurrently = parseInt(pickedMonth.date.substring(0,4))
-        const pickedMonthDate = new Date(pickedYearCurrently, pickedMonthCurrently,1)
 
         let currentMonthDays = [];
-        let daysOfWeekLoad = []
-
-        weekdays.forEach((weekday) => {
-            daysOfWeekLoad.push(
-                <div className={"m-2 flex self-end place-self-center text-workday"}>
-                    {weekday.toString()}
-                </div>);
-        });
-        setDaysOfWeek(daysOfWeekLoad)
-
         currentMonthDays = createDaysForCurrentMonth(
             pickedYearCurrently,
             pickedMonthCurrently
         );
-
         const days = [...currentMonthDays];
 
         return days
@@ -114,14 +83,11 @@ function CompanySchedule(){
         }
     }
 
-    const loadWholeMonthDataForCompany = (today) => {
-        setAllTeamsAreLoadedInDivs(false)
-        setMonthDaysOffLoaded(false)
+    // Zmianna, która zawiera komponenty z zespołami, pracownikami, dniami
+    const [allTeams, setAllTeams] = useState([])
 
-        const optionsForFormatDate = {
-            year: "numeric",
-            month: "2-digit",
-        }
+    const loadWholeMonthDataForCompany = (today, currentMonthDaysOff) => {
+        setAllTeamsAreLoadedInDivs(false)
 
         const days = loadWholeMonthData({
             text: months[today.getMonth()]+" "
@@ -155,7 +121,7 @@ function CompanySchedule(){
             colDayOfWeek = colDayOfWeek + 1
         });
 
-        console.clear()
+        //console.clear()
 
         let row = 1
         teams.forEach((team, id) => {
@@ -170,13 +136,6 @@ function CompanySchedule(){
         // ustawianie calego kalendarza i pokazanie go
         setAllTeams(allTeamsLoad)
         setAllTeamsAreLoadedInDivs(true)
-    }
-
-    if(teamsLoaded && employeesLoaded && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
-        loadMonthDaysOff(new Date())
-        if(monthDaysOffLoaded) {
-            loadWholeMonthDataForCompany(new Date())
-        }
     }
 
     function createDaysForCurrentMonth(year, month) {
@@ -203,10 +162,10 @@ function CompanySchedule(){
                 pickedMonthTextDate.getMonth(),
                 0)
 
-            loadMonthDaysOff(pickedMonthTextDateMinusOne)
-            if(monthDaysOffLoaded) {
-                loadWholeMonthDataForCompany(pickedMonthTextDateMinusOne)
-            }
+            fetchGetCompanyMonthDaysOff(navigate, pickedMonthTextDateMinusOne.toLocaleDateString("sv", optionsForFormatDate))
+                .then(companyMonthDaysOff => {
+                    loadWholeMonthDataForCompany(pickedMonthTextDateMinusOne, companyMonthDaysOff)
+                })
         }
 
         if(mode === 'next'){
@@ -215,12 +174,14 @@ function CompanySchedule(){
                 pickedMonthTextDate.getMonth()+1,
                 1)
 
-            loadMonthDaysOff(pickedMonthTextDatePlusOne)
-            if(monthDaysOffLoaded) {
-                loadWholeMonthDataForCompany(pickedMonthTextDatePlusOne)
-            }
+            fetchGetCompanyMonthDaysOff(navigate, pickedMonthTextDatePlusOne.toLocaleDateString("sv", optionsForFormatDate))
+                .then(companyMonthDaysOff => {
+                    loadWholeMonthDataForCompany(pickedMonthTextDatePlusOne, companyMonthDaysOff)
+                })
         }
     }
+
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
     useEffect(() => {
         FunctionForResize("schedule-company-list", {setWantedHeightForList});
@@ -228,14 +189,19 @@ function CompanySchedule(){
 
     return(
         <>
-        {teamsLoaded && allTeamsAreLoadedInDivs ?
+        {allTeamsAreLoadedInDivs ?
             <>
                 <div id={"company-schedule-parent"} className={"every-page-on-scroll overflow-y-hidden hover:cursor-default"}
                      style={{minWidth: 800}}>
                     <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
-                                <ReusableButton id={"company-schedule-today"} value={legendToday} onClick={() => loadWholeMonthDataForCompany(new Date())}/>
+                                <ReusableButton id={"company-schedule-today"} value={legendToday} onClick={() =>
+                                {fetchGetCompanyMonthDaysOff(navigate, new Date())
+                                    .then(companyMonthDaysOff => {
+                                        console.log(companyMonthDaysOff)
+                                        loadWholeMonthDataForCompany(new Date(), companyMonthDaysOff)
+                                    })}}/>
                             </div>
                         </div>
                         <div className={"col-start-1 row-start-1 place-self-center"}>
@@ -270,8 +236,6 @@ function CompanySchedule(){
                     <div id={"schedule-company-list"}
                          style={{
                              height: wantedHeightsForList,
-                             // maxWidth: wantedWidthForList,
-                             // width: wantedWidthForList,
                              minWidth: 800}}
                          className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" gap-y-4 content-start"}>
                         {allTeams}

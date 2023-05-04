@@ -8,7 +8,7 @@ import {
     teamAdditionalRow
 } from "./GlobalAppConfig";
 import {
-    endpointGetAbsencesTypes,
+    endpointGetAbsencesTypes, endpointGetAllCompanyMonthDaysOff,
     endpointGetAllContracts, endpointGetAllEmployees,
     endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllSkills,
     endpointGetAllTeams, endpointGetEmployeeAbsences,
@@ -41,7 +41,7 @@ async function fetchGetEmployeeData(id, navigate) {
 }
 
 async function fetchGetAllEmployees(navigate, sortForTeams = false) {
-    const response = await fetch(serverIpProd + "/" + endpointGetAllEmployees)
+    const response = await fetch(serverIp + "/" + endpointGetAllEmployees)
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
@@ -104,7 +104,7 @@ async function fetchGetAllPositionsAndAddZeroRecordAndSort(navigate) {
 }
 
 async function fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate) {
-    const response = await fetch(serverIp + "/" + endpointGetAllPositionsLevels,
+    const response = await fetch(serverIpProd + "/" + endpointGetAllPositionsLevels,
         {
             method: "GET"
         })
@@ -214,6 +214,22 @@ async function fetchGetEmployeeMonthDaysOff(navigate, id, yearMonth) {
     }
 }
 
+async function fetchGetCompanyMonthDaysOff(navigate, yearMonth) {
+    const response = await fetch(serverIp + "/" + endpointGetAllCompanyMonthDaysOff + "/" + yearMonth,
+        {
+            method: "GET"
+        })
+        .catch( err => console.error(err))
+    console.clear()
+    if(response.status === 200){
+        const newData = await response.json();
+        return newData
+    }
+    else {
+        return []
+    }
+}
+
 export {
     fetchGetEmployeeData,
     fetchGetAllEmployees,
@@ -229,6 +245,7 @@ export {
     fetchGetEmployeesRequests,
     fetchGetEmployeesAbsences,
 
-    fetchGetEmployeeMonthDaysOff
+    fetchGetEmployeeMonthDaysOff,
+    fetchGetCompanyMonthDaysOff
 
 }

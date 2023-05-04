@@ -2,7 +2,7 @@
 // Adres ip aplikacji
 const serverIp = "http://127.0.0.1:3001";
 
-const serverIpProd = "http://127.0.0.1:3001";//https://localhost:7120";
+const serverIpProd = "https://localhost:7120";
 
 // Nazwa aplikacji
 const appName = "PIRSOFT";
