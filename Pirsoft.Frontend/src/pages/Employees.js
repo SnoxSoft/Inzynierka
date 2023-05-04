@@ -10,8 +10,7 @@ import {
     headerEmployees,
     labelFind,
     labelFirstNameAndLastName,
-    pageNameEmployees,
-    serverIp
+    pageNameEmployees
 } from "../GlobalAppConfig";
 import AddEmployeeAnAbsence from "./AddEmployeeAnAbsence";
 import {

@@ -22,7 +22,10 @@ import {
     endpointGetEmployeeMonthDaysOff,
     endpointGetEmployeesRequests,
     endpointGetRequestApprovers,
-    endpointGetRequestsStatuses, endpointPostSendEmailForPasswordChange
+    endpointGetRequestsStatuses,
+    endpointPostChangePassword,
+    endpointPostSendEmailForPasswordChange,
+    endpointPutChangePassword
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -65,6 +68,17 @@ async function fetchGetChangePasswordData(navigate, code) {
         const newData = await response.json();
         return newData[0]
     }
+}
+
+async function fetchPutChangePassword(navigate, employeeId, newPassword, newRepeatPassword) {
+    return await fetch(serverIp + "/" + endpointPutChangePassword,
+        {
+            method: "PUT",
+            body: JSON.stringify({
+                employee_id: employeeId,
+                new_employee_password: newPassword,
+                repeat_new_employee_password: newRepeatPassword})
+        })
 }
 
 async function fetchGetEmployeeData(id, navigate) {
@@ -290,6 +304,7 @@ export {
     fetchPutEditOldPasswordInProfile,
     fetchPostSendEmailForPasswordChange,
     fetchGetChangePasswordData,
+    fetchPutChangePassword,
 
     fetchGetEmployeeData,
     fetchGetAllEmployees,
