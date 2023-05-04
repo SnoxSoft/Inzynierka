@@ -21,7 +21,8 @@ import {
     labelVerificationCode, pageNameRemind,
     serverIp
 } from "../GlobalAppConfig";
-import {endpointGetVerifyCode, endpointPostChangePassword, endpointPostSendVerifyCode} from "../EndpointAppConfig";
+import {endpointGetVerifyCode, endpointPostChangePassword, endpointPostSendEmailForPasswordChange} from "../EndpointAppConfig";
+import {fetchPostSendEmailForPasswordChange} from "../DataFetcher";
 
 function RemindSendMail(){
     document.title = pageNameRemind;
@@ -42,9 +43,7 @@ function RemindSendMail(){
 
     const sendVerifyEmail = () => {
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@')) {
-            fetch(serverIp + "/" + endpointPostSendVerifyCode + "/" + email, {
-                method: 'POST'
-            }).then((response) => {
+            fetchPostSendEmailForPasswordChange(navigate, email).then((response) => {
                 if(response.status === 200){
                     setMailSentAlert(true);
                     setTimeout(() => {setMailSentAlert(false)}, 3000);

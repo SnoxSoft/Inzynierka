@@ -28,7 +28,7 @@ const endpointGetEmployeeAbsences = "getEmployeeAbsences";
 // Przypominanie hasła //
 
 // Wysłanie kodu weryfikacyjnego na adres email
-const endpointPostSendVerifyCode = "sendVerifyCode";
+const endpointPostSendEmailForPasswordChange = "sendVerifyCode";
 
 // Weryfikacja kodu przesłanego na dany email z podanym adresem email
 const endpointGetVerifyCode = "verifyCode";
@@ -122,7 +122,7 @@ export {
 
     endpointGetRequestApprovers,
 
-    endpointPostSendVerifyCode, endpointGetVerifyCode, endpointPostChangePassword, endpointEmployeeChangePassword,
+    endpointPostSendEmailForPasswordChange, endpointGetVerifyCode, endpointPostChangePassword, endpointEmployeeChangePassword,
 
     endpointGetLogIn,
 

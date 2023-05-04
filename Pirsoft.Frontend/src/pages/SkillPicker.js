@@ -11,7 +11,7 @@ import {
     endpointGetAllSkills, endpointGetAllTeams,
     endpointGetVerifyCode,
     endpointPostChangePassword,
-    endpointPostSendVerifyCode
+    endpointPostSendEmailForPasswordChange
 } from "../EndpointAppConfig";
 import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 

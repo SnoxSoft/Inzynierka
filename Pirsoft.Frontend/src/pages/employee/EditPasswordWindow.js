@@ -10,11 +10,14 @@ import {
 import LoggingPassword from "../../components/logging/LoggingPassword";
 import ReusableButton from "../../components/base/ReusableButton";
 import React, {useState} from "react";
-import {endpointEmployeeChangePassword} from "../../EndpointAppConfig";
+import {fetchPutEditOldPasswordInProfile} from "../../DataFetcher";
+import {useNavigate} from "react-router-dom";
 
 function EditPasswordWindow({setShowPasswordChangeFrame,
                                 setEmployeeDataShow, employee}) {
     document.title = pagePasswordEdit;
+
+    const navigate = useNavigate();
 
     // Poniżej znajdą się wszystkie dane i funkcje dla okienka zmiany hasła w danych pracownika
     const [oldPassword, setOldPassword] = useState();
@@ -35,15 +38,9 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                 // Tutaj pomyslimy jakie wartosci sprawdzic
                 if (newPassword.toString() === newRepeatPassword.toString()) {
 
-                    fetch(serverIp + "/" + endpointEmployeeChangePassword,
-                        {
-                            method: 'PUT',
-                            body: JSON.stringify({
-                                employee_id: employee.employee_id,
-                                employee_old_password: oldPassword,
-                                new_employee_password: newPassword,
-                                repeat_new_employee_password: newRepeatPassword})
-                        }).then((response) => {
+                    fetchPutEditOldPasswordInProfile(navigate,
+                        employee.employee_id, oldPassword, newPassword, newRepeatPassword)
+                        .then((response) => {
                         if(response.status === 200){
                             setPasswordChangedSuccesfully(true);
                             setTimeout(() => {

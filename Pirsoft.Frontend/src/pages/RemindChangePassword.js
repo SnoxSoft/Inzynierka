@@ -14,6 +14,7 @@ import {
     serverIp
 } from "../GlobalAppConfig";
 import {endpointPostChangePassword} from "../EndpointAppConfig";
+import {fetchGetChangePasswordData} from "../DataFetcher";
 
 function Remind(){
     document.title = pagePasswordChange;
@@ -21,19 +22,16 @@ function Remind(){
     const navigate = useNavigate()
     const {code} = useParams();
 
-    const [employeeId, setEmployeeId] = useState('');
+    const [employeeId, setEmployeeId] = useState(null);
     const [employeeName, setEmployeeName] = useState('');
-    loadAllSkills().then(r => {
-        setEmployeeId(r.employee_id)
-        setEmployeeName(r.first_name + " " + r.last_name)
+
+    useEffect(() => {
+        fetchGetChangePasswordData(navigate, code)
+            .then(response => {
+                setEmployeeId(response.employee_id)
+                setEmployeeName(response.first_name + " " + response.last_name)
+            })
     })
-
-    async function loadAllSkills(){
-        const response = await fetch(serverIp + "/get/change-password/"+code, {method: 'GET'})
-        const employeeData = await response.json();
-
-        return employeeData[0]
-    }
 
     const [newPassword, setNewPassword] = useState();
     const [newRepeatPassword, setNewRepeatPassword] = useState();
@@ -50,7 +48,11 @@ function Remind(){
     }, []);
 
     const changePassword = () => {
-        if (newPassword !== undefined && newRepeatPassword !== undefined &&
+        if(employeeId === null){
+            setProblemOccured(true);
+            setTimeout(() => {setProblemOccured(false)}, 3000);
+        }
+        else if (newPassword !== undefined && newRepeatPassword !== undefined &&
             newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0) {
 
             // Tutaj do pomyślenia jakie wartosci sprawdzic
@@ -91,56 +93,56 @@ function Remind(){
         }
     }
 
-    return <div id={"password-reminder-page"}
-             className={"every-page-on-scroll hover:cursor-default"}
-             style={{ height: wantedHeightsForList } }>
-            <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
-                <div>
-                    <p>{labelChangePassword}</p>
-                    <p>{employeeName}</p>
-                </div>
-                <br/><br/>
-                <div className={"flex flex-col gap-4"}>
-                    <label>{labelGiveNewPassword}</label>
-                    <div className={"flex flex-col gap-4 self-center"}>
-                        <LoggingPassword
-                            id={"remind-new-password"}
-                            value={newPassword} onChange={setNewPassword} showHide={false}/>
+    return  <div id={"password-reminder-page"}
+                 className={"every-page-on-scroll hover:cursor-default"}
+                 style={{ height: wantedHeightsForList } }>
+                <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
+                    <div>
+                        <p>{labelChangePassword}</p>
+                        <p>{employeeName}</p>
+                    </div>
+                    <br/><br/>
+                    <div className={"flex flex-col gap-4"}>
+                        <label>{labelGiveNewPassword}</label>
+                        <div className={"flex flex-col gap-4 self-center"}>
+                            <LoggingPassword
+                                id={"remind-new-password"}
+                                value={newPassword} onChange={setNewPassword} showHide={false}/>
+                        </div>
+                    </div>
+                    <div className={"flex flex-col gap-4"}>
+                        <label>{labelGiveNewPasswordAgain}</label>
+                        <div className={"flex flex-col gap-4 self-center"}>
+                            <LoggingPassword
+                                id={"remind-repeat-password"}
+                                value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div className={"bg-blue-menu self-center"}>
+                        <ReusableButton id={"remind-change-password-approve"}
+                            value={labelApprove} onClick={() => changePassword()}/>
                     </div>
                 </div>
-                <div className={"flex flex-col gap-4"}>
-                    <label>{labelGiveNewPasswordAgain}</label>
-                    <div className={"flex flex-col gap-4 self-center"}>
-                        <LoggingPassword
-                            id={"remind-repeat-password"}
-                            value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
-                    </div>
-                </div>
-                <br/>
-                <div className={"bg-blue-menu self-center"}>
-                    <ReusableButton id={"remind-change-password-approve"}
-                        value={labelApprove} onClick={() => changePassword()}/>
+                <div className={"flex flex-col items-center text-workday"}>
+                    {passwordChangedSuccesfully ?
+                        <p className={"bg-green-700 rounded-md font-bold whitespace-pre-wrap text-center"}>
+                            {alertPasswordChanged}
+                        </p> : <></> }
+                    {problemOccured ?
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertUnexpectedError}
+                        </p> : <></> }
+                    {wrongPasswords ?
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertPutNewPasswords}
+                        </p> : <></> }
+                    {notTheSame ?
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertNewPasswordsAreIncompatible}
+                        </p> : <></> }
                 </div>
             </div>
-            <div className={"flex flex-col items-center text-workday"}>
-                {passwordChangedSuccesfully ?
-                    <p className={"bg-green-700 rounded-md font-bold whitespace-pre-wrap text-center"}>
-                        {alertPasswordChanged}
-                    </p> : <></> }
-                {problemOccured ?
-                    <p className={"bg-red-700 rounded-md font-bold"}>
-                        {alertUnexpectedError}
-                    </p> : <></> }
-                {wrongPasswords ?
-                    <p className={"bg-red-700 rounded-md font-bold"}>
-                        {alertPutNewPasswords}
-                    </p> : <></> }
-                {notTheSame ?
-                    <p className={"bg-red-700 rounded-md font-bold"}>
-                        {alertNewPasswordsAreIncompatible}
-                    </p> : <></> }
-            </div>
-        </div>
 }
 
 export default Remind;

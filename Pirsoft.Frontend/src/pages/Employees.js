@@ -13,7 +13,6 @@ import {
     pageNameEmployees,
     serverIp
 } from "../GlobalAppConfig";
-import {endpointGetAllEmployees, endpointGetEmployees} from "../EndpointAppConfig";
 import AddEmployeeAnAbsence from "./AddEmployeeAnAbsence";
 import {
     fetchGetAllEmployees,
