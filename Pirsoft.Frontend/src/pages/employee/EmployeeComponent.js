@@ -185,17 +185,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
     // Ładowanie umiejętności dla okna wyboru umiejętności
     const [loadedAllSkills, setLoadedAllSkills] = useState([])
-    async function loadAllSkills(){
-        setLoadedAllSkills([])
-        let allSkillsLoad = []
-        const response = await fetch(serverIp + "/" + endpointGetAllSkills)
-        const skills = await response.json();
-
-        skills.forEach((s) => {
-            allSkillsLoad.push(s)
-        })
-        setLoadedAllSkills(allSkillsLoad)
-    }
 
     return(
         <>

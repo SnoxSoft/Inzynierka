@@ -12,11 +12,15 @@ import {
     labelRequestType, pageNameRequest,
     serverIp
 } from "../GlobalAppConfig";
-import {endpointGetRequestApprovers} from "../EndpointAppConfig";
-
+import {
+    fetchApproversForRequest
+} from "../DataFetcher";
+import {useNavigate} from "react-router-dom";
 
 const Request = ({setAbsencesVisible}) =>{
     document.title = pageNameRequest;
+
+    const navigate = useNavigate();
 
     // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
@@ -28,13 +32,6 @@ const Request = ({setAbsencesVisible}) =>{
     currentDate.setDate(1);
     const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
     const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
-
-
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-    useEffect(() => {
-        FunctionForResize("schedule-list", {setWantedHeightForList});
-        FunctionForResize("schedule-month", {setWantedHeightForList});
-    }, []);
 
     // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
@@ -64,40 +61,35 @@ const Request = ({setAbsencesVisible}) =>{
         setLeaveDaysLeft(true);
     }
 
-    // Pobranie listy osób, które mogą zatwierdzić wniosek
-    const [approvers, setApprovers] = useState(Array);
+    // Lista w której pokażemy wsyzystkei ossoby które mogą zatwierdzać
+    const [approversList, setApproversList] = useState(null);
 
-    const fetchingApprovers = () => {
-        fetch(serverIp + "/" + endpointGetRequestApprovers + "/" + sessionStorage.getItem("USER"))
-            .then((response) => {response.json()
-                .then((response) => {
-                    setApprovers(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
-
-    if (approvers[0] === undefined) {
-        fetchingApprovers()
-    }
-
-    const [approversList, setApproversList] = useState([]);
-
-    if (approvers[0] !== undefined && approversList.length === 0){
-        let approversListLoad = [];
-        let approverId = 1;
-        for (const i of approvers) {
-            approversListLoad.push(
-                <div key={"approver-item-" + approverId} className={"text-black"}>
-                    {i.name}, {i.role}
-                </div>
-            )
-            approverId++;
+    useEffect(() => {
+        // Pobranie listy osób, które mogą zatwierdzić wniosek
+        if (approversList === null) {
+            fetchApproversForRequest(navigate, sessionStorage.getItem("USER"))
+                .then(approvers => {
+                    let approversListLoad = [];
+                    let approverId = 1;
+                    for (const i of approvers) {
+                        approversListLoad.push(
+                            <div key={"approver-item-" + approverId} className={"text-black"}>
+                                {i.name}, {i.role}
+                            </div>
+                        )
+                        approverId++;
+                    }
+                    setApproversList(approversListLoad)
+                })
         }
-        setApproversList(approversListLoad)
-    }
+
+    });
+
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+    useEffect(() => {
+        FunctionForResize("schedule-list", {setWantedHeightForList});
+        FunctionForResize("schedule-month", {setWantedHeightForList});
+    }, []);
 
     return(
         <div id={"Request"}
