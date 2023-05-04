@@ -82,19 +82,20 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // Do pokazania/Ukrycia okna do wystawiania wniosku urlopowego
     const [showAddEmployeeAnAbsence, setShowAddEmployeeAnAbsence] = useState(false)
 
+
     // Dane pracownika
     const[firstName, setFirstName] = useState(employee !== undefined && employee !== null ? employee.first_name : '');
     const[lastName, setLastName] = useState(employee !== undefined && employee !== null? employee.last_name : '');
     const[email, setEmail] = useState(employee !== undefined && employee !== null ? employee.email_address : '');
     const[bank, setBank] = useState(employee !== undefined && employee !== null ? employee.bank_account_number : '');
-    const[birth, setBirth] = useState(employee !== undefined && employee !== null ? employee.birth_date : '');
+    const[birth, setBirth] = useState(employee !== undefined && employee !== null ? employee.birth_date.substring(0, 10) : '');
     const[pesel, setPesel] = useState(employee !== undefined && employee !== null ? employee.pesel : '');
     const[salary, setSalary] = useState(employee !== undefined && employee !== null ? employee.salary_gross : '');
     const[department, setDepartment] = useState(employee !== undefined && employee !== null ? employee.employee_department_id : '');
     const[contract, setContract] = useState(employee !== undefined && employee !== null ? employee.employee_contract_type_id : '');
     const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.employee_company_role_id : '');
     const[positionLevel, setPositionLevel] = useState(employee !== undefined && employee !== null ? employee.employee_seniority_level_id : '');
-    const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.employment_start_date : '');
+    const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.employment_start_date.substring(0, 10) : '');
 
     // Reszta danych pracownika
     const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? undefined : undefined); //employee.avatar
@@ -106,14 +107,14 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setLastName(employee.last_name);
             setEmail(employee.email_address);
             setBank(employee.bank_account_number);
-            setBirth(employee.birth_date);
+            setBirth(employee.birth_date.substring(0, 10));
             setPesel(employee.pesel);
             setSalary(employee.salary_gross);
             setDepartment(employee.employee_department_id);
             setContract(employee.employee_contract_type_id);
             setPosition(employee.employee_company_role_id);
             setPositionLevel(employee.employee_seniority_level_id);
-            setStart(employee.employment_start_date);
+            setStart(employee.employment_start_date.substring(0, 10));
 
             setAvatarData(employee.avatar);
             setSkillsData(employee.skills);
