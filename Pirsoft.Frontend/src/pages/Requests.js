@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import RequestsListItem from "../components/requests/RequestsListItem";
 import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
-import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 import {
     pageNameRequests,
     requestActionLabel,
@@ -10,11 +9,6 @@ import {
     requestStatusLabel, serverIp,
 } from "../GlobalAppConfig";
 import RequestsFilter from "../components/requests/RequestsFilter";
-import {
-    endpointGetAbsencesTypes,
-    endpointGetEmployeesRequests,
-    endpointGetRequestsStatuses
-} from "../EndpointAppConfig";
 import {useNavigate} from "react-router-dom";
 import {
     fetchGetAllTeamsAndAddZeroRecordAndSort,

@@ -4,18 +4,13 @@ import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import AbsencesListItem from "../components/absences/AbsencesListItem";
 import Request from "./Request";
-import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 import {
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
     labelFilter, labelRequest, pageNameAbsences,
     requestActionLabel,
     requestDescriptionLabel, requestStatusApprovedLabel, requestStatusDisapprovedLabel,
-    requestStatusLabel, requestStatusWaitingLabel,
-    serverIp
+    requestStatusLabel, requestStatusWaitingLabel
 } from "../GlobalAppConfig";
-import {
-    endpointGetEmployeeAbsences
-} from "../EndpointAppConfig";
 import {useNavigate} from "react-router-dom";
 import {
     fetchGetRequestsStatuses,
@@ -68,13 +63,6 @@ function Absences(){
     // Ładowanie nieobecności pracownika, statusów nieobecności oraz nazwa nieobecności
     const [employeeAbsences, setEmployeeAbsences] = useState(null);
 
-    // Filtrowanie nieobecności
-    function filtrAbsences(id){
-        setEmployeeAbsences(null)
-        fetchGetEmployeesAbsences(navigate, id)
-            .then(employeeAbsences => setEmployeeAbsences(employeeAbsences));
-    }
-
     useEffect(() => {
         // Załadowanie statusów wniosków
         if (requestsStatus === null) {
@@ -90,17 +78,23 @@ function Absences(){
                 .then(absencesTypes => setAbsencesTypes(absencesTypes));
         }
 
-        if(employeeAbsences === null) {
+        if(employeeAbsences === null && requestsStatus !== null && absencesTypes !== null) {
             filtrAbsences()
         }
     })
+
+    // Filtrowanie nieobecności
+    function filtrAbsences(id){
+        setEmployeeAbsences(null)
+        fetchGetEmployeesAbsences(navigate, id)
+            .then(employeeAbsences => {setEmployeeAbsences(employeeAbsences)});
+    }
 
     // W tej zmiennej znajduje się cała lista wniosków do wyświetlenia
     const [absencesList, setAbsencesList] = useState([]);
 
     if (employeeAbsences !== null && absencesList.length === 0){
         let absencesListLoad = [];
-
         let row = 0;
         for (const i of employeeAbsences) {
             absencesListLoad.push(
