@@ -11,28 +11,30 @@ import {
     labelFilter,
     legendLabel, months,
     monthsOfYourWorkLabel, pageNameSchedule,
-    serverIp, weekdays
+    weekdays
 } from "../GlobalAppConfig";
-import {endpointGetEmployeeMonthDaysOff} from "../EndpointAppConfig";
 import Legend from "../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
+import {useNavigate} from "react-router-dom";
+import {fetchGetEmployeeMonthDaysOff} from "../DataFetcher";
 
 function Schedule(){
     document.title = pageNameSchedule;
 
-    // Ładowanie dni wolnych / wybranych / nieobecnych
-    let daysOff = [Object]
-    fetch(serverIp + "/" + endpointGetEmployeeMonthDaysOff + "/" + sessionStorage.getItem('USER') + "/" + "2023-02")
-        .then((response) => {response.json()
-            .then((response) => {
-                daysOff = response
-            });
-        })
-        .catch((err) => {
-            console.log(err.message);
-        })
+    const navigate = useNavigate();
 
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+    // Ładowanie dni wolnych / wybranych / nieobecnych
+    const [monthDaysOff, setMonthDaysOff] = useState([])
+
+    // Ładowanie listy do wybrania miesiąca
+    const [monthList, setMonthList] = useState([])
+
+    useEffect(() => {
+        if(monthList.length === 0) {
+            filtrSchedule()
+                .then(scheduleList => setMonthList(scheduleList))
+        }
+    })
 
     const options = {
         year: "numeric",
@@ -52,14 +54,7 @@ function Schedule(){
         dateTodayMinusThreeMonthsFormatted);
     const [to, setTo] = useState(dateToday);
 
-    const [monthList, setMonthList] = useState([])
-
-    useEffect(() => {
-        FunctionForResize("schedule-month-list", {setWantedHeightForList});
-
-    }, []);
-
-    const filtrSchedule = () => {
+    async function filtrSchedule(){
         const dateFrom = new Date(from);
         const dateTo = new Date(to);
 
@@ -78,19 +73,21 @@ function Schedule(){
                     date: newDate.toLocaleDateString("sv", options)
                 });
         }
-        setMonthList(localList)
+        return localList
     }
 
+    // Pokazanie miesiąca abo listy miesięcy
     const[showHidePickedMonth, setShowHidePickedMonth] = useState(false);
 
     const [daysOfWeek, setDaysOfWeek] = useState([])
     const [calendarDays, setCalendarDays] = useState([])
 
-
+    // Tekst wyświetlany jaki miesiąc ostał wybrany
     const [pickedMonthText, setPickedMonth] = useState('')
 
     const loadWholeMonthData = (pickedMonth) => {
         setPickedMonth(pickedMonth)
+        setCalendarDays([])
 
         const pickedMonthCurrently = parseInt(pickedMonth.date.substring(5,7))-1
         const pickedYearCurrently = parseInt(pickedMonth.date.substring(0,4))
@@ -113,28 +110,31 @@ function Schedule(){
         const firstDayOfCurrentMonth = new Date(pickedYearCurrently, pickedMonthCurrently, 1)
         const lastDayOfCurrentMonth = new Date(pickedYearCurrently, pickedMonthCurrently+1, 0)
 
-        currentMonthDays = createDaysForCurrentMonth(
-            pickedYearCurrently,
-            pickedMonthCurrently,
-            daysOff
-        );
+        // Ładowanie dni wolnych po załadowaniu okna a nie na bieżąco
+        fetchGetEmployeeMonthDaysOff(navigate, sessionStorage.getItem('USER'), pickedMonth.date)
+            .then(monthDaysOfff => {
+                setMonthDaysOff(monthDaysOfff)
 
-        previousMonthDays = createDaysForPreviousMonth(firstDayOfCurrentMonth);
+                currentMonthDays = createDaysForCurrentMonth(
+                    pickedYearCurrently,
+                    pickedMonthCurrently,
+                    monthDaysOfff
+                );
 
-        nextMonthDays = createDaysForNextMonth(lastDayOfCurrentMonth);
+                previousMonthDays = createDaysForPreviousMonth(firstDayOfCurrentMonth);
+                nextMonthDays = createDaysForNextMonth(lastDayOfCurrentMonth);
 
-        const days = [...previousMonthDays, ...currentMonthDays, ...nextMonthDays];
+                const days = [...previousMonthDays, ...currentMonthDays, ...nextMonthDays];
 
-        let calendarDaysLoad = []
-
-        days.forEach((day) => {
-            calendarDaysLoad.push(appendDay(day));
-        });
-
-        setCalendarDays(calendarDaysLoad)
-        setShowHidePickedMonth(true)
+                let calendarDaysLoad = []
+                days.forEach((day) => {
+                    calendarDaysLoad.push(appendDay(day));
+                });
+                setCalendarDays(calendarDaysLoad)
+            }).then(r => setShowHidePickedMonth(true));
     }
 
+    //funkcja edytująca wybrane pola na podstawie danej nieobecności
     function appendDay(day) {
         let color = 'bg-dayoffmonth'
 
@@ -185,9 +185,7 @@ function Schedule(){
                     month === offDayFound.getMonth() &&
                     index + 1 === offDayFound.getDate()){
                     reason = daysOff[i].reason
-                    //console.log(daysOff[i])
                 }
-
             }
             return {
                 date: dayjs(`${year}-${month+1}-${index + 1}`).format("YYYY-MM-DD"),
@@ -354,10 +352,15 @@ function Schedule(){
         }
     }
 
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+
     useEffect(() => {
         FunctionForResize("schedule-month-list", {setWantedHeightForList});
+    }, [pickedMonthText, calendarDays]);
 
-    }, [pickedMonthText]);
+    useEffect(() => {
+        FunctionForResize("schedule-month-list", {setWantedHeightForList});
+    }, []);
 
     return(
         <>
@@ -463,7 +466,8 @@ function Schedule(){
                         <div className={"grow"}>
                             <ReusableButton value={labelFilter}
                                             id={"schedule-filter-button"}
-                                            onClick={() => filtrSchedule()}/></div>
+                                            onClick={() =>
+                                                filtrSchedule().then(scheduleList => setMonthList(scheduleList))}/></div>
                     </div>
                 </div>
                 <hr/>
