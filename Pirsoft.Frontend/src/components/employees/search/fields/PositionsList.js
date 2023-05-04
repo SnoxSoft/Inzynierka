@@ -24,7 +24,7 @@ const PositionsList = ({value = undefined, onChange, id, disableChange = false, 
                                 menuPlacement={placement}
                                 getOptionValue={option => `${option.role_id}`}
                                 options={positions}
-                                onChange={(e) => onChange(e.value)}
+                                onChange={(e) => onChange(e.role_id)}
                                 isDisabled={disableChange}/>
             }
         </>

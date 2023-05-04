@@ -24,7 +24,7 @@ const TeamsList = ({value = undefined, onChange, id, teams,
                        `${option.department_name}`
                    }
                    getOptionValue={option => `${option.department_id}`}
-                   onChange={(e) => onChange(e.value)}
+                   onChange={(e) => onChange(e.department_id)}
                    isDisabled={disableChange}/>
 }
 export default TeamsList;

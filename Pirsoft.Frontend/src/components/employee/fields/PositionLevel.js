@@ -23,7 +23,7 @@ const PositionLevel = ({value = undefined, onChange, id, disableChange = false, 
                    }
                    menuPlacement="top"
                    getOptionValue={option => `${option.seniority_level_id}`}
-                   onChange={(e) => onChange(e.value)}
+                   onChange={(e) => onChange(e.seniority_level_id)}
                    isDisabled={disableChange}/>
 }
 export default PositionLevel;

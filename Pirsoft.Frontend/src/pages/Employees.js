@@ -21,13 +21,19 @@ import {
     fetchGetAllTeamsAndAddZeroRecordAndSort
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
+import FunctionForResize from "../components/base/FunctionForResize";
 
 function Employees(){
     document.title = pageNameEmployees;
 
     const navigate = useNavigate();
 
+    // Wybrane wartości w filtrze
     const[firstnameAndLastname, setFirstnameAndLastname] = useState();
+    const[team, setTeam] = useState();
+    const[position, setPosition] = useState();
+
+    //Załądowane listy dla filtra
     const[teamsList, setTeamsList] = useState(null);
     const[positionsList, setPositionsList] = useState(null);
     const[order, setOrder] = useState(true); // true oznacza sortowanie od A->Z, a false od Z->A
@@ -54,43 +60,104 @@ function Employees(){
             fetchGetAllEmployees(navigate)
                 .then(employeesList => setEmployeesList(employeesList));
         }
+
+        FunctionForResize("employee-list", {setWantedHeightForList});
     });
 
-    const findEmployees = (e) => {
-
-        let firstnameValue = "";
-        let teamValue = "";
-        let positionValue = "";
-
-        if(firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0){
-            firstnameValue = firstnameAndLastname;
-        }
-        else firstnameValue = " ";
-
-        if(teamsList !== undefined && teamsList.toString().length !== 0){
-            teamValue = teamsList;
-        }
-        else teamValue = " ";
-
-        if(positionsList !== undefined && positionsList.toString().length !== 0){
-            positionValue = positionsList;
-        }
-        else positionValue = " ";
-
+    function findEmployees(){
         // Pobranie listy pracowników przy użyciu przycisku Szukaj
-        fetch(serverIp + "/" + endpointGetEmployees + "/" + firstnameValue + "/" + teamValue + "/" + positionValue + "/" + order)
-            .then((response) => {response.json()
-                .then((response) => {
-                    setEmployeesList(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
+        fetchGetAllEmployees(navigate)
+            .then(employeesList => {
+                let filteredEmployeeList = []
+                employeesList.map(employee => {
+                    const employeeName = employee.first_name + " " + employee.last_name
+
+                    // Duża Funkcja filtrująca
+
+                    // Jeśli tylko wpisana nazwa pracownika
+                    if((firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0 &&
+                        (team === undefined || team === 0) &&
+                        (position === undefined || position === 0))){
+                        if(employeeName.includes(firstnameAndLastname)){
+                            filteredEmployeeList.push(employee)
+                        }
+                    }
+                    // Jeśli tylko wybrany zespół pracownika
+                    if(team !== undefined && team !== 0 &&
+                        (firstnameAndLastname === undefined || firstnameAndLastname.toString().length === 0) &&
+                        (position === undefined || position === 0)){
+                        if(employee.employee_department_id.toString().trim() === team.toString().trim()){
+                            filteredEmployeeList.push(employee)
+                        }
+                    }
+                    // Jeśli tylko wybrane stanowisko pracownika
+                    if(position !== undefined && position !== 0 &&
+                        (firstnameAndLastname === undefined || firstnameAndLastname.toString().length === 0) &&
+                        (team === undefined || team === 0)){
+                        if(employee.employee_company_role_id.toString().trim() === position.toString().trim()){
+                            filteredEmployeeList.push(employee)
+                        }
+                    }
+
+                    // Jeśli wpisana nazwa pracownika i zespół
+                    if((firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0 &&
+                        (team !== undefined && team !== 0) &&
+                        (position === undefined || position === 0))){
+                        if(employeeName.includes(firstnameAndLastname) &&
+                            employee.employee_department_id.toString().trim() === team.toString().trim()){
+                            filteredEmployeeList.push(employee)
+                        }
+                    }
+                    // Jeśli wpisana nazwa pracownika i stanowisko
+                    if((firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0 &&
+                        (team === undefined || team === 0) && (position !== undefined && position !== 0))){
+                        if(employeeName.includes(firstnameAndLastname) &&
+                            employee.employee_company_role_id.toString().trim() === position.toString().trim()){
+                            filteredEmployeeList.push(employee)
+                        }
+                    }
+
+                    // Jeśli wybrany zespół pracownika i stanowisko
+                    if(team !== undefined && team !== 0 &&
+                        (firstnameAndLastname === undefined || firstnameAndLastname.toString().length === 0) &&
+                        (position !== undefined && position !== 0)){
+                        if(employee.employee_department_id.toString().trim() === team.toString().trim() &&
+                            employee.employee_company_role_id.toString().trim() === position.toString().trim()){
+                            filteredEmployeeList.push(employee)
+                        }
+                    }
+
+                    // Jeśli wybrane trzy na raz
+                    if(position !== undefined && position !== 0 &&
+                        (firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0) &&
+                        (team !== undefined && team !== 0)){
+                        if(employee.employee_company_role_id.toString().trim() === position.toString().trim() &&
+                            employeeName.includes(firstnameAndLastname) &&
+                            employee.employee_department_id.toString().trim() === team.toString().trim()){
+                            filteredEmployeeList.push(employee)
+                        }
+                    }
+
+                    // Wczytanie wszystkiego jeśli żadne filtry nie są wybrane
+                    if((firstnameAndLastname === undefined || firstnameAndLastname.toString().length === 0) &&
+                        (team === undefined || team === 0) && (position === undefined || position === 0)) {
+                        filteredEmployeeList.push(employee)
+                    }
+                })
+
+                setEmployeesList(filteredEmployeeList)
+            });
     }
 
     const[showAddEmployeeAnAbsence, setShowAddEmployeeAnAbsence] = useState(false)
     const[pickedEmployeeData, setPickedEmployeeData] = useState()
+
+    const[wantedHeightsForList, setWantedHeightForList] = useState(400);
+    useEffect(() => {
+        if(employeesList && teamsList && positionsList){
+            FunctionForResize("employee-list", {setWantedHeightForList});
+        }
+    }, []);
 
     return(
         <>
@@ -115,12 +182,12 @@ function Employees(){
                             <div className={"flex flex-row gap-2 flex-wrap"}>
                                 <div>
                                     <TeamsList id={"employees-teams-list"} className={""}
-                                               onChange={setTeamsList} teams={teamsList}/>
+                                               onChange={setTeam} teams={teamsList}/>
                                 </div>
                                 <div>
                                     <PositionsList id={"employees-positions-list"} className={""}
                                                    positions={positionsList}
-                                                   onChange={setPositionsList} placement={"bottom"}/>
+                                                   onChange={setPosition} placement={"bottom"}/>
                                 </div>
                             </div>
                         </div>
@@ -130,10 +197,11 @@ function Employees(){
                         </div>
                     </div>
                     <hr/>
-                    <div id={"employee-list"} className={"rounded-md overflow-y-auto h-full"}>
-                        {employeesList ?
+                    <div id={"employee-list"} className={"rounded-md overflow-y-auto"}
+                        style={{height: wantedHeightsForList}}>
+                        {employeesList && teamsList && positionsList ?
                             <EmployeesList values={[employeesList][0]} action={setPickedEmployeeData}
-                                           showRequest={setShowAddEmployeeAnAbsence}/> : <p/>}
+                                           showRequest={setShowAddEmployeeAnAbsence} teams={teamsList} positions={positionsList}/> : <p/>}
                     </div>
                 </div> :
                 <div id={"employees-load"}
