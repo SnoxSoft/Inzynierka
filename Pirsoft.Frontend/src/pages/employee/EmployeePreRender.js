@@ -7,7 +7,7 @@ import {
     fetchGetAllPositionsAndAddZeroRecordAndSort,
     fetchGetAllPositionsLevelsAndAddZeroRecordAndSort,
     fetchGetAllTeamsAndAddZeroRecordAndSort,
-    fetchGetEmployeeData
+    fetchGetEmployeeDataById
 } from "../../DataFetcher";
 import {alertUnexpectedError} from "../../GlobalAppConfig";
 
@@ -31,7 +31,7 @@ function EmployeePreRender(){
 
     useEffect(() => {
         setEmployee(null);
-        fetchGetEmployeeData(3, navigate)
+        fetchGetEmployeeDataById(3, navigate)
             .then(employee => setEmployee(employee));
 
         setTeams(null);

@@ -20,16 +20,26 @@ function Remind(){
     const navigate = useNavigate()
     const {code} = useParams();
 
+    const [employee, setEmployee] = useState([])
     const [employeeId, setEmployeeId] = useState(null);
     const [employeeName, setEmployeeName] = useState('');
 
     useEffect(() => {
         fetchGetChangePasswordData(navigate, code)
-            .then(response => {
-                setEmployeeId(response.employee_id)
-                setEmployeeName(response.first_name + " " + response.last_name)
+            .then(employeeItem => {
+                if(employee.length === 0){
+                    setEmployee(employeeItem)
+                }
             })
     })
+
+    useEffect(() => {
+        if(employee.length !== 0 && employeeId === null){
+            let employeeItem = employee.pop()
+            setEmployeeId(employeeItem.employee_id)
+            setEmployeeName(employeeItem.first_name + " " + employeeItem.last_name)
+        }
+    }, [employee])
 
     const [newPassword, setNewPassword] = useState();
     const [newRepeatPassword, setNewRepeatPassword] = useState();
