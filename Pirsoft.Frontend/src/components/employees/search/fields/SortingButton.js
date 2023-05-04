@@ -8,11 +8,11 @@ const SortingButton = ({setOrder, id}) => {
     const changeOrdering = () => {
         if(orderingButton.type === AiOutlineSortAscending){
             setOrderingButton(<AiOutlineSortDescending size={70} />)
-            setOrder(true);
+            setOrder(false);
         }
         else{
             setOrderingButton(<AiOutlineSortAscending size={70}/>)
-            setOrder(false);
+            setOrder(true);
         }
     }
     return(

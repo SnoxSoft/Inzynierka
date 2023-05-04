@@ -57,7 +57,7 @@ function Employees(){
 
         // Pobranie listy wszystkich pracowników
         if (employeesList === undefined) {
-            fetchGetAllEmployees(navigate)
+            fetchGetAllEmployees(navigate,true, order ? "ascending" : "descending")
                 .then(employeesList => setEmployeesList(employeesList));
         }
 
@@ -66,7 +66,7 @@ function Employees(){
 
     function findEmployees(){
         // Pobranie listy pracowników przy użyciu przycisku Szukaj
-        fetchGetAllEmployees(navigate)
+        fetchGetAllEmployees(navigate, true, order ? "ascending" : "descending")
             .then(employeesList => {
                 let filteredEmployeeList = []
                 employeesList.map(employee => {
