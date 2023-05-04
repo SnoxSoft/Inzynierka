@@ -8,11 +8,20 @@ import {
     teamAdditionalRow
 } from "./GlobalAppConfig";
 import {
-    endpointGetAbsencesTypes, endpointGetAllCompanyMonthDaysOff,
-    endpointGetAllContracts, endpointGetAllEmployees,
-    endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllSkills,
-    endpointGetAllTeams, endpointGetEmployeeAbsences,
-    endpointGetEmployeeData, endpointGetEmployeeMonthDaysOff, endpointGetEmployeesRequests, endpointGetRequestsStatuses
+    endpointGetAbsencesTypes,
+    endpointGetAllCompanyMonthDaysOff,
+    endpointGetAllContracts,
+    endpointGetAllEmployees,
+    endpointGetAllPositions,
+    endpointGetAllPositionsLevels,
+    endpointGetAllSkills,
+    endpointGetAllTeams,
+    endpointGetEmployeeAbsences,
+    endpointGetEmployeeData,
+    endpointGetEmployeeMonthDaysOff,
+    endpointGetEmployeesRequests,
+    endpointGetRequestApprovers,
+    endpointGetRequestsStatuses
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -230,6 +239,21 @@ async function fetchGetCompanyMonthDaysOff(navigate, yearMonth) {
     }
 }
 
+async function fetchApproversForRequest(navigate, id) {
+    const response = await fetch(serverIp + "/" + endpointGetRequestApprovers + "/" + id,
+        {
+            method: "GET"
+        })
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
+        return newData
+    }
+    else {
+        return []
+    }
+}
+
 export {
     fetchGetEmployeeData,
     fetchGetAllEmployees,
@@ -244,6 +268,7 @@ export {
     fetchGetAbsencesTypes,
     fetchGetEmployeesRequests,
     fetchGetEmployeesAbsences,
+    fetchApproversForRequest,
 
     fetchGetEmployeeMonthDaysOff,
     fetchGetCompanyMonthDaysOff
