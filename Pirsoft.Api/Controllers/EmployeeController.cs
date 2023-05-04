@@ -99,8 +99,8 @@ public class EmployeeController : Controller
             last_name = employeeModel.last_name;
         }
 
-        private int employee_id { get; }
-        private string first_name { get; }
-        private string last_name { get; }
+        public int employee_id { get; }
+        public string first_name { get; }
+        public string last_name { get; }
     }
 }
