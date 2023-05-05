@@ -64,7 +64,7 @@ function EmployeePreRender(){
                 <div id={"employee-load"}
                      className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default text-center"}
                      style={{minWidth:800} }>
-                    {alertUnexpectedError}
+                    {/*{alertUnexpectedError}*/}
                 </div>
             }
         </>
