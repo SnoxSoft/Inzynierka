@@ -6,16 +6,16 @@ import React, {useEffect, useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
 import SortingButton from "../components/employees/search/fields/SortingButton";
 import {
-    alertUnexpectedError,
-    headerEmployees,
+    alertUnexpectedError, firstnameLabel,
+    headerEmployees, labelBankAccount, labelBirthDate,
     labelFind,
-    labelFirstNameAndLastName,
-    pageNameEmployees
+    labelFirstNameAndLastName, labelPESEL, labelPosition, labelPositionLevel, labelSalary, labelTeam, lastnameLabel,
+    pageNameEmployees, requestActionLabel, requestDescriptionLabel, requestStatusLabel
 } from "../GlobalAppConfig";
 import AddEmployeeAnAbsence from "./AddEmployeeAnAbsence";
 import {
     fetchGetAllEmployees,
-    fetchGetAllPositionsAndAddZeroRecordAndSort,
+    fetchGetAllPositionsAndAddZeroRecordAndSort, fetchGetAllPositionsLevelsAndAddZeroRecordAndSort,
     fetchGetAllTeamsAndAddZeroRecordAndSort
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
@@ -34,6 +34,7 @@ function Employees(){
     //Załądowane listy dla filtra
     const[teamsList, setTeamsList] = useState(null);
     const[positionsList, setPositionsList] = useState(null);
+    const[positionLevelList, setPositionLevelList] = useState(null);
     const[order, setOrder] = useState(true); // true oznacza sortowanie od A->Z, a false od Z->A
 
     const [employeesList, setEmployeesList] = useState();
@@ -51,6 +52,13 @@ function Employees(){
             setPositionsList(null);
             fetchGetAllPositionsAndAddZeroRecordAndSort(navigate)
                 .then(positions => setPositionsList(positions));
+        }
+
+        //Załadowanie wszystkich pozycji dla filtra
+        if(positionLevelList === null) {
+            setPositionLevelList(null);
+            fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate)
+                .then(positionLevels => setPositionLevelList(positionLevels));
         }
 
         // Pobranie listy wszystkich pracowników
@@ -167,7 +175,7 @@ function Employees(){
             {teamsList && positionsList ?
                 <div
                     className={"every-page-on-scroll rounded-md border-2 border-b-workday text-workday overflow-y-hidden hover:cursor-default"}
-                    style={{minWidth: 800}}>
+                    style={{minWidth: 1000}}>
                     <div className={"p-4 gap-4 grid grid-cols-2 items-center"}>
 
                         <div className={"flex flex-col gap-2"}>
@@ -194,18 +202,34 @@ function Employees(){
                             <ReusableButton id={"employees-find"} value={labelFind} onClick={findEmployees}/>
                         </div>
                     </div>
-                    <hr/>
+                    <div className={"text-start pl-2 ml-4 mr-8 items-center rounded-md bg-brown-menu border-2 border-workday text-workday font-bold hover:cursor-default self-center grid grid-cols-6 h-8 "}>
+                        <div className={""}></div>
+                        <div className={"flex flex-row place-self-center"}>
+                            {firstnameLabel} i {lastnameLabel}
+                        </div>
+                        <div className={"flex flex-row place-self-center"}>
+                            {labelTeam}
+                        </div>
+                        <div className={"flex flex-row place-self-center"}>
+                            {labelPositionLevel}
+                        </div>
+                        <div className={"flex flex-row place-self-center"}>
+                            {labelPosition}
+                        </div>
+                        <div className={""}></div>
+                    </div>
                     <div id={"employee-list"} className={"rounded-md overflow-y-auto"}
                         style={{height: wantedHeightsForList}}>
                         {employeesList && teamsList && positionsList ?
                             <EmployeesList values={[employeesList][0]} action={setPickedEmployeeData}
-                                           showRequest={setShowAddEmployeeAnAbsence} teams={teamsList} positions={positionsList}/> : <p/>}
+                                           showRequest={setShowAddEmployeeAnAbsence}
+                                           teams={teamsList} positions={positionsList} positionLevels={positionLevelList}/> : <p/>}
                     </div>
                 </div> :
                 <div id={"employees-load"}
                      className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default text-center"}
                      style={{minWidth:800} }>
-                    {alertUnexpectedError}
+                    {/*{alertUnexpectedError}*/}
                 </div>
             }
             </>
