@@ -203,8 +203,28 @@ const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
 const alertOldPasswordIsIncompatible = "Wpisane stare hasło jest błędne";
 const alertOldPasswordIsMissing = "Wpisz stare hasło";
 
+
+// Błędy w tworzeniu użytkownika
+
+const alertWrongFirstName = "Uzupełnij prawidłowo pole " + firstnameLabel;
+const alertWrongLastName = "Uzupełnij prawidłowo pole " + lastnameLabel;
+const alertWrongAddressEmail = "Uzupełnij prawidłowo pole " + labelEmail;
+const alertWrongBankAccount = "Uzupełnij prawidłowo pole " + labelBankAccount;
+const alertWrongBirthDate = "Wybierz prawidłowo pole " + labelBirthDate;
+const alertWrongPESEL = "Uzupełnij prawidłowo pole " + labelPESEL;
+const alertWrongSalary = "Uzupełnij prawidłowo pole " + labelSalary;
+const alertWrongContract = "Wybierz prawidłowo pole " + labelContractType;
+const alertWrongPosition = "Wybierz prawidłowo pole " + labelPosition;
+const alertWrongPositionLevel = "Wybierz prawidłowo pole " + labelPositionLevel;
+const alertWrongTeam = "Wybierz prawidłowo pole " + labelTeam;
+const alertWrongStartDate = "Wybierz prawidłowo pole " + labelStartDate;
+
+
 export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
+
+    alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertWrongPESEL, alertWrongSalary, alertWrongContract,
+    alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate,
 
     labelNotifications,
 

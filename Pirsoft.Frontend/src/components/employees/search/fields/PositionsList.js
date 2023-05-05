@@ -18,6 +18,7 @@ const PositionsList = ({value = undefined, onChange, id, disableChange = false, 
     return <>
             {positions && <Select id={id} className={"text-black " + formatting}
                                 defaultValue={defaultValue}
+                                value={defaultValue}
                                 getOptionLabel={option =>
                                     `${option.role_name}`
                                 }

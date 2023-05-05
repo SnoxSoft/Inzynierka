@@ -43,6 +43,11 @@ function Absences(){
         FunctionForResize("schedule-month", {setWantedHeightForList});
     }, []);
 
+
+    // Stany checkboxów dla filtra
+    const [checkWaiting, setCheckWaiting] = useState(true);
+    const [checkApproved, setCheckApproved] = useState(true);
+    const [checkRefused, setCheckRefused] = useState(true);
     // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
@@ -50,11 +55,6 @@ function Absences(){
     // Będe potrzebować tu endpointa do czytania tych wartości
     const onDemandDays = 5;
     const leaveDays = 10;
-
-    // Stany checkboxów
-    const [checkOczekujace, setCheckOczekujace] = useState(true);
-    const [checkZatwierdzone, setCheckZatwierdzone] = useState(true);
-    const [checkodrzucone, setCheckodrzucone] = useState(true);
 
     // Zmienne do ładowania statusów i typów nieobecności
     const [requestsStatus, setRequestsStatus] = useState(null);
@@ -85,6 +85,14 @@ function Absences(){
 
     // Filtrowanie nieobecności
     function filtrAbsences(id){
+
+        console.log(checkWaiting)
+        console.log(checkApproved)
+        console.log(checkRefused)
+
+        console.log(dateFrom)
+        console.log(dateTo)
+
         setEmployeeAbsences(null)
         fetchGetEmployeesAbsences(navigate, id)
             .then(employeeAbsences => {setEmployeeAbsences(employeeAbsences)});
@@ -124,7 +132,9 @@ function Absences(){
                     </div>
                 </div>
                 <div className={"flex justify-center"}>
-                    <Calendar id={"absences"} setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}/>
+                    <Calendar id={"absences"}
+                              setDateTo={setDateTo} setDateFrom={setDateFrom}
+                              from={dateFrom} to={dateTo}/>
                 </div>
                 <div className={"flex justify-center"}>
                     <div className={"gap-2 flex items-center justify-center"}>
@@ -133,21 +143,21 @@ function Absences(){
                             <input
                                 id={"absences-waiting"}
                                 type="checkbox" defaultChecked={true}
-                               onChange={(e) => setCheckOczekujace(e.target.checked)}/>
+                               onChange={(e) => setCheckWaiting(e.target.checked)}/>
                         </div>
                         <div className={"flex flex-col"}>
                             <label>{requestStatusApprovedLabel}</label>
                             <input
                                 id={"absences-approved"}
                                 type="checkbox" defaultChecked={true}
-                                onChange={(e) => setCheckZatwierdzone(e.target.checked)}/>
+                                onChange={(e) => setCheckApproved(e.target.checked)}/>
                         </div>
                         <div className={"flex flex-col"}>
                             <label>{requestStatusDisapprovedLabel}</label>
                             <input
                                 id={"absences-disapproved"}
                                 type="checkbox" defaultChecked={true}
-                                onChange={(e) => setCheckodrzucone(e.target.checked)}/>
+                                onChange={(e) => setCheckRefused(e.target.checked)}/>
                         </div>
                     </div>
                 </div>

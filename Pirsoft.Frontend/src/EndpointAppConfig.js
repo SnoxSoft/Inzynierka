@@ -3,6 +3,7 @@
 // Dane pracownika //
 const endpointGetEmployeeData = "get/employee";
 
+const endpointPostCreateEmployee = "create/new/employee";
 
 // Listy wniosków urlopowych //
 
@@ -141,7 +142,7 @@ export {
 
     endpointGetEmployedYears, endpointGetReceivedYearGrades, endpointGetGivenGrades, endpointGetAvailableQuartets,
 
-    endpointGetEmployeeData,
+    endpointGetEmployeeData, endpointPostCreateEmployee,
 
     endpointGetNotifications, endpointDeleteNotification
 

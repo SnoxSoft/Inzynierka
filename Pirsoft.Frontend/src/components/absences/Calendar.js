@@ -1,6 +1,6 @@
 import React from "react";
 import {calendarLabelFrom, calendarLabelTo} from "../../GlobalAppConfig";
-const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false, id}) => {
+const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false, id, doValidate = false}) => {
 
     const options = {
         year: "numeric",
@@ -9,6 +9,10 @@ const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false, id}) => {
     }
 
     function validateDate(pickedDateText, method){
+        if(!doValidate){
+            return
+        }
+
         let pickedDate = new Date(pickedDateText)
 
         if(method === "from") {

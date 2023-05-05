@@ -17,6 +17,7 @@ const PositionLevel = ({value = undefined, onChange, id, disableChange = false, 
     return <Select id={id}
         className={"text-black rounded-full text-left grow"}
                    defaultValue={defaultValue}
+                   value={defaultValue}
                    options={positionLevels}
                    getOptionLabel={option =>
                        `${option.seniority_level_name}`

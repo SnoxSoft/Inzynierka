@@ -17,6 +17,7 @@ const Contract = ({value = undefined, onChange, id, disableChange = false, contr
     return <Select id={id}
                    className={"text-black rounded-full text-left grow"}
                    defaultValue={defaultValue}
+                   value={defaultValue}
                    options={contracts}
                    getOptionLabel={option =>
                        `${option.contract_type_name}`
