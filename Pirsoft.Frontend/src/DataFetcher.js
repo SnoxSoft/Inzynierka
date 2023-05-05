@@ -22,7 +22,7 @@ import {
     endpointGetEmployeeMonthDaysOff,
     endpointGetEmployeesRequests,
     endpointGetRequestApprovers,
-    endpointGetRequestsStatuses,
+    endpointGetRequestsStatuses, endpointPostCreateEmployee,
     endpointPostSendEmailForPasswordChange,
     endpointPutChangePassword
 } from "./EndpointAppConfig";
@@ -92,6 +92,13 @@ async function fetchGetEmployeeDataById(id, navigate) {
             redirectToMainWindow(navigate)
         }
     } else return undefined
+}
+
+async function fetchPostCreateEmployee(query) {
+    return await fetch(serverIpProd + "/" + endpointPostCreateEmployee + "?" + query,
+        {
+            method: "POST"
+        })
 }
 
 async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirection = "ascending") {
@@ -306,6 +313,7 @@ export {
     fetchPutChangePassword,
 
     fetchGetEmployeeDataById,
+    fetchPostCreateEmployee,
     fetchGetAllEmployees,
 
     fetchGetAllTeamsAndAddZeroRecordAndSort,

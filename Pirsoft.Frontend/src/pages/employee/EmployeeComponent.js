@@ -23,8 +23,13 @@ import {
     firstnameLabel,
     headerPasswordChange,
     labelApprove,
-    labelBack, labelBankAccount, labelBirthDate, labelChange, labelChangePassword,
-    labelClose, labelContractType,
+    labelBack,
+    labelBankAccount,
+    labelBirthDate,
+    labelChange,
+    labelChangePassword,
+    labelClose,
+    labelContractType,
     labelCreate,
     labelDelete,
     labelEdit,
@@ -34,11 +39,34 @@ import {
     labelGiveOldPassword,
     labelPESEL,
     labelPick,
-    labelPosition, labelPositionLevel,
-    labelRequest, labelSalary,
+    labelPosition,
+    labelPositionLevel,
+    labelRequest,
+    labelSalary,
     labelSave,
     labelStartDate,
-    lastnameLabel, pageNameEmployeeData, pageNameEmployeeRegister, pageNameEmployeeView, serverIp, labelTeam
+    lastnameLabel,
+    pageNameEmployeeData,
+    pageNameEmployeeRegister,
+    pageNameEmployeeView,
+    serverIp,
+    labelTeam,
+    legendLabel,
+    alertPasswordChanged,
+    alertUnexpectedError,
+    alertWrongFirstName,
+    alertWrongLastName,
+    alertWrongBankAccount,
+    alertWrongBirthDate,
+    alertWrongPESEL,
+    alertWrongSalary,
+    alertWrongContract,
+    alertWrongPosition,
+    alertWrongPositionLevel,
+    alertWrongTeam,
+    alertWrongStartDate,
+    alertWrongEmail,
+    alertWrongAddressEmail
 } from "../../GlobalAppConfig";
 import {endpointGetAllSkills} from "../../EndpointAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
@@ -46,7 +74,10 @@ import PositionLevel from "../../components/employee/fields/PositionLevel";
 import SkillPicker from "../SkillPicker";
 import EditPasswordWindow from "./EditPasswordWindow";
 import TeamsList from "../../components/employees/search/fields/TeamsList";
-import {fetchGetAllSkillsAndSort} from "../../DataFetcher";
+import {fetchGetAllSkillsAndSort, fetchPostCreateEmployee} from "../../DataFetcher";
+import Legend from "../../components/legend/Legend";
+import {Popup} from "semantic-ui-react";
+import grossSalary from "../../components/employee/fields/GrossSalary";
 function EmployeeComponent({id, mode, employee, teams, contracts, positions, positionsLevels}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -161,27 +192,152 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
     }, [employeeDataShow]);
 
+
+    const [showPopupWithProblems, setShowPopupWithProblems] = useState(false);
+    const [alerts, setAlerts] = useState(<></>)
+
+    const buildPopup = () => {
+        return showPopupWithProblems ?
+                <div className={"flex flex-col items-center text-workday gap-2 p-2"}>
+                    {alerts}
+                </div>:
+            <></>
+    }
+
     const saveEmployee = () => {
-        console.log(
-            "id:"+id+
-            "\n employee data: \n" +
-            firstName + ", \n" +
-            lastName + ", \n" +
-            email + ", \n" +
-            bank + ", \n" +
-            birth + ", \n" +
-            pesel + ", \n" +
-            salary + ", \n" +
-            department + ", \n" +
-            contract + ", \n" +
-            position + ", \n" +
-            positionLevel + ", \n" +
-            start + " \n \n" +
-            " skills: \n" +
-            skillsData +
-            " \n avatar: " //+
-            //avatarData
-        )
+        setShowPopupWithProblems(false)
+        // Sprawdzenie błędów
+        setAlerts(<></>)
+        let alerts = []
+        if(firstName.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongFirstName}
+                </p>
+            )
+        }
+        if(lastName.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongLastName}
+                </p>
+            )
+        }
+        if(email.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongAddressEmail}
+                </p>
+            )
+        }
+        if(bank.toString().trim().length !== 26 || Number(bank) === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongBankAccount}
+                </p>
+            )
+        }
+        if(birth.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongBirthDate}
+                </p>
+            )
+        }
+        if(pesel.toString().trim().length !== 11 || Number(pesel) === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPESEL}
+                </p>
+            )
+        }
+        if(salary.toString().trim().length === 0 || Number(salary) === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongSalary}
+                </p>
+            )
+        }
+        if(contract.toString().trim().length === 0 || contract === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongContract}
+                </p>
+            )
+        }
+        if(position.toString().trim().length === 0 || position === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPosition}
+                </p>
+            )
+        }
+        if(positionLevel.toString().trim().length === 0 || positionLevel === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPositionLevel}
+                </p>
+            )
+        }
+        if(department.toString().trim().length === 0 || department === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongTeam}
+                </p>
+            )
+        }
+        if(start.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongStartDate}
+                </p>
+            )
+        }
+        setAlerts(alerts)
+        if(alerts.length > 0){
+            setShowPopupWithProblems(true)
+        }
+        else{
+            const query = new URLSearchParams();
+            query.set("firstName", firstName);
+            query.set("lastName", lastName);
+            query.set("email", email);
+            query.set("bankAccountNumber", bank);
+            query.set("dateOfBirth", birth);
+            query.set("password", "Wanda123@2113wanda");
+            query.set("pesel", pesel);
+            query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
+            query.set("departmentId", department);
+            query.set("contractType", contract);
+            query.set("companyRole", position);
+            query.set("seniorityLevel", positionLevel);
+            query.set("employmentStartDate", start);
+
+            fetchPostCreateEmployee(query)
+                .then(r => console.log(r))
+        }
+
+        // // Do celów testowych żeby widzieć dane w konsoli
+        // console.log(
+        //     "id:"+id+
+        //     "\n employee data: \n" +
+        //     firstName + ", \n" +
+        //     lastName + ", \n" +
+        //     email + ", \n" +
+        //     bank + ", \n" +
+        //     birth + ", \n" +
+        //     pesel + ", \n" +
+        //     salary + ", \n" +
+        //     department + ", \n" +
+        //     contract + ", \n" +
+        //     position + ", \n" +
+        //     positionLevel + ", \n" +
+        //     start + " \n \n" +
+        //     " skills: \n" +
+        //     skillsData +
+        //     " \n avatar: " //+
+        //     //avatarData
+        // )
     }
 
     // Ładowanie umiejętności dla okna wyboru umiejętności
@@ -315,7 +471,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             : <></>
                         }
                         {mode === 'create' ?
-                            <ReusableButton id={"employee-create"} value={labelCreate} onClick={() => saveEmployee()}/>
+                            <Popup
+                                content={buildPopup}
+                                position={"top center"}
+                                trigger={<ReusableButton id={"employee-create"}
+                                             value={labelCreate} onClick={() => saveEmployee()}/>}
+                            />
                             : <></>
                         }
                     </>
