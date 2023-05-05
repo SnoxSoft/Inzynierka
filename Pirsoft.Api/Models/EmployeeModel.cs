@@ -27,10 +27,11 @@ public class EmployeeModel : IApiModel
     public int employee_seniority_level_id { get; set; }
     public int employee_company_role_id { get; set; }
 
+    public virtual ICollection<AbsenceModel> absenceemployee_approvers { get; set; } = new List<AbsenceModel>();
+    public virtual ICollection<AbsenceModel> absenceemployee_owners { get; set; } = new List<AbsenceModel>();
     public virtual CompanyRoleModel employee_company_role { get; set; } = null!;
     public virtual ContractTypeModel employee_contract_type { get; set; } = null!;
     public virtual DepartmentModel employee_department { get; set; } = null!;
     public virtual SeniorityLevelModel employee_seniority_level { get; set; } = null!;
-    public virtual ICollection<AbsenceModel> absences { get; } = new List<AbsenceModel>();
     public virtual ICollection<SkillModel> skills { get; } = new List<SkillModel>();
 }
