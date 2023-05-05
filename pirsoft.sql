@@ -16,6 +16,61 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `absence_statuses`
+--
+
+DROP TABLE IF EXISTS `absence_statuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `absence_statuses` (
+  `absence_status_id` int NOT NULL AUTO_INCREMENT,
+  `absence_status_name` varchar(45) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
+  `absence_status_name_eng` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`absence_status_id`),
+  UNIQUE KEY `absence_status_id_UNIQUE` (`absence_status_id`),
+  UNIQUE KEY `absence_status_name_UNIQUE` (`absence_status_name`),
+  UNIQUE KEY `absence_status_name_eng_UNIQUE` (`absence_status_name_eng`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=cp1250;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `absence_statuses`
+--
+
+LOCK TABLES `absence_statuses` WRITE;
+/*!40000 ALTER TABLE `absence_statuses` DISABLE KEYS */;
+INSERT INTO `absence_statuses` VALUES (1,'Oczekujący','pending'),(2,'Odrzucony','rejected'),(3,'Zaakceptowany','approved');
+/*!40000 ALTER TABLE `absence_statuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `absence_types`
+--
+
+DROP TABLE IF EXISTS `absence_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `absence_types` (
+  `absence_type_id` int NOT NULL AUTO_INCREMENT,
+  `absence_type_name` varchar(45) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
+  `absence_type_category` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`absence_type_id`),
+  UNIQUE KEY `absence_type_id_UNIQUE` (`absence_type_id`),
+  UNIQUE KEY `absence_type_name_UNIQUE` (`absence_type_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=cp1250;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `absence_types`
+--
+
+LOCK TABLES `absence_types` WRITE;
+/*!40000 ALTER TABLE `absence_types` DISABLE KEYS */;
+INSERT INTO `absence_types` VALUES (1,'Nieobecność','absent'),(2,'Urlop chorobowy','sick'),(3,'Urlop dla poratowania zdrowia','dayoff'),(4,'Urlop macieżyński','dayoff'),(5,'Urlop na oddanie krwi','dayoff'),(6,'Urlop na poszukiwanie pracy','dayoff'),(7,'Urlop na żądanie','demand'),(8,'Urlop ojcowski','dayoff'),(9,'Urlop okolicznościowy','dayoff'),(10,'Urlop szkoleniowy','dayoff'),(11,'Urlop wypoczynkowy','dayoff'),(12,'Urlop wychowawczy','dayoff'),(13,'Urlop za święto w sobotę','dayoff');
+/*!40000 ALTER TABLE `absence_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `absences`
 --
 
@@ -27,12 +82,22 @@ CREATE TABLE `absences` (
   `absence_start_date` date NOT NULL,
   `absence_end_date` date NOT NULL,
   `duration` int NOT NULL,
-  `absence_employee_id` int NOT NULL,
+  `unpaid` tinyint NOT NULL,
+  `absence_type_id` int NOT NULL,
+  `employee_approver_id` int NOT NULL,
+  `employee_owner_id` int NOT NULL,
+  `absence_status_id` int NOT NULL,
   PRIMARY KEY (`absence_id`),
   UNIQUE KEY `Id_UNIQUE` (`absence_id`),
-  KEY `fk_absence_employee_idx` (`absence_employee_id`),
-  CONSTRAINT `fk_absence_employee` FOREIGN KEY (`absence_employee_id`) REFERENCES `employees` (`employee_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  KEY `fk_absence_absence_type_idx` (`absence_type_id`),
+  KEY `fk_absence_status_idx` (`absence_status_id`),
+  KEY `fk_absence_employee_idx` (`employee_owner_id`),
+  KEY `fk_absence_approver_idx` (`employee_approver_id`),
+  CONSTRAINT `fk_absence_absence_status` FOREIGN KEY (`absence_status_id`) REFERENCES `absence_statuses` (`absence_status_id`),
+  CONSTRAINT `fk_absence_absence_type` FOREIGN KEY (`absence_type_id`) REFERENCES `absence_types` (`absence_type_id`),
+  CONSTRAINT `fk_absence_employee_approver` FOREIGN KEY (`employee_approver_id`) REFERENCES `employees` (`employee_id`),
+  CONSTRAINT `fk_absence_employee_owner` FOREIGN KEY (`employee_owner_id`) REFERENCES `employees` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,11 +118,11 @@ DROP TABLE IF EXISTS `company_roles`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `company_roles` (
   `role_id` int NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(45) NOT NULL,
+  `role_name` varchar(45) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
   PRIMARY KEY (`role_id`),
   UNIQUE KEY `id_UNIQUE` (`role_id`),
   UNIQUE KEY `roleName_UNIQUE` (`role_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +131,7 @@ CREATE TABLE `company_roles` (
 
 LOCK TABLES `company_roles` WRITE;
 /*!40000 ALTER TABLE `company_roles` DISABLE KEYS */;
-INSERT INTO `company_roles` VALUES (1,'Accounting'),(2,'Administrator'),(3,'BoardMember'),(4,'Ceo'),(5,'Employee'),(6,'HumanResources'),(7,'Manager');
+INSERT INTO `company_roles` VALUES (1,'Administrator'),(2,'Kadry'),(3,'Kierownik'),(4,'Księgowość'),(5,'Pracownik'),(6,'Prezes'),(7,'Zarząd');
 /*!40000 ALTER TABLE `company_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -79,11 +144,11 @@ DROP TABLE IF EXISTS `contract_types`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `contract_types` (
   `contract_id` int NOT NULL AUTO_INCREMENT,
-  `contract_type_name` varchar(45) NOT NULL,
+  `contract_type_name` varchar(45) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
   PRIMARY KEY (`contract_id`),
   UNIQUE KEY `contractName_UNIQUE` (`contract_type_name`),
   UNIQUE KEY `id_UNIQUE` (`contract_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,7 +157,7 @@ CREATE TABLE `contract_types` (
 
 LOCK TABLES `contract_types` WRITE;
 /*!40000 ALTER TABLE `contract_types` DISABLE KEYS */;
-INSERT INTO `contract_types` VALUES (1,'B2B'),(2,'ContractOfEmployment'),(3,'ContractOfMandate'),(4,'Unassigned');
+INSERT INTO `contract_types` VALUES (1,'B2B'),(2,'Nieprzypisany'),(3,'Umowa o dzieło'),(4,'Umowa o pracę'),(5,'Umowa zlecenie');
 /*!40000 ALTER TABLE `contract_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,11 +170,11 @@ DROP TABLE IF EXISTS `departments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `departments` (
   `department_id` int NOT NULL AUTO_INCREMENT,
-  `department_name` varchar(45) NOT NULL,
+  `department_name` varchar(45) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
   PRIMARY KEY (`department_id`),
   UNIQUE KEY `id_UNIQUE` (`department_id`),
   UNIQUE KEY `departamentName_UNIQUE` (`department_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,12 +196,12 @@ DROP TABLE IF EXISTS `employees`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employees` (
   `employee_id` int NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(50) NOT NULL,
-  `last_name` varchar(50) NOT NULL,
-  `email_address` varchar(120) NOT NULL,
-  `password` varchar(120) NOT NULL,
-  `pesel` varchar(11) NOT NULL,
-  `bank_account_number` varchar(26) DEFAULT NULL,
+  `first_name` varchar(50) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
+  `last_name` varchar(50) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
+  `email_address` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `password` varchar(120) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `pesel` varchar(11) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `bank_account_number` varchar(26) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,
   `seniority_in_months` int NOT NULL,
   `employment_start_date` date NOT NULL,
   `is_active` tinyint NOT NULL,
@@ -147,19 +212,19 @@ CREATE TABLE `employees` (
   `employee_department_id` int NOT NULL,
   `employee_seniority_level_id` int NOT NULL,
   `employee_company_role_id` int NOT NULL,
-  PRIMARY KEY (`employee_id`,`employee_contract_type_id`,`employee_department_id`,`employee_seniority_level_id`,`employee_company_role_id`),
+  PRIMARY KEY (`employee_id`),
   UNIQUE KEY `id_UNIQUE` (`employee_id`),
   UNIQUE KEY `pesel_UNIQUE` (`pesel`),
   UNIQUE KEY `email_UNIQUE` (`email_address`),
-  KEY `fk_employee_company_role_idx` (`employee_company_role_id`),
   KEY `fk_employee_contract_type_idx` (`employee_contract_type_id`),
-  KEY `fk_employee_department_idx` (`employee_department_id`),
+  KEY `fk_employee_department_id_idx` (`employee_department_id`),
   KEY `fk_employee_seniority_level_idx` (`employee_seniority_level_id`),
+  KEY `fk_employee_company_role_idx` (`employee_company_role_id`),
   CONSTRAINT `fk_employee_company_role` FOREIGN KEY (`employee_company_role_id`) REFERENCES `company_roles` (`role_id`),
   CONSTRAINT `fk_employee_contract_type` FOREIGN KEY (`employee_contract_type_id`) REFERENCES `contract_types` (`contract_id`),
   CONSTRAINT `fk_employee_department` FOREIGN KEY (`employee_department_id`) REFERENCES `departments` (`department_id`),
   CONSTRAINT `fk_employee_seniority_level` FOREIGN KEY (`employee_seniority_level_id`) REFERENCES `seniority_levels` (`seniority_level_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,11 +246,12 @@ DROP TABLE IF EXISTS `employees_skills`;
 CREATE TABLE `employees_skills` (
   `employee_id` int NOT NULL,
   `skill_id` int NOT NULL,
-  KEY `fk_employee_has_skills_employee1_idx` (`employee_id`),
+  PRIMARY KEY (`employee_id`,`skill_id`),
   KEY `fk_employees_skills_skill_idx` (`skill_id`),
+  KEY `fk_employees_skills_employee_idx` (`employee_id`),
   CONSTRAINT `fk_employees_skills_employee` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`),
   CONSTRAINT `fk_employees_skills_skill` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`skill_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,11 +272,11 @@ DROP TABLE IF EXISTS `seniority_levels`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `seniority_levels` (
   `seniority_level_id` int NOT NULL AUTO_INCREMENT,
-  `seniority_level_name` varchar(45) NOT NULL,
+  `seniority_level_name` varchar(45) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
   PRIMARY KEY (`seniority_level_id`),
   UNIQUE KEY `position_UNIQUE` (`seniority_level_name`),
   UNIQUE KEY `id_UNIQUE` (`seniority_level_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +285,7 @@ CREATE TABLE `seniority_levels` (
 
 LOCK TABLES `seniority_levels` WRITE;
 /*!40000 ALTER TABLE `seniority_levels` DISABLE KEYS */;
-INSERT INTO `seniority_levels` VALUES (1,'Junior'),(2,'Mid'),(3,'Other'),(4,'Senior');
+INSERT INTO `seniority_levels` VALUES (2,'Inny'),(1,'Junior'),(3,'Mid'),(4,'Senior');
 /*!40000 ALTER TABLE `seniority_levels` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,11 +298,11 @@ DROP TABLE IF EXISTS `skills`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `skills` (
   `skill_id` int NOT NULL AUTO_INCREMENT,
-  `skill_name` varchar(45) NOT NULL,
+  `skill_name` varchar(45) CHARACTER SET cp1250 COLLATE cp1250_general_ci NOT NULL,
   PRIMARY KEY (`skill_id`),
   UNIQUE KEY `id_UNIQUE` (`skill_id`),
   UNIQUE KEY `skillName_UNIQUE` (`skill_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -258,4 +324,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-03 23:05:53
+-- Dump completed on 2023-05-05 17:29:36
