@@ -34,5 +34,11 @@ namespace Pirsoft.Api.Security.Managers
             lis.Add(user);
             return Task.FromResult(lis);
         }
+        
+        public async Task<EmployeeModel> GetUserAsync(string email, string password)
+        {
+            var user = await FindByEmailAsync(email);
+            return user.password == password ? user : null;
+        }
     }
 }
