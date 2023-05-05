@@ -3,7 +3,7 @@ import ReusableButton from "../base/ReusableButton";
 import {labelRequest, labelShowProfile} from "../../GlobalAppConfig";
 import {BsPersonCircle} from "react-icons/bs";
 
-const EmployeeListItem = ({employee, action, showRequest, id, teams, positions}) => {
+const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, positionLevels}) => {
     const[showHideButtons, setShowHideButtons] = useState(false);
 
     const showOptions = () => {
@@ -33,19 +33,38 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions})
         return returnPosition
     }
 
-    return <li id={id} className={"flex flex-row m-2 p-4 gap-2 hover:bg-dayoffmonth hover:cursor-default hover:bg-opacity-80 rounded-md bg-brown-menu border-b-workday border-2"}
+    function translatePositionLevelName(position_level_id){
+        let returnPositionLevel = position_level_id
+        positionLevels.map(positionLevel => {
+            if(positionLevel.seniority_level_id.toString().trim() === position_level_id.toString().trim() )
+                returnPositionLevel = positionLevel.seniority_level_name
+        })
+
+        return returnPositionLevel
+    }
+
+    return <div id={id} className={"rounded-md grid grid-cols-6 m-2 h-16 hover:cursor-default hover:bg-opacity-80  hover:bg-brown-menu hover:border-b-workday hover:border-2"}
             onMouseOver={showOptions} onMouseLeave={hideOptions}>
-                <div className={"grow-0"}>
-                {/*{employee.avatar ?*/}
-                {/*    <img src={"data:image/png;base64," + employee.avatar} alt="Avatar image cap" className={"w-12 rounded-2xl"}/>*/}
-                {/*    : <BsPersonCircle />*/}
-                {/*}*/}
+                <div className={"place-self-center"}>
+                    {/*{employee.avatar ?*/}
+                    {/*    <img src={"data:image/png;base64," + employee.avatar} alt="Avatar image cap" className={"w-12 rounded-2xl"}/>*/}
+                    {/*    : <BsPersonCircle />*/}
+                    {/*}*/}
                     <BsPersonCircle fontSize={50}/>
                 </div>
-                <div className={"grow-0 flex flex-row self-center"}>
-                    {employee.first_name} {employee.last_name}, {translateDepartmentName(employee.employee_department_id)}, {translatePositionName(employee.employee_company_role_id)}
+                <div className={"flex flex-row place-self-center"}>
+                    {employee.first_name} {employee.last_name}
                 </div>
-                <div className={"grow flex flex-row justify-end gap-2"}>
+                <div className={"flex flex-row place-self-center"}>
+                    {translateDepartmentName(employee.employee_department_id)}
+                </div>
+                <div className={"flex flex-row place-self-center"}>
+                    {translatePositionLevelName(employee.employee_seniority_level_id)}
+                </div>
+                <div className={"flex flex-row place-self-center"}>
+                    {translatePositionName(employee.employee_company_role_id)}
+                </div>
+                <div className={"grow flex flex-row place-self-center gap-2"}>
                     {showHideButtons && (
                         <>
                             <ReusableButton id={id + "-request"} value={labelRequest} onClick={() => {
@@ -57,7 +76,7 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions})
                     )
                     }
                 </div>
-            </li>
+            </div>
 }
 
 export default EmployeeListItem;
