@@ -18,6 +18,7 @@ const TeamsList = ({value = undefined, onChange, id, teams,
     return <Select id={id}
         className={formatting + " text-black"}
                    defaultValue={defaultValue}
+                   value={defaultValue}
                    menuPlacement={placement}
                    options={teams}
                    getOptionLabel={option =>

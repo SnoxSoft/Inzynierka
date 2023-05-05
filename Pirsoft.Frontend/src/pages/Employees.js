@@ -188,10 +188,12 @@ function Employees(){
                             <div className={"flex flex-row gap-2 flex-wrap"}>
                                 <div>
                                     <TeamsList id={"employees-teams-list"} className={""}
+                                               value={team}
                                                onChange={setTeam} teams={teamsList}/>
                                 </div>
                                 <div>
                                     <PositionsList id={"employees-positions-list"} className={""}
+                                                   value={position}
                                                    positions={positionsList}
                                                    onChange={setPosition} placement={"bottom"}/>
                                 </div>

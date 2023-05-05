@@ -6,7 +6,7 @@ import {
     pageNameRequests,
     requestActionLabel,
     requestDescriptionLabel,
-    requestStatusLabel, serverIp,
+    requestStatusLabel
 } from "../GlobalAppConfig";
 import RequestsFilter from "../components/requests/RequestsFilter";
 import {useNavigate} from "react-router-dom";
@@ -43,13 +43,17 @@ function Requests(){
     const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
 
+    // Imie i nazwisko dla filtra
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+
     // Zespół do filtrowania
-    const[userTeam, setUserTeam] = useState();
+    const[team, setTeam] = useState();
 
     // Checkboxy fo filtrowania
-    const [checkOczekujace, setCheckOczekujace] = useState(true);
-    const [checkZatwierdzone, setCheckZatwierdzone] = useState(true);
-    const [checkOdrzucone, setCheckOdrzucone] = useState(true);
+    const [checkWaiting, setCheckWaiting] = useState(true);
+    const [checkApproved, setCheckApproved] = useState(true);
+    const [checkRefused, setCheckRefused] = useState(true);
     const [checkCreatedByCurrent, setCheckCreatedByCurrent] = useState(true);
     const [checkNotCreatedByCurrent, setCheckNotCreatedByCurrent] = useState(true)
 
@@ -57,16 +61,6 @@ function Requests(){
     const [requestsVisible, setRequestsVisible] = useState(true)
 
     const [requestPickedData, setRequestPickedData] = useState(undefined)
-
-    // Imie i nazwisko dla filtra
-    const [userName, setUserName] = useState('');
-    const [userSurname, setUserSurname] = useState('');
-    const handleNameChange = event => {
-        setUserName(event.target.value);
-    };
-    const handleSurnameChange = event => {
-        setUserSurname(event.target.value);
-    };
 
     // Zmienne do ładowania statusów i typów nieobecności
     const [employeeRequests, setEmployeeRequests] = useState(null);
@@ -102,6 +96,20 @@ function Requests(){
 
     // Filtrowanie wniosków
     function filtrRequests(){
+        console.log(firstName)
+        console.log(lastName)
+        console.log(team)
+
+        console.log(checkWaiting)
+        console.log(checkApproved)
+        console.log(checkRefused)
+
+        console.log(checkCreatedByCurrent)
+        console.log(checkNotCreatedByCurrent)
+
+        console.log(dateFrom)
+        console.log(dateTo)
+
         setEmployeeRequests(null)
         fetchGetEmployeesRequests(navigate, sessionStorage.getItem("USER"))
             .then(employeeRequests => setEmployeeRequests(employeeRequests));
@@ -133,12 +141,13 @@ function Requests(){
         <div id={"absences"} className={"every-page-on-scroll flex flex-col text-workday"}
             style={{minWidth: 800}}>
             <RequestsFilter
-                handleNameChange={handleNameChange} userName={userName}
-                handleSurnameChange={handleSurnameChange} userSurname={userSurname}
-                setUserTeam={setUserTeam} teamsList={teamsList}
-                setCheckOczekujace={setCheckOczekujace}
-                setCheckZatwierdzone={setCheckZatwierdzone}
-                setCheckOdrzucone={setCheckOdrzucone}
+                setFirstName={setFirstName} firstName={firstName}
+                setLastName={setLastName} lastName={lastName}
+                setTeam={setTeam} team={team}
+                teamsList={teamsList}
+                setCheckWaiting={setCheckWaiting}
+                setCheckApproved={setCheckApproved}
+                setCheckRefused={setCheckRefused}
                 setCheckCreatedByCurrent={setCheckCreatedByCurrent}
                 setCheckNotCreatedByCurrent={setCheckNotCreatedByCurrent}
                 dateTo={dateTo} setDateTo={setDateTo} dateFrom={dateFrom} setDateFrom={setDateFrom}

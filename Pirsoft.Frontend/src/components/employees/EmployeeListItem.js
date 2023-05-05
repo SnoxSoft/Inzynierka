@@ -80,5 +80,3 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, 
 }
 
 export default EmployeeListItem;
-
-//
