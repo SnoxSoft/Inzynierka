@@ -13,6 +13,8 @@ namespace Pirsoft.Api.DatabaseManagement
             => _databaseModelBuilder = databaseModelBuilder;
 
         public virtual DbSet<AbsenceModel> absences { get; set; }
+        public virtual DbSet<AbsenceStatusModel> absence_statuses { get; set; }
+        public virtual DbSet<AbsenceTypeModel> absence_types { get; set; }
         public virtual DbSet<CompanyRoleModel> company_roles { get; set; }
         public virtual DbSet<ContractTypeModel> contract_types { get; set; }
         public virtual DbSet<DepartmentModel> departments { get; set; }
