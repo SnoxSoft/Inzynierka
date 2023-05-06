@@ -172,7 +172,7 @@ function Employees(){
                                       //setEmployeeDataShow={setEmployeeDataShow}
                                       forEmployee={pickedEmployeeData}/> :
             <>
-            {teamsList && positionsList ?
+            {teamsList && positionsList && positionLevelList && positionsList ?
                 <div
                     className={"every-page-on-scroll rounded-md border-2 border-b-workday text-workday overflow-y-hidden hover:cursor-default"}
                     style={{minWidth: 1000}}>

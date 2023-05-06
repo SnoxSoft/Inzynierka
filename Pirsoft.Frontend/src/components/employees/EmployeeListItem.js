@@ -43,7 +43,7 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, 
         return returnPositionLevel
     }
 
-    return <div id={id} className={"rounded-md grid grid-cols-6 m-2 h-16 hover:cursor-default hover:bg-opacity-80  hover:bg-brown-menu hover:border-b-workday hover:border-2"}
+    return <div id={id} className={"rounded-md grid grid-cols-6 m-2 p-4 hover:cursor-default hover:bg-opacity-80 hover:bg-brown-menu hover:border-b-workday hover:border-2"}
             onMouseOver={showOptions} onMouseLeave={hideOptions}>
                 <div className={"place-self-center"}>
                     {/*{employee.avatar ?*/}
@@ -64,7 +64,7 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, 
                 <div className={"flex flex-row place-self-center"}>
                     {translatePositionName(employee.employee_company_role_id)}
                 </div>
-                <div className={"grow flex flex-row place-self-center gap-2"}>
+                <div className={"grow flex flex-row place-self-center gap-x-2"}>
                     {showHideButtons && (
                         <>
                             <ReusableButton id={id + "-request"} value={labelRequest} onClick={() => {

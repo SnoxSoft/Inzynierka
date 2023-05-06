@@ -21,7 +21,7 @@ const TeamLeader = ({disableChange, mode, value, setLeaderData, setEmployeesFind
 
     return (
         <>
-        {value === undefined || (value.length !== undefined && value.length === 0) ?
+        {value === undefined || value === null || (value.length !== undefined && value.length === 0) ?
             !disableChange ?
                 <ReusableButton id={"team-leader-add"} value={<HiPlus/>}
                                 color={""}

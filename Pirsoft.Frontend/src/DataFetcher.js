@@ -22,7 +22,7 @@ import {
     endpointGetEmployeeMonthDaysOff,
     endpointGetEmployeesRequests,
     endpointGetRequestApprovers,
-    endpointGetRequestsStatuses, endpointPostCreateEmployee,
+    endpointGetRequestsStatuses, endpointGetTeamData, endpointPostCreateEmployee,
     endpointPostSendEmailForPasswordChange,
     endpointPutChangePassword
 } from "./EndpointAppConfig";
@@ -82,7 +82,7 @@ async function fetchPutChangePassword(navigate, employeeId, newPassword, newRepe
 
 async function fetchGetEmployeeDataById(id, navigate) {
     if (id !== '-1') {
-        const response = await fetch(serverIpProd + "/" + endpointGetEmployeeData + "/" + id)
+        const response = await fetch(serverIpProd + "/" + endpointGetEmployeeData + "/" + 2)
             .catch( err => console.error(err))
         if(response.status === 200){
             const newData = await response.json();
@@ -108,6 +108,18 @@ async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirectio
         const newData = await response.json();
         if (sortForTeams)
             newData.sort(FunctionForSortingJson("last_name", sortDirection))
+        return newData
+    }
+    else {
+        redirectToMainWindow(navigate)
+    }
+}
+
+async function fetchGetTeamDataById(navigate, id) {
+    const response = await fetch(serverIp + "/" + endpointGetTeamData + "/" + id)
+        .catch( err => console.error(err))
+    if(response.status === 200){
+        const newData = await response.json();
         return newData
     }
     else {
@@ -317,6 +329,8 @@ export {
     fetchGetAllEmployees,
 
     fetchGetAllTeamsAndAddZeroRecordAndSort,
+    fetchGetTeamDataById,
+
     fetchGetAllContractsAndAddZeroRecordAndSort,
     fetchGetAllPositionsAndAddZeroRecordAndSort,
     fetchGetAllPositionsLevelsAndAddZeroRecordAndSort,
