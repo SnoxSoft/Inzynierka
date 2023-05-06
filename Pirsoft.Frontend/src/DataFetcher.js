@@ -82,7 +82,7 @@ async function fetchPutChangePassword(navigate, employeeId, newPassword, newRepe
 
 async function fetchGetEmployeeDataById(id, navigate) {
     if (id !== '-1') {
-        const response = await fetch(serverIpProd + "/" + endpointGetEmployeeData + "/" + 2)
+        const response = await fetch(serverIpProd + "/" + endpointGetEmployeeData + "/" + id)
             .catch( err => console.error(err))
         if(response.status === 200){
             const newData = await response.json();
