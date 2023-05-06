@@ -24,7 +24,7 @@ const EmployeeRow = ({employee, row, id}) => {
     return <div id={id} key={id + "-key"}
                 className={"hover:cursor-default w-44 row-start-"+row+" col-start-1 text-workday flex flex-row place-content-end gap-1"}
                 onMouseOver={() => setOptionsEditVisible(true)} onMouseLeave={() => setOptionsEditVisible(false)}>
-        <div>
+        <div className={"text-right"}>
             {employee.first_name + ' ' + employee.last_name}
         </div>
         {optionsEditVisible ?

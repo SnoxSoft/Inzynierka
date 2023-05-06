@@ -2,13 +2,10 @@ import React, {useEffect, useState} from "react";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import ReusableButton from "../../components/base/ReusableButton";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
-import FunctionForSortingJson from "../../components/base/FunctionForSortingJson";
-import {labelCreateTeam, pageNameTeams, serverIp, serverIpProd} from "../../GlobalAppConfig";
-import {endpointGetAllEmployees, endpointGetAllTeams} from "../../EndpointAppConfig";
+import {labelCreateTeam, pageNameTeams} from "../../GlobalAppConfig";
 import {
-    fetchGetAbsencesTypes, fetchGetAllEmployees,
-    fetchGetAllTeamsAndAddZeroRecordAndSort,
-    fetchGetRequestsStatuses
+    fetchGetAllEmployees,
+    fetchGetAllTeamsAndAddZeroRecordAndSort
 } from "../../DataFetcher";
 import {useNavigate} from "react-router-dom";
 
@@ -21,12 +18,11 @@ function Teams(){
 
     // Wszystkie zespoly ktore są potrzebne
     const [teams, setTeams] = useState(null);
-    const [teamsLoaded, setTeamsLoaded] = useState(false)
 
     const [allTeams, setAllTeams] = useState([])
 
-    const [employeesList, setEmployeesList] = useState(null);
-    const [employeesLoaded, setEmployeesLoaded] = useState(false)
+    // Pobranie wszystkich pracowników
+    const [employees, setEmployees] = useState(null);
 
     useEffect(() => {
         // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
@@ -37,9 +33,9 @@ function Teams(){
         }
 
         // Pobranie listy wszystkich pracowników
-        if (employeesList === null) {
+        if (employees === null) {
             fetchGetAllEmployees(navigate, true)
-                .then(employeesList => setEmployeesList(employeesList));
+                .then(employeesList => setEmployees(employeesList));
         }
     })
 
@@ -59,7 +55,7 @@ function Teams(){
             // Dodanie zespołów
             row = row + 1
             allTeamsLoad.push(
-                <TeamAndEmployees id={"team-"+teamId} row={row} team={team} employees={employeesList}/>
+                <TeamAndEmployees id={"team-"+teamId} row={row} team={team} employees={employees}/>
             )
 
         });
@@ -69,7 +65,7 @@ function Teams(){
         setAllTeamsAreLoadedInDivs(true)
     }
 
-    if(teams && employeesList && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
+    if(teams && employees && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
         loadWholeMonthDataForCompany()
     }
 
