@@ -18,4 +18,11 @@ public class AbsenceController : ControllerBase
         var query = await _crudHandler.ReadAllAsync<AbsenceStatusModel>();
         return await query.OrderBy(absenceStatus => absenceStatus.absence_status_id).ToListAsync();
     }
+    
+    [HttpGet("get/absence/types")]
+    public async Task<IEnumerable<AbsenceTypeModel>> GetListOfAllAbsenceTypes()
+    {
+        var query = await _crudHandler.ReadAllAsync<AbsenceTypeModel>();
+        return await query.OrderBy(absenceType => absenceType.absence_type_id).ToListAsync();
+    }
 }
