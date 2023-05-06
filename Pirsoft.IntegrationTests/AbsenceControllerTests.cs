@@ -17,4 +17,14 @@ public class AbsenceControllerTests
         response.Result.IsSuccessStatusCode.Should().BeTrue();
         response.IsCompletedSuccessfully.Should().BeTrue();
     }
+    
+    [Test]
+    public void GetAllAbsenceTypes_IsReturning_SuccessCodeWithResponse()
+    {
+        var response = _client.GetAsync("https://localhost:7120/get/absence/types");
+
+        response.Result.Content.Should().NotBeNull();
+        response.Result.IsSuccessStatusCode.Should().BeTrue();
+        response.IsCompletedSuccessfully.Should().BeTrue();
+    }
 }
