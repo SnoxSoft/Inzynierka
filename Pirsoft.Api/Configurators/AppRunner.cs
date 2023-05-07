@@ -1,4 +1,7 @@
-﻿using Pirsoft.Api.PatternsAbstraction;
+﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.FileProviders;
+using Pirsoft.Api.Configurators.OptionsProviders;
+using Pirsoft.Api.PatternsAbstraction;
 
 namespace Pirsoft.Api.Configurators
 {
@@ -33,11 +36,29 @@ namespace Pirsoft.Api.Configurators
                 _app.UseSwagger();
                 _app.UseSwaggerUI();
             }
-            _app.UseCors();
+            _app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             _app.UseHttpsRedirection();
             _app.UseAuthentication();
             _app.UseAuthorization();
             _app.MapControllers();
+
+            // move to separate configurator
+            string projectRootDirectory = Directory.GetParent(Directory.GetCurrentDirectory())!.FullName;
+            string avatarDirectory = _app.Configuration.GetValue<string>("Resources:AvatarDirectory")!;
+            string fullPathToAvatarDirectory = Path.Combine(projectRootDirectory, avatarDirectory);
+
+            if (Directory.Exists(fullPathToAvatarDirectory) == false)
+            {
+                Directory.CreateDirectory(fullPathToAvatarDirectory);
+            }
+
+            _app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(fullPathToAvatarDirectory),
+                RequestPath = $"/{avatarDirectory}"
+            });
+
+            //_app.UseStaticFiles(StaticFilesOptionsProvider.Instance.Options);
 
             CanRun = true;
         }
