@@ -94,10 +94,11 @@ async function fetchGetEmployeeDataById(id, navigate) {
     } else return undefined
 }
 
-async function fetchPostCreateEmployee(query) {
+async function fetchPostCreateEmployee(query, formData) {
     return await fetch(serverIpProd + "/" + endpointPostCreateEmployee + "?" + query,
         {
-            method: "POST"
+            method: "POST",
+            body: formData
         })
 }
 

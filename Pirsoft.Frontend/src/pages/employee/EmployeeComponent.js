@@ -313,7 +313,10 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             query.set("seniorityLevel", positionLevel);
             query.set("employmentStartDate", start);
 
-            fetchPostCreateEmployee(query)
+            const formData = new FormData();
+            //formData.append("employee_avatar", fileToUpload, fileToUpload.name);
+
+            fetchPostCreateEmployee(query, formData)
                 .then(r => console.log(r))
         }
 
