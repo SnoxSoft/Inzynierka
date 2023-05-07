@@ -6,6 +6,7 @@ using Pirsoft.Api.Enums;
 using Pirsoft.Api.Models.ModelCreators;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
+using System.Security.Claims;
 using Pirsoft.Api.Security.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -112,6 +113,47 @@ public class EmployeeController : Controller
         catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+    
+    [Authorize(Roles = "Kadry")]
+    [HttpPut("employees/{id}")]
+    public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeModel employee, [FromServices] ICrudHandler crudHandler)
+    {
+        var existingEmployee = await crudHandler.ReadAsync<EmployeeModel>(id);
+
+        if (existingEmployee == null)
+        {
+            return NotFound();
+        }
+
+        // Make sure the email is not editable
+        employee.email_address = existingEmployee.email_address;
+
+        // Update the employee object
+        existingEmployee.first_name = employee.first_name;
+        existingEmployee.last_name = employee.last_name;
+        existingEmployee.pesel = employee.pesel;
+        existingEmployee.bank_account_number = employee.bank_account_number;
+        existingEmployee.seniority_in_months = employee.seniority_in_months;
+        existingEmployee.employment_start_date = employee.employment_start_date;
+        existingEmployee.is_active = employee.is_active;
+        existingEmployee.password_reset = employee.password_reset;
+        existingEmployee.birth_date = employee.birth_date;
+        existingEmployee.salary_gross = employee.salary_gross;
+        existingEmployee.employee_contract_type_id = employee.employee_contract_type_id;
+        existingEmployee.employee_department_id = employee.employee_department_id;
+        existingEmployee.employee_seniority_level_id = employee.employee_seniority_level_id;
+        existingEmployee.employee_company_role_id = employee.employee_company_role_id;
+
+        try
+        {
+            await crudHandler.UpdateAsync(existingEmployee);
+            return Ok();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict();
         }
     }
 
