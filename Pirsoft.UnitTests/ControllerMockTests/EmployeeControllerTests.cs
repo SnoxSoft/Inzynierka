@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -83,5 +84,37 @@ public class EmployeeControllerTests
 
         // Assert
         _crudHandlerMock.Verify(x => x.DeleteAsync(employee), Times.Once);
+    }
+    
+    [Test]
+    public async Task UpdateEmployee_WithValidData_ShouldReturnOk()
+    {
+        // Arrange
+        var id = 1;
+        var employee = new EmployeeModel { first_name = "John", last_name = "Doe", pesel = "12345678901" };
+        var existingEmployee = new EmployeeModel { employee_id = id, first_name = "Jane", last_name = "Doe", pesel = "12345678901", email_address = "jane.doe@example.com" };
+        _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync(existingEmployee);
+
+        // Act
+        var result = await _employeeController.UpdateEmployee(id, employee, _crudHandlerMock.Object);
+
+        // Assert
+        result.Should().BeOfType<OkResult>();
+        _crudHandlerMock.Verify(x => x.UpdateAsync(existingEmployee), Times.Once);
+    }
+
+    [Test]
+    public async Task UpdateEmployee_WithNonExistingEmployee_ShouldReturnNotFound()
+    {
+        // Arrange
+        var id = 1;
+        var employee = new EmployeeModel { first_name = "John", last_name = "Doe", pesel = "12345678901" };
+        _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync((EmployeeModel)null);
+
+        // Act
+        var result = await _employeeController.UpdateEmployee(id, employee, _crudHandlerMock.Object);
+
+        // Assert
+        result.Should().BeOfType<NotFoundResult>();
     }
 }
