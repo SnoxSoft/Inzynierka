@@ -3,7 +3,6 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
-import TeamRow from "../components/companySchedule/TeamRow";
 import {legendLabel, legendToday, months, pageNameCompanySchedule, serverIp, weekdays} from "../GlobalAppConfig";
 import {Popup} from "semantic-ui-react";
 import Legend from "../components/legend/Legend";
@@ -12,6 +11,7 @@ import {
     fetchGetAllTeamsAndAddZeroRecordAndSort, fetchGetCompanyMonthDaysOff
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
+import TeamRow from "../components/teams/TeamRow";
 
 function CompanySchedule(){
     document.title = pageNameCompanySchedule;
@@ -99,7 +99,7 @@ function CompanySchedule(){
         // Naglowek miesiaca dwa puste pola
         allTeamsLoad.push(
             <div id={"empty-team-header"} key={"empty-team-header"}
-                className={"row-start-1 col-start-1"}>
+                className={"row-start-1 col-start-1 w-48"}>
             </div>)
         allTeamsLoad.push(
             <div id={"empty-employee-header"} key={"empty-employee-header"}
@@ -129,7 +129,8 @@ function CompanySchedule(){
             row = row + 1
             allTeamsLoad.push(
                 <TeamRow id={"company-schedule-team-"+id} team={team} row={row} days={days}
-                    employees={employees} currentMonthDaysOff={currentMonthDaysOff}/>)
+                    employees={employees} currentMonthDaysOff={currentMonthDaysOff}
+                isSchedule={true}/>)
 
         });
 
@@ -224,7 +225,7 @@ function CompanySchedule(){
                             <div>
                                 <Popup
                                     content={<Legend id={"company-schedule-legend-window"}/>}
-                                    position={"bottom left"}
+                                    position={"left center"}
                                     trigger={<ReusableButton
                                         id={"company-schedule-legend"}
                                         value={legendLabel}/>}

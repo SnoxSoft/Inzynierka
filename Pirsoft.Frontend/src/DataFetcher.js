@@ -28,6 +28,7 @@ import {
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
+import axios from "axios";
 
 function redirectToMainWindow(navigate){
     //przekierowanie do strony logowania - wystapil błąd albo do strony glownej
@@ -102,16 +103,19 @@ async function fetchPostCreateEmployee(query) {
 }
 
 async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirection = "ascending") {
-    const response = await fetch(serverIp + "/" + endpointGetAllEmployees)
-        .catch( err => console.error(err))
-    if(response.status === 200){
-        const newData = await response.json();
-        if (sortForTeams)
-            newData.sort(FunctionForSortingJson("last_name", sortDirection))
-        return newData
-    }
-    else {
-        redirectToMainWindow(navigate)
+    try {
+        const response = await axios.get(`${serverIpProd}/${endpointGetAllEmployees}`);
+        if (response.status === 200) {
+            let newData = response.data;
+            if (sortForTeams) {
+                newData = newData.sort(FunctionForSortingJson('last_name', sortDirection));
+            }
+            return newData;
+        } else {
+            redirectToMainWindow(navigate);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -225,7 +229,7 @@ async function fetchGetRequestsStatuses(navigate) {
 }
 
 async function fetchGetAbsencesTypes(navigate) {
-    const response = await fetch(serverIp + "/" + endpointGetAbsencesTypes,
+    const response = await fetch(serverIpProd + "/" + endpointGetAbsencesTypes,
         {
             method: "GET"
         })

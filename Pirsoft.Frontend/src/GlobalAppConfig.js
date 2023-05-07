@@ -81,7 +81,7 @@ const labelSave = "Zapisz";
 const teamAdditionalRow = "Wybierz zespół...";
 const positionAdditionalRow = "Wybierz stanowisko...";
 const positionLevelAdditionalRow = "Wybierz poziom stanowiska...";
-
+const absencesAdditionalRow = "Wybierz powód wniosku...";
 const contractAdditionalRow = "Wybierz rodzaj umowy...";
 
 const yearAdditionalRow = "Wybierz rok...";
@@ -237,7 +237,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     calendarLabelFrom, calendarLabelTo,
     labelRequest, labelShowProfile, alertCantGoFurther,
     labelFromTimeOfAbsence, labelFromTimeOfRequest,
-    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow,
+    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow, absencesAdditionalRow,
     employeesMenu,
     employeeRegisterMenu,
     scheduleMenu,

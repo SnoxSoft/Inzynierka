@@ -31,7 +31,7 @@ function EmployeePreRender(){
 
     useEffect(() => {
         setEmployee(null);
-        fetchGetEmployeeDataById(3, navigate)
+        fetchGetEmployeeDataById(id, navigate)
             .then(employee => setEmployee(employee));
 
         setTeams(null);

@@ -3,7 +3,7 @@ import ReusableButton from "../components/base/ReusableButton";
 import Calendar from "../components/absences/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import AbsencesListItem from "../components/absences/AbsencesListItem";
-import Request from "./Request";
+import RequestWindow from "./RequestWindow";
 import {
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
     labelFilter, labelRequest, pageNameAbsences,
@@ -107,7 +107,7 @@ function Absences(){
         for (const i of employeeAbsences) {
             absencesListLoad.push(
                 <AbsencesListItem id={"absences-list-item-"+row} key={row} employeeAbsence={i}
-                                  old={i.from <= new Date().toLocaleDateString("sv", options)}
+                                  old={i.absence_start_date <= new Date().toLocaleDateString("sv", options)}
                                   absencesTypes={absencesTypes}
                                   absencesStatus={requestsStatus}/>
             )
@@ -182,7 +182,7 @@ function Absences(){
                 {absencesList}
             </div>
         </div> :
-        <Request setAbsencesVisible={setAbsencesVisible}/>
+            <RequestWindow setAbsencesVisible={setAbsencesVisible}/>
         }
         </>
     )
