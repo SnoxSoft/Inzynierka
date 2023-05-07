@@ -40,7 +40,7 @@ const AbsencesListItem = ({employeeAbsence, old = false, absencesTypes, absences
         <div id={id} className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
             <div className={"p-2 flex rounded-md basis-8/12"}>
-                {labelFromTimeOfAbsence} {employeeAbsence.from} - {employeeAbsence.to}, {absenceType}
+                {labelFromTimeOfAbsence} {employeeAbsence.absence_start_date} - {employeeAbsence.absence_end_date}, {absenceType}
             </div>
             <div className={"flex basis-1/12 place-content-center rounded-md "}>
                 {absenceStatus}

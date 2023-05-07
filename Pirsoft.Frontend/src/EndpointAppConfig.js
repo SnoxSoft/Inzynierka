@@ -14,7 +14,7 @@ const endpointGetEmployeesRequests = "getEmployeesRequests";
 const endpointGetRequestsStatuses = "getRequestsStatus";
 
 // Zwraca rodzaje dni nieobecności / wniosków urlopowych
-const endpointGetAbsencesTypes = "getAbsencesTypes";
+const endpointGetAbsencesTypes = "get/absence/types";
 
 // Wystawianie wniosku urlopowego //
 
@@ -68,17 +68,10 @@ const endpointGetAllCompanyMonthDaysOff = "allCompanyMonthDays";
 // Zwraca listę wszystkich umiejętności istniejących w firmie
 const endpointGetAllSkills = "get/skills";
 
-
-
 // Szukacze list pracowników
 
 // Wyszukanie całej listy pracowników w firmie
 const endpointGetAllEmployees = "get/employees";
-
-// Wyszukanie listy pracowników według wybranego filtra
-const endpointGetEmployees = "getEmployees";
-
-
 
 // Lista zespołów //
 
@@ -136,7 +129,7 @@ export {
 
     endpointGetAllSkills, endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllContracts,
 
-    endpointGetAllEmployees, endpointGetEmployees,
+    endpointGetAllEmployees,
 
     endpointGetAllTeams, endpointGetTeamData,
 
