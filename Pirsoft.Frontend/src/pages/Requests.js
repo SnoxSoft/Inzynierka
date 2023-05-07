@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import RequestsListItem from "../components/requests/RequestsListItem";
-import ApprovalOrRejectionRequest from "./ApprovalOrRejectionRequest";
 import {
     pageNameRequests,
     requestActionLabel,
@@ -16,6 +15,7 @@ import {
     fetchGetRequestsStatuses,
     fetchGetAbsencesTypes
 } from "../DataFetcher";
+import RequestWindow from "./RequestWindow";
 
 function Requests(){
     document.title = pageNameRequests;
@@ -137,44 +137,42 @@ function Requests(){
 
     return(
         <>
-        {requestsVisible ?
-        <div id={"absences"} className={"every-page-on-scroll flex flex-col text-workday"}
-            style={{minWidth: 800}}>
-            <RequestsFilter
-                setFirstName={setFirstName} firstName={firstName}
-                setLastName={setLastName} lastName={lastName}
-                setTeam={setTeam} team={team}
-                teamsList={teamsList}
-                setCheckWaiting={setCheckWaiting}
-                setCheckApproved={setCheckApproved}
-                setCheckRefused={setCheckRefused}
-                setCheckCreatedByCurrent={setCheckCreatedByCurrent}
-                setCheckNotCreatedByCurrent={setCheckNotCreatedByCurrent}
-                dateTo={dateTo} setDateTo={setDateTo} dateFrom={dateFrom} setDateFrom={setDateFrom}
-                filtrRequests={filtrRequests}
-            />
+            {requestsVisible ?
+            <div id={"absences"} className={"every-page-on-scroll flex flex-col text-workday"}
+                style={{minWidth: 800}}>
+                <RequestsFilter
+                    setFirstName={setFirstName} firstName={firstName}
+                    setLastName={setLastName} lastName={lastName}
+                    setTeam={setTeam} team={team}
+                    teamsList={teamsList}
+                    setCheckWaiting={setCheckWaiting}
+                    setCheckApproved={setCheckApproved}
+                    setCheckRefused={setCheckRefused}
+                    setCheckCreatedByCurrent={setCheckCreatedByCurrent}
+                    setCheckNotCreatedByCurrent={setCheckNotCreatedByCurrent}
+                    dateTo={dateTo} setDateTo={setDateTo} dateFrom={dateFrom} setDateFrom={setDateFrom}
+                    filtrRequests={filtrRequests}
+                />
 
-            <div className={"text-start ml-4 mr-8 items-center h-6 rounded-md flex bg-brown-menu border-2 border-workday text-workday font-bold hover:cursor-default"}>
-                <div className={"p-2 flex rounded-md basis-8/12"}>
-                    {requestDescriptionLabel}
+                <div className={"text-start ml-4 mr-8 items-center h-6 rounded-md flex bg-brown-menu border-2 border-workday text-workday font-bold hover:cursor-default"}>
+                    <div className={"p-2 flex rounded-md basis-8/12"}>
+                        {requestDescriptionLabel}
+                    </div>
+                    <div className={"flex basis-1/12 place-content-center rounded-md "}>
+                        {requestStatusLabel}
+                    </div>
+                    <div className={"flex justify-evenly basis-3/12"}>
+                        {requestActionLabel}
+                    </div>
                 </div>
-                <div className={"flex basis-1/12 place-content-center rounded-md "}>
-                    {requestStatusLabel}
+                <div id={"schedule-list"} className={"overflow-y-auto"} style={{ height: wantedHeightsForList}} >
+                    {requestsList}
                 </div>
-                <div className={"flex justify-evenly basis-3/12"}>
-                    {requestActionLabel}
-                </div>
-            </div>
-            <div id={"schedule-list"} className={"overflow-y-auto"} style={{ height: wantedHeightsForList}} >
-                {requestsList}
-            </div>
-        </div>
-        :
-            <ApprovalOrRejectionRequest setRequestsVisible={setRequestsVisible}
-                                        requestPickedData={requestPickedData}
-                                        requestsTypes={absencesTypes}/>
-        }
-            </>
+            </div> :
+                <RequestWindow setRequestsVisible={setRequestsVisible}
+                        requestData={requestPickedData} mode={"approval"}/>
+            }
+        </>
     )
 }
 export default Requests;

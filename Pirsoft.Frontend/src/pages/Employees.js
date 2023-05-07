@@ -6,13 +6,12 @@ import React, {useEffect, useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
 import SortingButton from "../components/employees/search/fields/SortingButton";
 import {
-    alertUnexpectedError, firstnameLabel,
-    headerEmployees, labelBankAccount, labelBirthDate,
+    firstnameLabel,
+    headerEmployees,
     labelFind,
-    labelFirstNameAndLastName, labelPESEL, labelPosition, labelPositionLevel, labelSalary, labelTeam, lastnameLabel,
-    pageNameEmployees, requestActionLabel, requestDescriptionLabel, requestStatusLabel
+    labelFirstNameAndLastName, labelPosition, labelPositionLevel, labelTeam, lastnameLabel,
+    pageNameEmployees
 } from "../GlobalAppConfig";
-import AddEmployeeAnAbsence from "./AddEmployeeAnAbsence";
 import {
     fetchGetAllEmployees,
     fetchGetAllPositionsAndAddZeroRecordAndSort, fetchGetAllPositionsLevelsAndAddZeroRecordAndSort,
@@ -20,6 +19,7 @@ import {
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import FunctionForResize from "../components/base/FunctionForResize";
+import RequestWindow from "./RequestWindow";
 
 function Employees(){
     document.title = pageNameEmployees;
@@ -168,9 +168,8 @@ function Employees(){
     return(
         <>
         {showAddEmployeeAnAbsence ?
-                <AddEmployeeAnAbsence setShowAddEmployeeAnAbsence={setShowAddEmployeeAnAbsence}
-                                      //setEmployeeDataShow={setEmployeeDataShow}
-                                      forEmployee={pickedEmployeeData}/> :
+                <RequestWindow setShowAddEmployeeAnAbsence={setShowAddEmployeeAnAbsence}
+                               requestData={pickedEmployeeData} mode={"create"}/> :
             <>
             {teamsList && positionsList && positionLevelList && positionsList ?
                 <div

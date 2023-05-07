@@ -13,9 +13,7 @@ import DateOfBirth from "../../components/employee/fields/DateOfBirth";
 import Pesel from "../../components/employee/fields/Pesel";
 import GrossSalary from "../../components/employee/fields/GrossSalary";
 import EmploymentStartDate from "../../components/employee/fields/EmploymentStartDate";
-import LoggingPassword from "../../components/logging/LoggingPassword";
 import Contract from "../../components/employee/fields/Contract";
-import AddEmployeeAnAbsence from "../AddEmployeeAnAbsence";
 import {
     alertNewPasswordsAreIncompatible,
     alertOldPasswordIsIncompatible,
@@ -78,6 +76,7 @@ import {fetchGetAllSkillsAndSort, fetchPostCreateEmployee} from "../../DataFetch
 import Legend from "../../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
 import grossSalary from "../../components/employee/fields/GrossSalary";
+import RequestWindow from "../RequestWindow";
 function EmployeeComponent({id, mode, employee, teams, contracts, positions, positionsLevels}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -501,9 +500,10 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                         setShowPasswordChangeFrame={setShowPasswordChangeFrame}/> :
                     <></>}
                 {showAddEmployeeAnAbsence ?
-                    <AddEmployeeAnAbsence setShowAddEmployeeAnAbsence={setShowAddEmployeeAnAbsence}
-                                          setEmployeeDataShow={setEmployeeDataShow}
-                        forEmployee={employee}/> :
+                    <RequestWindow setShowAddEmployeeAnAbsence={setShowAddEmployeeAnAbsence}
+                             setEmployeeDataShow={setEmployeeDataShow}
+                            requestData={employee}/>
+                    :
                     <></>
                 }
             </>
