@@ -7,9 +7,10 @@ using Pirsoft.Api.Models.ModelCreators;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
 using Pirsoft.Api.Security.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Pirsoft.Api.Security.Interfaces;
+using IAuthenticationService = Microsoft.AspNetCore.Authentication.IAuthenticationService;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -20,12 +21,16 @@ public class EmployeeController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     private readonly IEmployeeModelValidator _validator;
+    private readonly IUserManager<EmployeeModel> _userManager;
 
-    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IAuthenticationService authenticationService)
+    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IUserManager<EmployeeModel> userManager)
     {
         _crudHandler = crudHandler;
         _validator = validator;
+        _userManager = userManager;
     }
+
+    public EmployeeController(ICrudHandler crudHandler) => _crudHandler = crudHandler;    
 
     [HttpPost("create/new/employee")]
     public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths,
@@ -87,6 +92,26 @@ public class EmployeeController : Controller
         else
         {
             return null;
+        }
+    }
+
+    [HttpDelete("delete/employee/{id}")]
+    [Authorize(Roles = "Kadry")] 
+    public async Task<IActionResult> DeleteEmployeeById(int id)
+    {
+        // Check if the employee exists
+        var employee = await _crudHandler.ReadAsync<EmployeeModel>(id);
+        if (employee == null)
+            return NotFound();
+
+        try
+        {
+            await _crudHandler.DeleteAsync(employee);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
