@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using Pirsoft.Api.DatabaseManagement;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 
 namespace Pirsoft.Api.Controllers;
