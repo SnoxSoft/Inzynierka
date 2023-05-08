@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
-import Calendar from "../components/absences/Calendar";
+import Calendar from "../components/base/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
-import AbsencesListItem from "../components/absences/AbsencesListItem";
+import RequestListItem from "../components/absences/RequestListItem";
 import RequestWindow from "./RequestWindow";
 import {
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
@@ -14,7 +14,7 @@ import {
 import {useNavigate} from "react-router-dom";
 import {
     fetchGetRequestsStatuses,
-    fetchGetAbsencesTypes, fetchGetEmployeesAbsences
+    fetchGetAbsencesTypes, fetchGetEmployeesRequests, fetchGetEmployeeDataById
 } from "../DataFetcher";
 
 
@@ -52,18 +52,25 @@ function Absences(){
     const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
 
-    // Będe potrzebować tu endpointa do czytania tych wartości
-    const onDemandDays = 5;
-    const leaveDays = 10;
-
     // Zmienne do ładowania statusów i typów nieobecności
     const [requestsStatus, setRequestsStatus] = useState(null);
     const [absencesTypes, setAbsencesTypes] = useState(null);
+    const [employee, setEmployee] = useState(null);
 
-    // Ładowanie nieobecności pracownika, statusów nieobecności oraz nazwa nieobecności
-    const [employeeAbsences, setEmployeeAbsences] = useState(null);
+    // // Ładowanie nieobecności pracownika, statusów nieobecności oraz nazwa nieobecności
+    // const [employeeAbsences, setEmployeeAbsences] = useState(null);
+
+    // W tej zmiennej znajduje się cała lista wniosków do wyświetlenia
+    const [absencesList, setAbsencesList] = useState(null);
 
     useEffect(() => {
+        //Załadowanie osobistych wartości dni urlopowych
+        if (employee === null) {
+            setEmployee(null);
+            fetchGetEmployeeDataById(sessionStorage.getItem('USER'), navigate)
+                .then(employee => setEmployee(employee));
+        }
+
         // Załadowanie statusów wniosków
         if (requestsStatus === null) {
             setRequestsStatus(null);
@@ -78,42 +85,78 @@ function Absences(){
                 .then(absencesTypes => setAbsencesTypes(absencesTypes));
         }
 
-        if(employeeAbsences === null && requestsStatus !== null && absencesTypes !== null) {
+        if(employee !== null && requestsStatus !== null && absencesTypes !== null && absencesList === null){
             filtrAbsences()
         }
     })
 
     // Filtrowanie nieobecności
-    function filtrAbsences(id){
+    function filtrAbsences(){
+        // console.log(checkWaiting)
+        // console.log(checkApproved)
+        // console.log(checkRefused)
+        //
+        // console.log(dateFrom)
+        // console.log(dateTo)
 
-        console.log(checkWaiting)
-        console.log(checkApproved)
-        console.log(checkRefused)
+        //Trzeba wyczyścić listę przed każdym filtrem
+        setAbsencesList([])
 
-        console.log(dateFrom)
-        console.log(dateTo)
+        fetchGetEmployeesRequests(navigate, dateFrom, dateTo)
+            .then(employeeAbsences => {
 
-        setEmployeeAbsences(null)
-        fetchGetEmployeesAbsences(navigate, id)
-            .then(employeeAbsences => {setEmployeeAbsences(employeeAbsences)});
+                let absencesListLoad = [];
+                let row = 0;
+
+                if(employeeAbsences !== undefined){
+                    employeeAbsences.map(absence => {
+                        let addAbsence = null
+                        if (checkWaiting && checkRefused && checkApproved) {
+                            addAbsence = absence
+                        } else if ((checkWaiting && !checkRefused && !checkApproved) && absence.absence_status_id === 1) {
+                            addAbsence = absence
+                        } else if ((!checkWaiting && checkRefused && !checkApproved) && absence.absence_status_id === 2) {
+                            addAbsence = absence
+                        } else if ((!checkWaiting && !checkRefused && checkApproved) && absence.absence_status_id === 3) {
+                            addAbsence = absence
+                        } else if ((checkWaiting && checkRefused && !checkApproved) && (absence.absence_status_id === 1 || absence.absence_status_id === 2)) {
+                            addAbsence = absence
+                        } else if ((!checkWaiting && checkRefused && checkApproved) && (absence.absence_status_id === 2 || absence.absence_status_id === 3)) {
+                            addAbsence = absence
+                        } else if ((checkWaiting && !checkRefused && checkApproved) && (absence.absence_status_id === 3 || absence.absence_status_id === 2)) {
+                            addAbsence = absence
+                        }
+
+                        if(addAbsence !== null){
+                            if(absence.employee_owner_id.toString().trim() !== sessionStorage.getItem('USER').toString().trim()){
+                                addAbsence = null
+                            }
+                        }
+
+                        if (addAbsence !== null) {
+                            absencesListLoad.push(
+                                <RequestListItem id={"absences-list-item-" + row} key={row} employeeAbsence={addAbsence}
+                                                 old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options)}
+                                                 absencesTypes={absencesTypes}
+                                                 requestsStatus={requestsStatus}
+                                                 window={"absences"}/>
+                            )
+                            row++;
+                        }
+                    })
+                }
+                setAbsencesList(absencesListLoad)
+            })
     }
 
-    // W tej zmiennej znajduje się cała lista wniosków do wyświetlenia
-    const [absencesList, setAbsencesList] = useState([]);
 
-    if (employeeAbsences !== null && absencesList.length === 0){
-        let absencesListLoad = [];
-        let row = 0;
-        for (const i of employeeAbsences) {
-            absencesListLoad.push(
-                <AbsencesListItem id={"absences-list-item-"+row} key={row} employeeAbsence={i}
-                                  old={i.absence_start_date <= new Date().toLocaleDateString("sv", options)}
-                                  absencesTypes={absencesTypes}
-                                  absencesStatus={requestsStatus}/>
-            )
-            row++;
-        }
-        setAbsencesList(absencesListLoad)
+    // Ładowanie tych wartości z informacji pracownika
+    let onDemandDays = 5;
+    let leaveDays = 10;
+
+    if(employee !== null){
+        onDemandDays = employee.employee_company_role_id;
+        leaveDays = employee.employee_contract_type_id;
     }
 
     return(
@@ -164,7 +207,9 @@ function Absences(){
                 <div className={"flex justify-center"}>
                     <ReusableButton
                         id={"absences-filter"}
-                        value={labelFilter} formatting={"h-7 border-2 border-workday"} onClick={() => filtrAbsences()}/>
+                        value={labelFilter} formatting={"h-7 border-2 border-workday"} onClick={async () => {
+                        filtrAbsences()
+                    }}/>
                 </div>
             </div>
             <div className={"text-start ml-4 mr-8 items-center h-6 bg-brown-menu rounded-md flex text-workday border-2 border-workday font-bold"}>
@@ -182,7 +227,7 @@ function Absences(){
                 {absencesList}
             </div>
         </div> :
-            <RequestWindow setAbsencesVisible={setAbsencesVisible}/>
+            <RequestWindow setAbsencesVisible={setAbsencesVisible} requestData={employee}/>
         }
         </>
     )

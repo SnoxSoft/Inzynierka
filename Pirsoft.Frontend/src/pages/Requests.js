@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
-import RequestsListItem from "../components/requests/RequestsListItem";
 import {
     pageNameRequests,
     requestActionLabel,
@@ -13,9 +12,10 @@ import {
     fetchGetAllTeamsAndAddZeroRecordAndSort,
     fetchGetEmployeesRequests,
     fetchGetRequestsStatuses,
-    fetchGetAbsencesTypes
+    fetchGetAbsencesTypes, fetchGetEmployeeDataById, fetchGetAllEmployees
 } from "../DataFetcher";
 import RequestWindow from "./RequestWindow";
+import RequestListItem from "../components/absences/RequestListItem";
 
 function Requests(){
     document.title = pageNameRequests;
@@ -39,17 +39,6 @@ function Requests(){
         FunctionForResize("schedule-month", {setWantedHeightForList});
     }, []);
 
-    // Gettery i settery dla filtra kalendarza
-    const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
-    const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
-
-    // Imie i nazwisko dla filtra
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-
-    // Zespół do filtrowania
-    const[team, setTeam] = useState();
-
     // Checkboxy fo filtrowania
     const [checkWaiting, setCheckWaiting] = useState(true);
     const [checkApproved, setCheckApproved] = useState(true);
@@ -57,16 +46,29 @@ function Requests(){
     const [checkCreatedByCurrent, setCheckCreatedByCurrent] = useState(true);
     const [checkNotCreatedByCurrent, setCheckNotCreatedByCurrent] = useState(true)
 
+    // Gettery i settery dla filtra kalendarza
+    const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
+    const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
+
+    // Imie i nazwisko dla filtra
+    const [firstNameAndLastName, setFirstNameAndLastName] = useState('')
+
+    // Zespół do filtrowania
+    const[team, setTeam] = useState();
+
     // Pokazanie lub schowanie listy wniosków / akceptacji/odrzucenia wniosku
     const [requestsVisible, setRequestsVisible] = useState(true)
 
     const [requestPickedData, setRequestPickedData] = useState(undefined)
 
     // Zmienne do ładowania statusów i typów nieobecności
-    const [employeeRequests, setEmployeeRequests] = useState(null);
     const [requestsStatus, setRequestsStatus] = useState(null);
     const [absencesTypes, setAbsencesTypes] = useState(null);
     const [teamsList, setTeamsList] = useState(null);
+
+    // W tej zmiennej znajduje się cała lista wniosków do wyświetlenia
+    const [requestsList, setRequestsList] = useState(null);
+    const [employeesList, setEmployeesList] = useState(null)
 
     useEffect(() => {
         // Załadowanie statusów wniosków
@@ -89,51 +91,211 @@ function Requests(){
                 .then(teamsList => setTeamsList(teamsList));
         }
 
-        if(employeeRequests === null) {
+        // Pobranie listy wszystkich pracowników
+        if (employeesList === null) {
+            fetchGetAllEmployees(navigate)
+                .then(employeesList => setEmployeesList(employeesList));
+        }
+
+        if(requestsStatus !== null && absencesTypes !== null && teamsList !== null && employeesList !== null && requestsList === null) {
             filtrRequests()
         }
     })
 
     // Filtrowanie wniosków
-    function filtrRequests(){
-        console.log(firstName)
-        console.log(lastName)
+    function filtrRequests() {
+        console.clear()
+        console.log(firstNameAndLastName)
         console.log(team)
+        //
+        // console.log(checkWaiting)
+        // console.log(checkApproved)
+        // console.log(checkRefused)
+        //
+        // console.log(checkCreatedByCurrent)
+        // console.log(checkNotCreatedByCurrent)
+        //
+        // console.log(dateFrom)
+        // console.log(dateTo)
 
-        console.log(checkWaiting)
-        console.log(checkApproved)
-        console.log(checkRefused)
-
-        console.log(checkCreatedByCurrent)
-        console.log(checkNotCreatedByCurrent)
-
-        console.log(dateFrom)
-        console.log(dateTo)
-
-        setEmployeeRequests(null)
-        fetchGetEmployeesRequests(navigate, sessionStorage.getItem("USER"))
-            .then(employeeRequests => setEmployeeRequests(employeeRequests));
-    }
-
-    // W tej zmiennej znajduje się cała lista wniosków do wyświetlenia
-    const [requestsList, setRequestsList] = useState([]);
-
-    // Tworzenie listy wniosków urlopowych, wnioski już przestarzałe są w szarym kolorze
-    if (employeeRequests !== null && requestsList.length === 0){
-        let requestsListLoad = [];
+        setRequestsList([])
         let row = 0;
-        for (const i of employeeRequests) {
-            requestsListLoad.push(
-                <RequestsListItem id={"request-list-item-"+row} employeeRequest={i} key={row} setRequestsVisible={setRequestsVisible}
-                                  old={i.from <= new Date().toLocaleDateString("sv", options)}
-                                  setRequestPickedData={setRequestPickedData}
-                                  requestsTypes={absencesTypes}
-                                  requestsStatus={requestsStatus}/>
-            )
-            row++;
-        }
-        setRequestsList(requestsListLoad)
+        fetchGetEmployeesRequests(navigate, dateFrom, dateTo)
+            .then(employeeRequests => {
+                let requestsListLoad = [];
+                if (employeeRequests !== undefined) {
+                    employeeRequests.map(request => {
+                        let addRequest = null
+
+                        // Duza funkcja filtrujaca
+                        let currentUserId = sessionStorage.getItem('USER')
+
+                        if (checkWaiting && checkRefused && checkApproved && checkCreatedByCurrent && checkNotCreatedByCurrent) {
+                            addRequest = request
+                        } else {
+                            // Opcje dla oczekujace
+                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === 1 &&
+                                checkCreatedByCurrent && !checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === 1 &&
+                                !checkCreatedByCurrent && checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === 1 &&
+                                checkCreatedByCurrent && checkNotCreatedByCurrent) {
+                                addRequest = request
+                            }
+
+                            // Opcje dla odrzucone
+                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === 2 &&
+                                checkCreatedByCurrent && !checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === 2 &&
+                                !checkCreatedByCurrent && checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === 2 &&
+                                checkCreatedByCurrent && checkNotCreatedByCurrent) {
+                                addRequest = request
+                            }
+
+                            // Opcje dla zatwierdzone
+                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === 3 &&
+                                checkCreatedByCurrent && !checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === 3 &&
+                                !checkCreatedByCurrent && checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === 3 &&
+                                checkCreatedByCurrent && checkNotCreatedByCurrent) {
+                                addRequest = request
+                            }
+
+                            // Opcje dla oczekujace i odrzucone
+                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === 1 || request.absence_status_id === 2) &&
+                                checkCreatedByCurrent && !checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === 1 || request.absence_status_id === 2) &&
+                                !checkCreatedByCurrent && checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === 1 || request.absence_status_id === 2) &&
+                                checkCreatedByCurrent && checkNotCreatedByCurrent) {
+                                addRequest = request
+                            }
+
+                            // Opcje za odrzucone i zatwierdzone
+                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === 2 || request.absence_status_id === 3) &&
+                                checkCreatedByCurrent && !checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === 2 || request.absence_status_id === 3) &&
+                                !checkCreatedByCurrent && checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === 2 || request.absence_status_id === 3) &&
+                                checkCreatedByCurrent && checkNotCreatedByCurrent) {
+                                addRequest = request
+                            }
+
+                            // Opcje dla zatwierdzone i oczekujace
+                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 2) &&
+                                checkCreatedByCurrent && !checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 2) &&
+                                !checkCreatedByCurrent && checkNotCreatedByCurrent &&
+                                currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
+                                addRequest = request
+                            }
+                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 2) &&
+                                checkCreatedByCurrent && checkNotCreatedByCurrent) {
+                                addRequest = request
+                            }
+                        }
+
+
+                        // Tutaj ładuje dane pracownika
+                        let employeeName = null
+                        let employeeTeam = null
+                        employeesList.map(employee => {
+                            if(request.employee_owner_id === employee.employee_id){
+                                employeeName = employee.first_name + " " + employee.last_name
+                                teamsList.map(team => {
+                                    if(team.department_id === employee.employee_department_id){
+                                        employeeTeam = team
+                                    }
+                                })
+                            }
+                        })
+
+                        // ostatni etap filtra - szukanie nazwy i zespolu
+                        if(addRequest !== null && employeeName !== null && employeeTeam !== null) {
+                            // Wybrany tylko zespół
+                            if((firstNameAndLastName === undefined || firstNameAndLastName.trim() === "") &&
+                                (team !== undefined && team !== 0)){
+                                if(employeeTeam.department_id !== team){
+                                    addRequest = null
+                                }
+                            }
+                            // Wybrana tylko nazwa pracownika
+                            if((firstNameAndLastName !== undefined && firstNameAndLastName.trim() !== "") &&
+                                (team === undefined || team === 0)){
+                                if(employeeName.includes(firstNameAndLastName)){
+                                }
+                                else {
+                                    addRequest = null
+                                }
+                            }
+                            // Wybrana i nazwa i zespół
+                            if((firstNameAndLastName !== undefined && firstNameAndLastName.trim() !== "") &&
+                                (team !== undefined && team !== 0)){
+                                if(employeeName.includes(firstNameAndLastName) && employeeTeam.department_id === team){
+
+                                }
+                                else {
+                                    addRequest = null
+                                }
+                            }
+
+                            if(addRequest !== null) {
+                                requestsListLoad.push(
+                                    <RequestListItem id={"request-list-item-" + row} employeeAbsence={addRequest}
+                                                     key={row}
+                                                     setRequestsVisible={setRequestsVisible}
+                                                     old={addRequest.absence_start_date <= new Date().toLocaleDateString("sv", options)}
+                                                     setRequestPickedData={setRequestPickedData}
+                                                     employeeName={employeeName}
+                                                     employeeTeam={employeeTeam.department_name}
+                                                     absencesTypes={absencesTypes}
+                                                     requestsStatus={requestsStatus}
+                                                     window={"requests"}/>
+                                )
+                                row++;
+                            }
+                        }
+                    })
+                    setRequestsList(requestsListLoad)
+                }
+            })
     }
+
 
     return(
         <>
@@ -141,8 +303,7 @@ function Requests(){
             <div id={"absences"} className={"every-page-on-scroll flex flex-col text-workday"}
                 style={{minWidth: 800}}>
                 <RequestsFilter
-                    setFirstName={setFirstName} firstName={firstName}
-                    setLastName={setLastName} lastName={lastName}
+                    setFirstNameAndLastName={setFirstNameAndLastName} firstNameAndLastName={firstNameAndLastName}
                     setTeam={setTeam} team={team}
                     teamsList={teamsList}
                     setCheckWaiting={setCheckWaiting}

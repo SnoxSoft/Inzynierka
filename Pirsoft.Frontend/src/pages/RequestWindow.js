@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
-import Calendar from "../components/absences/Calendar";
+import Calendar from "../components/base/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {CgClose} from "react-icons/cg";
 import {
@@ -12,10 +12,10 @@ import {
     serverIp
 } from "../GlobalAppConfig";
 import {
-    fetchApproversForRequest, fetchGetAbsencesTypes
+    fetchApproversForRequest, fetchGetAbsencesTypes, fetchGetEmployeeDataById
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
-import AbsencesList from "../components/requests/AbsencesList";
+import AbsencesList from "../components/absences/AbsencesList";
 
 const RequestWindow = ({setAbsencesVisible = undefined,
                      setShowAddEmployeeAnAbsence = undefined, setEmployeeDataShow = undefined,
@@ -25,30 +25,10 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
     const navigate = useNavigate();
 
-    // Opcje dla wyświetlenia daty w formacie tekstowym
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }
-    const currentDate = new Date();
-    currentDate.setDate(1);
-    const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
-    const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
-
-    // Gettery i settery dla filtra kalendarza
-    const [dateFrom, setDateFrom] = useState(
-        requestData && mode !== 'create' ? requestData.from : previousThreeMonthsDate.toLocaleDateString("sv", options));
-    const [dateTo, setDateTo] = useState(
-        requestData && mode !== 'create' ? requestData.to : futureThreeMonthsDate.toLocaleDateString("sv", options));
-    const [absence, setAbsence] = useState()
-    const [noPay, setNoPay] = useState(false)
-
-    const disableChanges = mode === "approval"
 
     // Będe potrzebować tu endpointa do czytania tych wartości przy wybraniu wniosku
-    const onDemandDays = 5;
-    const leaveDays = 5;
+    let onDemandDays = 5;
+    let leaveDays = 10;
 
     // Lista rodzai urlopów
     const [absencesList, setAbsencesList] = useState(null)
@@ -56,7 +36,25 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     // Lista w której pokażemy wsyzystkei ossoby które mogą zatwierdzać
     const [approversList, setApproversList] = useState(null);
 
+    // Pracownik, który otrzymuje wniosek
+    const [employee, setEmployee] = useState(null);
+
+    console.log(requestData)
     useEffect(() => {
+        // Załadowanie danych pracownika, dla którego wystawiamy wniosek
+        if (employee === null) {
+            setEmployee(null);
+            fetchGetEmployeeDataById(requestData.employee_id !== undefined ? requestData.employee_id : requestData.employee_owner_id, navigate)
+                .then(employee => {
+                    setEmployee(employee);
+                    if(employee !== undefined){
+                        // Bile jakie wartosci, czekam aż pojawia sie te pola w employee modelu
+                        onDemandDays = employee.employee_company_role_id;
+                        leaveDays = employee.employee_contract_type_id;
+                    }
+                });
+        }
+
         if (absencesList === null) {
             setAbsencesList([]);
             fetchGetAbsencesTypes(navigate)
@@ -75,7 +73,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
         // Pobranie listy osób, które mogą zatwierdzić wniosek
         if (approversList === null) {
-            fetchApproversForRequest(navigate, sessionStorage.getItem("USER"))
+            fetchApproversForRequest(navigate, requestData.employee_id)
                 .then(approvers => {
                     let approversListLoad = [];
                     let approverId = 1;
@@ -92,8 +90,29 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         }
     })
 
+
+    // Opcje dla wyświetlenia daty w formacie tekstowym
+    const options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }
+    const currentDate = new Date();
+    currentDate.setDate(1);
+    const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
+    const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
+
+    // Gettery i settery dla filtra kalendarza
+    const [dateFrom, setDateFrom] = useState(
+        requestData && mode !== 'create' ? requestData.absence_start_date : previousThreeMonthsDate.toLocaleDateString("sv", options));
+    const [dateTo, setDateTo] = useState(
+        requestData && mode !== 'create' ? requestData.absence_end_date : futureThreeMonthsDate.toLocaleDateString("sv", options));
+    const [absence, setAbsence] = useState(requestData ? requestData.absence_type_id : null)
+    const [noPay, setNoPay] = useState(requestData ? requestData.unpaid || leaveDays === 0 : false)
+
+    const disableChanges = mode === "approval"
+
     function close(){
-        console.log(setShowAddEmployeeAnAbsence)
         if(setAbsencesVisible){
             setAbsencesVisible(true)
         }
@@ -126,13 +145,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     function approveRequest(){
         // dodanie onedpointu
     }
-
-    // // Zaznaczenie opcji urlop bezpłaty jeśli brak dni urlopowych
-    // const [leaveDaysLeft, setLeaveDaysLeft] = useState(false);
-    //
-    // if (leaveDays === 0 && leaveDaysLeft !== true){
-    //     setLeaveDaysLeft(true);
-    // }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
@@ -170,14 +182,14 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                                           disableChange={disableChanges}/>
                     </div>
                 </div>
-                <div className={"flex"}>
+                <div className={"flex flex-col place-self-center place-items-center"}>
                     <p className={"basis-1/3 text-end pr-4"}>
                         {labelRequestNoPay}
                     </p>
                     <input id={"request-type-no-pay"} type={"checkbox"}
                            className={"h-5 w-5 checked:decoration-workday"}
                            onChange={(e) => setNoPay(e.target.checked)}
-                           checked={noPay} disabled={disableChanges}/>
+                           checked={noPay} disabled={disableChanges || leaveDays === 0}/>
                 </div>
                 {mode === "create" ?
                 <div id={"schedule-list"} className={"flex"}>
