@@ -64,6 +64,29 @@ function Logging(){
                     }
                 })
         }
+        // if (sessionStorage.getItem('USER') === null) {
+        //     fetch(serverIp + "/" + endpointGetLogIn + "/" + email + "/" + password)
+        //         .then((response) => {response.json()
+        //             .then((response) => {
+        //                 sessionStorage.setItem('USER', response[0].id)
+        //                 sessionStorage.setItem('FIRSTNAME', response[0].firstname)
+        //                 sessionStorage.setItem('LASTNAME', response[0].lastname)
+        //                 sessionStorage.setItem('AVATAR', response[0].avatar)
+        //                 sessionStorage.setItem('START', response[0].start)
+        //
+        //                 window.location.reload(false);
+        //             });
+        //         })
+        //         .catch((err) => {
+        //             console.log(err.message);
+        //             sessionStorage.setItem('USER', null)
+        //             sessionStorage.setItem('FIRSTNAME', null)
+        //             sessionStorage.setItem('LASTNAME', null)
+        //             sessionStorage.setItem('AVATAR', null)
+        //             sessionStorage.setItem('START', null)
+        //
+        //         })
+        // }
     }
 
     return <>
@@ -73,7 +96,10 @@ function Logging(){
              style={{ height: wantedHeightsForList } }>
             <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                 <div>
-                    <p>{welcomeMessage}</p>
+                    <p>{welcomeMessage+
+                        getLocalStorageKeyWithExpiry("loggedEmployee")+
+                        console.log(getLocalStorageKeyWithExpiry("loggedEmployee"))
+                    }</p>
                 </div>
                 <div id={"login-error-message"} className={"text-red-600 font-bold"}></div>
                 <br></br>
