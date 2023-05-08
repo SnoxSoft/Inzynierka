@@ -23,6 +23,7 @@ import {
     endpointGetEmployeeData,
     endpointGetOneEmployeeBetweenDatesDaysOff,
     endpointGetRequestsStatuses,
+    endpointGetEmployeesRequests, endpointGetLogIn,
     endpointGetTeamData,
     endpointPostCreateEmployee,
     endpointPostSendEmailForPasswordChange,
@@ -323,6 +324,18 @@ async function fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateT
     }
 }
 
+async function fetchLoginEmployee(navigate, email, password){
+    const response = await fetch(serverIpProd + "/" + endpointGetLogIn + "?email=" + email + "&password=" + password,
+        {
+            method: "POST",
+        })
+        .catch( err => console.error(err))
+    if (response.status === 200)
+        return response.json()
+    else
+        return []
+}
+
 export {
     fetchPutEditOldPasswordInProfile,
     fetchPostSendEmailForPasswordChange,
@@ -347,7 +360,9 @@ export {
     fetchGetAbsencesTypes,
 
     fetchPostCreateAbsence,
+    fetchGetCompanyMonthDaysOff
     fetchGetOneEmployeeBetweenDatesDaysOff,
     fetchGetAllEmployeesBetweenDatesDaysOff
 
+    fetchLoginEmployee,
 }

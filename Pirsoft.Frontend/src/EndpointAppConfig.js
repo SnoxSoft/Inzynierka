@@ -41,7 +41,7 @@ const endpointEmployeeChangePassword = "changePassword"
 // Logowanie sie //
 
 // Zalogowanie sie do aplikacji
-const endpointGetLogIn = "getEmployee";
+const endpointGetLogIn = "api/authenticate";
 
 
 // Harmonogram pracy //

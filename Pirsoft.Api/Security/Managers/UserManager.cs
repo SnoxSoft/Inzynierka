@@ -15,7 +15,7 @@ namespace Pirsoft.Api.Security.Managers
         public async Task<EmployeeModel> FindByEmailAsync(string email)
         {
             var users = await _crudHandler.ReadAllAsync<EmployeeModel>();
-            var user = users.FirstOrDefault(u => u.email_address.ToLowerInvariant().Equals(email.ToLowerInvariant()));
+            var user = users.FirstOrDefault(u => u.email_address.Equals(email));
             return user;
         }
 
