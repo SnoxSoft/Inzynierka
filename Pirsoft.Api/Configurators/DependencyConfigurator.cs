@@ -21,6 +21,7 @@ namespace Pirsoft.Api.Configurators
         private void configureDatabaseManagement()
         {
             _services.AddTransient<ICrudHandler, CrudHandler>();
+            _services.AddTransient<IEmployeeCrudHandler, EmployeeCrudHandler>();
             _services.AddSingleton<IDatabaseModelBuilder, DatabaseModelBuilder>();
         }
 

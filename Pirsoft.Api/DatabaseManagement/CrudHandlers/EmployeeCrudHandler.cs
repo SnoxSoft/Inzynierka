@@ -3,7 +3,7 @@ using Pirsoft.Api.Models;
 
 namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
 {
-    public class EmployeeCrudHandler
+    public sealed class EmployeeCrudHandler : IEmployeeCrudHandler
     {
         private readonly DatabaseContext _dbContext;
 
@@ -18,5 +18,11 @@ namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
         {
             return await Task.FromResult(_dbContext.Set<EmployeeModel>().Include(employee => employee.skills));
         }
+    }
+
+    public interface IEmployeeCrudHandler
+    {
+        Task<EmployeeModel?> ReadEmployeeByIdAsync(int employeeId);
+        Task<IQueryable<EmployeeModel?>> ReadAllEmployeesAsync();
     }
 }
