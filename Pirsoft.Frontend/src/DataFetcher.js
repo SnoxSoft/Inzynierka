@@ -17,7 +17,6 @@ import {
     endpointGetAllPositionsLevels,
     endpointGetAllSkills,
     endpointGetAllTeams, endpointGetChangePassword,
-    endpointGetEmployeeAbsences,
     endpointGetEmployeeData,
     endpointGetEmployeeMonthDaysOff,
     endpointGetEmployeesRequests,
@@ -33,9 +32,9 @@ import axios from "axios";
 function redirectToMainWindow(navigate){
     //przekierowanie do strony logowania - wystapil błąd albo do strony glownej
     setTimeout(function() {
-        sessionStorage.clear()
-        navigate("/", { replace: true });
-        window.location.reload();
+        // sessionStorage.clear()
+        // navigate("/", { replace: true });
+        // window.location.reload();
     }, 3000);
 }
 
@@ -214,7 +213,7 @@ async function fetchGetAllSkillsAndSort(navigate) {
 }
 
 async function fetchGetRequestsStatuses(navigate) {
-    const response = await fetch(serverIp + "/" + endpointGetRequestsStatuses,
+    const response = await fetch(serverIpProd + "/" + endpointGetRequestsStatuses,
         {
             method: "GET"
         })
@@ -243,31 +242,15 @@ async function fetchGetAbsencesTypes(navigate) {
     }
 }
 
-async function fetchGetEmployeesRequests(navigate, id) {
-    const response = await fetch(serverIp + "/" + endpointGetEmployeesRequests + "/" + id,
+async function fetchGetEmployeesRequests(navigate, dateFrom, dateTo) {
+    const response = await fetch(serverIp + "/" + endpointGetEmployeesRequests + "/" + dateFrom + "/" + dateTo,
         {
             method: "GET"
         })
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
-        newData.sort(FunctionForSortingJson("from", "descending"))
-        return newData
-    }
-    else {
-        redirectToMainWindow(navigate)
-    }
-}
-
-async function fetchGetEmployeesAbsences(navigate, id) {
-    const response = await fetch(serverIp + "/" + endpointGetEmployeeAbsences + "/" + id,
-        {
-            method: "GET"
-        })
-        .catch( err => console.error(err))
-    if(response.status === 200){
-        const newData = await response.json();
-        newData.sort(FunctionForSortingJson("from", "descending"))
+        newData.sort(FunctionForSortingJson("absence_start_date", "descending"))
         return newData
     }
     else {
@@ -343,7 +326,6 @@ export {
     fetchGetRequestsStatuses,
     fetchGetAbsencesTypes,
     fetchGetEmployeesRequests,
-    fetchGetEmployeesAbsences,
     fetchApproversForRequest,
 
     fetchGetEmployeeMonthDaysOff,

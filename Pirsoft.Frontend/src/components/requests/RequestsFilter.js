@@ -1,19 +1,17 @@
 import TeamsList from "../employees/search/fields/TeamsList";
-import Calendar from "../absences/Calendar";
+import Calendar from "../base/Calendar";
 import ReusableButton from "../base/ReusableButton";
 import React from "react";
 import {
-    firstnameLabel,
     labelFilter,
-    lastnameLabel,
     requestStatusApprovedLabel, requestStatusCreatedByMeLabel, requestStatusCreatedNotByMeLabel,
     requestStatusDisapprovedLabel, requestStatusWaitingLabel,
     labelTeam
 } from "../../GlobalAppConfig";
+import FirstNameAndLastName from "../grades/FirstNameAndLastName";
 
 function RequestsFilter({
-                            setFirstName, firstName,
-                            setLastName, lastName,
+                            firstNameAndLastName, setFirstNameAndLastName,
                             setTeam, team,
                             teamsList,
                             setCheckWaiting,
@@ -29,16 +27,8 @@ function RequestsFilter({
     <div className={"flex flex-col gap-2 p-4"}>
         <div className={"flex justify-evenly items-center flex-wrap gap-2 hover:cursor-default"}>
             <div>
-                {firstnameLabel} <input id={"requests-firstname"}
-                                        className={"text-black rounded"}
-                                        onChange={(e) => setFirstName(e.target.value)}
-                                        value={firstName}/>
-            </div>
-            <div>
-                {lastnameLabel} <input id={"requests-lastname"}
-                                       className={"text-black rounded"}
-                                       onChange={(e) => setLastName(e.target.value)}
-                                       value={lastName}/>
+                <FirstNameAndLastName id={"request-firstname-lastname"}
+                                      value={firstNameAndLastName} onChange={setFirstNameAndLastName}/>
             </div>
             <div className={"flex gap-x-2 items-center"}>
                 {labelTeam}
