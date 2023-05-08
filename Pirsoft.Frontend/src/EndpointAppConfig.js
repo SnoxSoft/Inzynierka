@@ -11,7 +11,7 @@ const endpointPostCreateEmployee = "create/new/employee";
 const endpointGetEmployeesRequests = "getEmployeesRequests";
 
 // Zwraca wszystkie rodzaje statusów wniosków urlopowych
-const endpointGetRequestsStatuses = "getRequestsStatus";
+const endpointGetRequestsStatuses = "get/absence/statuses";
 
 // Zwraca rodzaje dni nieobecności / wniosków urlopowych
 const endpointGetAbsencesTypes = "get/absence/types";
@@ -20,10 +20,6 @@ const endpointGetAbsencesTypes = "get/absence/types";
 
 // Zwraca listę osób, która otrzyma wniosek uropowy do wiadomości, do potwierdzenia
 const endpointGetRequestApprovers = "getApprovers";
-
-// Zwraca listę nieobecności zalogowanego pracownika
-const endpointGetEmployeeAbsences = "getEmployeeAbsences";
-
 
 
 // Przypominanie hasła //
@@ -115,7 +111,6 @@ const endpointDeleteNotification = "deleteNotification";
 
 export {
     endpointGetEmployeesRequests, endpointGetRequestsStatuses,
-    endpointGetEmployeeAbsences,
     endpointGetAbsencesTypes,
 
     endpointGetRequestApprovers,

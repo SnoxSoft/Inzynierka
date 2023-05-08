@@ -6,9 +6,9 @@ const AbsencesList = ({value = undefined, onChange, absences,
 
     let defaultValue = { absence_type_id: 0, absence_type_name: absencesAdditionalRow };
 
-    if(value !== undefined){
+    if(value !== undefined && absences !== null){
         absences.map(absence => {
-            if(absence.absence_type_id.toString().trim() === value.toString().trim()){
+            if(absence.absence_type_id === value){
                 defaultValue = { absence_type_id: absence.absence_type_id, absence_type_name: absence.absence_type_name };
             }
         });

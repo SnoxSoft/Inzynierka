@@ -27,7 +27,7 @@ function Employees(){
     const navigate = useNavigate();
 
     // Wybrane wartości w filtrze
-    const[firstnameAndLastname, setFirstnameAndLastname] = useState();
+    const[firstnameAndLastname, setFirstnameAndLastname] = useState('');
     const[team, setTeam] = useState();
     const[position, setPosition] = useState();
 
