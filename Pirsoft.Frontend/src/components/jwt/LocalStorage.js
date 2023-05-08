@@ -10,6 +10,10 @@ export function getLocalStorageKeyWithExpiry(key)
 
     const localStrJson = JSON.parse(localStr);
 
+<<<<<<< HEAD
+=======
+    console.log(localStrJson);
+>>>>>>> 78b4135 (Added JWT support on front)
     const currentDate = new Date().getTime();
 
     if(currentDate > localStrJson.expiry)
