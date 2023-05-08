@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.Models;
 
-namespace Pirsoft.Api.DatabaseManagement
+namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
 {
     // -- DI as Singleton
     public sealed class CrudHandler : ICrudHandler
@@ -28,8 +29,12 @@ namespace Pirsoft.Api.DatabaseManagement
 
         public async Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel =>
             await Task.FromResult(_dbContext.Set<TModel>());
-        
-        
+
+        public async Task<EmployeeModel?> ReadEmployeeById(int employeeId)
+        {
+            return await _dbContext.Set<EmployeeModel>().Include(employee => employee.skills).FirstOrDefaultAsync(employee => employee.employee_id == employeeId);
+        }
+
 
         public async Task UpdateAsync<TModel>(TModel entity) where TModel : class, IApiModel
         {
@@ -64,6 +69,7 @@ namespace Pirsoft.Api.DatabaseManagement
         Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel;
         Task UpdateAsync<TModel>(TModel entity) where TModel : class, IApiModel;
         Task DeleteAsync<TModel>(TModel entity) where TModel : class, IApiModel;
+        Task<EmployeeModel?> ReadEmployeeById(int employeeId);
         int PushChangesToDatabase();
     }
 }

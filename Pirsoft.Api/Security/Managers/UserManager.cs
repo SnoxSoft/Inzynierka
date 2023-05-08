@@ -1,4 +1,4 @@
-﻿using Pirsoft.Api.DatabaseManagement;
+﻿using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Security.Interfaces;
 using Pirsoft.Api.Security.Models;
