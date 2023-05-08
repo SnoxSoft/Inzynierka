@@ -6,6 +6,7 @@ using Pirsoft.Api.Enums;
 using Pirsoft.Api.Models.ModelCreators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -16,11 +17,13 @@ public class EmployeeController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     private readonly IEmployeeModelValidator _validator;
+    private readonly IEmployeeCrudHandler _employeeCrudHandler;
 
-    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator)
+    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IAuthenticationService authenticationService, IEmployeeCrudHandler employeeCrudHandler)
     {
         _crudHandler = crudHandler;
         _validator = validator;
+        _employeeCrudHandler = employeeCrudHandler;
     }
 
     [HttpPost("create/new/employee")]
@@ -47,8 +50,8 @@ public class EmployeeController : Controller
     [HttpGet("/get/employees")]
     public async Task<IEnumerable<employeeDTO>> GetListOfAllEmployees()
     {
-        var query = await _crudHandler.ReadAllAsync<EmployeeModel>();
-        return await query.Select(employeeModel => new employeeDTO(employeeModel)).ToListAsync();
+        var employees = await _employeeCrudHandler.ReadAllEmployeesAsync();
+        return await employees.Select(employeeModel => new employeeDTO(employeeModel)).ToListAsync();
     }
 
     [HttpGet("/get/filtered/employees/{name?}/{departmentId?}/{positionId?}")]
@@ -76,11 +79,11 @@ public class EmployeeController : Controller
     [HttpGet("/get/employee/{employeeId}")]
     public async Task<EmployeeModel> GetEmployeeById(int employeeId)
     {
-        var query = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
+        var employee = await _employeeCrudHandler.ReadEmployeeByIdAsync(employeeId);
 
-        if (query != null)
+        if (employee != null)
         {
-            return query;
+            return employee;
         }
         else
         {

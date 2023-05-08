@@ -30,12 +30,6 @@ namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
         public async Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel =>
             await Task.FromResult(_dbContext.Set<TModel>());
 
-        public async Task<EmployeeModel?> ReadEmployeeById(int employeeId)
-        {
-            return await _dbContext.Set<EmployeeModel>().Include(employee => employee.skills).FirstOrDefaultAsync(employee => employee.employee_id == employeeId);
-        }
-
-
         public async Task UpdateAsync<TModel>(TModel entity) where TModel : class, IApiModel
         {
             if (entity.ApiInternalId < 1)
@@ -69,7 +63,6 @@ namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
         Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel;
         Task UpdateAsync<TModel>(TModel entity) where TModel : class, IApiModel;
         Task DeleteAsync<TModel>(TModel entity) where TModel : class, IApiModel;
-        Task<EmployeeModel?> ReadEmployeeById(int employeeId);
         int PushChangesToDatabase();
     }
 }
