@@ -49,7 +49,7 @@ const RequestListItem = ({employeeAbsence, employeeAbsenceTeam, old = false,
                 <div className={"p-2 flex rounded-md basis-8/12"}>
                     {labelFromTimeOfAbsence} {employeeAbsence.absence_start_date} - {employeeAbsence.absence_end_date}, {absenceType}
                 </div> :
-                <div className={"p-2 flex rounded-md basis-8/12 flex-col"}>
+                <div className={"p-2 flex rounded-md basis-8/12 flex-col cursor-default"}>
                     <div>
                         {employeeName}, {employeeTeam},
                     </div>

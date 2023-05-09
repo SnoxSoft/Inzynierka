@@ -133,11 +133,9 @@ function Schedule(){
                 if(monthDaysOff !== undefined && monthDaysOff !== null) {
                     monthDaysOff.map((days) => {
                         if(days.absence_status_id === 3){
-                            console.log("ccccc")
                             let absenceTypeForDay = "absent"
                             let absenceNameForDay = ""
-                            console.log(days.absence_start_date)
-                            console.log(days.absence_end_date)
+
                             absencesTypes.map((absenceType) => {
                                 if(absenceType.absence_type_id === days.absence_type_id){
                                     absenceTypeForDay = absenceType.absence_type_category;
