@@ -37,7 +37,7 @@ public class EmployeeController : Controller
 
         EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber,
             departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,
-            employmentStartDate, birthDate, companyRole, contractType, seniorityLevel).CreateModel();
+            birthDate, employmentStartDate, companyRole, contractType, seniorityLevel).CreateModel();
 
         await _crudHandler.CreateAsync(newEmployee);
         _crudHandler.PushChangesToDatabase();
