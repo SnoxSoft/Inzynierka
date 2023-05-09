@@ -119,7 +119,7 @@ async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirectio
 }
 
 async function fetchGetTeamDataById(navigate, id) {
-    const response = await fetch(serverIp + "/" + endpointGetTeamData + "/" + id)
+    const response = await fetch(serverIpProd + "/" + endpointGetTeamData + "/" + id)
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
