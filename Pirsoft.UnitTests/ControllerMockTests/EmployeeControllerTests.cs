@@ -9,6 +9,9 @@ using NUnit.Framework;
 using Pirsoft.Api.Controllers;
 using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.Models;
+using Pirsoft.Api.Security.Interfaces;
+using Pirsoft.Api.Security.Managers;
+using Pirsoft.Api.Validators;
 
 namespace Pirsoft.UnitTests.ControllerMockTests;
 
@@ -22,7 +25,7 @@ public class EmployeeControllerTests
     public void SetUp()
     {
         _crudHandlerMock = new Mock<ICrudHandler>();
-        _employeeController = new EmployeeController(_crudHandlerMock.Object);
+        _employeeController = new EmployeeController(_crudHandlerMock.Object, new EmployeeModelValidator(),new UserManager(new CrudHandler(new DatabaseContext())));
     }
 
     [Test]

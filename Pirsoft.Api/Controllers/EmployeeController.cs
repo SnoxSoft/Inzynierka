@@ -16,7 +16,7 @@ using IAuthenticationService = Microsoft.AspNetCore.Authentication.IAuthenticati
 namespace Pirsoft.Api.Controllers;
 
 //[Authorize]
-[ApiController]
+[ApiController] 
 //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class EmployeeController : Controller
 {
@@ -30,9 +30,7 @@ public class EmployeeController : Controller
         _validator = validator;
         _userManager = userManager;
     }
-
-    public EmployeeController(ICrudHandler crudHandler) => _crudHandler = crudHandler;    
-
+    
     [HttpPost("create/new/employee")]
     public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths,
          double grossSalary, bool isActive, bool passwordReset, DateTime employmentStartDate, DateTime dateOfBirth, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
