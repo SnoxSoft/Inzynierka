@@ -154,7 +154,7 @@ function Absences(){
     let onDemandDays = 5;
     let leaveDays = 10;
 
-    if(employee !== null){
+    if(employee !== null && employee !== undefined){
         onDemandDays = employee.employee_company_role_id;
         leaveDays = employee.employee_contract_type_id;
     }

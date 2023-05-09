@@ -264,7 +264,6 @@ async function fetchGetEmployeeMonthDaysOff(navigate, id, yearMonth) {
             method: "GET"
         })
         .catch( err => console.error(err))
-    console.clear()
     if(response.status === 200){
         const newData = await response.json();
         return newData
@@ -280,7 +279,6 @@ async function fetchGetCompanyMonthDaysOff(navigate, yearMonth) {
             method: "GET"
         })
         .catch( err => console.error(err))
-    console.clear()
     if(response.status === 200){
         const newData = await response.json();
         return newData
