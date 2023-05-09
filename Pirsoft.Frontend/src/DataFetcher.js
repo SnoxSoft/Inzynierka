@@ -8,6 +8,7 @@ import {
     teamAdditionalRow
 } from "./GlobalAppConfig";
 import {
+    endpointDeleteEmployee,
     endpointEmployeeChangePassword,
     endpointGetAbsencesTypes,
     endpointGetAllCompanyMonthDaysOff,
@@ -23,7 +24,7 @@ import {
     endpointGetRequestApprovers,
     endpointGetRequestsStatuses, endpointGetTeamData, endpointPostCreateEmployee,
     endpointPostSendEmailForPasswordChange,
-    endpointPutChangePassword
+    endpointPutChangePassword, endpointPutEditEmployee
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -98,6 +99,23 @@ async function fetchPostCreateEmployee(query) {
     return await fetch(serverIpProd + "/" + endpointPostCreateEmployee + "?" + query,
         {
             method: "POST"
+        })
+}
+
+async function fetchPutEditEmployee(id, body, query) {
+    return await fetch(serverIpProd + "/" + endpointPutEditEmployee + "/" + id + "?" + query,
+        {
+            method: "PUT",
+            body: body,
+            headers: {'Content-Type': 'application/json', 'charset': 'utf-8'}
+        })
+}
+
+async function fetchDeleteEmployee(id) {
+    return await fetch(serverIpProd + "/" + endpointDeleteEmployee + "/" + id,
+        {
+            method: "DELETE",
+            headers: {'Content-Type': 'application/json', 'charset': 'utf-8'}
         })
 }
 
@@ -312,6 +330,8 @@ export {
 
     fetchGetEmployeeDataById,
     fetchPostCreateEmployee,
+    fetchPutEditEmployee,
+    fetchDeleteEmployee,
     fetchGetAllEmployees,
 
     fetchGetAllTeamsAndAddZeroRecordAndSort,
