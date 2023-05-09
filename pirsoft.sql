@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: localhost    Database: pirsoft
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -212,6 +212,9 @@ CREATE TABLE `employees` (
   `employee_department_id` int NOT NULL,
   `employee_seniority_level_id` int NOT NULL,
   `employee_company_role_id` int NOT NULL,
+  `leave_base_days` int NOT NULL DEFAULT '0',
+  `leave_demand_days` int NOT NULL DEFAULT '0',
+  `leave_is_seniority_threshold` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`employee_id`),
   UNIQUE KEY `id_UNIQUE` (`employee_id`),
   UNIQUE KEY `pesel_UNIQUE` (`pesel`),
@@ -324,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-05 17:29:36
+-- Dump completed on 2023-05-07 15:59:42
