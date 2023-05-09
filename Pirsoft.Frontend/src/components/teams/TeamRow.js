@@ -105,10 +105,13 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
         <div id={id + "-hover"} key={id + "-hover-key"}
                 onMouseOver={() => editOptions && setOptionsEditVisible(true)}
                 onMouseLeave={() => editOptions && setOptionsEditVisible(false)}
-                className={"hover:cursor-pointer row-start-"+row+" col-start-1 text-workday text-left gap-2 flex flex-row"}>
+                className={ (!isSchedule ? "hover:cursor-pointer" : "") + " row-start-"+row+" col-start-1 text-workday text-left gap-2 flex flex-row"}>
             <div id={id + "-open"} key={id + "-open"} className={"flex flex-row"}
                  onClick={() => changeVisibilityForPassword()}>
-                {/*<button>{changeVisibilityIcon}</button>*/}
+                {!isSchedule ?
+                    <button>{changeVisibilityIcon}</button> :
+                    <></>
+                }
                 <div className={"pl-2"}>{team.department_name}</div>
             </div>
 
