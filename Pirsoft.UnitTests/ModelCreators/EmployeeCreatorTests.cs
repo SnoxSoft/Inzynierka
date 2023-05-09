@@ -20,9 +20,12 @@ namespace Pirsoft.UnitTests.ModelCreators
             string fakePesel = "12345678901";
             string fakeBankAccountNumber = "12341234123412341234123412";
             int fakeDepartmentId = 1;
+            int fakeLeaveBaseDays = 1;
+            int fakeLeaveDemandDays = 1;
             int fakeSeniorityInMonths = 1;
             double fakeGrossSalary = 1d;
             bool fakeIsActive = true;
+            bool fakeLeaveIsSeniorityThreshold = true;
             bool fakePasswordReset = true;
             DateTime fakeEmploymentStartDate = DateTime.MinValue;
             DateTime fakeDateOfBirth = DateTime.MinValue;
@@ -32,8 +35,8 @@ namespace Pirsoft.UnitTests.ModelCreators
 
             EmployeeCreator sut = new (
                 fakeFirstName, fakeLastName, fakeEmail, fakePassword, fakePesel, fakeBankAccountNumber,
-                fakeDepartmentId, fakeSeniorityInMonths, fakeGrossSalary,
-                fakeIsActive, fakePasswordReset,
+                fakeDepartmentId, fakeLeaveBaseDays, fakeLeaveDemandDays, fakeSeniorityInMonths, fakeGrossSalary,
+                fakeIsActive, fakeLeaveIsSeniorityThreshold, fakePasswordReset,
                 fakeDateOfBirth, fakeEmploymentStartDate,
                 fakeCompanyRole, fakeContractType, fakeSeniorityLevel);
 
