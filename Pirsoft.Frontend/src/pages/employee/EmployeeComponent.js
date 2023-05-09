@@ -72,7 +72,12 @@ import PositionLevel from "../../components/employee/fields/PositionLevel";
 import SkillPicker from "../SkillPicker";
 import EditPasswordWindow from "./EditPasswordWindow";
 import TeamsList from "../../components/employees/search/fields/TeamsList";
-import {fetchGetAllSkillsAndSort, fetchPostCreateEmployee} from "../../DataFetcher";
+import {
+    fetchDeleteEmployee,
+    fetchGetAllSkillsAndSort,
+    fetchPostCreateEmployee,
+    fetchPutEditEmployee
+} from "../../DataFetcher";
 import Legend from "../../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
 import grossSalary from "../../components/employee/fields/GrossSalary";
@@ -202,6 +207,11 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </div>:
             <></>
     }
+    function deleteEmployee(){
+        fetchDeleteEmployee(id)
+            .then(r => console.log(r))
+    }
+
 
     const saveEmployee = () => {
         setShowPopupWithProblems(false)
@@ -312,8 +322,51 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             query.set("seniorityLevel", positionLevel);
             query.set("employmentStartDate", start);
 
-            fetchPostCreateEmployee(query)
-                .then(r => console.log(r))
+            if(id === "-1") {
+                console.log("create")
+                fetchPostCreateEmployee(query)
+                    .then(r => console.log(r))
+            }
+            else{
+                console.log("edit lol")
+
+                const query = new URLSearchParams();
+                query.set("firstName", firstName);
+                query.set("lastName", lastName);
+                query.set("email", email);
+                query.set("bankAccountNumber", bank);
+                query.set("dateOfBirth", birth);
+                query.set("password", "Wanda123@2113wanda");
+                query.set("pesel", pesel);
+                query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
+                query.set("departmentId", department);
+                query.set("contractType", contract);
+                query.set("companyRole", position);
+                query.set("seniorityLevel", positionLevel);
+                query.set("employmentStartDate", start);
+
+                let bodyEdit = JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    bankAccountNumber: bank,
+                    dateOfBirth: birth,
+                    //password: "Wanda123@2113wanda",
+                    pesel: pesel,
+                    grossSalary: salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary,
+                    departmentId: department,
+                    contractType: contract,
+                    companyRole: position,
+                    seniorityLevel: positionLevel,
+                    employmentStartDate: start
+
+                })
+
+
+                let employee = {employee: bodyEdit}
+                fetchPutEditEmployee(query, employee, query)
+                    .then(r => console.log(r))
+            }
         }
 
         // // Do celów testowych żeby widzieć dane w konsoli
@@ -453,7 +506,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     <>
                         {mode === 'edit' && sessionStorage.getItem('USER') === id ?
                             <>
-                                <ReusableButton id={"employee-delete"} value={labelDelete} link={""} />
+                                <ReusableButton id={"employee-delete"} value={labelDelete} onClick={() => deleteEmployee()} />
                                 <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
                                 {sessionStorage.getItem('USER') === id &&
                                 <ReusableButton id={"employee-password-change"} value={labelChangePassword}

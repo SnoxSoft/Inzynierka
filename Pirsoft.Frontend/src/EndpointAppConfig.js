@@ -5,6 +5,10 @@ const endpointGetEmployeeData = "get/employee";
 
 const endpointPostCreateEmployee = "create/new/employee";
 
+const endpointPutEditEmployee = "employees";
+
+const endpointDeleteEmployee = "delete/employee";
+
 // Listy wniosków urlopowych //
 
 // Zwraca listę wniosków urlopowych innych pracowników
@@ -111,12 +115,12 @@ const endpointDeleteNotification = "deleteNotification";
 
 export {
     endpointGetEmployeesRequests, endpointGetRequestsStatuses,
-    endpointGetAbsencesTypes,
+    endpointGetAbsencesTypes, endpointPutEditEmployee,
 
     endpointGetRequestApprovers,
 
     endpointPostSendEmailForPasswordChange, endpointGetVerifyCode, endpointGetChangePassword,
-    endpointPostChangePassword, endpointPutChangePassword, endpointEmployeeChangePassword,
+    endpointPostChangePassword, endpointPutChangePassword, endpointEmployeeChangePassword, endpointDeleteEmployee,
 
     endpointGetLogIn,
 
