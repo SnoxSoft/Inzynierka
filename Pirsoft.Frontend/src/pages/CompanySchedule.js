@@ -23,6 +23,12 @@ function CompanySchedule(){
         month: "2-digit",
     }
 
+    const optionsForEndpoint = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }
+
     // Zmienna pozwalająca wyświetlić cały komponent kalendarza
     const [allTeamsAreLoadedInDivs, setAllTeamsAreLoadedInDivs] = useState(false)
 
@@ -46,13 +52,47 @@ function CompanySchedule(){
         }
 
         if(allTeamsAreLoadedInDivs === false && teams !== null && employees !== null){
-            fetchGetCompanyMonthDaysOff(navigate, new Date().toLocaleDateString("sv", optionsForFormatDate))
+            const firstDayOfCurrentMonth = new Date()
+            firstDayOfCurrentMonth.setDate(1)
+            const lastDayOfCurrentMonth = new Date()
+            lastDayOfCurrentMonth.setMonth(firstDayOfCurrentMonth.getMonth() + 1)
+            lastDayOfCurrentMonth.setDate(0)
+
+            fetchGetCompanyMonthDaysOff(navigate,
+                firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint),
+                lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint))
                 .then(companyMonthDaysOff => {
-                    loadWholeMonthDataForCompany(new Date(), companyMonthDaysOff)
+                    createDataForCalendar(new Date(), companyMonthDaysOff)
                 })
         }
 
     });
+
+    function createDataForCalendar(date, companyMonthDaysOff){
+        let preparedMonthDaysOff = []
+
+        // Tutaj tworzę jsona do pokazania dni wolnych na kalendarzu firmowym
+        if(companyMonthDaysOff !== undefined && companyMonthDaysOff !== null) {
+            companyMonthDaysOff.map((companyMonthDays) => {
+                if(companyMonthDays.absence_status_id === 3){
+                    let absenceDateStart = new Date(companyMonthDays.absence_start_date)
+                    let absenceDateEnd = new Date(companyMonthDays.absence_end_date)
+                    let dayDifference = absenceDateEnd.getDate() - absenceDateStart.getDate()
+
+                    let daysForCurrentEmployee = []
+                    for(let day = 0; day <= dayDifference; day++){
+                        daysForCurrentEmployee.push(absenceDateStart.toLocaleDateString("sv", optionsForEndpoint))
+                        absenceDateStart.setDate(absenceDateStart.getDate() + 1)
+                    }
+                    preparedMonthDaysOff.push({
+                        employee: companyMonthDays.employee_owner_id,
+                        daysoff: daysForCurrentEmployee
+                    })
+                }
+            })
+        }
+        loadWholeMonthDataForCompany(date, preparedMonthDaysOff)
+    }
 
     // Zmienna wyświetlająca o wybranym miesiacu i roku
     const [pickedMonthText, setPickedMonth] = useState('')
@@ -158,26 +198,42 @@ function CompanySchedule(){
         const pickedMonthTextDate = new Date(pickedMonthText.date)
 
         if(mode === 'previous'){
-            const pickedMonthTextDateMinusOne = new Date(
+            const firstDayOfPreviousMonth = new Date(
+                pickedMonthTextDate.getFullYear(),
+                pickedMonthTextDate.getMonth(),
+                0)
+            firstDayOfPreviousMonth.setDate(1)
+            const lastDayOfPreviousMonth = new Date(
                 pickedMonthTextDate.getFullYear(),
                 pickedMonthTextDate.getMonth(),
                 0)
 
-            fetchGetCompanyMonthDaysOff(navigate, pickedMonthTextDateMinusOne.toLocaleDateString("sv", optionsForFormatDate))
+            fetchGetCompanyMonthDaysOff(navigate,
+                firstDayOfPreviousMonth.toLocaleDateString("sv", optionsForEndpoint),
+                lastDayOfPreviousMonth.toLocaleDateString("sv", optionsForEndpoint))
                 .then(companyMonthDaysOff => {
-                    loadWholeMonthDataForCompany(pickedMonthTextDateMinusOne, companyMonthDaysOff)
+                    createDataForCalendar(firstDayOfPreviousMonth, companyMonthDaysOff)
                 })
         }
 
         if(mode === 'next'){
-            const pickedMonthTextDatePlusOne = new Date(
+            const firstDayOfNextMonth = new Date(
                 pickedMonthTextDate.getFullYear(),
                 pickedMonthTextDate.getMonth()+1,
                 1)
+            firstDayOfNextMonth.setDate(1)
+            const lastDayOfNextMonth = new Date(
+                pickedMonthTextDate.getFullYear(),
+                pickedMonthTextDate.getMonth()+1,
+                1)
+            lastDayOfNextMonth.setMonth(firstDayOfNextMonth.getMonth() + 1)
+            lastDayOfNextMonth.setDate(0)
 
-            fetchGetCompanyMonthDaysOff(navigate, pickedMonthTextDatePlusOne.toLocaleDateString("sv", optionsForFormatDate))
+            fetchGetCompanyMonthDaysOff(navigate,
+                firstDayOfNextMonth.toLocaleDateString("sv", optionsForEndpoint),
+                lastDayOfNextMonth.toLocaleDateString("sv", optionsForEndpoint))
                 .then(companyMonthDaysOff => {
-                    loadWholeMonthDataForCompany(pickedMonthTextDatePlusOne, companyMonthDaysOff)
+                    createDataForCalendar(firstDayOfNextMonth, companyMonthDaysOff)
                 })
         }
     }
@@ -198,10 +254,17 @@ function CompanySchedule(){
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
                                 <ReusableButton id={"company-schedule-today"} value={legendToday} onClick={() =>
-                                {fetchGetCompanyMonthDaysOff(navigate, new Date())
+                                {
+                                    const firstDayOfCurrentMonth = new Date()
+                                    firstDayOfCurrentMonth.setDate(1)
+                                    const lastDayOfCurrentMonth = new Date()
+                                    lastDayOfCurrentMonth.setMonth(firstDayOfCurrentMonth.getMonth() + 1)
+                                    lastDayOfCurrentMonth.setDate(0)
+                                    fetchGetCompanyMonthDaysOff(navigate,
+                                        firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint),
+                                        lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint))
                                     .then(companyMonthDaysOff => {
-                                        console.log(companyMonthDaysOff)
-                                        loadWholeMonthDataForCompany(new Date(), companyMonthDaysOff)
+                                        createDataForCalendar(new Date(), companyMonthDaysOff)
                                     })}}/>
                             </div>
                         </div>

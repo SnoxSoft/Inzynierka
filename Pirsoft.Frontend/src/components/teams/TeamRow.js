@@ -56,16 +56,17 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
     let allTeamsDataLoad = [];
 
     if(isSchedule) {
+        console.clear()
         let colTeam = 2
-        days.forEach((day, dayId) => {
-            // Dodanie pustego wiersza
-            allTeamsDataLoad.push(
-                <div id={id} key={id}
-                     className={"row-start-"+row+" col-start-"+colTeam+" text-workday"}>
-                </div>
-            )
-            colTeam = colTeam + 1
-        });
+        // days.forEach((day, dayId) => {
+        //     // Dodanie pustego wiersza
+        //     allTeamsDataLoad.push(
+        //         <div id={id} key={id}
+        //              className={"row-start-"+row+" col-start-"+colTeam+" text-workday"}>
+        //         </div>
+        //     )
+        //     colTeam = colTeam + 1
+        // });
 
         employees.forEach((employee, employeeId) => {
             if (employee.employee_department_id === team.department_id) {
@@ -76,11 +77,14 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
                 // szukanie dni wolnych danego pracownika
                 let daysOffOfThisEmployee = []
                 currentMonthDaysOff.forEach((e) => {
+                    // console.log(e)
+                    // console.log(employee.employee_id)
                     if (e.employee === employee.employee_id) {
-                        daysOffOfThisEmployee = e.daysoff
+                        e.daysoff.map((day) => {
+                            daysOffOfThisEmployee.push(day)
+                        })
                     }
                 })
-
                 // dodawanie komponentów dni pracownika
                 let col = 2
                 days.forEach((day, dayId) => {
@@ -104,8 +108,8 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
                 className={"hover:cursor-pointer row-start-"+row+" col-start-1 text-workday text-left gap-2 flex flex-row"}>
             <div id={id + "-open"} key={id + "-open"} className={"flex flex-row"}
                  onClick={() => changeVisibilityForPassword()}>
-                <button>{changeVisibilityIcon}</button>
-                <div>{team.department_name}</div>
+                {/*<button>{changeVisibilityIcon}</button>*/}
+                <div className={"pl-2"}>{team.department_name}</div>
             </div>
 
             {optionsEditVisible && editOptions ?
@@ -120,7 +124,7 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
                 </> : <></>
             }
         </div>
-            {showHideEmployeesSchedule ?
+            {(showHideEmployeesSchedule && !isSchedule) || isSchedule ?
                 allTeamsDataLoad :
                 <></>
             }

@@ -274,8 +274,8 @@ async function fetchGetEmployeeMonthDaysOff(navigate, id, dateFrom, dateTo) {
     }
 }
 
-async function fetchGetCompanyMonthDaysOff(navigate, yearMonth) {
-    const response = await fetch(serverIp + "/" + endpointGetAllCompanyMonthDaysOff + "/" + yearMonth,
+async function fetchGetCompanyMonthDaysOff(navigate, dateFrom, dateTo) {
+    const response = await fetch(serverIp + "/" + endpointGetAllCompanyMonthDaysOff + "/" + dateFrom + "/" + dateTo,
         {
             method: "GET"
         })

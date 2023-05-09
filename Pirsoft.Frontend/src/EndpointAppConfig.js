@@ -55,7 +55,7 @@ const endpointGetLogIn = "getEmployee";
 const endpointGetEmployeeMonthDaysOff = "get/employee/absences";
 
 // Zwraca nieobecności wszystkich pracownikó na dany miesiąc dla całej firmy
-const endpointGetAllCompanyMonthDaysOff = "allCompanyMonthDays";
+const endpointGetAllCompanyMonthDaysOff = "get/employees/absences";
 
 
 
