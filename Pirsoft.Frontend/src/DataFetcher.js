@@ -258,14 +258,15 @@ async function fetchGetEmployeesRequests(navigate, dateFrom, dateTo) {
     }
 }
 
-async function fetchGetEmployeeMonthDaysOff(navigate, id, yearMonth) {
-    const response = await fetch(serverIp + "/" + endpointGetEmployeeMonthDaysOff + "/" + id + "/" + yearMonth,
+async function fetchGetEmployeeMonthDaysOff(navigate, id, dateFrom, dateTo) {
+    const response = await fetch(serverIp + "/" + endpointGetEmployeeMonthDaysOff + "/" + id + "/" + dateFrom + "/" + dateTo,
         {
             method: "GET"
         })
         .catch( err => console.error(err))
     if(response.status === 200){
         const newData = await response.json();
+        newData.sort(FunctionForSortingJson("absence_start_date", "ascending"))
         return newData
     }
     else {

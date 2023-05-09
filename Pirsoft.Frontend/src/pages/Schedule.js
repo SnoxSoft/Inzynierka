@@ -16,29 +16,40 @@ import {
 import Legend from "../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
 import {useNavigate} from "react-router-dom";
-import {fetchGetEmployeeMonthDaysOff} from "../DataFetcher";
+import {fetchGetAbsencesTypes, fetchGetEmployeeMonthDaysOff} from "../DataFetcher";
 
 function Schedule(){
     document.title = pageNameSchedule;
 
     const navigate = useNavigate();
 
-    // Ładowanie dni wolnych / wybranych / nieobecnych
-    const [monthDaysOff, setMonthDaysOff] = useState([])
-
     // Ładowanie listy do wybrania miesiąca
     const [monthList, setMonthList] = useState([])
+    const [absencesTypes, setAbsencesTypes] = useState(null)
 
     useEffect(() => {
         if(monthList.length === 0) {
             filtrSchedule()
                 .then(scheduleList => setMonthList(scheduleList))
         }
+
+        // Załadowanie typów nieobecności
+        if(absencesTypes === null) {
+            setAbsencesTypes(null)
+            fetchGetAbsencesTypes(navigate)
+                .then(absencesTypes => setAbsencesTypes(absencesTypes));
+        }
     })
 
     const options = {
         year: "numeric",
         month: "2-digit",
+    }
+
+    const optionsForEndpoint = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
     }
 
     const dateToday = new Date().toLocaleDateString("sv", options)
@@ -110,10 +121,45 @@ function Schedule(){
         const firstDayOfCurrentMonth = new Date(pickedYearCurrently, pickedMonthCurrently, 1)
         const lastDayOfCurrentMonth = new Date(pickedYearCurrently, pickedMonthCurrently+1, 0)
 
+        const firstDayOfMonthForEndpoint = firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint)
+        const lastDayOfMonthForEndpoint = lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint)
+
         // Ładowanie dni wolnych po załadowaniu okna a nie na bieżąco
-        fetchGetEmployeeMonthDaysOff(navigate, sessionStorage.getItem('USER'), pickedMonth.date)
-            .then(monthDaysOfff => {
-                setMonthDaysOff(monthDaysOfff)
+        fetchGetEmployeeMonthDaysOff(navigate, sessionStorage.getItem('USER'), firstDayOfMonthForEndpoint, lastDayOfMonthForEndpoint)
+            .then(monthDaysOff => {
+
+                let monthDaysOfff = []
+                // Tutaj tworzę jsona do pokazania dni wolnych na kalendarzu
+                if(monthDaysOff !== undefined && monthDaysOff !== null) {
+                    monthDaysOff.map((days) => {
+                        if(days.absence_status_id === 3){
+                            console.log("ccccc")
+                            let absenceTypeForDay = "absent"
+                            let absenceNameForDay = ""
+                            console.log(days.absence_start_date)
+                            console.log(days.absence_end_date)
+                            absencesTypes.map((absenceType) => {
+                                if(absenceType.absence_type_id === days.absence_type_id){
+                                    absenceTypeForDay = absenceType.absence_type_category;
+                                    absenceNameForDay = absenceType.absence_type_name;
+                                }
+                            })
+                            let absenceDateStart = new Date(days.absence_start_date)
+                            let absenceDateEnd = new Date(days.absence_end_date)
+                            let dayDifference = absenceDateEnd.getDate() - absenceDateStart.getDate()
+
+                            for(let day = 0; day <= dayDifference; day++){
+                               let dayData =  {
+                                    date: absenceDateStart.toLocaleDateString("sv", optionsForEndpoint),
+                                    reason: absenceTypeForDay,
+                                    name: absenceNameForDay
+                                }
+                                monthDaysOfff.push(dayData)
+                                absenceDateStart.setDate(absenceDateStart.getDate() + 1)
+                            }
+                        }
+                    })
+                }
 
                 currentMonthDays = createDaysForCurrentMonth(
                     pickedYearCurrently,
@@ -162,8 +208,9 @@ function Schedule(){
             border = 'outline-dashed outline-4'
         }
 
-        return <div className={'flex flex-row justify-evenly border-workday border-2 hover:cursor-default '+color+' m-2 rounded-md text-black '+border+' '}>
-            {day.dayOfMonth}
+        return <div className={'flex flex-col h-20 border-workday border-2 hover:cursor-default '+color+' m-2 rounded-md text-black '+border+' '}>
+            <div className={"bg-dayoffmonth bg-opacity-50 text-center self-stretch"}>{day.dayOfMonth}</div>
+            <div className={"text-center text-xs"}>{day.name} </div>
         </div>
     }
 
@@ -179,12 +226,14 @@ function Schedule(){
             }
             else {today = false}
             let reason = 'noReason'
+            let name = ''
             for(let i = 0; i < daysOff.length; i++){
                 const offDayFound = new Date(daysOff[i].date)
                 if(year === offDayFound.getFullYear() &&
                     month === offDayFound.getMonth() &&
                     index + 1 === offDayFound.getDate()){
                     reason = daysOff[i].reason
+                    name = daysOff[i].name
                 }
             }
             return {
@@ -193,6 +242,7 @@ function Schedule(){
                 isCurrentMonth: true,
                 today: today,
                 weekend: dateCurrentlyChecked.getDay() === 6 || dateCurrentlyChecked.getDay() === 0 ? true : false,
+                name: name,
                 reason: reason
             };
         });
