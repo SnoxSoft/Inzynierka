@@ -52,7 +52,7 @@ const endpointGetLogIn = "getEmployee";
 // Harmonogram pracy //
 
 // Zwraca dni urlopowe dla danego pracownika na wybrany miesiąc
-const endpointGetEmployeeMonthDaysOff = "monthDays";
+const endpointGetEmployeeMonthDaysOff = "get/employee/absences";
 
 // Zwraca nieobecności wszystkich pracownikó na dany miesiąc dla całej firmy
 const endpointGetAllCompanyMonthDaysOff = "allCompanyMonthDays";
