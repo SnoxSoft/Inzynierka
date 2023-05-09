@@ -4,14 +4,8 @@ using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 using Pirsoft.Api.Enums;
 using Pirsoft.Api.Models.ModelCreators;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
-using System.Security.Claims;
-using Pirsoft.Api.Security.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Pirsoft.Api.Security.Interfaces;
-using IAuthenticationService = Microsoft.AspNetCore.Authentication.IAuthenticationService;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -22,18 +16,17 @@ public class EmployeeController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     private readonly IEmployeeModelValidator _validator;
-    private readonly IUserManager<EmployeeModel> _userManager;
 
-    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IUserManager<EmployeeModel> userManager)
+    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator)
     {
         _crudHandler = crudHandler;
         _validator = validator;
-        _userManager = userManager;
     }
-    
+
     [HttpPost("create/new/employee")]
-    public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths,
-         double grossSalary, bool isActive, bool passwordReset, DateTime employmentStartDate, DateTime dateOfBirth, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
+    public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber,
+            int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
+            DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
             pesel = "Missing data";
@@ -42,8 +35,9 @@ public class EmployeeController : Controller
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
             bankAccountNumber = "Missing data";
 
-        EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, departmentId,seniorityInMonths, grossSalary, isActive, passwordReset, employmentStartDate,
-            dateOfBirth, companyRole, contractType, seniorityLevel).CreateModel();
+        EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber,
+            departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,
+            employmentStartDate, birthDate, companyRole, contractType, seniorityLevel).CreateModel();
 
         await _crudHandler.CreateAsync(newEmployee);
         _crudHandler.PushChangesToDatabase();
