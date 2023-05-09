@@ -11,9 +11,12 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly string _pesel;
         private readonly string _bankAccountNumber;
         private readonly int _departmentId;
+        private readonly int _leaveBaseDays;
+        private readonly int _leaveDemandDays;
         private readonly int _seniorityInMonths;
         private readonly double _grossSalary;
         private readonly bool _isActive;
+        private readonly bool _leaveIsSeniorityThreshold;
         private readonly bool _passwordReset;
         private readonly DateTime _birthDate;
         private readonly DateTime _employmentStartDate;
@@ -21,8 +24,9 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly EContractType _contractType;
         private readonly ESeniorityLevel _seniorityLevel;
 
-        public EmployeeCreator(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths, double grossSalary,
-            bool isActive, bool passwordReset, DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
+        public EmployeeCreator(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber,
+            int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
+            DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
         {
             _firstName = firstName;
             _lastName = lastName;
@@ -30,13 +34,16 @@ namespace Pirsoft.Api.Models.ModelCreators
             _password = password;
             _pesel = pesel;
             _bankAccountNumber = bankAccountNumber;
+            _departmentId = departmentId;
+            _leaveBaseDays = leaveBaseDays;
+            _leaveDemandDays = leaveDemandDays;
             _seniorityInMonths = seniorityInMonths;
             _grossSalary = grossSalary;
             _isActive = isActive;
+            _leaveIsSeniorityThreshold = leaveIsSeniorityThreshold;
             _passwordReset = passwordReset;
             _birthDate = birthDate;
             _employmentStartDate = employmentStartDate;
-            _departmentId = departmentId;
             _companyRole = companyRole;
             _contractType = contractType;
             _seniorityLevel = seniorityLevel;
@@ -51,8 +58,11 @@ namespace Pirsoft.Api.Models.ModelCreators
             pesel = _pesel,
             bank_account_number = _bankAccountNumber,
             seniority_in_months = _seniorityInMonths,
+            leave_base_days = _leaveBaseDays,
+            leave_demand_days = _leaveDemandDays,
             salary_gross = _grossSalary,
             is_active = Convert.ToByte(_isActive),
+            leave_is_seniority_threshold = Convert.ToByte(_leaveIsSeniorityThreshold),
             password_reset = Convert.ToByte(_passwordReset),
             birth_date = _birthDate,
             employment_start_date = _employmentStartDate,
