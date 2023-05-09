@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -9,8 +8,6 @@ using NUnit.Framework;
 using Pirsoft.Api.Controllers;
 using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.Models;
-using Pirsoft.Api.Security.Interfaces;
-using Pirsoft.Api.Security.Managers;
 using Pirsoft.Api.Validators;
 
 namespace Pirsoft.UnitTests.ControllerMockTests;
@@ -18,14 +15,14 @@ namespace Pirsoft.UnitTests.ControllerMockTests;
 [TestFixture]
 public class EmployeeControllerTests
 {
-    private Mock<ICrudHandler> _crudHandlerMock;
-    private EmployeeController _employeeController;
+    private Mock<ICrudHandler> _crudHandlerMock = null!;
+    private EmployeeController _employeeController = null!;
 
     [SetUp]
     public void SetUp()
     {
         _crudHandlerMock = new Mock<ICrudHandler>();
-        _employeeController = new EmployeeController(_crudHandlerMock.Object, new EmployeeModelValidator(),new UserManager(new CrudHandler(new DatabaseContext())));
+        _employeeController = new EmployeeController(_crudHandlerMock.Object, Mock.Of<IEmployeeModelValidator>());
     }
 
     [Test]
@@ -88,7 +85,7 @@ public class EmployeeControllerTests
         // Assert
         _crudHandlerMock.Verify(x => x.DeleteAsync(employee), Times.Once);
     }
-    
+
     [Test]
     public async Task UpdateEmployee_WithValidData_ShouldReturnOk()
     {
