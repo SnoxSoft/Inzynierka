@@ -22,6 +22,9 @@ public class EmployeeModel : IApiModel
     public byte password_reset { get; set; }
     public DateTime birth_date { get; set; }
     public double salary_gross { get; set; }
+    public int leave_base_days { get; set; }
+    public int leave_demand_days { get; set; }
+    public byte leave_is_seniority_threshold { get; set; }
     public int employee_contract_type_id { get; set; }
     public int employee_department_id { get; set; }
     public int employee_seniority_level_id { get; set; }
