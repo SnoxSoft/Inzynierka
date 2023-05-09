@@ -48,7 +48,7 @@ const TeamWindow = ({id, mode, title}) => {
                 setTeamData([]);
                 fetchGetTeamDataById(navigate, id)
                     .then(team => {
-                        setTeamData(team[0].department_name)
+                        setTeamData(team.department_name)
                     });
             }
 
@@ -77,24 +77,25 @@ const TeamWindow = ({id, mode, title}) => {
     function reloadSkills(employeeData){
         let skillList = []
         employeeData.forEach((e) => {
-            e.skills.forEach((s) => {
-                let found = false
-                skillList.forEach(element => {
-                    if(element.name === s.skill_name){
-                        found = true
-                    }
-                });
-                if(!found){
-                    skillList.push({name:s.skill_name, value:1})
-                }
-                else {
+            if(e.skills !== undefined) {
+                e.skills.forEach((s) => {
+                    let found = false
                     skillList.forEach(element => {
-                        if(element.name === s.skill_name){
-                            element.value = element.value + 1;
+                        if (element.name === s.skill_name) {
+                            found = true
                         }
                     });
-                }
-            })
+                    if (!found) {
+                        skillList.push({name: s.skill_name, value: 1})
+                    } else {
+                        skillList.forEach(element => {
+                            if (element.name === s.skill_name) {
+                                element.value = element.value + 1;
+                            }
+                        });
+                    }
+                })
+            }
         })
         if(!employeeSkillDataLoad || mode !== 'create') {
             setEmployeeSkillData(skillList)
