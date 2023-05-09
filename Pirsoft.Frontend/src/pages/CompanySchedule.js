@@ -190,7 +190,7 @@ function CompanySchedule(){
 
     return(
         <>
-        {allTeamsAreLoadedInDivs ?
+        {allTeamsAreLoadedInDivs && employees !== undefined && employees !== null ?
             <>
                 <div id={"company-schedule-parent"} className={"every-page-on-scroll overflow-y-hidden hover:cursor-default"}
                      style={{minWidth: 800}}>

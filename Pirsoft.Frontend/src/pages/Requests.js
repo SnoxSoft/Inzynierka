@@ -104,7 +104,7 @@ function Requests(){
 
     // Filtrowanie wniosków
     function filtrRequests() {
-        console.clear()
+
         console.log(firstNameAndLastName)
         console.log(team)
         //
@@ -230,20 +230,21 @@ function Requests(){
                             }
                         }
 
-
                         // Tutaj ładuje dane pracownika
                         let employeeName = null
                         let employeeTeam = null
-                        employeesList.map(employee => {
-                            if(request.employee_owner_id === employee.employee_id){
-                                employeeName = employee.first_name + " " + employee.last_name
-                                teamsList.map(team => {
-                                    if(team.department_id === employee.employee_department_id){
-                                        employeeTeam = team
-                                    }
-                                })
-                            }
-                        })
+                        if(employeesList !== undefined && employeesList !== null) {
+                            employeesList.map(employee => {
+                                if (request.employee_owner_id === employee.employee_id) {
+                                    employeeName = employee.first_name + " " + employee.last_name
+                                    teamsList.map(team => {
+                                        if (team.department_id === employee.employee_department_id) {
+                                            employeeTeam = team
+                                        }
+                                    })
+                                }
+                            })
+                        }
 
                         // ostatni etap filtra - szukanie nazwy i zespolu
                         if(addRequest !== null && employeeName !== null && employeeTeam !== null) {
