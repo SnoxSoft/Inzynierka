@@ -55,6 +55,7 @@ const endpointGetOneEmployeeBetweenDatesDaysOff = "get/employee/absences";
 // Zwraca nieobecności wszystkich pracownikó na dany miesiąc dla całej firmy
 const endpointGetAllEmployeesBetweenDatesDaysOff = "get/employees/absences";
 
+const endpointPostCreateAbsence = "create/new/absence"
 
 
 // Umiejętności pracownika //
@@ -87,6 +88,7 @@ const endpointGetAllPositionsLevels = "get/seniority/levels";
 export {
     endpointGetEmployeesRequests, endpointGetRequestsStatuses,
     endpointGetAbsencesTypes, endpointPutEditEmployee,
+    endpointPostCreateAbsence,
 
     endpointGetRequestApprovers,
 
