@@ -11,8 +11,10 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
             => _modelBuilder.Entity<CompanyRoleModel>(entity =>
             {
                 entity.HasKey(e => e.role_id).HasName("PRIMARY");
+
                 entity.HasIndex(e => e.role_id, "id_UNIQUE").IsUnique();
                 entity.HasIndex(e => e.role_name, "roleName_UNIQUE").IsUnique();
+
                 entity.Property(e => e.role_name).HasMaxLength(45);
             });
     }
