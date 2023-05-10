@@ -37,4 +37,22 @@ public class AbsenceController : ControllerBase
         await _crudHandler.CreateAsync(newAbsence);
         _crudHandler.PushChangesToDatabase();
     }
+
+    [HttpGet("get/employee/absences/{id}/{dateFrom}/{dateTo}")]
+    public async Task<IEnumerable<AbsenceModel>> GetEmployeeAbsences(int id, DateTime dateFrom, DateTime dateTo)
+    {
+        var query = await _crudHandler.ReadAllAsync<AbsenceModel>();
+        return query.AsQueryable().Where(absence => absence.employee_owner_id == id).
+            Where(absence => absence.absence_start_date >= dateFrom && absence.absence_end_date<=dateTo).ToList();
+        
+    }
+    
+    [HttpGet("get/all/employee/absences/{dateFrom}/{dateTo}")]
+    public async Task<IEnumerable<AbsenceModel>> GetAllEmployeeAbsences(DateTime dateFrom, DateTime dateTo)
+    {
+        var query = await _crudHandler.ReadAllAsync<AbsenceModel>();
+        return query.AsQueryable().
+            Where(absence => absence.absence_start_date >= dateFrom && absence.absence_end_date<=dateTo).ToList();
+        
+    }
 }
