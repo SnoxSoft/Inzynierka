@@ -66,10 +66,12 @@ namespace Pirsoft.Api.Security.Services
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, employee.email_address),
-                new Claim("uid", employee.employee_id.ToString()),
-                new Claim(ClaimTypes.Role, "user"),
+                new Claim("UserId", employee.employee_id.ToString()),
+                new Claim("FirstName", employee.first_name),
+                new Claim("LastName", employee.last_name),
+                new Claim("Email", employee.email_address),
+                new Claim("Role", employee.employee_company_role_id.ToString()),
+                new Claim("Department", employee.employee_department_id.ToString()),
             }
             .Union(userClaims)
             .Union(roleClaims);
