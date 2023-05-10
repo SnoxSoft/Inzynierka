@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using Pirsoft.Api.Controllers;
-using Pirsoft.Api.DatabaseManagement;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 
 namespace Pirsoft.UnitTests.ControllerMockTests;
