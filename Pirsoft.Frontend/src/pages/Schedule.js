@@ -16,7 +16,7 @@ import {
 import Legend from "../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
 import {useNavigate} from "react-router-dom";
-import {fetchGetAbsencesTypes, fetchGetEmployeeMonthDaysOff} from "../DataFetcher";
+import {fetchGetAbsencesTypes, fetchGetOneEmployeeBetweenDatesDaysOff} from "../DataFetcher";
 
 function Schedule(){
     document.title = pageNameSchedule;
@@ -125,7 +125,7 @@ function Schedule(){
         const lastDayOfMonthForEndpoint = lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint)
 
         // Ładowanie dni wolnych po załadowaniu okna a nie na bieżąco
-        fetchGetEmployeeMonthDaysOff(navigate, sessionStorage.getItem('USER'), firstDayOfMonthForEndpoint, lastDayOfMonthForEndpoint)
+        fetchGetOneEmployeeBetweenDatesDaysOff(navigate, sessionStorage.getItem('USER'), firstDayOfMonthForEndpoint, lastDayOfMonthForEndpoint)
             .then(monthDaysOff => {
 
                 let monthDaysOfff = []

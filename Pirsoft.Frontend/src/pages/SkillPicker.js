@@ -1,19 +1,10 @@
-import React, {useEffect, useState} from "react";
-import FunctionForResize from "../components/base/FunctionForResize";
+import React from "react";
 import ReusableButton from "../components/base/ReusableButton";
-import {useNavigate} from "react-router-dom";
 
 import {
-    labelApprove, labelClose, pageSkillPicker, serverIp, serverIpProd,
-    skillsLabel, teamAdditionalRow
+    labelApprove, labelClose, pageSkillPicker,
+    skillsLabel
 } from "../GlobalAppConfig";
-import {
-    endpointGetAllSkills, endpointGetAllTeams,
-    endpointGetVerifyCode,
-    endpointPostChangePassword,
-    endpointPostSendEmailForPasswordChange
-} from "../EndpointAppConfig";
-import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 
 function SkillPicker({parent, loadedAllSkills, skillsData, setSkillsData,
                          actionSetTrue = undefined, actionSetFalse}) {

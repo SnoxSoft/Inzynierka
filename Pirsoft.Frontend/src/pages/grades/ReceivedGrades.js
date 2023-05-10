@@ -14,7 +14,7 @@ function ReceivedGrades({heightFromParent, setGradeMode, setPickedGradeData, set
     const[loadedGrades, setLoadedGrades] = useState(undefined)
 
     if(years === undefined) {
-        fetch(serverIp + "/" + endpointGetEmployedYears + "/" + sessionStorage.getItem('USER'))
+        fetch(serverIp + "/getYears/" + sessionStorage.getItem('USER'))
             .then((response) => {
                 response.json()
                     .then((response) => {
@@ -42,7 +42,7 @@ function ReceivedGrades({heightFromParent, setGradeMode, setPickedGradeData, set
     // Funkcja pobierająca listę ocen z bieżącego roku
     function getGrades () {
         // Pobranie listy ocen na podstawie wybranego roku
-        fetch(serverIp + "/" + endpointGetReceivedYearGrades + "/" + sessionStorage.getItem('USER') + "/" + pickedYear)
+        fetch(serverIp + "/getGrades/" + sessionStorage.getItem('USER') + "/" + pickedYear)
             .then((response) => {response.json()
                 .then((response) => {
                     setCurrentGradesList(response)

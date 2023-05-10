@@ -133,7 +133,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     const[contract, setContract] = useState(employee !== undefined && employee !== null ? employee.employee_contract_type_id : '');
     const[leaveDays, setLeaveDays] = useState(employee !== undefined && employee !== null ? employee.leave_base_days : 0);
     const[demandDays, setDemandDays] = useState(employee !== undefined && employee !== null ? employee.leave_demand_days : 0);
-    const[overTenYears, setOverTenYears] = useState(employee !== undefined && employee !== null ? employee.leave_is_seniority_threshold : false);
+    const[overTenYears, setOverTenYears] = useState(employee !== undefined && employee !== null ? employee.leave_is_seniority_threshold === 0 ? false: true : false);
     const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.employee_company_role_id : '');
     const[positionLevel, setPositionLevel] = useState(employee !== undefined && employee !== null ? employee.employee_seniority_level_id : '');
     const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.employment_start_date.substring(0, 10) : '');
@@ -175,7 +175,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setContract('');
             setLeaveDays(0)
             setDemandDays(0)
-            setOverTenYears(0)
+            setOverTenYears(false)
             setPosition('');
             setPositionLevel('');
             setStart('');
@@ -233,140 +233,120 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         // Sprawdzenie błędów
         setAlerts(<></>)
         let alerts = []
-        if(firstName.toString().trim().length === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongFirstName}
-                </p>
-            )
-        }
-        if(lastName.toString().trim().length === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongLastName}
-                </p>
-            )
-        }
-        if(email.toString().trim().length === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongAddressEmail}
-                </p>
-            )
-        }
-        if(bank.toString().trim().length !== 26 || Number(bank) === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongBankAccount}
-                </p>
-            )
-        }
-        if(birth.toString().trim().length === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongBirthDate}
-                </p>
-            )
-        }
-        if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongPESEL}
-                </p>
-            )
-        }
-        if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongSalary}
-                </p>
-            )
-        }
-        if(contract.toString().trim().length === 0 || contract === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongContract}
-                </p>
-            )
-        }
-        if(position.toString().trim().length === 0 || position === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongPosition}
-                </p>
-            )
-        }
-        if(positionLevel.toString().trim().length === 0 || positionLevel === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongPositionLevel}
-                </p>
-            )
-        }
-        if(department.toString().trim().length === 0 || department === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongTeam}
-                </p>
-            )
-        }
-        if(start.toString().trim().length === 0){
-            alerts.push(
-                <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertWrongStartDate}
-                </p>
-            )
-        }
-        setAlerts(alerts)
+        // if(firstName.toString().trim().length === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongFirstName}
+        //         </p>
+        //     )
+        // }
+        // if(lastName.toString().trim().length === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongLastName}
+        //         </p>
+        //     )
+        // }
+        // if(email.toString().trim().length === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongAddressEmail}
+        //         </p>
+        //     )
+        // }
+        // if(bank.toString().trim().length !== 26 || Number(bank) === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongBankAccount}
+        //         </p>
+        //     )
+        // }
+        // if(birth.toString().trim().length === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongBirthDate}
+        //         </p>
+        //     )
+        // }
+        // if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongPESEL}
+        //         </p>
+        //     )
+        // }
+        // if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongSalary}
+        //         </p>
+        //     )
+        // }
+        // if(contract.toString().trim().length === 0 || contract === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongContract}
+        //         </p>
+        //     )
+        // }
+        // if(position.toString().trim().length === 0 || position === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongPosition}
+        //         </p>
+        //     )
+        // }
+        // if(positionLevel.toString().trim().length === 0 || positionLevel === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongPositionLevel}
+        //         </p>
+        //     )
+        // }
+        // if(department.toString().trim().length === 0 || department === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongTeam}
+        //         </p>
+        //     )
+        // }
+        // if(start.toString().trim().length === 0){
+        //     alerts.push(
+        //         <p className={"bg-red-700 rounded-md font-bold"}>
+        //             {alertWrongStartDate}
+        //         </p>
+        //     )
+        // }
+        // setAlerts(alerts)
+
+        const query = new URLSearchParams();
+        query.set("firstName", firstName);
+        query.set("lastName", lastName);
+        query.set("email", email);
+        query.set("bankAccountNumber", bank);
+        query.set("dateOfBirth", birth);
+        query.set("password", "Wanda123@2113wanda");
+        query.set("pesel", pesel);
+        query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
+        query.set("departmentId", department);
+        query.set("contractType", contract);
+        query.set("companyRole", position);
+        query.set("seniorityLevel", positionLevel);
+        query.set("employmentStartDate", start);
+        query.set("leaveBaseDays", leaveDays);
+        query.set("leaveDemandDays", demandDays);
+        query.set("leaveIsSeniorityThreshold", overTenYears);
+
         if(alerts.length > 0){
             setShowPopupWithProblems(true)
         }
         else{
-            const query = new URLSearchParams();
-            query.set("firstName", firstName);
-            query.set("lastName", lastName);
-            query.set("email", email);
-            query.set("bankAccountNumber", bank);
-            query.set("dateOfBirth", birth);
-            query.set("password", "Wanda123@2113wanda");
-            query.set("pesel", pesel);
-            query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
-            query.set("departmentId", department);
-            query.set("contractType", contract);
-            query.set("companyRole", position);
-            query.set("seniorityLevel", positionLevel);
-            query.set("employmentStartDate", start);
-            query.set("leaveBaseDays", leaveDays);
-            query.set("leaveDemandDays", demandDays);
-            query.set("leaveIsSeniorityThreshold", overTenYears);
-
             if(id === "-1") {
-                console.log("create")
                 fetchPostCreateEmployee(query)
                     .then(r => console.log(r))
             }
             else{
-                console.log("edit lol")
-
-                const query = new URLSearchParams();
-                query.set("firstName", firstName);
-                query.set("lastName", lastName);
-                query.set("email", email);
-                query.set("bankAccountNumber", bank);
-                query.set("dateOfBirth", birth);
-                query.set("password", "Wanda123@2113wanda");
-                query.set("pesel", pesel);
-                query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
-                query.set("departmentId", department);
-                query.set("contractType", contract);
-                query.set("companyRole", position);
-                query.set("seniorityLevel", positionLevel);
-                query.set("employmentStartDate", start);
-                query.set("leaveBaseDays", leaveDays);
-                query.set("leaveDemandDays", demandDays);
-                query.set("leaveIsSeniorityThreshold", overTenYears);
-
-                let bodyEdit = {employee:{
+                let bodyEdit = {
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
@@ -384,11 +364,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     leaveDemandDays: demandDays,
                     leaveIsSeniorityThreshold: overTenYears
 
-                }}
+                }
 
-
-                let employee = {employee: bodyEdit}
-                fetchPutEditEmployee(query, employee, query)
+                fetchPutEditEmployee(id, bodyEdit, query)
                     .then(r => {
                         if(r !== undefined){
                             console.log(r)

@@ -19,7 +19,7 @@ const NotificationItem = ({id, employeeNotification, employeeNotifications, setE
     // Endpoint do usuwania wposu powiadomienia
     function deleteNotification(id){
         // Wysyłanie informacji na backend o odznaczeniu endpointa
-        fetch(serverIp + "/" + endpointDeleteNotification + "/" + id)
+        fetch(serverIp + "/deleteNotification/" + id)
             .catch((err) => {
                 console.log(err.message);
             })
