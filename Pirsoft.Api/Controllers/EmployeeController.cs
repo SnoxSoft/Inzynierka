@@ -110,19 +110,15 @@ public class EmployeeController : Controller
     
     [Authorize(Roles = "Kadry")]
     [HttpPut("employees/{id}")]
-    public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeModel employee, [FromServices] ICrudHandler crudHandler)
+    public async Task<IActionResult> UpdateEmployee(int id, EmployeeModel employee)
     {
-        var existingEmployee = await crudHandler.ReadAsync<EmployeeModel>(id);
+        var existingEmployee = await _crudHandler.ReadAsync<EmployeeModel>(id);
 
         if (existingEmployee == null)
-        {
             return NotFound();
-        }
-
-        // Make sure the email is not editable
+        
         employee.email_address = existingEmployee.email_address;
-
-        // Update the employee object
+        
         existingEmployee.first_name = employee.first_name;
         existingEmployee.last_name = employee.last_name;
         existingEmployee.pesel = employee.pesel;
@@ -140,7 +136,7 @@ public class EmployeeController : Controller
 
         try
         {
-            await crudHandler.UpdateAsync(existingEmployee);
+            await _crudHandler.UpdateAsync(existingEmployee);
             return Ok();
         }
         catch (DbUpdateConcurrencyException)
