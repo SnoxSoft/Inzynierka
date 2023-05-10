@@ -12,7 +12,11 @@ import {
     serverIp
 } from "../GlobalAppConfig";
 import {
-    fetchApproversForRequest, fetchGetAbsencesTypes, fetchGetEmployeeDataById
+    fetchApproversForRequest,
+    fetchGetAbsencesTypes,
+    fetchGetEmployeeDataById,
+    fetchPostCreateAbsence,
+    fetchPostCreateEmployee
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import AbsencesList from "../components/absences/AbsencesList";
@@ -138,6 +142,19 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         console.log(leaveDays)
         console.log(demandDays)
         //close()
+
+        const query = new URLSearchParams();
+        query.set("absenceStartDate", dateFrom);
+        query.set("absenceEndDate", dateTo);
+        query.set("unpaid", noPay ? 1 : 0);
+        query.set("absenceTypeId", absence);
+        query.set("employeeApproverId", 1);
+        query.set("employeeOwnerId", employee.employee_id);
+        query.set("absenceStatusId", 1);
+
+        fetchPostCreateAbsence(query)
+                    .then(r => console.log(r))
+
     }
 
     function rejectRequest(){

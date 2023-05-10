@@ -27,7 +27,7 @@ import {
     endpointPostCreateEmployee,
     endpointPostSendEmailForPasswordChange,
     endpointPutChangePassword,
-    endpointPutEditEmployee
+    endpointPutEditEmployee, endpointPostCreateAbsence
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -288,6 +288,9 @@ async function fetchGetAbsencesTypes(navigate) {
     }
 }
 
+async function fetchPostCreateAbsence(params) {
+    return await axios.post(`${serverIpProd}/${endpointPostCreateAbsence}?${params}`)
+}
 async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, dateTo) {
     try {
         const response = await axios.get(`${serverIp}/${endpointGetOneEmployeeBetweenDatesDaysOff}/${id}/${dateFrom}/${dateTo}`)
@@ -343,6 +346,7 @@ export {
     fetchGetRequestsStatuses,
     fetchGetAbsencesTypes,
 
+    fetchPostCreateAbsence,
     fetchGetOneEmployeeBetweenDatesDaysOff,
     fetchGetAllEmployeesBetweenDatesDaysOff
 
