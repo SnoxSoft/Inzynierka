@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: pirsoft
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.0.32
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -66,7 +66,7 @@ CREATE TABLE `absence_types` (
 
 LOCK TABLES `absence_types` WRITE;
 /*!40000 ALTER TABLE `absence_types` DISABLE KEYS */;
-INSERT INTO `absence_types` VALUES (1,'Nieobecność','absent'),(2,'Urlop chorobowy','sick'),(3,'Urlop dla poratowania zdrowia','dayoff'),(4,'Urlop macieżyński','dayoff'),(5,'Urlop na oddanie krwi','dayoff'),(6,'Urlop na poszukiwanie pracy','dayoff'),(7,'Urlop na żądanie','demand'),(8,'Urlop ojcowski','dayoff'),(9,'Urlop okolicznościowy','dayoff'),(10,'Urlop szkoleniowy','dayoff'),(11,'Urlop wypoczynkowy','dayoff'),(12,'Urlop wychowawczy','dayoff'),(13,'Urlop za święto w sobotę','dayoff');
+INSERT INTO `absence_types` VALUES (1,'Nieobecność','absent'),(2,'Urlop chorobowy','sick'),(3,'Urlop dla poratowania zdrowia','dayoff'),(4,'Urlop macierzyński','dayoff'),(5,'Urlop na oddanie krwi','dayoff'),(6,'Urlop na poszukiwanie pracy','dayoff'),(7,'Urlop na żądanie','demand'),(8,'Urlop ojcowski','dayoff'),(9,'Urlop okolicznościowy','dayoff'),(10,'Urlop szkoleniowy','dayoff'),(11,'Urlop wypoczynkowy','dayoff'),(12,'Urlop wychowawczy','dayoff'),(13,'Urlop za święto w sobotę','dayoff');
 /*!40000 ALTER TABLE `absence_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,7 +84,7 @@ CREATE TABLE `absences` (
   `duration` int NOT NULL,
   `unpaid` tinyint NOT NULL,
   `absence_type_id` int NOT NULL,
-  `employee_approver_id` int NOT NULL,
+  `employee_approver_id` int NOT NULL DEFAULT '0',
   `employee_owner_id` int NOT NULL,
   `absence_status_id` int NOT NULL,
   PRIMARY KEY (`absence_id`),
@@ -92,10 +92,8 @@ CREATE TABLE `absences` (
   KEY `fk_absence_absence_type_idx` (`absence_type_id`),
   KEY `fk_absence_status_idx` (`absence_status_id`),
   KEY `fk_absence_employee_idx` (`employee_owner_id`),
-  KEY `fk_absence_approver_idx` (`employee_approver_id`),
   CONSTRAINT `fk_absence_absence_status` FOREIGN KEY (`absence_status_id`) REFERENCES `absence_statuses` (`absence_status_id`),
   CONSTRAINT `fk_absence_absence_type` FOREIGN KEY (`absence_type_id`) REFERENCES `absence_types` (`absence_type_id`),
-  CONSTRAINT `fk_absence_employee_approver` FOREIGN KEY (`employee_approver_id`) REFERENCES `employees` (`employee_id`),
   CONSTRAINT `fk_absence_employee_owner` FOREIGN KEY (`employee_owner_id`) REFERENCES `employees` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -183,7 +181,7 @@ CREATE TABLE `departments` (
 
 LOCK TABLES `departments` WRITE;
 /*!40000 ALTER TABLE `departments` DISABLE KEYS */;
-INSERT INTO `departments` VALUES (1,'DPT_TEST');
+INSERT INTO `departments` VALUES (1,'brak');
 /*!40000 ALTER TABLE `departments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -238,6 +236,25 @@ LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`ADMIN`@`%`*/ /*!50003 TRIGGER `employees_BEFORE_DELETE` BEFORE DELETE ON `employees` FOR EACH ROW BEGIN
+	DELETE FROM employees_skills WHERE employee_id = OLD.employee_id;
+    UPDATE absences SET employee_approver_id = '0' WHERE employee_approver_id = OLD.employee_id;
+    DELETE FROM absences WHERE employee_owner_id = OLD.employee_id;   
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `employees_skills`
@@ -288,7 +305,7 @@ CREATE TABLE `seniority_levels` (
 
 LOCK TABLES `seniority_levels` WRITE;
 /*!40000 ALTER TABLE `seniority_levels` DISABLE KEYS */;
-INSERT INTO `seniority_levels` VALUES (2,'Inny'),(1,'Junior'),(3,'Mid'),(4,'Senior');
+INSERT INTO `seniority_levels` VALUES (1,'Inny'),(2,'Junior'),(3,'Mid'),(4,'Senior');
 /*!40000 ALTER TABLE `seniority_levels` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,7 +331,7 @@ CREATE TABLE `skills` (
 
 LOCK TABLES `skills` WRITE;
 /*!40000 ALTER TABLE `skills` DISABLE KEYS */;
-INSERT INTO `skills` VALUES (5,'Html'),(2,'Java'),(4,'MsOffice'),(3,'Php'),(1,'Sql');
+INSERT INTO `skills` VALUES (1,'HTML'),(2,'Java'),(3,'MsOffice'),(4,'PHP'),(5,'SQL');
 /*!40000 ALTER TABLE `skills` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -327,4 +344,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-07 15:59:42
+-- Dump completed on 2023-05-10 22:59:26
