@@ -47,14 +47,14 @@ const RequestListItem = ({employeeAbsence, employeeAbsenceTeam, old = false,
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
             {window === "absences" ?
                 <div className={"p-2 flex rounded-md basis-8/12"}>
-                    {labelFromTimeOfAbsence} {employeeAbsence.absence_start_date} - {employeeAbsence.absence_end_date}, {absenceType}
+                    {labelFromTimeOfAbsence} {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}, {absenceType}
                 </div> :
                 <div className={"p-2 flex rounded-md basis-8/12 flex-col cursor-default"}>
                     <div>
                         {employeeName}, {employeeTeam},
                     </div>
                     <div>
-                        {absenceType}, {labelFromTimeOfRequest} {employeeAbsence.absence_start_date} - {employeeAbsence.absence_end_date}
+                        {absenceType}, {labelFromTimeOfRequest} {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}
                     </div>
 
                 </div>

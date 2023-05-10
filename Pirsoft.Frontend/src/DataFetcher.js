@@ -293,7 +293,7 @@ async function fetchPostCreateAbsence(params) {
 }
 async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, dateTo) {
     try {
-        const response = await axios.get(`${serverIp}/${endpointGetOneEmployeeBetweenDatesDaysOff}/${id}/${dateFrom}/${dateTo}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetOneEmployeeBetweenDatesDaysOff}/${id}/${dateFrom}/${dateTo}`)
         if (response && response.status === 200) {
             const newData = await response.data;
             newData.sort(FunctionForSortingJson("absence_start_date", "descending"))
@@ -309,7 +309,7 @@ async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, da
 
 async function fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateTo) {
     try {
-        const response = await axios.get(`${serverIp}/${endpointGetAllEmployeesBetweenDatesDaysOff}/${dateFrom}/${dateTo}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetAllEmployeesBetweenDatesDaysOff}/${dateFrom}/${dateTo}`)
         if (response && response.status === 200) {
             const newData = await response.data;
             newData.sort(FunctionForSortingJson("absence_start_date", "descending"))

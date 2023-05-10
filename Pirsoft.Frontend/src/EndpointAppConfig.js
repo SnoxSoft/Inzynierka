@@ -11,9 +11,6 @@ const endpointDeleteEmployee = "delete/employee";
 
 // Listy wniosków urlopowych //
 
-// Zwraca listę wniosków urlopowych innych pracowników
-const endpointGetEmployeesRequests = "getEmployeesRequests";
-
 // Zwraca wszystkie rodzaje statusów wniosków urlopowych
 const endpointGetRequestsStatuses = "get/absence/statuses";
 
@@ -53,7 +50,7 @@ const endpointGetLogIn = "getEmployee";
 const endpointGetOneEmployeeBetweenDatesDaysOff = "get/employee/absences";
 
 // Zwraca nieobecności wszystkich pracownikó na dany miesiąc dla całej firmy
-const endpointGetAllEmployeesBetweenDatesDaysOff = "get/employees/absences";
+const endpointGetAllEmployeesBetweenDatesDaysOff = "get/all/employee/absences";
 
 const endpointPostCreateAbsence = "create/new/absence"
 
@@ -86,7 +83,7 @@ const endpointGetAllContracts = "get/contracts";
 const endpointGetAllPositionsLevels = "get/seniority/levels";
 
 export {
-    endpointGetEmployeesRequests, endpointGetRequestsStatuses,
+    endpointGetRequestsStatuses,
     endpointGetAbsencesTypes, endpointPutEditEmployee,
     endpointPostCreateAbsence,
 
