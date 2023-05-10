@@ -21,7 +21,6 @@ namespace Pirsoft.Api.Models
 
         public virtual AbsenceStatusModel absence_status { get; set; } = null!;
         public virtual AbsenceTypeModel absence_type { get; set; } = null!;
-        public virtual EmployeeModel employee_approver { get; set; } = null!;
         public virtual EmployeeModel employee_owner { get; set; } = null!;
     }
 }
