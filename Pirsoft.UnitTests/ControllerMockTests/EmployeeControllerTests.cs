@@ -96,7 +96,7 @@ public class EmployeeControllerTests
         _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync(existingEmployee);
 
         // Act
-        var result = await _employeeController.UpdateEmployee(id, employee, _crudHandlerMock.Object);
+        var result = await _employeeController.UpdateEmployee(id, employee);
 
         // Assert
         result.Should().BeOfType<OkResult>();
@@ -112,7 +112,7 @@ public class EmployeeControllerTests
         _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync((EmployeeModel)null);
 
         // Act
-        var result = await _employeeController.UpdateEmployee(id, employee, _crudHandlerMock.Object);
+        var result = await _employeeController.UpdateEmployee(id, employee);
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();

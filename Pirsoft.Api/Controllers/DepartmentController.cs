@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.Models;
@@ -28,5 +29,60 @@ public class DepartmentController : Controller
             return query;
         else
             return null;
+    }
+
+    [HttpPost("/create/department")]
+    public async Task CreateNewDepartment(string departmentName)
+    {
+        DepartmentModel newDepartment = new DepartmentModel()
+        {
+            department_name = departmentName
+        };
+        
+        await _crudHandler.CreateAsync(newDepartment);
+        _crudHandler.PushChangesToDatabase();
+    }
+
+    [HttpDelete("/delete/department/{id}")]
+    [Authorize(Roles = "Kadry")] 
+    public async Task<ActionResult> DeleteDepartmentById(int id)
+    {
+
+        var department = await _crudHandler.ReadAsync<DepartmentModel>(id);
+        if (department == null)
+            return NotFound();
+
+        try
+        {
+            await _crudHandler.DeleteAsync(department);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpPut("edit/department/{id}")]
+    [Authorize(Roles = "Kadry")]
+    public async Task<ActionResult> UpdateDepartment(int id, DepartmentModel departmentModel)
+    {
+        var existingDepartment = await _crudHandler.ReadAsync<DepartmentModel>(id);
+
+        if (existingDepartment == null)
+            return NotFound();
+
+        existingDepartment.department_id = departmentModel.department_id;
+        existingDepartment.department_name = departmentModel.department_name;
+        
+        try
+        {
+            await _crudHandler.UpdateAsync(existingDepartment);
+            return Ok();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict();
+        }
     }
 }
