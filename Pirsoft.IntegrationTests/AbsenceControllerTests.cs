@@ -37,23 +37,27 @@ public class AbsenceControllerTests
     [Test]
     public async Task CreateNewAbsence_IsReturning_SuccessCodeWithValidParameters()
     {
-        AbsenceModel absenceModel = new AbsenceModel()
-        {
-            absence_start_date = new DateTime(2023,05,11),
-            absence_end_date = new DateTime(2023,05,12),
-            unpaid = Convert.ToSByte(1),
-            duration = 0,
-            absence_id = 1,
-            absence_type_id = 1,
-            employee_approver_id = 1,
-            employee_owner_id = 1,
-            absence_status_id = 1,
-        };
-    
-        var response = await _client.PostAsJsonAsync("https://localhost:7120/create/new/absence", absenceModel);
+        var response = await _client.PostAsync("https://localhost:7120/create/new/absence?absenceStartDate=2023-05-05&absenceEndDate=2023-05-05&unpaid=1&absenceTypeId=1&employeeApproverId=1&employeeOwnerId=1&absenceStatusId=1", null);
     
         response.IsSuccessStatusCode.Should().BeTrue();
         response.EnsureSuccessStatusCode();
     }
     
+    [Test]
+    public async Task GetAbsencesForEmployeeBetweenDates_IsReturning_SuccessCodeWithValidParameters()
+    {
+        var response = await _client.GetAsync("https://localhost:7120/get/employee/absences/2/2023-05-05/2023-05-06");
+        
+        response.IsSuccessStatusCode.Should().BeTrue();
+        response.EnsureSuccessStatusCode();
+    }
+    
+    [Test]
+    public async Task GetEmployeesAbsencesBetweenDates_IsReturning_SuccessCodeWithValidParameters()
+    {
+        var response = await _client.GetAsync("https://localhost:7120/get/all/employee/absences/2023-05-05/2023-05-06");
+        
+        response.IsSuccessStatusCode.Should().BeTrue();
+        response.EnsureSuccessStatusCode();
+    }
 }

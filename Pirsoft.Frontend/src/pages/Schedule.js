@@ -21,6 +21,8 @@ import {fetchGetAbsencesTypes, fetchGetOneEmployeeBetweenDatesDaysOff} from "../
 function Schedule(){
     document.title = pageNameSchedule;
 
+    //getLocalStorageKeyWithExpiry("loggedEmployee").userId
+
     const navigate = useNavigate();
 
     // Ładowanie listy do wybrania miesiąca
