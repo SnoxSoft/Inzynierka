@@ -16,6 +16,7 @@ import {
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import AbsencesList from "../components/absences/AbsencesList";
+import demandDays from "../components/employee/fields/DemandDays";
 
 const RequestWindow = ({setAbsencesVisible = undefined,
                      setShowAddEmployeeAnAbsence = undefined, setEmployeeDataShow = undefined,
@@ -24,11 +25,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     document.title = pageNameRequest;
 
     const navigate = useNavigate();
-
-
-    // Będe potrzebować tu endpointa do czytania tych wartości przy wybraniu wniosku
-    let onDemandDays = 5;
-    let leaveDays = 10;
 
     // Lista rodzai urlopów
     const [absencesList, setAbsencesList] = useState(null)
@@ -39,18 +35,23 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     // Pracownik, który otrzymuje wniosek
     const [employee, setEmployee] = useState(null);
 
-    console.log(requestData)
+    // Ładowanie tych wartości z informacji pracownika
+    const [demandDays, setDemandDays] = useState(0);
+    const [leaveDays, setLeaveDays] = useState(0);
+
     useEffect(() => {
         // Załadowanie danych pracownika, dla którego wystawiamy wniosek
         if (employee === null) {
             setEmployee(null);
             fetchGetEmployeeDataById(requestData.employee_id !== undefined ? requestData.employee_id : requestData.employee_owner_id, navigate)
                 .then(employee => {
-                    setEmployee(employee);
                     if(employee !== undefined){
-                        // Bile jakie wartosci, czekam aż pojawia sie te pola w employee modelu
-                        onDemandDays = employee.employee_company_role_id;
-                        leaveDays = employee.employee_contract_type_id;
+                        setDemandDays(employee.leave_demand_days);
+                        setLeaveDays(employee.leave_base_days);
+
+                        setNoPay(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? employee.leave_base_days === 0 : false)
+
+                        setEmployee(employee);
                     }
                 });
         }
@@ -60,7 +61,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
             fetchGetAbsencesTypes(navigate)
                 .then(absences => {
                     setAbsencesList(absences)
-
                     if(requestData !== undefined) {
                         absences.map((absence) => {
                             if (requestData.type === absence.absence_type_name) {
@@ -108,8 +108,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     const [dateTo, setDateTo] = useState(
         requestData && mode !== 'create' ? requestData.absence_end_date : futureThreeMonthsDate.toLocaleDateString("sv", options));
     const [absence, setAbsence] = useState(requestData ? requestData.absence_type_id : null)
-    const [noPay, setNoPay] = useState(requestData ? requestData.unpaid || leaveDays === 0 : false)
-
+    const [noPay, setNoPay] = useState(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? leaveDays === 0 : false)
     const disableChanges = mode === "approval"
 
     function close(){
@@ -130,20 +129,41 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     function createRequest(){
+        console.clear()
         console.log(dateFrom)
         console.log(dateTo)
         console.log(absence)
         console.log(noPay)
 
-        close()
+        console.log(leaveDays)
+        console.log(demandDays)
+        //close()
     }
 
     function rejectRequest(){
         // dodanie endpointu
+        console.clear()
+        console.log(dateFrom)
+        console.log(dateTo)
+        console.log(absence)
+        console.log(noPay)
+
+        console.log(leaveDays)
+        console.log(demandDays)
+        //close()
     }
 
     function approveRequest(){
         // dodanie onedpointu
+        console.clear()
+        console.log(dateFrom)
+        console.log(dateTo)
+        console.log(absence)
+        console.log(noPay)
+
+        console.log(leaveDays)
+        console.log(demandDays)
+        //close()
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
@@ -187,9 +207,9 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                         {labelRequestNoPay}
                     </p>
                     <input id={"request-type-no-pay"} type={"checkbox"}
-                           className={"h-5 w-5 checked:decoration-workday"}
+                           className={"h-5 w-5 accent-workday"}
                            onChange={(e) => setNoPay(e.target.checked)}
-                           checked={noPay} disabled={disableChanges || leaveDays === 0}/>
+                           checked={noPay} disabled={disableChanges || mode === "create" && leaveDays === 0}/>
                 </div>
                 {mode === "create" ?
                 <div id={"schedule-list"} className={"flex"}>

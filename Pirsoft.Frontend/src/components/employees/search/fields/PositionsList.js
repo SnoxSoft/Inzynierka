@@ -16,7 +16,7 @@ const PositionsList = ({value = undefined, onChange, id, disableChange = false, 
     }
 
     return <>
-            {positions && <Select id={id} className={"text-black " + formatting}
+            {positions && <Select id={id} className={"text-black " + formatting + " active:border-absent "}
                                 defaultValue={defaultValue}
                                 value={defaultValue}
                                 getOptionLabel={option =>
