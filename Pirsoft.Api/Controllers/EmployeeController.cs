@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 using Pirsoft.Api.Enums;
@@ -19,7 +18,7 @@ public class EmployeeController : Controller
     private readonly IEmployeeModelValidator _validator;
     private readonly IEmployeeCrudHandler _employeeCrudHandler;
 
-    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IAuthenticationService authenticationService, IEmployeeCrudHandler employeeCrudHandler)
+    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IEmployeeCrudHandler employeeCrudHandler)
     {
         _crudHandler = crudHandler;
         _validator = validator;

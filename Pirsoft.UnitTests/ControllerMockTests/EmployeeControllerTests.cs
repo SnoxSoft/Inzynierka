@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using Pirsoft.Api.Controllers;
-using Pirsoft.Api.DatabaseManagement;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 
@@ -22,7 +22,7 @@ public class EmployeeControllerTests
     public void SetUp()
     {
         _crudHandlerMock = new Mock<ICrudHandler>();
-        _employeeController = new EmployeeController(_crudHandlerMock.Object, Mock.Of<IEmployeeModelValidator>());
+        _employeeController = new EmployeeController(_crudHandlerMock.Object, Mock.Of<IEmployeeModelValidator>(), Mock.Of<IEmployeeCrudHandler>());
     }
 
     [Test]
