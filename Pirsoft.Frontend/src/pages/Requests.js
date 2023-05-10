@@ -10,9 +10,8 @@ import RequestsFilter from "../components/requests/RequestsFilter";
 import {useNavigate} from "react-router-dom";
 import {
     fetchGetAllTeamsAndAddZeroRecordAndSort,
-    fetchGetEmployeesRequests,
     fetchGetRequestsStatuses,
-    fetchGetAbsencesTypes, fetchGetEmployeeDataById, fetchGetAllEmployees
+    fetchGetAbsencesTypes, fetchGetAllEmployees, fetchGetAllEmployeesBetweenDatesDaysOff
 } from "../DataFetcher";
 import RequestWindow from "./RequestWindow";
 import RequestListItem from "../components/absences/RequestListItem";
@@ -120,7 +119,7 @@ function Requests(){
 
         setRequestsList([])
         let row = 0;
-        fetchGetEmployeesRequests(navigate, dateFrom, dateTo)
+        fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateTo)
             .then(employeeRequests => {
                 let requestsListLoad = [];
                 if (employeeRequests !== undefined) {

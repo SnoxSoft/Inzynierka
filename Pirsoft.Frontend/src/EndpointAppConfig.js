@@ -31,19 +31,14 @@ const endpointGetRequestApprovers = "getApprovers";
 // Wysłanie kodu weryfikacyjnego na adres email
 const endpointPostSendEmailForPasswordChange = "sendVerifyCode";
 
-// Weryfikacja kodu przesłanego na dany email z podanym adresem email
-const endpointGetVerifyCode = "verifyCode";
-
 const endpointGetChangePassword = "get/change-password"
 
 // Zmiana hasła po potwierdzeniu kodu weryfikacyjnego
-const endpointPostChangePassword = "changePassword";
 
 const endpointPutChangePassword = "changePassword";
 
 // Edycja hasła pracownika w profilu
 const endpointEmployeeChangePassword = "changePassword"
-
 
 
 // Logowanie sie //
@@ -52,14 +47,13 @@ const endpointEmployeeChangePassword = "changePassword"
 const endpointGetLogIn = "getEmployee";
 
 
-
 // Harmonogram pracy //
 
 // Zwraca dni urlopowe dla danego pracownika na wybrany miesiąc
-const endpointGetEmployeeMonthDaysOff = "get/employee/absences";
+const endpointGetOneEmployeeBetweenDatesDaysOff = "get/employee/absences";
 
 // Zwraca nieobecności wszystkich pracownikó na dany miesiąc dla całej firmy
-const endpointGetAllCompanyMonthDaysOff = "get/employees/absences";
+const endpointGetAllEmployeesBetweenDatesDaysOff = "get/employees/absences";
 
 
 
@@ -90,41 +84,18 @@ const endpointGetAllContracts = "get/contracts";
 //Zwraca listę wszystkich poziomów zatrudnień
 const endpointGetAllPositionsLevels = "get/seniority/levels";
 
-// Oceny kwartalne //
-
-// Zwraca lata w których dany pracownik jest zatrudniony
-const endpointGetEmployedYears = "getYears"
-
-// Zwraca listę ocen otrzymanych na dany, wybrany rok dla zalogowanego pracownika
-const endpointGetReceivedYearGrades = "getGrades";
-
-// Zwraca listę ocen wypisanych przez zalogowanego pracownika według filtru
-const endpointGetGivenGrades = "getGivenGrades";
-
-// Zwraca możliwe kwartał do wyboru dla danego pracownika, któremu wystawiamy ocenę
-const endpointGetAvailableQuartets = "getAvailableQuartets";
-
-
-
-// Powiadomienia //
-const endpointGetNotifications = "getNotifications";
-
-// Usunięcie wyskakującego powiadomienia
-const endpointDeleteNotification = "deleteNotification";
-
-
 export {
     endpointGetEmployeesRequests, endpointGetRequestsStatuses,
     endpointGetAbsencesTypes, endpointPutEditEmployee,
 
     endpointGetRequestApprovers,
 
-    endpointPostSendEmailForPasswordChange, endpointGetVerifyCode, endpointGetChangePassword,
-    endpointPostChangePassword, endpointPutChangePassword, endpointEmployeeChangePassword, endpointDeleteEmployee,
+    endpointPostSendEmailForPasswordChange, endpointGetChangePassword,
+    endpointPutChangePassword, endpointEmployeeChangePassword, endpointDeleteEmployee,
 
     endpointGetLogIn,
 
-    endpointGetEmployeeMonthDaysOff, endpointGetAllCompanyMonthDaysOff,
+    endpointGetOneEmployeeBetweenDatesDaysOff, endpointGetAllEmployeesBetweenDatesDaysOff,
 
     endpointGetAllSkills, endpointGetAllPositions, endpointGetAllPositionsLevels, endpointGetAllContracts,
 
@@ -132,10 +103,6 @@ export {
 
     endpointGetAllTeams, endpointGetTeamData,
 
-    endpointGetEmployedYears, endpointGetReceivedYearGrades, endpointGetGivenGrades, endpointGetAvailableQuartets,
-
-    endpointGetEmployeeData, endpointPostCreateEmployee,
-
-    endpointGetNotifications, endpointDeleteNotification
+    endpointGetEmployeeData, endpointPostCreateEmployee
 
     }

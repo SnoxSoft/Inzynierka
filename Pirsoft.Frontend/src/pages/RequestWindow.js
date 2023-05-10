@@ -71,23 +71,23 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                 });
         }
 
-        // Pobranie listy osób, które mogą zatwierdzić wniosek
-        if (approversList === null) {
-            fetchApproversForRequest(navigate, requestData.employee_id)
-                .then(approvers => {
-                    let approversListLoad = [];
-                    let approverId = 1;
-                    for (const i of approvers) {
-                        approversListLoad.push(
-                            <div key={"approver-item-" + approverId} className={"text-black"}>
-                                {i.name}, {i.role}
-                            </div>
-                        )
-                        approverId++;
-                    }
-                    setApproversList(approversListLoad)
-                })
-        }
+        // // Pobranie listy osób, które mogą zatwierdzić wniosek
+        // if (approversList === null) {
+        //     fetchApproversForRequest(navigate, requestData.employee_id)
+        //         .then(approvers => {
+        //             let approversListLoad = [];
+        //             let approverId = 1;
+        //             for (const i of approvers) {
+        //                 approversListLoad.push(
+        //                     <div key={"approver-item-" + approverId} className={"text-black"}>
+        //                         {i.name}, {i.role}
+        //                     </div>
+        //                 )
+        //                 approverId++;
+        //             }
+        //             setApproversList(approversListLoad)
+        //         })
+        // }
     })
 
 

@@ -14,7 +14,7 @@ import {
 import {useNavigate} from "react-router-dom";
 import {
     fetchGetRequestsStatuses,
-    fetchGetAbsencesTypes, fetchGetEmployeesRequests, fetchGetEmployeeDataById
+    fetchGetAbsencesTypes, fetchGetEmployeeDataById, fetchGetOneEmployeeBetweenDatesDaysOff
 } from "../DataFetcher";
 
 
@@ -102,7 +102,7 @@ function Absences(){
         //Trzeba wyczyścić listę przed każdym filtrem
         setAbsencesList([])
 
-        fetchGetEmployeesRequests(navigate, dateFrom, dateTo)
+        fetchGetOneEmployeeBetweenDatesDaysOff(navigate, 2, dateFrom, dateTo)
             .then(employeeAbsences => {
 
                 let absencesListLoad = [];

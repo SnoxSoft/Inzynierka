@@ -8,7 +8,7 @@ import {Popup} from "semantic-ui-react";
 import Legend from "../components/legend/Legend";
 import {
     fetchGetAllEmployees,
-    fetchGetAllTeamsAndAddZeroRecordAndSort, fetchGetCompanyMonthDaysOff
+    fetchGetAllTeamsAndAddZeroRecordAndSort, fetchGetAllEmployeesBetweenDatesDaysOff
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import TeamRow from "../components/teams/TeamRow";
@@ -58,7 +58,7 @@ function CompanySchedule(){
             lastDayOfCurrentMonth.setMonth(firstDayOfCurrentMonth.getMonth() + 1)
             lastDayOfCurrentMonth.setDate(0)
 
-            fetchGetCompanyMonthDaysOff(navigate,
+            fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
                 firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint),
                 lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint))
                 .then(companyMonthDaysOff => {
@@ -208,7 +208,7 @@ function CompanySchedule(){
                 pickedMonthTextDate.getMonth(),
                 0)
 
-            fetchGetCompanyMonthDaysOff(navigate,
+            fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
                 firstDayOfPreviousMonth.toLocaleDateString("sv", optionsForEndpoint),
                 lastDayOfPreviousMonth.toLocaleDateString("sv", optionsForEndpoint))
                 .then(companyMonthDaysOff => {
@@ -229,7 +229,7 @@ function CompanySchedule(){
             lastDayOfNextMonth.setMonth(firstDayOfNextMonth.getMonth() + 1)
             lastDayOfNextMonth.setDate(0)
 
-            fetchGetCompanyMonthDaysOff(navigate,
+            fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
                 firstDayOfNextMonth.toLocaleDateString("sv", optionsForEndpoint),
                 lastDayOfNextMonth.toLocaleDateString("sv", optionsForEndpoint))
                 .then(companyMonthDaysOff => {
@@ -260,7 +260,7 @@ function CompanySchedule(){
                                     const lastDayOfCurrentMonth = new Date()
                                     lastDayOfCurrentMonth.setMonth(firstDayOfCurrentMonth.getMonth() + 1)
                                     lastDayOfCurrentMonth.setDate(0)
-                                    fetchGetCompanyMonthDaysOff(navigate,
+                                    fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
                                         firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint),
                                         lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint))
                                     .then(companyMonthDaysOff => {
