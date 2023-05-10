@@ -64,7 +64,7 @@ function SkillPicker({parent, loadedAllSkills, skillsData, setSkillsData,
                     <p>{skill.skill_name}</p>
                     <input
                         id={"employee-skill-list-item-" + skillId + "-checkbox"}
-                        className={"bg-weekend checked:bg-weekend"} type={"checkbox"} defaultChecked={hasSkill}/>
+                        className={"accent-workday"} type={"checkbox"} defaultChecked={hasSkill}/>
                 </div>
                 <hr/>
             </>

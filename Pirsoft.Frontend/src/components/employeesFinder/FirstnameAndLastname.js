@@ -8,7 +8,7 @@ const FirstnameAndLastname = ({onChange, value, id}) => {
     return <div className={"flex flex-row gap-2"}>
         <div>{labelFirstNameAndLastName}</div>
         <div>
-        <input id={id + "-checkbox"} type={"checkbox"} className={"w-6 h-6"} defaultChecked={false}
+        <input id={id + "-checkbox"} type={"checkbox"} className={"w-6 h-6 accent-workday"} defaultChecked={false}
             onChange={(e) => setLockAndUnlock(!e.target.checked)}/>
         </div>
         <div>

@@ -36,31 +36,35 @@ function RequestsFilter({
                            onChange={setTeam} value={team} teams={teamsList}/>
             </div>
         </div>
-        <div className={"flex items-center justify-center gap-4"}>
-            <div className={"flex flex-col"}>
-                <label>{requestStatusWaitingLabel}</label>
-                <input type="checkbox" defaultChecked={true}
-                       onChange={(e) => setCheckWaiting(e.target.checked)}/>
+        <div className={"flex flex-row items-center justify-evenly"}>
+            <div className={"flex flex-row gap-2"}>
+                <div className={"flex flex-col place-items-center"}>
+                    <label>{requestStatusWaitingLabel}</label>
+                    <input type="checkbox" defaultChecked={true} className={"w-6 h-6 accent-workday"}
+                           onChange={(e) => setCheckWaiting(e.target.checked)}/>
+                </div>
+                <div className={"flex flex-col place-items-center"}>
+                    <label>{requestStatusApprovedLabel}</label>
+                    <input id={"requests-approved"} type="checkbox" defaultChecked={true} className={"w-5 h-5 accent-workday"}
+                           onChange={(e) => setCheckApproved(e.target.checked)}/>
+                </div>
+                <div className={"flex flex-col place-items-center"}>
+                    <label>{requestStatusDisapprovedLabel}</label>
+                    <input id={"requests-disapproved"} type="checkbox" defaultChecked={true} className={"w-5 h-5 accent-workday"}
+                           onChange={(e) => setCheckRefused(e.target.checked)}/>
+                </div>
             </div>
-            <div className={"flex flex-col"}>
-                <label>{requestStatusApprovedLabel}</label>
-                <input id={"requests-approved"} type="checkbox" defaultChecked={true}
-                       onChange={(e) => setCheckApproved(e.target.checked)}/>
-            </div>
-            <div className={"flex flex-col"}>
-                <label>{requestStatusDisapprovedLabel}</label>
-                <input id={"requests-disapproved"} type="checkbox" defaultChecked={true}
-                       onChange={(e) => setCheckRefused(e.target.checked)}/>
-            </div>
-            <div className={"flex flex-col"}>
-                <label>{requestStatusCreatedByMeLabel}</label>
-                <input id={"requests-created-by-me"} type="checkbox" defaultChecked={true}
-                       onChange={(e) => setCheckCreatedByCurrent(e.target.checked)}/>
-            </div>
-            <div className={"flex flex-col"}>
-                <label>{requestStatusCreatedNotByMeLabel}</label>
-                <input id={"requests-created-not-by-me"} type="checkbox" defaultChecked={true}
-                       onChange={(e) => setCheckNotCreatedByCurrent(e.target.checked)}/>
+            <div className={"flex flex-row gap-2"}>
+                <div className={"flex flex-col place-items-center"}>
+                    <label>{requestStatusCreatedByMeLabel}</label>
+                    <input id={"requests-created-by-me"} type="checkbox" defaultChecked={true} className={"w-5 h-5 accent-workday"}
+                           onChange={(e) => setCheckCreatedByCurrent(e.target.checked)}/>
+                </div>
+                <div className={"flex flex-col place-items-center"}>
+                    <label>{requestStatusCreatedNotByMeLabel}</label>
+                    <input id={"requests-created-not-by-me"} type="checkbox" defaultChecked={true} className={"w-5 h-5 accent-workday"}
+                           onChange={(e) => setCheckNotCreatedByCurrent(e.target.checked)}/>
+                </div>
             </div>
         </div>
         <div className={"flex justify-center"}>

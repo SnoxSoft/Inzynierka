@@ -46,10 +46,10 @@ const EmployeePickerListItem = ({employee, pickOneOrMore, pickedEmployeeData, se
                 className={"flex flex-row m-2 p-2 gap-2 hover:bg-dayoffmonth bg-brown-menu border-2 border-workday hover:cursor-default hover:bg-opacity-80 rounded-md hover:border-b-workday hover:border-2"}>
                 <div className={"grow-0 flex flex-row items-center justify-end gap-2"}>
                     {pickOneOrMore ?
-                        <input id={id + "-check"} type={"radio"} name={"shetty-group"} className={"w-5 h-5 hover:cursor-pointer"}
+                        <input id={id + "-check"} type={"radio"} name={"shetty-group"} className={"w-5 h-5 hover:cursor-pointer accent-workday"}
                                onChange={(e) => pickedEmployeesAction(e.target.checked, employee)}/>
                         :
-                        <input id={id + "-check"} type={"checkbox"} className={"w-5 h-5 hover:cursor-pointer"}
+                        <input id={id + "-check"} type={"checkbox"} className={"w-5 h-5 hover:cursor-pointer accent-workday"}
                                onChange={(e) => pickedEmployeesAction(e.target.checked, employee)}/>
                     }
                 </div>

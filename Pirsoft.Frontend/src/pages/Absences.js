@@ -151,12 +151,12 @@ function Absences(){
 
 
     // Ładowanie tych wartości z informacji pracownika
-    let onDemandDays = 5;
-    let leaveDays = 10;
+    let demandDays = 0;
+    let leaveDays = 0;
 
     if(employee !== null && employee !== undefined){
-        onDemandDays = employee.employee_company_role_id;
-        leaveDays = employee.employee_contract_type_id;
+        demandDays = employee.leave_demand_days;
+        leaveDays = employee.leave_base_days;
     }
 
     return(
@@ -167,7 +167,7 @@ function Absences(){
             <div className={"flex p-4 gap-4 text-center flex-col"}>
                 <div className={"grow grid grid-cols-1 grid-rows-1 place-items-end"}>
                     <div className={"col-start-1 row-start-1 place-self-center"}>
-                        {headerAbsencesEndOfDaysOff}: {leaveDays}, {headerAbsencesDaysNoPayLeft}: {onDemandDays}
+                        {headerAbsencesEndOfDaysOff}: {leaveDays}, {headerAbsencesDaysNoPayLeft}: {demandDays}
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <ReusableButton id={"request"} value={labelRequest} color={"bg-blue-menu"}
@@ -181,25 +181,25 @@ function Absences(){
                 </div>
                 <div className={"flex justify-center"}>
                     <div className={"gap-2 flex items-center justify-center"}>
-                        <div className={"flex flex-col"}>
+                        <div className={"flex flex-col place-items-center"}>
                             <label>{requestStatusWaitingLabel}</label>
                             <input
                                 id={"absences-waiting"}
-                                type="checkbox" defaultChecked={true}
+                                type="checkbox" defaultChecked={true} className={"w-5 h-5 accent-workday"}
                                onChange={(e) => setCheckWaiting(e.target.checked)}/>
                         </div>
-                        <div className={"flex flex-col"}>
+                        <div className={"flex flex-col place-items-center"}>
                             <label>{requestStatusApprovedLabel}</label>
                             <input
                                 id={"absences-approved"}
-                                type="checkbox" defaultChecked={true}
+                                type="checkbox" defaultChecked={true} className={"w-5 h-5 accent-workday"}
                                 onChange={(e) => setCheckApproved(e.target.checked)}/>
                         </div>
-                        <div className={"flex flex-col"}>
+                        <div className={"flex flex-col place-items-center"}>
                             <label>{requestStatusDisapprovedLabel}</label>
                             <input
                                 id={"absences-disapproved"}
-                                type="checkbox" defaultChecked={true}
+                                type="checkbox" defaultChecked={true} className={"w-5 h-5 accent-workday"}
                                 onChange={(e) => setCheckRefused(e.target.checked)}/>
                         </div>
                     </div>

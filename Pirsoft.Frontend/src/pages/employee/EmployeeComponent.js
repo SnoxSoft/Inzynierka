@@ -64,7 +64,7 @@ import {
     alertWrongTeam,
     alertWrongStartDate,
     alertWrongEmail,
-    alertWrongAddressEmail
+    alertWrongAddressEmail, labelLeaveDays, labelDemandDays, labelOverTenYears
 } from "../../GlobalAppConfig";
 import {endpointGetAllSkills} from "../../EndpointAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
@@ -82,6 +82,9 @@ import Legend from "../../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
 import grossSalary from "../../components/employee/fields/GrossSalary";
 import RequestWindow from "../RequestWindow";
+import LeaveDays from "../../components/employee/fields/LeaveDays";
+import DemandDays from "../../components/employee/fields/DemandDays";
+import OverTenYears from "../../components/employee/fields/OverTenYears";
 function EmployeeComponent({id, mode, employee, teams, contracts, positions, positionsLevels}){
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -128,6 +131,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     const[salary, setSalary] = useState(employee !== undefined && employee !== null ? employee.salary_gross : '');
     const[department, setDepartment] = useState(employee !== undefined && employee !== null ? employee.employee_department_id : '');
     const[contract, setContract] = useState(employee !== undefined && employee !== null ? employee.employee_contract_type_id : '');
+    const[leaveDays, setLeaveDays] = useState(employee !== undefined && employee !== null ? employee.leave_base_days : 0);
+    const[demandDays, setDemandDays] = useState(employee !== undefined && employee !== null ? employee.leave_demand_days : 0);
+    const[overTenYears, setOverTenYears] = useState(employee !== undefined && employee !== null ? employee.leave_is_seniority_threshold : false);
     const[position, setPosition] = useState(employee !== undefined && employee !== null ? employee.employee_company_role_id : '');
     const[positionLevel, setPositionLevel] = useState(employee !== undefined && employee !== null ? employee.employee_seniority_level_id : '');
     const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.employment_start_date.substring(0, 10) : '');
@@ -147,6 +153,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setSalary(employee.salary_gross);
             setDepartment(employee.employee_department_id);
             setContract(employee.employee_contract_type_id);
+            setLeaveDays(employee.leave_base_days)
+            setDemandDays(employee.leave_demand_days)
+            setOverTenYears(employee.leave_is_seniority_threshold)
             setPosition(employee.employee_company_role_id);
             setPositionLevel(employee.employee_seniority_level_id);
             setStart(employee.employment_start_date.substring(0, 10));
@@ -164,6 +173,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setSalary('');
             setDepartment('');
             setContract('');
+            setLeaveDays(0)
+            setDemandDays(0)
+            setOverTenYears(0)
             setPosition('');
             setPositionLevel('');
             setStart('');
@@ -186,6 +198,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setSalary(salary);
             setDepartment(department)
             setContract(contract);
+            setLeaveDays(leaveDays);
+            setDemandDays(demandDays);
+            setOverTenYears(overTenYears);
             setPosition(position);
             setPositionLevel(positionLevel);
             setStart(start);
@@ -253,14 +268,14 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </p>
             )
         }
-        if(pesel.toString().trim().length !== 11 || Number(pesel) === 0){
+        if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongPESEL}
                 </p>
             )
         }
-        if(salary.toString().trim().length === 0 || Number(salary) === 0){
+        if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongSalary}
@@ -321,6 +336,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             query.set("companyRole", position);
             query.set("seniorityLevel", positionLevel);
             query.set("employmentStartDate", start);
+            query.set("leaveBaseDays", leaveDays);
+            query.set("leaveDemandDays", demandDays);
+            query.set("leaveIsSeniorityThreshold", overTenYears);
 
             if(id === "-1") {
                 console.log("create")
@@ -344,8 +362,11 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 query.set("companyRole", position);
                 query.set("seniorityLevel", positionLevel);
                 query.set("employmentStartDate", start);
+                query.set("leaveBaseDays", leaveDays);
+                query.set("leaveDemandDays", demandDays);
+                query.set("leaveIsSeniorityThreshold", overTenYears);
 
-                let bodyEdit = JSON.stringify({
+                let bodyEdit = {employee:{
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
@@ -358,14 +379,24 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     contractType: contract,
                     companyRole: position,
                     seniorityLevel: positionLevel,
-                    employmentStartDate: start
+                    employmentStartDate: start,
+                    leaveBaseDays: leaveDays,
+                    leaveDemandDays: demandDays,
+                    leaveIsSeniorityThreshold: overTenYears
 
-                })
+                }}
 
 
                 let employee = {employee: bodyEdit}
                 fetchPutEditEmployee(query, employee, query)
-                    .then(r => console.log(r))
+                    .then(r => {
+                        if(r !== undefined){
+                            console.log(r)
+                            if(r.status){
+
+                            }
+                        }
+                    })
             }
         }
 
@@ -465,10 +496,29 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     </div>
 
                     {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
+                        <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelStartDate} </label>
                             <EmploymentStartDate id={"employee-start-date"} value={start} onChange={setStart} disableChange={disableData}/>
                         </div>
+                        <div className={"flex flex-row justify-between text-right gap-4"}>
+                            <div className={"basis-1/3"}> </div>
+                            <div className={"flex flex-row gap-4 w-full place-content-evenly"}>
+                                <div className={"flex flex-col place-items-center"}>
+                                    <label>{labelLeaveDays}</label>
+                                    <LeaveDays id={"employee_leave_days"} value={leaveDays} onChange={setLeaveDays} disableChange={disableData}/>
+                                </div>
+                                <div className={"flex flex-col place-items-center"}>
+                                    <label>{labelDemandDays}</label>
+                                    <DemandDays id={"employee-demand-days"} value={demandDays} onChange={setDemandDays} disableChange={disableData}/>
+                                </div>
+                                <div className={"flex flex-col place-items-center"}>
+                                    <label>{labelOverTenYears}</label>
+                                    <OverTenYears id={"employee-ten-years"} value={overTenYears} onChange={setOverTenYears} disableChange={disableData}/>
+                                </div>
+                            </div>
+                        </div>
+                        </>
                         : <></>}
                 </div>
 

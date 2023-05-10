@@ -281,7 +281,8 @@ const EmployeesFinder = ({
                             {methodToUse !== 'grade' ?
                                 <>
                                     <div className={"flex text-end"}>{labelEmployeeFinderExchanceEmployeesBetween}</div>
-                                    <input id={"finder-swap-members"} type={"checkbox"} className={"w-6 h-6"} disabled={!isSwapPossible} onChange={(e) => setSwapOption(e.target.checked)}/>
+                                    <input id={"finder-swap-members"} type={"checkbox"} className={"w-6 h-6 accent-workday"}
+                                           disabled={!isSwapPossible} onChange={(e) => setSwapOption(e.target.checked)}/>
                                 </> :
                                 <></>
                             }

@@ -150,6 +150,9 @@ const labelPosition = "Stanowisko";
 const labelPositionLevel = "Poziom stanowiska";
 const labelStartDate = "Rozpoczęcie pracy";
 
+const labelLeaveDays = "Dni urlopowe";
+const labelDemandDays = "Dni na żądanie";
+const labelOverTenYears = "Czy 10 lat pracy";
 
 // Oceny kwartalne
 const labelGivenGrades = "Wystawione oceny";
@@ -219,7 +222,6 @@ const alertWrongPositionLevel = "Wybierz prawidłowo pole " + labelPositionLevel
 const alertWrongTeam = "Wybierz prawidłowo pole " + labelTeam;
 const alertWrongStartDate = "Wybierz prawidłowo pole " + labelStartDate;
 
-
 export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
 
@@ -253,6 +255,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
     employeeGradeText, employeeGradedText,
     firstnameLabel, lastnameLabel, labelTeam,
+    labelLeaveDays, labelDemandDays, labelOverTenYears,
     requestStatusWaitingLabel,
     requestStatusApprovedLabel,
     requestStatusDisapprovedLabel,
