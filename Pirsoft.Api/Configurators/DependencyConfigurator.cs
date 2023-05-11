@@ -1,4 +1,5 @@
 ﻿using Pirsoft.Api.DatabaseManagement;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.PatternsAbstraction;
 using Pirsoft.Api.Validators;
 
@@ -20,6 +21,7 @@ namespace Pirsoft.Api.Configurators
         private void configureDatabaseManagement()
         {
             _services.AddTransient<ICrudHandler, CrudHandler>();
+            _services.AddTransient<IEmployeeCrudHandler, EmployeeCrudHandler>();
             _services.AddSingleton<IDatabaseModelBuilder, DatabaseModelBuilder>();
         }
 

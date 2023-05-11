@@ -9,7 +9,7 @@ const YearQuarters = ({id, onChange, value, createMode = false,
             quartets.push(
                 <div key={"Q" + (i + 1)} className={"flex flex-col"}>
                     {"Q" + (i + 1)}
-                    <input id={id + "-Q" + (i + 1)} type={"radio"} checked={true} name={"quartet-group"}/>
+                    <input id={id + "-Q" + (i + 1)} type={"radio"} checked={true} name={"quartet-group"} className={"accent-brown-menu"}/>
                 </div>
             )
         }
@@ -18,7 +18,7 @@ const YearQuarters = ({id, onChange, value, createMode = false,
                 quartets.push(
                     <div key={"Q" + (i + 1)} className={"flex flex-col"}>
                         {"Q" + (i + 1)}
-                        <input id={id + "-Q" + (i + 1)} type={"radio"} name={"quartet-group"} value={"Q" + (i + 1)}
+                        <input id={id + "-Q" + (i + 1)} type={"radio"} name={"quartet-group"} value={"Q" + (i + 1)} className={"accent-brown-menu"}
                                onClick={(e) => onChange(e.target.value)}/>
                     </div>
                 )

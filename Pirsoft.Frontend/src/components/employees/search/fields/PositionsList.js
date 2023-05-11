@@ -1,53 +1,31 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Select from 'react-select'
-import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
-import {positionAdditionalRow, serverIpProd} from "../../../../GlobalAppConfig";
-import {endpointGetAllPositions} from "../../../../EndpointAppConfig";
+import {positionAdditionalRow} from "../../../../GlobalAppConfig";
 
-const PositionsList = ({value, onChange, id, disableChange = false, formatting = "w-96", placement = "top"}) => {
+const PositionsList = ({value = undefined, onChange, id, disableChange = false, positions,
+                           formatting = "w-96", placement = "top"}) => {
 
-    const [positions, setPositions] = useState();
     let defaultValue = { role_id: 0, role_name: positionAdditionalRow };
 
-    if (positions === undefined) {
-        fetch(serverIpProd + "/" + endpointGetAllPositions,
-            {
-                method: "GET"
-            })
-            .then((response) => response.json())//response.json())
-            .then((response) => {
-                response.push({role_id: 0, role_name: positionAdditionalRow})
-                response.sort(FunctionForSortingJson("role_id", "ascending"))
-                setPositions(response)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
+    if(value !== undefined){
+        positions.map(position => {
+            if(position.role_id.toString().trim() === value.toString().trim()){
+                defaultValue = { role_id: position.role_id, role_name: position.role_name };
+            }
+        });
     }
 
-    // Zostawiam komentarz
-    // if(positions[0] !== undefined){
-    //     positions.map(position => {
-    //         if(position.role_id.toString().trim() === value.toString().trim()){
-    //             console.log(position.role_id + ", " + value + ",  ")
-    //             console.log(position.role_id.toString().trim() === value.toString().trim())
-    //             console.log(defaultValue)
-    //             defaultValue = { role_id: position.role_id, role_name: position.role_name };
-    //             console.log(defaultValue)
-    //         }
-    //     });
-    // }
-
     return <>
-            {positions && <Select id={id} className={"text-black " + formatting}
+            {positions && <Select id={id} className={"text-black " + formatting + " active:border-absent "}
                                 defaultValue={defaultValue}
+                                value={defaultValue}
                                 getOptionLabel={option =>
                                     `${option.role_name}`
                                 }
                                 menuPlacement={placement}
                                 getOptionValue={option => `${option.role_id}`}
                                 options={positions}
-                                onChange={(e) => onChange(e.value)}
+                                onChange={(e) => onChange(e.role_id)}
                                 isDisabled={disableChange}/>
             }
         </>

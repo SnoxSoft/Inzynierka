@@ -3,102 +3,111 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
-import TeamRow from "../components/companySchedule/TeamRow";
-import FunctionForSortingJson from "../components/base/FunctionForSortingJson";
 import {legendLabel, legendToday, months, pageNameCompanySchedule, serverIp, weekdays} from "../GlobalAppConfig";
-import {endpointGetAllCompanyMonthDaysOff, endpointGetAllEmployees, endpointGetAllTeams} from "../EndpointAppConfig";
 import {Popup} from "semantic-ui-react";
 import Legend from "../components/legend/Legend";
+import {
+    fetchGetAllEmployees,
+    fetchGetAllTeamsAndAddZeroRecordAndSort, fetchGetAllEmployeesBetweenDatesDaysOff
+} from "../DataFetcher";
+import {useNavigate} from "react-router-dom";
+import TeamRow from "../components/teams/TeamRow";
 
 function CompanySchedule(){
     document.title = pageNameCompanySchedule;
 
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
-    const[wantedWidthForList, setWantedWidthForList] = useState(1000);
+    const navigate = useNavigate();
 
-    //wszystkie zespoly ktore potrzebuje
-    const [teams, setTeams] = useState(Object);
-    const [teamsLoaded, setTeamsLoaded] = useState(false)
-
-    const [allTeams, setAllTeams] = useState([])
-
-    // ładowanie raz zespołów po załądowaniu okna a nie na bieżąco
-    if (teams[0] === undefined) {
-        fetch(serverIp + "/" + endpointGetAllTeams)
-            .then((response) => response.json())
-            .then((response) => {
-                response.sort(FunctionForSortingJson("department_id", "ascending"))
-                setTeams(response)
-                setTeamsLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
+    const optionsForFormatDate = {
+        year: "numeric",
+        month: "2-digit",
     }
 
-    const [currentMonthDaysOff, setCurrentMonthDaysOff] = useState(Object);
-    const [monthDaysOffLoaded, setMonthDaysOffLoaded] = useState(false)
-    const loadMonthDaysOff = (data) => {
-        // ładowanie dni wolnych / wybranych / nieobecnych w wybranym miesiacu
-
-        fetch(serverIp + "/" + endpointGetAllCompanyMonthDaysOff + "/2022-02")
-            .then((response) => response.json())
-            .then((response) => {
-                setCurrentMonthDaysOff(response)
-                setMonthDaysOffLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
+    const optionsForEndpoint = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
     }
 
-    const [employees, setEmployees] = useState(Object);
-    const [employeesLoaded, setEmployeesLoaded] = useState(false)
-
-    // ładowanie wszystkich pracowników
-    if (employees[0] === undefined) {
-        fetch(serverIp + "/" + endpointGetAllEmployees)
-            .then((response) => response.json())
-            .then((response) => {
-                response.sort(FunctionForSortingJson("last_name", "ascending"))
-                setEmployees(response)
-                setEmployeesLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
-
+    // Zmienna pozwalająca wyświetlić cały komponent kalendarza
     const [allTeamsAreLoadedInDivs, setAllTeamsAreLoadedInDivs] = useState(false)
 
-    const [pickedMonthText, setPickedMonth] = useState('')
+    //wszystkie zespoly ktore potrzebuje
+    const [teams, setTeams] = useState(null);
+    const [employees, setEmployees] = useState(null);
 
-    const [daysOfWeek, setDaysOfWeek] = useState([])
-    const [calendarDays, setCalendarDays] = useState([])
+    useEffect(() => {
+        // Załadowanie wszystkich zespołów
+        if(teams === null) {
+            fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, false)
+                .then(teams => {
+                    setTeams(teams)
+                });
+        }
+
+        // Pobranie listy wszystkich pracowników
+        if (employees === null) {
+            fetchGetAllEmployees(navigate, true)
+                .then(employees => setEmployees(employees));
+        }
+
+        if(allTeamsAreLoadedInDivs === false && teams !== null && employees !== null){
+            const firstDayOfCurrentMonth = new Date()
+            firstDayOfCurrentMonth.setDate(1)
+            const lastDayOfCurrentMonth = new Date()
+            lastDayOfCurrentMonth.setMonth(firstDayOfCurrentMonth.getMonth() + 1)
+            lastDayOfCurrentMonth.setDate(0)
+
+            fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
+                firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint),
+                lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint))
+                .then(companyMonthDaysOff => {
+                    createDataForCalendar(new Date(), companyMonthDaysOff)
+                })
+        }
+
+    });
+
+    function createDataForCalendar(date, companyMonthDaysOff){
+        let preparedMonthDaysOff = []
+
+        // Tutaj tworzę jsona do pokazania dni wolnych na kalendarzu firmowym
+        if(companyMonthDaysOff !== undefined && companyMonthDaysOff !== null) {
+            companyMonthDaysOff.map((companyMonthDays) => {
+                if(companyMonthDays.absence_status_id === 3){
+                    let absenceDateStart = new Date(companyMonthDays.absence_start_date)
+                    let absenceDateEnd = new Date(companyMonthDays.absence_end_date)
+                    let dayDifference = absenceDateEnd.getDate() - absenceDateStart.getDate()
+
+                    let daysForCurrentEmployee = []
+                    for(let day = 0; day <= dayDifference; day++){
+                        daysForCurrentEmployee.push(absenceDateStart.toLocaleDateString("sv", optionsForEndpoint))
+                        absenceDateStart.setDate(absenceDateStart.getDate() + 1)
+                    }
+                    preparedMonthDaysOff.push({
+                        employee: companyMonthDays.employee_owner_id,
+                        daysoff: daysForCurrentEmployee
+                    })
+                }
+            })
+        }
+        loadWholeMonthDataForCompany(date, preparedMonthDaysOff)
+    }
+
+    // Zmienna wyświetlająca o wybranym miesiacu i roku
+    const [pickedMonthText, setPickedMonth] = useState('')
 
     const loadWholeMonthData = (pickedMonth) => {
         setPickedMonth(pickedMonth)
 
         const pickedMonthCurrently = parseInt(pickedMonth.date.substring(5,7))-1
         const pickedYearCurrently = parseInt(pickedMonth.date.substring(0,4))
-        const pickedMonthDate = new Date(pickedYearCurrently, pickedMonthCurrently,1)
 
         let currentMonthDays = [];
-        let daysOfWeekLoad = []
-
-        weekdays.forEach((weekday) => {
-            daysOfWeekLoad.push(
-                <div className={"m-2 flex self-end place-self-center text-workday"}>
-                    {weekday.toString()}
-                </div>);
-        });
-        setDaysOfWeek(daysOfWeekLoad)
-
         currentMonthDays = createDaysForCurrentMonth(
             pickedYearCurrently,
             pickedMonthCurrently
         );
-
         const days = [...currentMonthDays];
 
         return days
@@ -114,14 +123,11 @@ function CompanySchedule(){
         }
     }
 
-    const loadWholeMonthDataForCompany = (today) => {
-        setAllTeamsAreLoadedInDivs(false)
-        setMonthDaysOffLoaded(false)
+    // Zmianna, która zawiera komponenty z zespołami, pracownikami, dniami
+    const [allTeams, setAllTeams] = useState([])
 
-        const optionsForFormatDate = {
-            year: "numeric",
-            month: "2-digit",
-        }
+    const loadWholeMonthDataForCompany = (today, currentMonthDaysOff) => {
+        setAllTeamsAreLoadedInDivs(false)
 
         const days = loadWholeMonthData({
             text: months[today.getMonth()]+" "
@@ -133,7 +139,7 @@ function CompanySchedule(){
         // Naglowek miesiaca dwa puste pola
         allTeamsLoad.push(
             <div id={"empty-team-header"} key={"empty-team-header"}
-                className={"row-start-1 col-start-1"}>
+                className={"row-start-1 col-start-1 w-48"}>
             </div>)
         allTeamsLoad.push(
             <div id={"empty-employee-header"} key={"empty-employee-header"}
@@ -155,29 +161,22 @@ function CompanySchedule(){
             colDayOfWeek = colDayOfWeek + 1
         });
 
-        console.clear()
+        //console.clear()
 
         let row = 1
         teams.forEach((team, id) => {
-            console.log("ładuje na nowo")
             // dodanie zespołów
             row = row + 1
             allTeamsLoad.push(
                 <TeamRow id={"company-schedule-team-"+id} team={team} row={row} days={days}
-                    employees={employees} currentMonthDaysOff={currentMonthDaysOff}/>)
+                    employees={employees} currentMonthDaysOff={currentMonthDaysOff}
+                isSchedule={true}/>)
 
         });
 
         // ustawianie calego kalendarza i pokazanie go
         setAllTeams(allTeamsLoad)
         setAllTeamsAreLoadedInDivs(true)
-    }
-
-    if(teamsLoaded && employeesLoaded && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
-        loadMonthDaysOff(new Date())
-        if(monthDaysOffLoaded) {
-            loadWholeMonthDataForCompany(new Date())
-        }
     }
 
     function createDaysForCurrentMonth(year, month) {
@@ -199,29 +198,47 @@ function CompanySchedule(){
         const pickedMonthTextDate = new Date(pickedMonthText.date)
 
         if(mode === 'previous'){
-            const pickedMonthTextDateMinusOne = new Date(
+            const firstDayOfPreviousMonth = new Date(
+                pickedMonthTextDate.getFullYear(),
+                pickedMonthTextDate.getMonth(),
+                0)
+            firstDayOfPreviousMonth.setDate(1)
+            const lastDayOfPreviousMonth = new Date(
                 pickedMonthTextDate.getFullYear(),
                 pickedMonthTextDate.getMonth(),
                 0)
 
-            loadMonthDaysOff(pickedMonthTextDateMinusOne)
-            if(monthDaysOffLoaded) {
-                loadWholeMonthDataForCompany(pickedMonthTextDateMinusOne)
-            }
+            fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
+                firstDayOfPreviousMonth.toLocaleDateString("sv", optionsForEndpoint),
+                lastDayOfPreviousMonth.toLocaleDateString("sv", optionsForEndpoint))
+                .then(companyMonthDaysOff => {
+                    createDataForCalendar(firstDayOfPreviousMonth, companyMonthDaysOff)
+                })
         }
 
         if(mode === 'next'){
-            const pickedMonthTextDatePlusOne = new Date(
+            const firstDayOfNextMonth = new Date(
                 pickedMonthTextDate.getFullYear(),
                 pickedMonthTextDate.getMonth()+1,
                 1)
+            firstDayOfNextMonth.setDate(1)
+            const lastDayOfNextMonth = new Date(
+                pickedMonthTextDate.getFullYear(),
+                pickedMonthTextDate.getMonth()+1,
+                1)
+            lastDayOfNextMonth.setMonth(firstDayOfNextMonth.getMonth() + 1)
+            lastDayOfNextMonth.setDate(0)
 
-            loadMonthDaysOff(pickedMonthTextDatePlusOne)
-            if(monthDaysOffLoaded) {
-                loadWholeMonthDataForCompany(pickedMonthTextDatePlusOne)
-            }
+            fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
+                firstDayOfNextMonth.toLocaleDateString("sv", optionsForEndpoint),
+                lastDayOfNextMonth.toLocaleDateString("sv", optionsForEndpoint))
+                .then(companyMonthDaysOff => {
+                    createDataForCalendar(firstDayOfNextMonth, companyMonthDaysOff)
+                })
         }
     }
+
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
     useEffect(() => {
         FunctionForResize("schedule-company-list", {setWantedHeightForList});
@@ -229,14 +246,26 @@ function CompanySchedule(){
 
     return(
         <>
-        {teamsLoaded && allTeamsAreLoadedInDivs ?
+        {allTeamsAreLoadedInDivs && employees !== undefined && employees !== null ?
             <>
                 <div id={"company-schedule-parent"} className={"every-page-on-scroll overflow-y-hidden hover:cursor-default"}
                      style={{minWidth: 800}}>
                     <div className={"p-4 flex flex-row text-workday justify-between gap-4"}>
                         <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                             <div>
-                                <ReusableButton id={"company-schedule-today"} value={legendToday} onClick={() => loadWholeMonthDataForCompany(new Date())}/>
+                                <ReusableButton id={"company-schedule-today"} value={legendToday} onClick={() =>
+                                {
+                                    const firstDayOfCurrentMonth = new Date()
+                                    firstDayOfCurrentMonth.setDate(1)
+                                    const lastDayOfCurrentMonth = new Date()
+                                    lastDayOfCurrentMonth.setMonth(firstDayOfCurrentMonth.getMonth() + 1)
+                                    lastDayOfCurrentMonth.setDate(0)
+                                    fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
+                                        firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint),
+                                        lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint))
+                                    .then(companyMonthDaysOff => {
+                                        createDataForCalendar(new Date(), companyMonthDaysOff)
+                                    })}}/>
                             </div>
                         </div>
                         <div className={"col-start-1 row-start-1 place-self-center"}>
@@ -259,7 +288,7 @@ function CompanySchedule(){
                             <div>
                                 <Popup
                                     content={<Legend id={"company-schedule-legend-window"}/>}
-                                    position={"bottom left"}
+                                    position={"left center"}
                                     trigger={<ReusableButton
                                         id={"company-schedule-legend"}
                                         value={legendLabel}/>}
@@ -271,8 +300,6 @@ function CompanySchedule(){
                     <div id={"schedule-company-list"}
                          style={{
                              height: wantedHeightsForList,
-                             // maxWidth: wantedWidthForList,
-                             // width: wantedWidthForList,
                              minWidth: 800}}
                          className={"rounded-md overflow-y-auto bg-green-menu overflow-x-auto grid grid-row-"+(employees.length + teams.length + 1)+" gap-y-4 content-start"}>
                         {allTeams}

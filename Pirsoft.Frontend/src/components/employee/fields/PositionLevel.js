@@ -1,39 +1,30 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Select from 'react-select'
-import FunctionForSortingJson from "../../base/FunctionForSortingJson";
-import {positionLevelAdditionalRow, serverIpProd} from "../../../GlobalAppConfig";
-import {endpointGetAllPositionsLevels} from "../../../EndpointAppConfig";
+import {positionLevelAdditionalRow} from "../../../GlobalAppConfig";
 
-const PositionLevel = ({value, onChange, id, disableChange = false}) => {
+const PositionLevel = ({value = undefined, onChange, id, disableChange = false, positionLevels}) => {
 
-    const [positionLevels, setPositionLevels] = useState();
+    let defaultValue = { seniority_level_id: 0, seniority_level_name: positionLevelAdditionalRow };
 
-    if (positionLevels === undefined) {
-        fetch(serverIpProd + "/" + endpointGetAllPositionsLevels,
-            {
-                method: "GET"
-            })
-            .then((response) => response.json())
-            .then((response) => {
-                response.push({ seniority_level_id: 0, seniority_level_name: positionLevelAdditionalRow })
-                response.sort(FunctionForSortingJson("seniority_level_id", "ascending"))
-                setPositionLevels(response)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
+    if(value !== undefined){
+        positionLevels.map(positionLevel => {
+            if(positionLevel.seniority_level_id.toString().trim() === value.toString().trim()){
+                defaultValue = { seniority_level_id: positionLevel.seniority_level_id, seniority_level_name: positionLevel.seniority_level_name };
+            }
+        });
     }
 
     return <Select id={id}
         className={"text-black rounded-full text-left grow"}
-                   defaultValue={{ seniority_level_id: 0, seniority_level_name: positionLevelAdditionalRow }}
+                   defaultValue={defaultValue}
+                   value={defaultValue}
                    options={positionLevels}
                    getOptionLabel={option =>
                        `${option.seniority_level_name}`
                    }
                    menuPlacement="top"
                    getOptionValue={option => `${option.seniority_level_id}`}
-                   onChange={(e) => onChange(e.value)}
+                   onChange={(e) => onChange(e.seniority_level_id)}
                    isDisabled={disableChange}/>
 }
 export default PositionLevel;

@@ -9,32 +9,19 @@ const EmployeeRow = ({employee, row, id}) => {
 
     const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<VscTriangleRight/>);
 
-    function changeVisibilityForPassword() {
-        if (changeVisibilityIcon.type === VscTriangleDown) {
-            setChangeVisibilityIcon(<VscTriangleRight />);
-            //setEmployeesVisible(false)
-        } else {
-            setChangeVisibilityIcon(<VscTriangleDown />);
-            //setEmployeesVisible(true)
-        }
-    }
-
     const[optionsEditVisible,setOptionsEditVisible] = useState(false)
 
-    return <div id={id} key={id + "-key"}
-                className={"hover:cursor-default w-44 row-start-"+row+" col-start-1 text-workday flex flex-row place-content-end gap-1"}
-                onMouseOver={() => setOptionsEditVisible(true)} onMouseLeave={() => setOptionsEditVisible(false)}>
-        <div>
-            {employee.first_name + ' ' + employee.last_name}
-        </div>
-        {optionsEditVisible ?
-                <ReusableButton id={id + "-open-employee"} value={<MdOpenInNew/>}
-                                formatting={""} color={""}
-                                link={"/employee/"+employee.employee_id}/>
-                : <></>
-        }
-    </div>
+    return <ReusableButton id={id} key={id + "-key"}
+                // className={"hover:cursor-default w-44 row-start-"+row+" col-start-1 text-workday hover:cursor-pointer flex flex-row place-content-end gap-1"}
+                    value={
+                            <div className={"text-right"}>
+                            {employee.first_name + ' ' + employee.last_name}
+                            </div>
+                        }
 
+                    formatting={" w-44 row-start-"+row+" col-start-1 text-workday hover:cursor-pointer flex flex-row place-content-end gap-1 "} color={""}
+                    hover={""}
+                    link={"/employee/"+employee.employee_id}/>
 }
 
 export default EmployeeRow;

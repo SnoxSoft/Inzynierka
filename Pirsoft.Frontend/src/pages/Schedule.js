@@ -11,32 +11,47 @@ import {
     labelFilter,
     legendLabel, months,
     monthsOfYourWorkLabel, pageNameSchedule,
-    serverIp, weekdays
+    weekdays
 } from "../GlobalAppConfig";
-import {endpointGetEmployeeMonthDaysOff} from "../EndpointAppConfig";
 import Legend from "../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
+import {useNavigate} from "react-router-dom";
+import {fetchGetAbsencesTypes, fetchGetOneEmployeeBetweenDatesDaysOff} from "../DataFetcher";
 
 function Schedule(){
     document.title = pageNameSchedule;
 
-    // Ładowanie dni wolnych / wybranych / nieobecnych
-    let daysOff = [Object]
-    fetch(serverIp + "/" + endpointGetEmployeeMonthDaysOff + "/" + sessionStorage.getItem('USER') + "/" + "2023-02")
-        .then((response) => {response.json()
-            .then((response) => {
-                daysOff = response
-            });
-        })
-        .catch((err) => {
-            console.log(err.message);
-        })
+    //getLocalStorageKeyWithExpiry("loggedEmployee").userId
 
-    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+    const navigate = useNavigate();
+
+    // Ładowanie listy do wybrania miesiąca
+    const [monthList, setMonthList] = useState([])
+    const [absencesTypes, setAbsencesTypes] = useState(null)
+
+    useEffect(() => {
+        if(monthList.length === 0) {
+            filtrSchedule()
+                .then(scheduleList => setMonthList(scheduleList))
+        }
+
+        // Załadowanie typów nieobecności
+        if(absencesTypes === null) {
+            setAbsencesTypes(null)
+            fetchGetAbsencesTypes(navigate)
+                .then(absencesTypes => setAbsencesTypes(absencesTypes));
+        }
+    })
 
     const options = {
         year: "numeric",
         month: "2-digit",
+    }
+
+    const optionsForEndpoint = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
     }
 
     const dateToday = new Date().toLocaleDateString("sv", options)
@@ -52,14 +67,7 @@ function Schedule(){
         dateTodayMinusThreeMonthsFormatted);
     const [to, setTo] = useState(dateToday);
 
-    const [monthList, setMonthList] = useState([])
-
-    useEffect(() => {
-        FunctionForResize("schedule-month-list", {setWantedHeightForList});
-
-    }, []);
-
-    const filtrSchedule = () => {
+    async function filtrSchedule(){
         const dateFrom = new Date(from);
         const dateTo = new Date(to);
 
@@ -78,19 +86,21 @@ function Schedule(){
                     date: newDate.toLocaleDateString("sv", options)
                 });
         }
-        setMonthList(localList)
+        return localList
     }
 
+    // Pokazanie miesiąca abo listy miesięcy
     const[showHidePickedMonth, setShowHidePickedMonth] = useState(false);
 
     const [daysOfWeek, setDaysOfWeek] = useState([])
     const [calendarDays, setCalendarDays] = useState([])
 
-
+    // Tekst wyświetlany jaki miesiąc ostał wybrany
     const [pickedMonthText, setPickedMonth] = useState('')
 
     const loadWholeMonthData = (pickedMonth) => {
         setPickedMonth(pickedMonth)
+        setCalendarDays([])
 
         const pickedMonthCurrently = parseInt(pickedMonth.date.substring(5,7))-1
         const pickedYearCurrently = parseInt(pickedMonth.date.substring(0,4))
@@ -113,28 +123,64 @@ function Schedule(){
         const firstDayOfCurrentMonth = new Date(pickedYearCurrently, pickedMonthCurrently, 1)
         const lastDayOfCurrentMonth = new Date(pickedYearCurrently, pickedMonthCurrently+1, 0)
 
-        currentMonthDays = createDaysForCurrentMonth(
-            pickedYearCurrently,
-            pickedMonthCurrently,
-            daysOff
-        );
+        const firstDayOfMonthForEndpoint = firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint)
+        const lastDayOfMonthForEndpoint = lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint)
 
-        previousMonthDays = createDaysForPreviousMonth(firstDayOfCurrentMonth);
+        // Ładowanie dni wolnych po załadowaniu okna a nie na bieżąco
+        fetchGetOneEmployeeBetweenDatesDaysOff(navigate, sessionStorage.getItem('USER'), firstDayOfMonthForEndpoint, lastDayOfMonthForEndpoint)
+            .then(monthDaysOff => {
 
-        nextMonthDays = createDaysForNextMonth(lastDayOfCurrentMonth);
+                let monthDaysOfff = []
+                // Tutaj tworzę jsona do pokazania dni wolnych na kalendarzu
+                if(monthDaysOff !== undefined && monthDaysOff !== null) {
+                    monthDaysOff.map((days) => {
+                        if(days.absence_status_id === 3){
+                            let absenceTypeForDay = "absent"
+                            let absenceNameForDay = ""
 
-        const days = [...previousMonthDays, ...currentMonthDays, ...nextMonthDays];
+                            absencesTypes.map((absenceType) => {
+                                if(absenceType.absence_type_id === days.absence_type_id){
+                                    absenceTypeForDay = absenceType.absence_type_category;
+                                    absenceNameForDay = absenceType.absence_type_name;
+                                }
+                            })
+                            let absenceDateStart = new Date(days.absence_start_date)
+                            let absenceDateEnd = new Date(days.absence_end_date)
+                            let dayDifference = absenceDateEnd.getDate() - absenceDateStart.getDate()
 
-        let calendarDaysLoad = []
+                            for(let day = 0; day <= dayDifference; day++){
+                               let dayData =  {
+                                    date: absenceDateStart.toLocaleDateString("sv", optionsForEndpoint),
+                                    reason: absenceTypeForDay,
+                                    name: absenceNameForDay
+                                }
+                                monthDaysOfff.push(dayData)
+                                absenceDateStart.setDate(absenceDateStart.getDate() + 1)
+                            }
+                        }
+                    })
+                }
 
-        days.forEach((day) => {
-            calendarDaysLoad.push(appendDay(day));
-        });
+                currentMonthDays = createDaysForCurrentMonth(
+                    pickedYearCurrently,
+                    pickedMonthCurrently,
+                    monthDaysOfff
+                );
 
-        setCalendarDays(calendarDaysLoad)
-        setShowHidePickedMonth(true)
+                previousMonthDays = createDaysForPreviousMonth(firstDayOfCurrentMonth);
+                nextMonthDays = createDaysForNextMonth(lastDayOfCurrentMonth);
+
+                const days = [...previousMonthDays, ...currentMonthDays, ...nextMonthDays];
+
+                let calendarDaysLoad = []
+                days.forEach((day) => {
+                    calendarDaysLoad.push(appendDay(day));
+                });
+                setCalendarDays(calendarDaysLoad)
+            }).then(r => setShowHidePickedMonth(true));
     }
 
+    //funkcja edytująca wybrane pola na podstawie danej nieobecności
     function appendDay(day) {
         let color = 'bg-dayoffmonth'
 
@@ -149,7 +195,7 @@ function Schedule(){
             if(day.reason === 'absent'){
                 color = 'bg-absent'
             }
-            if(day.reason === 'dayoff'){
+            if(day.reason === 'dayoff' || day.reason === 'demand'){
                 color = 'bg-dayoff'
             }
             if(day.reason === 'sick'){
@@ -162,8 +208,9 @@ function Schedule(){
             border = 'outline-dashed outline-4'
         }
 
-        return <div className={'flex flex-row justify-evenly border-workday border-2 hover:cursor-default '+color+' m-2 rounded-md text-black '+border+' '}>
-            {day.dayOfMonth}
+        return <div className={'flex flex-col h-20 border-workday border-2 hover:cursor-default '+color+' m-2 rounded-md text-black '+border+' '}>
+            <div className={"bg-dayoffmonth bg-opacity-50 text-center self-stretch"}>{day.dayOfMonth}</div>
+            <div className={"text-center text-xs"}>{day.name} </div>
         </div>
     }
 
@@ -179,15 +226,15 @@ function Schedule(){
             }
             else {today = false}
             let reason = 'noReason'
+            let name = ''
             for(let i = 0; i < daysOff.length; i++){
                 const offDayFound = new Date(daysOff[i].date)
                 if(year === offDayFound.getFullYear() &&
                     month === offDayFound.getMonth() &&
                     index + 1 === offDayFound.getDate()){
                     reason = daysOff[i].reason
-                    //console.log(daysOff[i])
+                    name = daysOff[i].name
                 }
-
             }
             return {
                 date: dayjs(`${year}-${month+1}-${index + 1}`).format("YYYY-MM-DD"),
@@ -195,6 +242,7 @@ function Schedule(){
                 isCurrentMonth: true,
                 today: today,
                 weekend: dateCurrentlyChecked.getDay() === 6 || dateCurrentlyChecked.getDay() === 0 ? true : false,
+                name: name,
                 reason: reason
             };
         });
@@ -354,10 +402,15 @@ function Schedule(){
         }
     }
 
+    const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+
     useEffect(() => {
         FunctionForResize("schedule-month-list", {setWantedHeightForList});
+    }, [pickedMonthText, calendarDays]);
 
-    }, [pickedMonthText]);
+    useEffect(() => {
+        FunctionForResize("schedule-month-list", {setWantedHeightForList});
+    }, []);
 
     return(
         <>
@@ -395,7 +448,7 @@ function Schedule(){
                         <div>
                             <Popup
                                 content={<Legend id={"schedule-legend-window"} bigLegend={true}/>}
-                                position={"bottom left"}
+                                position={"left center"}
                                 trigger={<ReusableButton id={"schedule-legend"}
                                     value={legendLabel}/>}
                             />
@@ -463,7 +516,8 @@ function Schedule(){
                         <div className={"grow"}>
                             <ReusableButton value={labelFilter}
                                             id={"schedule-filter-button"}
-                                            onClick={() => filtrSchedule()}/></div>
+                                            onClick={() =>
+                                                filtrSchedule().then(scheduleList => setMonthList(scheduleList))}/></div>
                     </div>
                 </div>
                 <hr/>

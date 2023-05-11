@@ -8,7 +8,7 @@ const Notifications = (props) => {
 
     const [employeeNotifications, setEmployeeNotifications] = useState(Array);
     const fetchingEmployeeNotifications = () => {
-        fetch(serverIp + "/" + endpointGetNotifications + "/" + sessionStorage.getItem("USER"))
+        fetch(serverIp + "/getNotifications/" + sessionStorage.getItem("USER"))
             .then((response) => {response.json()
                 .then((response) => {
                     setEmployeeNotifications(response)

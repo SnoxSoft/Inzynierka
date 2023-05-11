@@ -9,10 +9,10 @@ const TeamAndEmployees = ({row, team, employees, id}) => {
     let createTeamsComponent = []
 
     createTeamsComponent.push(<TeamRow id={id} team={team} row={row}
-           setEmployeesVisible={setEmployeesVisible}/>)
+           setEmployeesVisible={setEmployeesVisible} editOptions={true}/>)
 
     employees.forEach((employee, employeeId) => {
-        if(employee.employee_department_id === (team.department_id+'')){
+        if(employee.employee_department_id === team.department_id){
             row = row + 1
             createTeamsComponent.push(
                 employeesVisible ?

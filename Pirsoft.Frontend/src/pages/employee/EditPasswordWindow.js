@@ -1,7 +1,7 @@
 import {
     alertNewPasswordsAreIncompatible,
-    alertOldPasswordIsIncompatible, alertOldPasswordIsMissing,
-    alertPutNewPasswords,
+    alertOldPasswordIsMissing, alertPasswordChanged,
+    alertPutNewPasswords, alertUnexpectedError,
     headerPasswordChange, labelApprove, labelClose,
     labelGiveNewPassword,
     labelGiveNewPasswordAgain,
@@ -10,26 +10,25 @@ import {
 import LoggingPassword from "../../components/logging/LoggingPassword";
 import ReusableButton from "../../components/base/ReusableButton";
 import React, {useState} from "react";
-import {endpointEmployeeChangePassword, endpointGetAllSkills} from "../../EndpointAppConfig";
+import {fetchPutEditOldPasswordInProfile} from "../../DataFetcher";
+import {useNavigate} from "react-router-dom";
 
 function EditPasswordWindow({setShowPasswordChangeFrame,
-                                setEmployeeDataShow}) {
+                                setEmployeeDataShow, employee}) {
     document.title = pagePasswordEdit;
+
+    const navigate = useNavigate();
 
     // Poniżej znajdą się wszystkie dane i funkcje dla okienka zmiany hasła w danych pracownika
     const [oldPassword, setOldPassword] = useState();
     const [newPassword, setNewPassword] = useState();
     const [newRepeatPassword, setNewRepeatPassword] = useState();
 
-    const [wrongOldPassword, setWrongOldPassword] = useState(false)
+    const [passwordChangedSuccesfully, setPasswordChangedSuccesfully] = useState(false)
+    const [problemOccured, setProblemOccured] = useState(false)
     const [missingOldPassword, setMissingOldPassword] = useState(false)
     const [wrongNewPassword, setWrongNewPassword] = useState(false)
     const [notTheSame, setNotTheSame] = useState(false)
-
-    async function changingPassword(){
-        const response = await fetch(serverIp + "/" + endpointEmployeeChangePassword, {method:"PUT"})
-        const responseJSON = await response.json();
-    }
 
     const changePassword = () => {
         if(oldPassword !== undefined && oldPassword.toString().length > 0) {
@@ -39,14 +38,30 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                 // Tutaj pomyslimy jakie wartosci sprawdzic
                 if (newPassword.toString() === newRepeatPassword.toString()) {
 
-                    changingPassword().then((r) => {
-                        setOldPassword('')
-                        setNewPassword('')
-                        setNewRepeatPassword('')
+                    fetchPutEditOldPasswordInProfile(navigate,
+                        employee.employee_id, oldPassword, newPassword, newRepeatPassword)
+                        .then((response) => {
+                        if(response.status === 200){
+                            setPasswordChangedSuccesfully(true);
+                            setTimeout(() => {
+                                setPasswordChangedSuccesfully(false)
+                                setOldPassword('')
+                                setNewPassword('')
+                                setNewRepeatPassword('')
 
-                        setEmployeeDataShow(true);
-                        setShowPasswordChangeFrame(false)
+                                setEmployeeDataShow(true);
+                                setShowPasswordChangeFrame(false)
+                            }, 3000);
+                        }
+                        else{
+                            setProblemOccured(true);
+                            setTimeout(() => {setProblemOccured(false)}, 3000);
+                        }
                     })
+                        .catch((err) => {
+                            console.log(err.message);
+
+                        })
                 } else {
                     setNotTheSame(true);
                     setTimeout(() => {
@@ -122,22 +137,26 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
 
                 </div>
                 <div className={"flex flex-col items-center text-workday"}>
+                    {passwordChangedSuccesfully ?
+                        <p className={"bg-green-700 rounded-md font-bold whitespace-pre-wrap text-center"}>
+                            {alertPasswordChanged}
+                        </p> : <></>}
                     {wrongNewPassword ?
-                        <p className={"bg-red-700 rounded-md font-bold"}>{alertPutNewPasswords}</p> :
-                        <></>
-                    }
-                    {wrongOldPassword ?
-                        <p className={"bg-red-700 rounded-md font-bold"}>{alertOldPasswordIsIncompatible}</p> :
-                        <></>
-                    }
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertPutNewPasswords}
+                        </p> : <></>}
                     {missingOldPassword ?
-                        <p className={"bg-red-700 rounded-md font-bold"}>{alertOldPasswordIsMissing}</p> :
-                        <></>
-                    }
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertOldPasswordIsMissing}
+                        </p> : <></>}
                     {notTheSame ?
-                        <p className={"bg-red-700 rounded-md font-bold"}>{alertNewPasswordsAreIncompatible}</p> :
-                        <></>
-                    }
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertNewPasswordsAreIncompatible}
+                        </p> : <></>}
+                    {problemOccured ?
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertUnexpectedError}
+                        </p> : <></> }
                 </div>
             </div>
 }

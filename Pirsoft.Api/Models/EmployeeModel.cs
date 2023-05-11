@@ -22,15 +22,19 @@ public class EmployeeModel : IApiModel
     public byte password_reset { get; set; }
     public DateTime birth_date { get; set; }
     public double salary_gross { get; set; }
+    public int leave_base_days { get; set; }
+    public int leave_demand_days { get; set; }
+    public byte leave_is_seniority_threshold { get; set; }
     public int employee_contract_type_id { get; set; }
     public int employee_department_id { get; set; }
     public int employee_seniority_level_id { get; set; }
     public int employee_company_role_id { get; set; }
 
+    public virtual ICollection<AbsenceModel> absenceemployee_approvers { get; set; } = new List<AbsenceModel>();
+    public virtual ICollection<AbsenceModel> absenceemployee_owners { get; set; } = new List<AbsenceModel>();
     public virtual CompanyRoleModel employee_company_role { get; set; } = null!;
     public virtual ContractTypeModel employee_contract_type { get; set; } = null!;
     public virtual DepartmentModel employee_department { get; set; } = null!;
     public virtual SeniorityLevelModel employee_seniority_level { get; set; } = null!;
-    public virtual ICollection<AbsenceModel> absences { get; } = new List<AbsenceModel>();
     public virtual ICollection<SkillModel> skills { get; } = new List<SkillModel>();
 }

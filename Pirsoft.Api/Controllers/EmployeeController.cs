@@ -1,35 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 using Pirsoft.Api.Enums;
 using Pirsoft.Api.Models.ModelCreators;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
-using Pirsoft.Api.Security.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 
 namespace Pirsoft.Api.Controllers;
 
 //[Authorize]
-[ApiController]
+[ApiController] 
 //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class EmployeeController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     private readonly IEmployeeModelValidator _validator;
+    private readonly IEmployeeCrudHandler _employeeCrudHandler;
 
-    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IAuthenticationService authenticationService)
+    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IEmployeeCrudHandler employeeCrudHandler)
     {
         _crudHandler = crudHandler;
         _validator = validator;
+        _employeeCrudHandler = employeeCrudHandler;
     }
 
     [HttpPost("create/new/employee")]
-    public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, int departmentId, int seniorityInMonths,
-         double grossSalary, bool isActive, bool passwordReset, DateTime employmentStartDate, DateTime dateOfBirth, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
+    public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber,
+            int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
+            DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
             pesel = "Missing data";
@@ -38,19 +37,20 @@ public class EmployeeController : Controller
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
             bankAccountNumber = "Missing data";
 
-        EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, departmentId,seniorityInMonths, grossSalary, isActive, passwordReset, employmentStartDate,
-            dateOfBirth, companyRole, contractType, seniorityLevel).CreateModel();
+        EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber,
+            departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,
+            birthDate, employmentStartDate, companyRole, contractType, seniorityLevel).CreateModel();
 
         await _crudHandler.CreateAsync(newEmployee);
         _crudHandler.PushChangesToDatabase();
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("/get/employees")]
     public async Task<IEnumerable<employeeDTO>> GetListOfAllEmployees()
     {
-        var query = await _crudHandler.ReadAllAsync<EmployeeModel>();
-        return await query.Select(employeeModel => new employeeDTO(employeeModel)).ToListAsync();
+        var employees = await _employeeCrudHandler.ReadAllEmployeesAsync();
+        return await employees.Select(employeeModel => new employeeDTO(employeeModel)).ToListAsync();
     }
 
     [HttpGet("/get/filtered/employees/{name?}/{departmentId?}/{positionId?}")]
@@ -75,6 +75,78 @@ public class EmployeeController : Controller
         }
     }
 
+    [HttpGet("/get/employee/{employeeId}")]
+    public async Task<EmployeeModel> GetEmployeeById(int employeeId)
+    {
+        var employee = await _employeeCrudHandler.ReadEmployeeByIdAsync(employeeId);
+
+        if (employee != null)
+        {
+            return employee;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    [HttpDelete("delete/employee/{id}")]
+    [Authorize(Roles = "Kadry")] 
+    public async Task<IActionResult> DeleteEmployeeById(int id)
+    {
+        // Check if the employee exists
+        var employee = await _crudHandler.ReadAsync<EmployeeModel>(id);
+        if (employee == null)
+            return NotFound();
+
+        try
+        {
+            await _crudHandler.DeleteAsync(employee);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+    
+    [Authorize(Roles = "Kadry")]
+    [HttpPut("employees/{id}")]
+    public async Task<IActionResult> UpdateEmployee(int id, EmployeeModel employee)
+    {
+        var existingEmployee = await _crudHandler.ReadAsync<EmployeeModel>(id);
+
+        if (existingEmployee == null)
+            return NotFound();
+        
+        employee.email_address = existingEmployee.email_address;
+        
+        existingEmployee.first_name = employee.first_name;
+        existingEmployee.last_name = employee.last_name;
+        existingEmployee.pesel = employee.pesel;
+        existingEmployee.bank_account_number = employee.bank_account_number;
+        existingEmployee.seniority_in_months = employee.seniority_in_months;
+        existingEmployee.employment_start_date = employee.employment_start_date;
+        existingEmployee.is_active = employee.is_active;
+        existingEmployee.password_reset = employee.password_reset;
+        existingEmployee.birth_date = employee.birth_date;
+        existingEmployee.salary_gross = employee.salary_gross;
+        existingEmployee.employee_contract_type_id = employee.employee_contract_type_id;
+        existingEmployee.employee_department_id = employee.employee_department_id;
+        existingEmployee.employee_seniority_level_id = employee.employee_seniority_level_id;
+        existingEmployee.employee_company_role_id = employee.employee_company_role_id;
+
+        try
+        {
+            await _crudHandler.UpdateAsync(existingEmployee);
+            return Ok();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict();
+        }
+    }
+
     public struct employeeDTO
     {
         public employeeDTO(EmployeeModel employeeModel)
@@ -82,10 +154,17 @@ public class EmployeeController : Controller
             employee_id = employeeModel.employee_id;
             first_name = employeeModel.first_name;
             last_name = employeeModel.last_name;
+            employee_department_id = employeeModel.employee_department_id;
+            employee_seniority_level_id = employeeModel.employee_seniority_level_id;
+            employee_company_role_id = employeeModel.employee_company_role_id;
         }
 
-        private int employee_id { get; }
-        private string first_name { get; }
-        private string last_name { get; }
+        public int employee_id { get; }
+        public string first_name { get; }
+        public string last_name { get; }
+        public int employee_department_id { get; }
+        public int employee_seniority_level_id { get; }
+        public int employee_company_role_id { get; }
+
     }
 }

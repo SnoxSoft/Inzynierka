@@ -19,6 +19,8 @@ namespace Pirsoft.Api.DatabaseManagement
             => new IEntityBuilder[]
             {
                 new AbsenceEntityBuilder(modelBuilder),
+                new AbsenceStatusEntityBuilder(modelBuilder),
+                new AbsenceTypeEntityBuilder(modelBuilder),
                 new CompanyRoleEntityBuilder(modelBuilder),
                 new ContractTypeEntityBuilder(modelBuilder),
                 new DepartmentEntityBuilder(modelBuilder),

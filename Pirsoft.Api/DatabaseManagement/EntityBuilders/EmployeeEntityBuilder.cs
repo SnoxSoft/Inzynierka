@@ -10,17 +10,16 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
         public override ModelBuilder Build()
             => _modelBuilder.Entity<EmployeeModel>(entity =>
             {
-                entity.HasKey(e => new { e.employee_id, e.employee_contract_type_id, e.employee_department_id, e.employee_seniority_level_id, e.employee_company_role_id }).HasName("PRIMARY");
+                entity.HasKey(e => e.employee_id).HasName("PRIMARY");
 
                 entity.HasIndex(e => e.email_address, "email_UNIQUE").IsUnique();
                 entity.HasIndex(e => e.employee_company_role_id, "fk_employee_company_role_idx");
                 entity.HasIndex(e => e.employee_contract_type_id, "fk_employee_contract_type_idx");
-                entity.HasIndex(e => e.employee_department_id, "fk_employee_department_idx");
+                entity.HasIndex(e => e.employee_department_id, "fk_employee_department_id_idx");
                 entity.HasIndex(e => e.employee_seniority_level_id, "fk_employee_seniority_level_idx");
                 entity.HasIndex(e => e.employee_id, "id_UNIQUE").IsUnique();
                 entity.HasIndex(e => e.pesel, "pesel_UNIQUE").IsUnique();
 
-                entity.Property(e => e.employee_id).ValueGeneratedOnAdd();
                 entity.Property(e => e.bank_account_number).HasMaxLength(26);
                 entity.Property(e => e.birth_date).HasColumnType("date");
                 entity.Property(e => e.email_address).HasMaxLength(120);
@@ -58,7 +57,6 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
                             .OnDelete(DeleteBehavior.ClientSetNull)
                             .HasConstraintName("fk_employees_skills_skill"),
                         l => l.HasOne<EmployeeModel>().WithMany()
-                            .HasPrincipalKey("employee_id")
                             .HasForeignKey("employee_id")
                             .OnDelete(DeleteBehavior.ClientSetNull)
                             .HasConstraintName("fk_employees_skills_employee"),
@@ -66,8 +64,8 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
                         {
                             j.HasKey("employee_id", "skill_id").HasName("PRIMARY");
                             j.ToTable("employees_skills");
-                            j.HasIndex(new[] { "employee_id" }, "fk_employee_has_skills_employee1_idx");
-                            j.HasIndex(new[] { "skill_id" }, "fk_skill_idx");
+                            j.HasIndex(new[] { "employee_id" }, "fk_employees_skills_employee_idx");
+                            j.HasIndex(new[] { "skill_id" }, "fk_employees_skills_skill_idx");
                         });
             });
     }

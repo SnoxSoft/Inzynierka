@@ -2,56 +2,45 @@ import React, {useEffect, useState} from "react";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import ReusableButton from "../../components/base/ReusableButton";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
-import FunctionForSortingJson from "../../components/base/FunctionForSortingJson";
-import {labelCreateTeam, pageNameTeams, serverIp, serverIpProd} from "../../GlobalAppConfig";
-import {endpointGetAllEmployees, endpointGetAllTeams} from "../../EndpointAppConfig";
+import {labelCreateTeam, pageNameTeams} from "../../GlobalAppConfig";
+import {
+    fetchGetAllEmployees,
+    fetchGetAllTeamsAndAddZeroRecordAndSort
+} from "../../DataFetcher";
+import {useNavigate} from "react-router-dom";
 
 function Teams(){
     document.title = pageNameTeams;
 
+    const navigate = useNavigate();
+
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
     // Wszystkie zespoly ktore są potrzebne
-    const [teams, setTeams] = useState(Object);
-    const [teamsLoaded, setTeamsLoaded] = useState(false)
+    const [teams, setTeams] = useState(null);
 
     const [allTeams, setAllTeams] = useState([])
 
+    // Pobranie wszystkich pracowników
+    const [employees, setEmployees] = useState(null);
 
-    // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
-    if (teams[0] === undefined) {
-        fetch(serverIpProd + "/" + endpointGetAllTeams)
-            .then((response) => response.json())
-            .then((response) => {
-                response.sort(FunctionForSortingJson("department_id", "ascending"))
-                setTeams(response)
-                setTeamsLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
+    useEffect(() => {
+        // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
+        if(teams === null) {
+            setTeams(null);
+            fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, false)
+                .then(teams => setTeams(teams));
+        }
+
+        // Pobranie listy wszystkich pracowników
+        if (employees === null) {
+            fetchGetAllEmployees(navigate, true)
+                .then(employeesList => setEmployees(employeesList));
+        }
+    })
 
     const [currentMonthDaysOff, setCurrentMonthDaysOff] = useState(Object);
     const [monthDaysOffLoaded, setMonthDaysOffLoaded] = useState(false)
-
-    const [employees, setEmployees] = useState(Object);
-    const [employeesLoaded, setEmployeesLoaded] = useState(false)
-
-
-    // Ładowanie wszystkich pracowników
-    if (employees[0] === undefined) {
-        fetch(serverIp + "/" + endpointGetAllEmployees)
-            .then((response) => response.json())
-            .then((response) => {
-                response.sort(FunctionForSortingJson("last_name", "ascending"))
-                setEmployees(response)
-                setEmployeesLoaded(true)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
 
     const [allTeamsAreLoadedInDivs, setAllTeamsAreLoadedInDivs] = useState(false)
 
@@ -76,7 +65,7 @@ function Teams(){
         setAllTeamsAreLoadedInDivs(true)
     }
 
-    if(teamsLoaded && employeesLoaded && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
+    if(teams && employees && allTeams.length === 0 && allTeamsAreLoadedInDivs === false){
         loadWholeMonthDataForCompany()
     }
 
@@ -87,7 +76,7 @@ function Teams(){
 
     return(
         <>
-        {teamsLoaded && allTeamsAreLoadedInDivs ?
+        {teams && allTeamsAreLoadedInDivs ?
             <div
              className={"every-page-on-scroll overflow-y-hidden"}
             style={{minWidth: 800}}>

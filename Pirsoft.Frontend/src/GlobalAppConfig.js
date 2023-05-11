@@ -2,7 +2,7 @@
 // Adres ip aplikacji
 const serverIp = "http://127.0.0.1:3001";
 
-const serverIpProd = "http://127.0.0.1:3001";//https://localhost:7120";
+const serverIpProd = "https://localhost:7120";
 
 // Nazwa aplikacji
 const appName = "PIRSOFT";
@@ -34,8 +34,8 @@ const pageNameRequest = appName + ": Wniosek";
 const pageNameRequests = appName + ": Wnioski pracowników";
 const pageNameNotifications = appName + ": Powiadomienia";
 const pageSkillPicker = appName + ": Wybór umiejętności";
-
 const pagePasswordEdit = appName + ": Edycja hasła";
+const pagePasswordChange = appName + ": Zmiana hasła";
 
 
 // Strona powitalna, logowanie
@@ -81,7 +81,7 @@ const labelSave = "Zapisz";
 const teamAdditionalRow = "Wybierz zespół...";
 const positionAdditionalRow = "Wybierz stanowisko...";
 const positionLevelAdditionalRow = "Wybierz poziom stanowiska...";
-
+const absencesAdditionalRow = "Wybierz powód wniosku...";
 const contractAdditionalRow = "Wybierz rodzaj umowy...";
 
 const yearAdditionalRow = "Wybierz rok...";
@@ -114,7 +114,7 @@ const employeeGradedText = "Ocenił pracownik:";
 // Filtr wniosków urlopowych
 const firstnameLabel = "Imie";
 const lastnameLabel = "Nazwisko";
-const teamLabel = "Zespół"
+const labelTeam = "Zespół"
 
 // Nagłowek moich nieobecności urlopowych
 const headerAbsencesEndOfDaysOff = "Zostało dni urlopowych";
@@ -150,6 +150,9 @@ const labelPosition = "Stanowisko";
 const labelPositionLevel = "Poziom stanowiska";
 const labelStartDate = "Rozpoczęcie pracy";
 
+const labelLeaveDays = "Dni urlopowe";
+const labelDemandDays = "Dni na żądanie";
+const labelOverTenYears = "Czy 10 lat pracy";
 
 // Oceny kwartalne
 const labelGivenGrades = "Wystawione oceny";
@@ -171,7 +174,7 @@ const labelVerificationCode = "Kod weryfikacyjny";
 const labelGiveOldPassword = "Podaj stare hasło";
 const labelGiveNewPassword = "Podaj nowe hasło";
 const labelGiveNewPasswordAgain = "Powtórz nowe hasło";
-const labelSendVerificationEmail = "Wyślij email weryfikacyjny";
+const labelSendVerificationEmail = "Wyślij email do zmiany hasła";
 const headerPasswordChange = "Zmiana hasła";
 
 const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
@@ -195,7 +198,7 @@ const labelNotifications = "Powiadomienia";
 
 // Wiadomości informacyjne w oknie przypominania hasła
 const alertMessageSent = "Wiadomość została wysłana";
-const alertVerficationCodeIsIncompatible = "Kod weryfikacyjny jest niezgodny";
+const alertPasswordChanged = "Hasło zostało zmienione. \nZa chwilę nastąpi przekierowanie";
 const alertWrongEmail = "Wprowadzony email jest błędny";
 const alertUnexpectedError = "Wystapił nieoczekiwany błąd, spróbuj ponownie za chwilę";
 const alertPutNewPasswords = "Wpisz nowe hasła w pola";
@@ -203,8 +206,27 @@ const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
 const alertOldPasswordIsIncompatible = "Wpisane stare hasło jest błędne";
 const alertOldPasswordIsMissing = "Wpisz stare hasło";
 
+
+// Błędy w tworzeniu użytkownika
+
+const alertWrongFirstName = "Uzupełnij prawidłowo pole " + firstnameLabel;
+const alertWrongLastName = "Uzupełnij prawidłowo pole " + lastnameLabel;
+const alertWrongAddressEmail = "Uzupełnij prawidłowo pole " + labelEmail;
+const alertWrongBankAccount = "Uzupełnij prawidłowo pole " + labelBankAccount;
+const alertWrongBirthDate = "Wybierz prawidłowo pole " + labelBirthDate;
+const alertWrongPESEL = "Uzupełnij prawidłowo pole " + labelPESEL;
+const alertWrongSalary = "Uzupełnij prawidłowo pole " + labelSalary;
+const alertWrongContract = "Wybierz prawidłowo pole " + labelContractType;
+const alertWrongPosition = "Wybierz prawidłowo pole " + labelPosition;
+const alertWrongPositionLevel = "Wybierz prawidłowo pole " + labelPositionLevel;
+const alertWrongTeam = "Wybierz prawidłowo pole " + labelTeam;
+const alertWrongStartDate = "Wybierz prawidłowo pole " + labelStartDate;
+
 export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
+
+    alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertWrongPESEL, alertWrongSalary, alertWrongContract,
+    alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate,
 
     labelNotifications,
 
@@ -212,11 +234,12 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
     pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
     pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker, pagePasswordEdit,
+    pagePasswordChange,
 
     calendarLabelFrom, calendarLabelTo,
     labelRequest, labelShowProfile, alertCantGoFurther,
     labelFromTimeOfAbsence, labelFromTimeOfRequest,
-    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow,
+    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow, absencesAdditionalRow,
     employeesMenu,
     employeeRegisterMenu,
     scheduleMenu,
@@ -231,7 +254,8 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
 
     skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
     employeeGradeText, employeeGradedText,
-    firstnameLabel, lastnameLabel, teamLabel,
+    firstnameLabel, lastnameLabel, labelTeam,
+    labelLeaveDays, labelDemandDays, labelOverTenYears,
     requestStatusWaitingLabel,
     requestStatusApprovedLabel,
     requestStatusDisapprovedLabel,
@@ -250,7 +274,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     labelVerificationCode, labelGiveNewPassword, labelGiveNewPasswordAgain, labelGiveOldPassword, headerPasswordChange,
 
     alertMessageSent,
-    alertVerficationCodeIsIncompatible,
+    alertPasswordChanged,
     alertWrongEmail,
     alertUnexpectedError,
     alertPutNewPasswords,

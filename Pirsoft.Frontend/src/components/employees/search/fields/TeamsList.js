@@ -1,36 +1,31 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Select from 'react-select'
-import FunctionForSortingJson from "../../../base/FunctionForSortingJson";
-import {serverIpProd, teamAdditionalRow} from "../../../../GlobalAppConfig";
-import {endpointGetAllTeams} from "../../../../EndpointAppConfig";
+import {teamAdditionalRow} from "../../../../GlobalAppConfig";
 
-const TeamsList = ({onChange, id}) => {
+const TeamsList = ({value = undefined, onChange, id, teams,
+                       disableChange = false, placement = "bottom", formatting = "w-96"}) => {
 
-    const [teams, setTeams] = useState(Object);
+    let defaultValue = { department_id: 0, department_name: teamAdditionalRow };
 
-    if (teams[0] === undefined) {
-        fetch(serverIpProd + "/" + endpointGetAllTeams)
-            .then((response) => response.json())
-            .then((response) => {
-                response.push({ department_id: 0, department_name: teamAdditionalRow })
-                response.sort(FunctionForSortingJson("department_id", "ascending"))
-                setTeams(response)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
+    if(value !== undefined){
+        teams.map(team => {
+            if(team.department_id.toString().trim() === value.toString().trim()){
+                defaultValue = { department_id: team.department_id, department_name: team.department_name };
+            }
+        });
     }
 
     return <Select id={id}
-        className={"w-96 text-black"}
-                   defaultValue={{ department_id: 0, department_name: teamAdditionalRow }}
+        className={formatting + " text-black"}
+                   defaultValue={defaultValue}
+                   value={defaultValue}
+                   menuPlacement={placement}
                    options={teams}
                    getOptionLabel={option =>
                        `${option.department_name}`
                    }
                    getOptionValue={option => `${option.department_id}`}
-                   onChange={(e) => onChange(e.value)}/>
-
-
+                   onChange={(e) => onChange(e.department_id)}
+                   isDisabled={disableChange}/>
 }
 export default TeamsList;
