@@ -75,10 +75,8 @@ const TeamWindow = ({id, mode, title}) => {
     function reloadSkills(allEmployeeSkillData){
         let skillList = []
         allEmployeeSkillData.map((e) => {
-            console.log(e)
             if(e.employee_skills !== undefined) {
                 e.employee_skills.map((s) => {
-                    console.log(s)
                     let found = false
                     skillList.forEach(element => {
                         if (element.skill_name === s.skill_name) {
@@ -166,7 +164,10 @@ const TeamWindow = ({id, mode, title}) => {
                             }
                             {mode === 'edit' ?
                                 <>
-                                    <ReusableButton id={"team-delete"} value={labelDelete} onClick={() => deleteTeam()}/>
+                                    {id.toString().trim() !== "1" ?
+                                        <ReusableButton id={"team-delete"} value={labelDelete} onClick={() => deleteTeam()}/> :
+                                        <></>
+                                    }
                                     <ReusableButton id={"team-save"} value={labelSave} onClick={() => saveTeam()}/>
                                 </> :
                                 <></>
