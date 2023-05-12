@@ -44,7 +44,7 @@ public class DepartmentController : Controller
     }
 
     [HttpDelete("/delete/department/{id}")]
-    [Authorize(Roles = "Kadry")] 
+    //[Authorize(Roles = "Kadry")] 
     public async Task<ActionResult> DeleteDepartmentById(int id)
     {
 
@@ -64,7 +64,7 @@ public class DepartmentController : Controller
     }
 
     [HttpPut("edit/department/{id}")]
-    [Authorize(Roles = "Kadry")]
+    //[Authorize(Roles = "Kadry")]
     public async Task<ActionResult> UpdateDepartment(int id, DepartmentModel departmentModel)
     {
         var existingDepartment = await _crudHandler.ReadAsync<DepartmentModel>(id);

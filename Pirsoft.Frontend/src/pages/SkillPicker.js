@@ -21,12 +21,10 @@ function SkillPicker({parent, loadedAllSkills, skillsData, setSkillsData,
                 const input = elements[ele].getElementsByTagName("input")[0];
 
                 if (p !== undefined && input !== undefined && input.checked) {
-                    skillsList.push(p.textContent + "");
+                    skillsList.push({skill_id: p.id, skill_name: p.textContent});
                 }
             }
         }
-
-        const myObjStr = JSON.stringify(skillsList);
 
         setSkillsData(skillsList)
         if(actionSetTrue !== undefined){
@@ -42,17 +40,17 @@ function SkillPicker({parent, loadedAllSkills, skillsData, setSkillsData,
     loadedAllSkills.map((skill) => {
         let hasSkill = false;
 
-        for (const property in skillsData) {
-            if (skill.skill_name.includes(skillsData[property])) {
+        skillsData.map((employeeSkill) => {
+            if (skill.skill_name.includes(employeeSkill.skill_name)) {
                 hasSkill = true;
             }
-        }
+        })
 
         skillsComponent.push(
             <>
                 <div id={"employee-skill-list-item-" + skillId} key={"skill" + skill.skill_id}
                      className={"grid grid-cols-2 gap-4 p-4 h-9 content-center"}>
-                    <p>{skill.skill_name}</p>
+                    <p id={skill.skill_id}>{skill.skill_name}</p>
                     <input
                         id={"employee-skill-list-item-" + skillId + "-checkbox"}
                         className={"accent-workday"} type={"checkbox"} defaultChecked={hasSkill}/>

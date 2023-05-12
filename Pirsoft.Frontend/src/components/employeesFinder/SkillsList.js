@@ -1,16 +1,19 @@
 
 const SkillsList = ({skillList, id}) => {
 
+
+    console.log(skillList)
     let details = [];
     let row = 0;
-    for (const skill in skillList) {
+
+    skillList.map((skill) => {
         details.push(
-            <div id={id + "-item-"+row} key={skill}>
-                {skillList[skill]}
+            <div id={id + "-item-"+row} key={skill.skill_id}>
+                {skill.skill_name}
             </div>
         );
         row++;
-    }
+    })
 
     return <div id={id} className={"flex flex-row gap-2"}>
         {details}

@@ -59,7 +59,7 @@ const RequestListItem = ({employeeAbsence, employeeAbsenceTeam, old = false,
 
                 </div>
             }
-            <div className={"flex basis-1/12 place-content-center rounded-md "}>
+            <div className={"flex basis-1/12 place-content-center rounded-md cursor-default "}>
                 {requestStatus}
             </div>
             <div className={"flex justify-evenly basis-3/12"}>

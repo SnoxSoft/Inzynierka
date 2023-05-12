@@ -4,14 +4,14 @@ const SkillsList = ({id, skillList}) => {
 
     let details = [];
     let skillId = 0;
-    for (const skill in skillList) {
+
+    skillList.map((skill) =>{
         details.push(
-            <li id={id + "-item-" + skillId} key={skill}>
-                {skillList[skill]}
-            </li>
-        );
+                <li id={id + "-item-" + skillId} key={id + "-item-" + skillId}>
+                    {skill.skill_name}
+                </li>)
         skillId++;
-    }
+    })
 
     return <div id={id} className={"text-center"}>
         <p>{skillsLabel}</p>

@@ -5,7 +5,7 @@ const endpointGetEmployeeData = "get/employee";
 
 const endpointPostCreateEmployee = "create/new/employee";
 
-const endpointPutEditEmployee = "employees";
+const endpointPutEditEmployee = "edit/employee";
 
 const endpointDeleteEmployee = "delete/employee";
 
@@ -68,6 +68,10 @@ const endpointGetAllEmployees = "get/employees";
 // Lista zespołów //
 
 // Zwraca listę wszystkich zespołów w firmie
+const endpointCreateTeam = "create/department";
+const endpointEditTeam = "edit/department";
+const endpointDeleteTeam = "delete/department";
+
 const endpointGetAllTeams = "get/departments";
 
 // Zwraca pełne informacje na temat wybranego zespołu
@@ -101,6 +105,7 @@ export {
     endpointGetAllEmployees,
 
     endpointGetAllTeams, endpointGetTeamData,
+    endpointCreateTeam, endpointDeleteTeam, endpointEditTeam,
 
     endpointGetEmployeeData, endpointPostCreateEmployee
 

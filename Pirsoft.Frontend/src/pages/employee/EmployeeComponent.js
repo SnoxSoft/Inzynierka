@@ -164,28 +164,32 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setSkillsData(employee.skills);
         }
         else {
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setBank('');
-            setBirth('');
-            setPesel('');
-            setSalary('');
-            setDepartment('');
-            setContract('');
-            setLeaveDays(0)
-            setDemandDays(0)
-            setOverTenYears(false)
-            setPosition('');
-            setPositionLevel('');
-            setStart('');
-
-            setAvatarData(undefined);
-            setSkillsData([]);
+            clearWindowData();
         }
         setEmployeeDataShow(true)
 
     }, [id]);
+
+    function clearWindowData(){
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setBank('');
+        setBirth('');
+        setPesel('');
+        setSalary('');
+        setDepartment('');
+        setContract('');
+        setLeaveDays(0)
+        setDemandDays(0)
+        setOverTenYears(false)
+        setPosition('');
+        setPositionLevel('');
+        setStart('');
+
+        setAvatarData(undefined);
+        setSkillsData([]);
+    }
 
     useEffect(() => {
         if(employee !== undefined && employee !== null && id !== '-1'){
@@ -224,7 +228,10 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     }
     function deleteEmployee(){
         fetchDeleteEmployee(id)
-            .then(r => console.log(r))
+            .then(r => {
+                clearWindowData();
+                navigate(-1);
+                console.log(r)})
     }
 
 
@@ -337,68 +344,27 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("leaveDemandDays", demandDays);
         query.set("leaveIsSeniorityThreshold", overTenYears);
 
+
         if(alerts.length > 0){
             setShowPopupWithProblems(true)
         }
         else{
             if(id === "-1") {
                 fetchPostCreateEmployee(query)
-                    .then(r => console.log(r))
+                    .then(r => {
+                        // Zapisanie umiejetnosci zaraz po tym
+                        console.log(skillsData)
+                        clearWindowData()})
             }
             else{
-                let bodyEdit = {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    bankAccountNumber: bank,
-                    dateOfBirth: birth,
-                    //password: "Wanda123@2113wanda",
-                    pesel: pesel,
-                    grossSalary: salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary,
-                    departmentId: department,
-                    contractType: contract,
-                    companyRole: position,
-                    seniorityLevel: positionLevel,
-                    employmentStartDate: start,
-                    leaveBaseDays: leaveDays,
-                    leaveDemandDays: demandDays,
-                    leaveIsSeniorityThreshold: overTenYears
-
-                }
-
-                fetchPutEditEmployee(id, bodyEdit, query)
+                query.set("leaveIsSeniorityThreshold", overTenYears ? 1 : 0);
+                fetchPutEditEmployee(id, query)
                     .then(r => {
-                        if(r !== undefined){
-                            console.log(r)
-                            if(r.status){
-
-                            }
-                        }
+                        //Zapisanie też nowych umiejetności zaraz po zapisaniu - endpoint
+                        console.log(skillsData)
                     })
             }
         }
-
-        // // Do celów testowych żeby widzieć dane w konsoli
-        // console.log(
-        //     "id:"+id+
-        //     "\n employee data: \n" +
-        //     firstName + ", \n" +
-        //     lastName + ", \n" +
-        //     email + ", \n" +
-        //     bank + ", \n" +
-        //     birth + ", \n" +
-        //     pesel + ", \n" +
-        //     salary + ", \n" +
-        //     department + ", \n" +
-        //     contract + ", \n" +
-        //     position + ", \n" +
-        //     positionLevel + ", \n" +
-        //     start + " \n \n" +
-        //     " skills: \n" +
-        //     skillsData +
-        //     " \n avatar: " //+
-        //     //avatarData
-        // )
     }
 
     // Ładowanie umiejętności dla okna wyboru umiejętności
@@ -532,7 +498,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
                 {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                     <>
-                        {mode === 'edit' && sessionStorage.getItem('USER') === id ?
+                        {mode === 'edit' ?
                             <>
                                 <ReusableButton id={"employee-delete"} value={labelDelete} onClick={() => deleteEmployee()} />
                                 <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
