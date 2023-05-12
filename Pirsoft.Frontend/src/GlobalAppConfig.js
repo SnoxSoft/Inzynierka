@@ -26,11 +26,10 @@ const pageNameTeamCreate = appName + ": Tworzenie zespołu";
 const pageNameTeamView = appName + ": Wyświetlanie danych zespołu";
 const pageNameReceivedGrades = appName + ": Moje oceny kwartalne";
 const pageNameGivenGrades = appName + ": Oceny pracowników";
-const pageNameEmployeesFinder = appName + ": Wyszukiwarka pracowników";
+const pageNameEmployeesFinder = appName + ": Wyszukiwarka umiejetności";
 const pageNameGrades = appName + ": Oceny kwartalne";
 const pageNameGiveGradesWindowView = appName + ": Ocena pracownika";
 const pageNameGiveGradesWindowGive = appName + ": Ocenianie pracownika";
-const pageNameRequest = appName + ": Wniosek";
 const pageNameRequests = appName + ": Wnioski pracowników";
 const pageNameNotifications = appName + ": Powiadomienia";
 const pageSkillPicker = appName + ": Wybór umiejętności";
@@ -167,6 +166,8 @@ const labelTeamManager = "Kierownik zespołu";
 const labelTeamMembers = "Członkowie zespołu";
 const labelCreateTeam = "Dodaj zespoł";
 
+const labelSkillFinder = "Wyszukiwarka umiejętności";
+
 // Przypomnienie hasła
 const labelRemindPassword = "Przypomnij hasło";
 const labelGiveEmail = "Podaj e-mail";
@@ -185,11 +186,7 @@ const quarters = ["Q1","Q2","Q3","Q4"];
 
 const headerEmployeesFinder = "Wyszukiwarka pracowników";
 const headerEmployeesFinderList = "Imie i nazwisko, Zespół, Stanowisko, Umiejętności"
-const labelEmployeeFinderExchanceEmployeesBetween = "Wymień aktualnego i wybranego pracownika pomiędzy zespołami";
 const headerEmployees = "Wyszukaj pracownika";
-const labelSwapInformation = "Osoby zostaną wymienione pomiędzy zespołami po zapisaniu zmian w aktualnie edytowanym zespole";
-const labelPersonChangedWith = "zamieniona z osobą";
-const labelAllPeopleChangedBetweenTeams = "Zamienione osoby pomiędzy zespołami";
 
 // Powiadomienia
 
@@ -222,8 +219,19 @@ const alertWrongPositionLevel = "Wybierz prawidłowo pole " + labelPositionLevel
 const alertWrongTeam = "Wybierz prawidłowo pole " + labelTeam;
 const alertWrongStartDate = "Wybierz prawidłowo pole " + labelStartDate;
 
+
+// Odpowiedzi operacji
+const alertSaved = "Zapisano";
+const alertDeleted = "Usunięto";
+const alertProblemOccured = "Wystąpił problem";
+const alertAccepted = "Zaakceptowano";
+const alertRefused = "Odrzucono";
+const alertChanged = "Zmieniono;"
+
 export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
+
+    alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved,
 
     alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertWrongPESEL, alertWrongSalary, alertWrongContract,
     alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate,
@@ -233,7 +241,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     pageNameRemind, pageNameEmployeeRegister, pageNameGiveGradesWindowGive, pageNameGiveGradesWindowView, pageNameTeamEdit, pageNameTeamCreate,
     pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
     pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
-    pageNameReceivedGrades, pageNameGrades, pageNameRequest, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker, pagePasswordEdit,
+    pageNameReceivedGrades, pageNameGrades, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker, pagePasswordEdit,
     pagePasswordChange,
 
     calendarLabelFrom, calendarLabelTo,
@@ -284,12 +292,12 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
 
     labelReceivedGrades, labelGivenGrades, labelQuarter,
 
-    headerEmployeesFinder, headerEmployeesFinderList, labelEmployeeFinderExchanceEmployeesBetween,
+    headerEmployeesFinder, headerEmployeesFinderList,
 
     headerEmployees,
 
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
-    labelSwapInformation,
 
-    labelStrongSkills, labelTeamManager, labelTeamMembers, labelTeamName, labelPersonChangedWith, labelAllPeopleChangedBetweenTeams, labelCreateTeam
+    labelStrongSkills, labelTeamManager, labelTeamMembers, labelTeamName,
+    labelCreateTeam, labelSkillFinder
 };

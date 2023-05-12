@@ -14,7 +14,7 @@ import GradeTitle from "../../components/giveGrade/GradeTitle";
 import GradeMessage from "../../components/giveGrade/GradeMessage";
 import GradeRating from "../../components/grades/GradeRating";
 import {useEffect, useState} from "react";
-import EmployeesFinder from "../EmployeesFinder";
+import EmployeeSkillFinder from "../EmployeeSkillFinder";
 
 function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
 
@@ -135,12 +135,12 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
                 }
             </div>
         </div> :
-                <EmployeesFinder title={title}
-                                 setTitle={setTitle}
-                                 setEmployeesFinderShowing={setHideFinder}
-                                 setPickedPersonId={setPickedPersonId}
-                                 setPickedPersonName={setPickedPersonName}
-                                 methodToUse={"grade"}
+                <EmployeeSkillFinder title={title}
+                                     setTitle={setTitle}
+                                     setEmployeesFinderShowing={setHideFinder}
+                                     setPickedPersonId={setPickedPersonId}
+                                     setPickedPersonName={setPickedPersonName}
+                                     methodToUse={"grade"}
 
                 />
             }

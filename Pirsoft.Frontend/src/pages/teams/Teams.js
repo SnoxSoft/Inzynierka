@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import FunctionForResize from "../../components/base/FunctionForResize";
 import ReusableButton from "../../components/base/ReusableButton";
 import TeamAndEmployees from "../../components/teams/TeamAndEmployees";
-import {labelCreateTeam, pageNameTeams} from "../../GlobalAppConfig";
+import {labelCreateTeam, labelSkillFinder, pageNameTeams} from "../../GlobalAppConfig";
 import {
     fetchGetAllEmployees,
     fetchGetAllTeamsAndAddZeroRecordAndSort
@@ -80,7 +80,10 @@ function Teams(){
             <div
              className={"every-page-on-scroll overflow-y-hidden"}
             style={{minWidth: 800}}>
-                <div className={"flex flex-cols justify-end p-4"}>
+                <div className={"flex flex-cols justify-between p-4"}>
+                    <ReusableButton id={"teams-finder-open"} value={labelSkillFinder}
+                                    link={"/employee-skill-finder"}
+                                    color={"bg-blue-menu"} formatting={"border-2 border-b-workday min-w-min w-32 h-12"}/>
                     <ReusableButton id={"teams-create-team"} value={labelCreateTeam} link={"/team-create"}/>
                 </div>
                 <hr/>

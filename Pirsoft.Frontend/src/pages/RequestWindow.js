@@ -8,25 +8,27 @@ import {
     labelRequest,
     labelRequestApprovers,
     labelRequestNoPay,
-    labelRequestType, pageNameRequest,
-    serverIp
+    labelRequestType, pageNameAddEmployeeAnAbsence, pageNameApprovalOrRejectionRequest
 } from "../GlobalAppConfig";
 import {
-    fetchApproversForRequest,
     fetchGetAbsencesTypes,
     fetchGetEmployeeDataById,
-    fetchPostCreateAbsence,
-    fetchPostCreateEmployee
+    fetchPostCreateAbsence
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import AbsencesList from "../components/absences/AbsencesList";
-import demandDays from "../components/employee/fields/DemandDays";
 
 const RequestWindow = ({setAbsencesVisible = undefined,
                      setShowAddEmployeeAnAbsence = undefined, setEmployeeDataShow = undefined,
                      setRequestsVisible = undefined,
                      requestData = undefined, mode = "create"}) =>{
-    document.title = pageNameRequest;
+
+    if(mode === "create"){
+        document.title = pageNameAddEmployeeAnAbsence;
+    }
+    else {
+        document.title = pageNameApprovalOrRejectionRequest;
+    }
 
     const navigate = useNavigate();
 
@@ -101,16 +103,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         month: "2-digit",
         day: "2-digit"
     }
-    const currentDate = new Date();
-    currentDate.setDate(1);
-    const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
-    const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
 
     // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(
-        requestData && mode !== 'create' ? requestData.absence_start_date : previousThreeMonthsDate.toLocaleDateString("sv", options));
+        requestData && mode !== 'create' ? requestData.absence_start_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(
-        requestData && mode !== 'create' ? requestData.absence_end_date : futureThreeMonthsDate.toLocaleDateString("sv", options));
+        requestData && mode !== 'create' ? requestData.absence_end_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
     const [absence, setAbsence] = useState(requestData ? requestData.absence_type_id : null)
     const [noPay, setNoPay] = useState(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? leaveDays === 0 : false)
     const disableChanges = mode === "approval"
@@ -153,7 +151,9 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         query.set("absenceStatusId", 1);
 
         fetchPostCreateAbsence(query)
-                    .then(r => console.log(r))
+                    .then(r => {
+                        close()
+                    })
 
     }
 

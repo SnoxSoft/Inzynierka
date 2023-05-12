@@ -149,6 +149,11 @@ function Absences(){
             })
     }
 
+    useEffect(() => {
+        if(absencesVisible && employee !== null && requestsStatus !== null && absencesTypes !== null) {
+            filtrAbsences();
+        }
+    },[absencesVisible])
 
     // Ładowanie tych wartości z informacji pracownika
     let demandDays = 0;

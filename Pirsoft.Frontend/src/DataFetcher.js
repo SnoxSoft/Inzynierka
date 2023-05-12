@@ -27,7 +27,7 @@ import {
     endpointPostCreateEmployee,
     endpointPostSendEmailForPasswordChange,
     endpointPutChangePassword,
-    endpointPutEditEmployee, endpointPostCreateAbsence
+    endpointPutEditEmployee, endpointPostCreateAbsence, endpointCreateTeam, endpointDeleteTeam, endpointEditTeam
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -93,6 +93,18 @@ async function fetchPutChangePassword(navigate, employeeId, newPassword, newRepe
         })
 }
 
+async function fetchPostCreateTeam(params) {
+    return await axios.post(`${serverIpProd}/${endpointCreateTeam}?${params}`)
+}
+
+async function fetchPutEditTeam(id, body) {
+    return await axios.put(`${serverIpProd}/${endpointEditTeam}/${id}`, body)
+}
+
+async function fetchDeleteTeam(id) {
+    return await axios.delete(`${serverIpProd}/${endpointDeleteTeam}/${id}`)
+}
+
 async function fetchGetEmployeeDataById(id, navigate) {
     if (id !== '-1') {
         try {
@@ -115,14 +127,7 @@ async function fetchPostCreateEmployee(params) {
     return await axios.post(`${serverIpProd}/${endpointPostCreateEmployee}?${params}`)
 }
 
-async function fetchPutEditEmployee(id, body, query) {
-    // return await fetch(serverIpProd + "/" + endpointPutEditEmployee + "/" + id + "?" + query,
-    //     {
-    //         method: "PUT",
-    //         body: body,
-    //         headers: {'Content-Type': 'application/json', 'charset': 'utf-8'}
-    //     })
-
+async function fetchPutEditEmployee(id, query) {
     return await axios.put(`${serverIpProd}/${endpointPutEditEmployee}/${id}?${query}`, {
         headers: headers
     })
@@ -337,6 +342,9 @@ export {
 
     fetchGetAllTeamsAndAddZeroRecordAndSort,
     fetchGetTeamDataById,
+    fetchPostCreateTeam,
+    fetchPutEditTeam,
+    fetchDeleteTeam,
 
     fetchGetAllContractsAndAddZeroRecordAndSort,
     fetchGetAllPositionsAndAddZeroRecordAndSort,

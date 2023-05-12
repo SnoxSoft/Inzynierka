@@ -305,6 +305,12 @@ function Requests(){
             })
     }
 
+    useEffect(() => {
+        if(requestsVisible && employeesList !== null && requestsStatus !== null && absencesTypes !== null) {
+            filtrRequests();
+        }
+    },[requestsVisible])
+
 
     return(
         <>

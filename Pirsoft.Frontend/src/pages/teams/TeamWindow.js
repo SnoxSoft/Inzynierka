@@ -5,17 +5,20 @@ import TeamLeader from "../../components/teamsModifcation/TeamLeader";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
-import EmployeesFinder from "../EmployeesFinder";
 import {
-    labelAllPeopleChangedBetweenTeams,
     labelClose,
-    labelCreate, labelDelete, labelPersonChangedWith,
+    labelCreate, labelDelete,
     labelSave,
     labelStrongSkills,
-    labelSwapInformation, labelTeamManager, labelTeamMembers,
+    labelTeamManager, labelTeamMembers,
     labelTeamName
 } from "../../GlobalAppConfig";
-import {fetchGetAllEmployees, fetchGetTeamDataById} from "../../DataFetcher";
+import {
+    fetchDeleteTeam,
+    fetchGetAllEmployees,
+    fetchGetTeamDataById,
+    fetchPostCreateTeam, fetchPutEditTeam
+} from "../../DataFetcher";
 
 const TeamWindow = ({id, mode, title}) => {
     const[dynamicTitle, setDynamicTitle] = useState(title)
@@ -23,22 +26,13 @@ const TeamWindow = ({id, mode, title}) => {
 
     const navigate = useNavigate()
 
-    const [employeesFinderShow, setEmployeesFinderShow] = useState(false)
-    const [methodToUse, setMethodToUse] = useState()
-    const [isSwapPossible, setIsSwapPossible] = useState(false)
-    const [idOfCurrentPickedEmployee, setIdOfCurrentPickedEmployee] = useState()
-    const [multipleChoice, setMultipleChoice] = useState(false)
-    const [swapDataFillingIn, setSwapDataFillingIn] = useState("")
-
     // Ładowanie danych
     const [teamData, setTeamData] = useState(null);
+    const [fullTeamData, setFullTeamData] = useState(null)
     const [leaderData, setLeaderData] = useState(null);
     const [employeeData, setEmployeeData] = useState(null);
     const [employeeSkillData, setEmployeeSkillData] = useState([]);
     const [employeeSkillDataLoad, setEmployeeSkillDataLoad] = useState(false)
-
-    const [swapTeamsBetweenTheseEmployee, setSwapTeamsBetweenTheseEmployee] = useState([])
-    const [swapEmployeesBetweenTeamsInformation, setSwapEmployeesBetweenTeamsInformation] = useState()
 
     useEffect(() => {
         if(mode === 'view' || mode === 'edit') {
@@ -48,6 +42,7 @@ const TeamWindow = ({id, mode, title}) => {
                 setTeamData([]);
                 fetchGetTeamDataById(navigate, id)
                     .then(team => {
+                        setFullTeamData(team);
                         setTeamData(team.department_name)
                     });
             }
@@ -58,38 +53,43 @@ const TeamWindow = ({id, mode, title}) => {
                 fetchGetAllEmployees(navigate, true)
                     .then(employeesList => {
                         let employeesListData = []
+                        let leaderListData = []
                         employeesList.map((employee) => {
                             if (employee.employee_department_id.toString() === id) {
                                 if (employee.employee_company_role_id.toString() !== "3") {
                                     employeesListData.push(employee)
                                 } else if (employee.employee_company_role_id.toString() === "3") {
-                                    setLeaderData(employee)
+                                    leaderListData.push(employee)
                                 }
                             }
                         })
                         setEmployeeData(employeesListData)
-                        reloadSkills(employeesListData)
+                        setLeaderData(leaderListData)
+                        let allEmployeeSkillData = [...leaderListData,...employeesListData];
+                        reloadSkills(allEmployeeSkillData)
                     });
             }
         }
     })
 
-    function reloadSkills(employeeData){
+    function reloadSkills(allEmployeeSkillData){
         let skillList = []
-        employeeData.forEach((e) => {
-            if(e.skills !== undefined) {
-                e.skills.forEach((s) => {
+        allEmployeeSkillData.map((e) => {
+            console.log(e)
+            if(e.employee_skills !== undefined) {
+                e.employee_skills.map((s) => {
+                    console.log(s)
                     let found = false
                     skillList.forEach(element => {
-                        if (element.name === s.skill_name) {
+                        if (element.skill_name === s.skill_name) {
                             found = true
                         }
                     });
                     if (!found) {
-                        skillList.push({name: s.skill_name, value: 1})
+                        skillList.push({skill_name: s.skill_name, value: 1})
                     } else {
                         skillList.forEach(element => {
-                            if (element.name === s.skill_name) {
+                            if (element.skill_name === s.skill_name) {
                                 element.value = element.value + 1;
                             }
                         });
@@ -103,103 +103,41 @@ const TeamWindow = ({id, mode, title}) => {
         }
     }
 
-    function setEmployeesFinderShowing(showOrNo, options){
-        if(options !== undefined) {
-            setMethodToUse(options.who)
-            setIsSwapPossible(options.idPickedEmployee !== null && options.who === "employee")
-            setIdOfCurrentPickedEmployee(options.idPickedEmployee)
-            setMultipleChoice(options.id === null && options.who === "employee")
-            setSwapDataFillingIn(options.howMuch)
-
-            // Jeśli ZMIEN lub USUŃ na kimś kto został zamieniony to usuwany zostaje on
-            // z on usunięty z exchange list
-            setExchangeInformation(options.idPickedEmployee)
-        }
-        setEmployeesFinderShow(showOrNo)
-    }
-
     function saveTeam(){
-        console.log("save")
+        let bodyEditTeam = {
+                apiInternalId: fullTeamData.apiInternalId,
+                department_id: fullTeamData.department_id,
+                department_name: teamData
+        }
+        fetchPutEditTeam(id, bodyEditTeam)
+            .then(r => {
+                navigate(-1);
+        })
     }
 
     function createTeam(){
-        console.log("delete")
+        const query = new URLSearchParams();
+        query.set("departmentName", teamData);
+
+        if(teamData !== null) {
+            fetchPostCreateTeam(query)
+                .then(r => {
+                    navigate(-1);
+                })
+        }
     }
 
     function deleteTeam(){
-        console.log("delete")
+        // Tutaj jeszcze muszę dodać edycje wszystkich pracowników w zespole i zmiane zespołu na 1 - brak
+        fetchDeleteTeam(id)
+            .then(r => {
+                navigate(-1);
+            })
     }
-
-    function setExchangeInformation(idToDeleteFromList = null) {
-        setSwapEmployeesBetweenTeamsInformation(<></>)
-        let loadSwapInformation = []
-
-        if (swapTeamsBetweenTheseEmployee.length > 0) {
-            loadSwapInformation.push(<div>{labelAllPeopleChangedBetweenTeams}</div>)
-        }
-
-        let ifAnyChangeOnCurrentSwappedEmployeeList = []
-        swapTeamsBetweenTheseEmployee.forEach((s) => {
-            if (idToDeleteFromList === null) {
-                loadSwapInformation.push(<div> {s[0].first_name + " " + s[0].last_name}, {labelPersonChangedWith}: {s.first_name + " " + s.last_name}</div>)
-                ifAnyChangeOnCurrentSwappedEmployeeList.push(s)
-            }
-
-            if (idToDeleteFromList !== null) {
-                if (s[0].employee_id !== idToDeleteFromList) {
-                    //delete from swap list, no more swap if any change occur and get back previous employee to the list :)
-                    loadSwapInformation.push(<div> {s[0].first_name + " " + s[0].last_name}, {labelPersonChangedWith}: {s.first_name + " " + s.last_name}</div>)
-                    ifAnyChangeOnCurrentSwappedEmployeeList.push(s)
-                } else {
-                    let employeeDataWithReturnedChanges = []
-                    employeeData.forEach((e) => {
-                        if(s[0].employee_id === e.employee_id){
-                            employeeDataWithReturnedChanges.push({employee_id: s.employee_id, first_name: s.first_name, last_name:s.last_name, skills: s.skills})
-                        }
-                        else {
-                            employeeDataWithReturnedChanges.push(e)
-                        }
-                    })
-                    setEmployeeData(employeeDataWithReturnedChanges)
-                }
-            }
-        })
-        if (swapTeamsBetweenTheseEmployee.length > 0) {
-            loadSwapInformation.push(<div> !!! </div>)
-            loadSwapInformation.push(<div>{labelSwapInformation}</div>)
-            loadSwapInformation.push(<div> !!! </div>)
-        }
-
-        setSwapTeamsBetweenTheseEmployee(ifAnyChangeOnCurrentSwappedEmployeeList)
-        if (loadSwapInformation.length > 0) {
-            setSwapEmployeesBetweenTeamsInformation(loadSwapInformation)
-        }
-    }
-
-    // useEffect(() => {
-    //     setEmployeeSkillDataLoad(false)
-    //     setExchangeInformation()
-    //     reloadSkills()
-    // },[employeeData])
 
     return (
         <>
-            {employeesFinderShow ?
-                <EmployeesFinder title={title} setTitle={setDynamicTitle}
-                     setEmployeesFinderShowing={setEmployeesFinderShowing}
-                     methodToUse={methodToUse}
-                     leaderData={leaderData}
-                     setLeaderData={setLeaderData}
-                     employeeData={employeeData}
-                     setEmployeeData={setEmployeeData}
-                     isSwapPossible={isSwapPossible}
-                     swapDataFillingIn={swapDataFillingIn}
-                     idOfCurrentPickedEmployee={idOfCurrentPickedEmployee}
-                     multipleChoice={multipleChoice}
-                     swapTeamsBetweenTheseEmployee={swapTeamsBetweenTheseEmployee}
-                     setSwapTeamsBetweenTheseEmployee={setSwapTeamsBetweenTheseEmployee}
-                    /> :
-            teamData !== null && employeeData !== null || mode === 'create' ?
+            {teamData !== null && employeeData !== null && leaderData !== null || mode === 'create' ?
                 <div id={"teams-add"}
                      className={"every-page-on-scroll text-workday bg-blue-menu hover:cursor-default"}
                      style={{minWidth: 800}}
@@ -213,23 +151,13 @@ const TeamWindow = ({id, mode, title}) => {
                                 <div>{labelStrongSkills}</div>
                                 <TeamMembersSkills skills={employeeSkillData}/>
                                 <div>{labelTeamManager}</div>
-                                <TeamLeader mode={mode} disableChange={(mode === 'view')}
-                                    value={leaderData} setLeaderData={setLeaderData}
-                                    setEmployeesFinderShowing={setEmployeesFinderShowing}
-                                    />
+                                <TeamLeader leaderData={leaderData} setLeaderData={setLeaderData}/>
                                 <div>{labelTeamMembers}</div>
                                 <TeamMembers
-                                    mode={mode}
-                                    disableChange={(mode === 'view')}
-                                    employeeData={employeeData} setEmployeeData={setEmployeeData}
-                                    employeeSkillData={employeeSkillData} setEmployeeSkillData={setEmployeeSkillData}
-                                    setEmployeesFinderShowing={setEmployeesFinderShowing}
-                                    swapTeamsBetweenTheseEmployee={swapTeamsBetweenTheseEmployee}
-                                    setSwapTeamsBetweenTheseEmployee={setSwapTeamsBetweenTheseEmployee}/>
+                                    employeeData={employeeData} setEmployeeData={setEmployeeData}/>
                             </> :
                             <></>
                         }
-                        <div className={"text-center"}>{swapEmployeesBetweenTeamsInformation}</div>
                         <div className={"flex flex-row gap-2"}>
                             <ReusableButton id={"team-close"} value={labelClose} onClick={() => navigate(-1)}/>
                             {mode === 'create' ?
