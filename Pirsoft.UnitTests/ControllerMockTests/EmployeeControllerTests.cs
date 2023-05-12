@@ -91,12 +91,14 @@ public class EmployeeControllerTests
     {
         // Arrange
         var id = 1;
-        var employee = new EmployeeModel { first_name = "John", last_name = "Doe", pesel = "12345678901" };
+        
         var existingEmployee = new EmployeeModel { employee_id = id, first_name = "Jane", last_name = "Doe", pesel = "12345678901", email_address = "jane.doe@example.com" };
         _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync(existingEmployee);
 
         // Act
-        var result = await _employeeController.UpdateEmployee(id, employee);
+        var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342",
+            1, 12,1, 3000, 0,
+            new DateTime(2023,05,05), new DateTime(2023,10,12), 1, 2, 1);
 
         // Assert
         result.Should().BeOfType<OkResult>();
@@ -108,11 +110,14 @@ public class EmployeeControllerTests
     {
         // Arrange
         var id = 1;
-        var employee = new EmployeeModel { first_name = "John", last_name = "Doe", pesel = "12345678901" };
+        
         _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync((EmployeeModel)null);
 
         // Act
-        var result = await _employeeController.UpdateEmployee(id, employee);
+        var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342",
+            1, 12,1, 3000, 0,
+            new DateTime(2023,05,05), new DateTime(2023,10,12), 1, 2, 1);
+
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
