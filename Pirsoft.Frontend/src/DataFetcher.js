@@ -38,10 +38,18 @@ import {
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
 import axios from "axios";
+import {getLocalStorageKeyWithExpiry} from "./components/jwt/LocalStorage";
+
+function getBearerToken(tokenStorage)
+{
+    if(tokenStorage !== null)
+        return tokenStorage.token
+    else return ""
+}
 
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'JWT fefege...',
+    'Authorization': `Bearer ${getBearerToken(getLocalStorageKeyWithExpiry("loggedEmployee"))}`,
     'charset': 'utf-8'
 }
 
@@ -147,7 +155,9 @@ async function fetchDeleteEmployee(id) {
 
 async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirection = "ascending") {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAllEmployees}`)
+        const response = (await axios.get(`${serverIpProd}/${endpointGetAllEmployees}`, {
+            headers: headers
+        }))
         if (response && response.status === 200) {
             let newData = response.data;
             if (sortForTeams) {
