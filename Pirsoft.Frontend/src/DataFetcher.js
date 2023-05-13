@@ -360,9 +360,8 @@ export {
     fetchGetAbsencesTypes,
 
     fetchPostCreateAbsence,
-    fetchGetCompanyMonthDaysOff
     fetchGetOneEmployeeBetweenDatesDaysOff,
-    fetchGetAllEmployeesBetweenDatesDaysOff
+    fetchGetAllEmployeesBetweenDatesDaysOff,
 
     fetchLoginEmployee,
 }

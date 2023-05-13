@@ -81,6 +81,7 @@ import {
 import Legend from "../../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
 import grossSalary from "../../components/employee/fields/GrossSalary";
+import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
 import RequestWindow from "../RequestWindow";
 import LeaveDays from "../../components/employee/fields/LeaveDays";
 import DemandDays from "../../components/employee/fields/DemandDays";
@@ -89,7 +90,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
     }
-    else if(id === sessionStorage.getItem('USER')){
+    else if(id === getLocalStorageKeyWithExpiry("loggedEmployee")){
         document.title = pageNameEmployeeData;
     }
     else document.title = pageNameEmployeeView;
@@ -109,8 +110,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     sessionStorage.setItem("PRIVILEDGE", 'UNAUTHORIED')
 
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
-    let disableData = sessionStorage.getItem('USER') !== id && mode !== 'create'
+    let disableData = getLocalStorageKeyWithExpiry("loggedEmployee") !== id && mode !== 'create'
 
+    var skills = []
     // Do pokazania/ukrycia danych pracownika
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
     // Do pokazania/ukrycia okna do wyboru umiejętności
@@ -140,7 +142,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
     // Reszta danych pracownika
     const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? undefined : undefined); //employee.avatar
-    const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
+    const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? skills : []);
 
     useEffect(() => {
         if(employee !== undefined && employee !== null && id !== '-1'){
@@ -161,7 +163,8 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setStart(employee.employment_start_date.substring(0, 10));
 
             setAvatarData(employee.avatar);
-            setSkillsData(employee.skills);
+            employee.skills.forEach((employee, index) => skills.push(employee.skill_name))
+            setSkillsData(skills);
         }
         else {
             setFirstName('');
@@ -411,6 +414,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
              className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default"}
              style={{minWidth:800} }>
             <div className={"grow flex flex-row"}>
+
                 <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {firstnameLabel} </label>
@@ -504,7 +508,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     <ProfilePicture id={"employee-profile-picture"} picture={avatarData}/>
                     <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
-                        {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' && sessionStorage.getItem('USER') === id || mode === 'create' ?
+                        {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' && getLocalStorageKeyWithExpiry("loggedEmployee") === id || mode === 'create' ?
                             <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
                                 onClick={ () => {
@@ -520,7 +524,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </div>
             </div>
             {mode !== 'create' &&
-                sessionStorage.getItem('USER') !== id ?
+                getLocalStorageKeyWithExpiry("loggedEmployee") !== id ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
                     <button
                         id={"employee-back"}
@@ -532,11 +536,11 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
                 {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                     <>
-                        {mode === 'edit' && sessionStorage.getItem('USER') === id ?
+                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") === id ?
                             <>
                                 <ReusableButton id={"employee-delete"} value={labelDelete} onClick={() => deleteEmployee()} />
                                 <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
-                                {sessionStorage.getItem('USER') === id &&
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") === id &&
                                 <ReusableButton id={"employee-password-change"} value={labelChangePassword}
                                         onClick={() => {
                                             setEmployeeDataShow(false);
