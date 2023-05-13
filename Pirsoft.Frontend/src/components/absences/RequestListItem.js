@@ -7,7 +7,7 @@ import {
     labelRequest,
     labelShowProfile
 } from "../../GlobalAppConfig";
-import {fetchDeleteAbsence, fetchDeleteEmployee} from "../../DataFetcher";
+import {fetchDeleteAbsence} from "../../DataFetcher";
 
 const RequestListItem = ({employeeAbsence, old = false,
               absencesTypes, requestsStatus, id, window,
