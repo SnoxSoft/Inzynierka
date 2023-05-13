@@ -94,8 +94,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
     let disableData = getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id && mode !== 'create'
-
-    var skills = []
+    
     // Do pokazania/ukrycia danych pracownika
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
     // Do pokazania/ukrycia okna do wyboru umiejętności
@@ -125,7 +124,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
     // Reszta danych pracownika
     const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? undefined : undefined); //employee.avatar
-    const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? skills : []);
+    const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
     useEffect(() => {
         if(employee !== undefined && employee !== null && id !== '-1'){
@@ -146,8 +145,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setStart(employee.employment_start_date.substring(0, 10));
 
             setAvatarData(employee.avatar);
-            employee.skills.forEach((employee, index) => skills.push(employee.skill_name))
-            setSkillsData(skills);
+            setSkillsData(employee.skills);
         }
         else {
             clearWindowData();
