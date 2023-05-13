@@ -300,7 +300,12 @@ async function fetchGetAbsencesTypes(navigate) {
 }
 
 async function fetchPostCreateAbsence(params) {
-    return await axios.post(`${serverIpProd}/${endpointPostCreateAbsence}?${params}`)
+    try {
+        return await axios.post(`${serverIpProd}/${endpointPostCreateAbsence}?${params}`)
+    } catch (error) {
+        console.error(error);
+        //redirectToMainWindow(navigate);
+    }
 }
 
 async function fetchPutEditAbsence(id, query) {

@@ -100,14 +100,14 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // edit - osoba przeglądająca konto lub
     //        uprawniona do edycji kont lub właściciel konta
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Na razie od ręki ustationy przywilej i zapisany w sesji
     // Podział na widoczność pól według roli konta plus podział na możliwość edycji.
     // Tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
-
-    // Uprawnienia edycji oraz przeglądania danych konta pracownika według zalogowanego konta
-    sessionStorage.setItem("PRIVILEDGE", 'UNAUTHORIED')
 
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
     let disableData = getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id && mode !== 'create'
@@ -242,91 +242,91 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         // Sprawdzenie błędów
         setAlerts(<></>)
         let alerts = []
-        // if(firstName.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongFirstName}
-        //         </p>
-        //     )
-        // }
-        // if(lastName.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongLastName}
-        //         </p>
-        //     )
-        // }
-        // if(email.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongAddressEmail}
-        //         </p>
-        //     )
-        // }
-        // if(bank.toString().trim().length !== 26 || Number(bank) === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongBankAccount}
-        //         </p>
-        //     )
-        // }
-        // if(birth.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongBirthDate}
-        //         </p>
-        //     )
-        // }
-        // if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongPESEL}
-        //         </p>
-        //     )
-        // }
-        // if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongSalary}
-        //         </p>
-        //     )
-        // }
-        // if(contract.toString().trim().length === 0 || contract === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongContract}
-        //         </p>
-        //     )
-        // }
-        // if(position.toString().trim().length === 0 || position === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongPosition}
-        //         </p>
-        //     )
-        // }
-        // if(positionLevel.toString().trim().length === 0 || positionLevel === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongPositionLevel}
-        //         </p>
-        //     )
-        // }
-        // if(department.toString().trim().length === 0 || department === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongTeam}
-        //         </p>
-        //     )
-        // }
-        // if(start.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongStartDate}
-        //         </p>
-        //     )
-        // }
-        // setAlerts(alerts)
+        if(firstName.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongFirstName}
+                </p>
+            )
+        }
+        if(lastName.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongLastName}
+                </p>
+            )
+        }
+        if(email.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongAddressEmail}
+                </p>
+            )
+        }
+        if(bank.toString().trim().length !== 26 || Number(bank) === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongBankAccount}
+                </p>
+            )
+        }
+        if(birth.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongBirthDate}
+                </p>
+            )
+        }
+        if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPESEL}
+                </p>
+            )
+        }
+        if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongSalary}
+                </p>
+            )
+        }
+        if(contract.toString().trim().length === 0 || contract === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongContract}
+                </p>
+            )
+        }
+        if(position.toString().trim().length === 0 || position === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPosition}
+                </p>
+            )
+        }
+        if(positionLevel.toString().trim().length === 0 || positionLevel === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPositionLevel}
+                </p>
+            )
+        }
+        if(department.toString().trim().length === 0 || department === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongTeam}
+                </p>
+            )
+        }
+        if(start.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongStartDate}
+                </p>
+            )
+        }
+        setAlerts(alerts)
 
         const query = new URLSearchParams();
         query.set("firstName", firstName);
@@ -346,6 +346,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("leaveDemandDays", demandDays);
         query.set("leaveIsSeniorityThreshold", overTenYears);
 
+        console.log(query)
 
         if(alerts.length > 0){
             setShowPopupWithProblems(true)
@@ -473,7 +474,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     <ProfilePicture id={"employee-profile-picture"} picture={avatarData}/>
                     <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
-                        {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' && getLocalStorageKeyWithExpiry("loggedEmployee") === id || mode === 'create' ?
+                        {getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === 'create' ?
                             <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
                                 onClick={ () => {
@@ -498,10 +499,8 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 : <></>
             }
             <div className={"grow-0 p-4 flex flex-row justify-around"}>
-
-                {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                     <>
-                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") === id ?
+                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ?
                             <>
                                 <ReusableButton id={"employee-delete"} value={labelDelete} onClick={() => deleteEmployee()} />
                                 <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
@@ -529,7 +528,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             : <></>
                         }
                     </>
-                    : <></>}
             </div>
         </div>
         :

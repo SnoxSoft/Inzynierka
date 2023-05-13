@@ -12,11 +12,15 @@ import {
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import TeamRow from "../components/teams/TeamRow";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 function CompanySchedule(){
     document.title = pageNameCompanySchedule;
 
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     const optionsForFormatDate = {
         year: "numeric",
