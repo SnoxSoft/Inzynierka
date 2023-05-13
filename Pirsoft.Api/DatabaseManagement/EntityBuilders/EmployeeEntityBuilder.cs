@@ -44,7 +44,9 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_employee_department");
 
-                entity.HasOne(d => d.employee_seniority_level).WithMany(p => p.employees)
+                entity
+                    .HasOne(d => d.employee_seniority_level)
+                    .WithMany(p => p.employees)
                     .HasForeignKey(d => d.employee_seniority_level_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_employee_seniority_level");

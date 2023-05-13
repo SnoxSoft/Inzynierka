@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 using Pirsoft.Api.Enums;
@@ -155,20 +156,39 @@ public class EmployeeController : Controller
             employee_id = employeeModel.employee_id;
             first_name = employeeModel.first_name;
             last_name = employeeModel.last_name;
-            employee_department_id = employeeModel.employee_department_id;
-            employee_seniority_level_id = employeeModel.employee_seniority_level_id;
-            employee_company_role_id = employeeModel.employee_company_role_id;
-            employee_skills = employeeModel.skills;
+            employee_department = new DepartmentModel
+            {
+                ApiInternalId = employeeModel.employee_department.ApiInternalId,
+                department_id = employeeModel.employee_department.department_id,
+                department_name = employeeModel.employee_department.department_name,
+            };
+            employee_seniority_level = new SeniorityLevelModel
+            {
+                ApiInternalId = employeeModel.employee_seniority_level.ApiInternalId,
+                seniority_level_id = employeeModel.employee_seniority_level.seniority_level_id,
+                seniority_level_name = employeeModel.employee_seniority_level.seniority_level_name,
+            };
+            employee_company_role = new CompanyRoleModel
+            {
+                ApiInternalId = employeeModel.employee_company_role.ApiInternalId,
+                role_id = employeeModel.employee_company_role.role_id,
+                role_name = employeeModel.employee_company_role.role_name,
+            };
+            employee_contract_type = new ContractTypeModel
+            {
+                ApiInternalId = employeeModel.employee_contract_type.ApiInternalId,
+                contract_id = employeeModel.employee_contract_type.contract_id,
+                contract_type_name = employeeModel.employee_contract_type.contract_type_name,
+            };
         }
 
         public int employee_id { get; }
         public string first_name { get; }
         public string last_name { get; }
-        public int employee_department_id { get; }
-        public int employee_seniority_level_id { get; }
-        public int employee_company_role_id { get; }
-        
+        public DepartmentModel employee_department { get; }
+        public SeniorityLevelModel employee_seniority_level { get; set; }
+        public CompanyRoleModel employee_company_role { get; }
+        public ContractTypeModel employee_contract_type { get; }
         public ICollection<SkillModel> employee_skills { get; }
-
     }
 }
