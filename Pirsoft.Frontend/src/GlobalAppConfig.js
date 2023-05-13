@@ -26,7 +26,7 @@ const pageNameTeamCreate = appName + ": Tworzenie zespołu";
 const pageNameTeamView = appName + ": Wyświetlanie danych zespołu";
 const pageNameReceivedGrades = appName + ": Moje oceny kwartalne";
 const pageNameGivenGrades = appName + ": Oceny pracowników";
-const pageNameEmployeesFinder = appName + ": Wyszukiwarka umiejetności";
+const pageNameSkillsFinder = appName + ": Wyszukiwarka umiejetności";
 const pageNameGrades = appName + ": Oceny kwartalne";
 const pageNameGiveGradesWindowView = appName + ": Ocena pracownika";
 const pageNameGiveGradesWindowGive = appName + ": Ocenianie pracownika";
@@ -240,7 +240,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
 
     pageNameRemind, pageNameEmployeeRegister, pageNameGiveGradesWindowGive, pageNameGiveGradesWindowView, pageNameTeamEdit, pageNameTeamCreate,
     pageNameEmployees, pageNameTeamView, pageNameLogging, pageNameSchedule, pageNameHomePage, pageNameAbsences, pageNameAddEmployeeAnAbsence,
-    pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameEmployeesFinder, pageNameEmployeeView, pageNameGivenGrades,
+    pageNameApprovalOrRejectionRequest, pageNameCompanySchedule, pageNameEmployeeData, pageNameSkillsFinder, pageNameEmployeeView, pageNameGivenGrades,
     pageNameReceivedGrades, pageNameGrades, pageNameRequests, pageNameTeams, pageNameNotifications, pageSkillPicker, pagePasswordEdit,
     pagePasswordChange,
 
