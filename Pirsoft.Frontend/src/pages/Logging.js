@@ -42,7 +42,11 @@ function Logging(){
                     switch (employee.statusCode) {
                         case 0:
                             const employeeTokenParsed = parseJWT(employee.token);
-                            setLocalStorageKeyWithExpiryKey("loggedEmployee", employeeTokenParsed);
+                            const token = [employeeTokenParsed].map((o) => ({
+                                ...o,
+                                token: employee.token
+                            }))
+                            setLocalStorageKeyWithExpiryKey("loggedEmployee", token[0]);
                             window.location.reload();
                             break;
                         case 1:
@@ -63,6 +67,7 @@ function Logging(){
     }
 
     return <>
+        {console.log(getLocalStorageKeyWithExpiry("loggedEmployee").token)}
         {getLocalStorageKeyWithExpiry("loggedEmployee") === null ?
         <div id={"home-logging-in"}
              className={"every-page-on-scroll hover:cursor-default"}
