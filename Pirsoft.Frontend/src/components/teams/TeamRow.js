@@ -35,15 +35,15 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
     function appendDay(day, row, col, daysOff, employeeId, dayId) {
         let color = 'bg-workday'
 
+        if(day.weekend !== undefined && day.weekend){
+            color = 'bg-weekend'
+        }
+
         daysOff.forEach((d) => {
             if(day.date === d){
                 color = 'bg-absent'
             }
         })
-
-        if(day.weekend !== undefined && day.weekend){
-            color = 'bg-weekend'
-        }
 
         return <div id={id+"-employee-"+employeeId+"-day-"+dayId}
                     key={id+"-employee-"+employeeId+"-day-"+dayId}

@@ -16,12 +16,16 @@ import {
     fetchGetRequestsStatuses,
     fetchGetAbsencesTypes, fetchGetEmployeeDataById, fetchGetOneEmployeeBetweenDatesDaysOff
 } from "../DataFetcher";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 
 function Absences(){
     document.title = pageNameAbsences;
 
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
@@ -65,9 +69,9 @@ function Absences(){
 
     useEffect(() => {
         //Załadowanie osobistych wartości dni urlopowych
-        if (employee === null) {
+        if (employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
             setEmployee(null);
-            fetchGetEmployeeDataById(sessionStorage.getItem('USER'), navigate)
+            fetchGetEmployeeDataById(getLocalStorageKeyWithExpiry("loggedEmployee").UserId, navigate)
                 .then(employee => setEmployee(employee));
         }
 
@@ -102,7 +106,7 @@ function Absences(){
         //Trzeba wyczyścić listę przed każdym filtrem
         setAbsencesList([])
 
-        fetchGetOneEmployeeBetweenDatesDaysOff(navigate, 2, dateFrom, dateTo)
+        fetchGetOneEmployeeBetweenDatesDaysOff(navigate, getLocalStorageKeyWithExpiry("loggedEmployee").UserId, dateFrom, dateTo)
             .then(employeeAbsences => {
 
                 let absencesListLoad = [];
@@ -128,7 +132,7 @@ function Absences(){
                         }
 
                         if(addAbsence !== null){
-                            if(absence.employee_owner_id.toString().trim() !== sessionStorage.getItem('USER').toString().trim()){
+                            if(absence.employee_owner_id.toString().trim() !== getLocalStorageKeyWithExpiry("loggedEmployee").UserId.toString().trim()){
                                 addAbsence = null
                             }
                         }
@@ -177,7 +181,12 @@ function Absences(){
                     </div>
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         <ReusableButton id={"request"} value={labelRequest} color={"bg-blue-menu"}
-                            onClick={() => setAbsencesVisible(false)}/>
+                            onClick={() => {
+                                if (getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
+                                    setAbsencesVisible(false)
+                                }
+                            }
+                        }/>
                     </div>
                 </div>
                 <div className={"flex justify-center"}>

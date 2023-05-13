@@ -1,6 +1,8 @@
+import {useNavigate} from "react-router-dom";
+
 const TIME_TO_EXPIRY = 1000*60*5; //ms*s*m
-export function getLocalStorageKeyWithExpiry(key)
-{
+
+export function getLocalStorageKeyWithExpiry(key) {
     const localStr = localStorage.getItem(key)
 
     if(!localStr)
@@ -15,6 +17,7 @@ export function getLocalStorageKeyWithExpiry(key)
     if(currentDate > localStrJson.expiry)
     {
         localStorage.removeItem(key);
+        window.location.reload()
         return null;
     }
 
@@ -23,7 +26,6 @@ export function getLocalStorageKeyWithExpiry(key)
         expiry: currentDate+TIME_TO_EXPIRY,
     }
     localStorage.setItem(key, JSON.stringify(updateKey));
-
 
     return localStrJson.value;
 }

@@ -16,20 +16,35 @@ import {
 import Legend from "../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
 import {useNavigate} from "react-router-dom";
-import {fetchGetAbsencesTypes, fetchGetOneEmployeeBetweenDatesDaysOff} from "../DataFetcher";
+import {fetchGetAbsencesTypes, fetchGetEmployeeDataById, fetchGetOneEmployeeBetweenDatesDaysOff} from "../DataFetcher";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 function Schedule(){
     document.title = pageNameSchedule;
 
-    //getLocalStorageKeyWithExpiry("loggedEmployee").userId
-
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Ładowanie listy do wybrania miesiąca
     const [monthList, setMonthList] = useState([])
     const [absencesTypes, setAbsencesTypes] = useState(null)
 
     useEffect(() => {
+        // Pobranie szczegółowych danych pracownika
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
+            fetchGetEmployeeDataById(getLocalStorageKeyWithExpiry("loggedEmployee").UserId, navigate)
+                .then(employee => {
+                    setFrom(
+                        dateTodayMinusThreeMonthsFormatted < dateStart ?
+                            employee.employment_start_date.toString().substring(0, 7) :
+                            dateTodayMinusThreeMonthsFormatted);
+                    filtrSchedule()
+                        .then(scheduleList => setMonthList(scheduleList))
+                });
+        }
+
         if(monthList.length === 0) {
             filtrSchedule()
                 .then(scheduleList => setMonthList(scheduleList))
@@ -55,7 +70,7 @@ function Schedule(){
     }
 
     const dateToday = new Date().toLocaleDateString("sv", options)
-    const dateStart = sessionStorage.getItem('START').substring(0,7)
+    const dateStart = new Date().toLocaleDateString("sv", options)
 
     const dateTodayMinusThreeMonths = new Date()
     dateTodayMinusThreeMonths.setMonth(dateTodayMinusThreeMonths.getMonth() - 2);
@@ -63,8 +78,8 @@ function Schedule(){
 
     const [from, setFrom] = useState(
         dateTodayMinusThreeMonthsFormatted < dateStart ?
-        dateStart :
-        dateTodayMinusThreeMonthsFormatted);
+            dateStart :
+            dateTodayMinusThreeMonthsFormatted);
     const [to, setTo] = useState(dateToday);
 
     async function filtrSchedule(){
@@ -127,7 +142,7 @@ function Schedule(){
         const lastDayOfMonthForEndpoint = lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint)
 
         // Ładowanie dni wolnych po załadowaniu okna a nie na bieżąco
-        fetchGetOneEmployeeBetweenDatesDaysOff(navigate, sessionStorage.getItem('USER'), firstDayOfMonthForEndpoint, lastDayOfMonthForEndpoint)
+        fetchGetOneEmployeeBetweenDatesDaysOff(navigate, getLocalStorageKeyWithExpiry("loggedEmployee").UserId, firstDayOfMonthForEndpoint, lastDayOfMonthForEndpoint)
             .then(monthDaysOff => {
 
                 let monthDaysOfff = []
@@ -371,7 +386,7 @@ function Schedule(){
                 pickedMonthTextDate.getMonth(),
                 0)
 
-            if(pickedMonthTextDateMinusOne.toLocaleDateString("sv", options) < dateStart){
+            if(pickedMonthTextDateMinusOne.toLocaleDateString("sv", options) < from){
                 setShowingAlert(true);
                 setTimeout(() => {setShowingAlert(false)}, 3000);
             }
@@ -389,7 +404,7 @@ function Schedule(){
                 pickedMonthTextDate.getMonth()+1,
                 1)
 
-            if(pickedMonthTextDatePlusOne.toLocaleDateString("sv", options) > dateToday){
+            if(pickedMonthTextDatePlusOne.toLocaleDateString("sv", options) > to){
                 setShowingAlert(true);
                 setTimeout(() => {setShowingAlert(false)}, 3000);
             }

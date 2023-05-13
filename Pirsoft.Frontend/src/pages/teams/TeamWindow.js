@@ -19,12 +19,16 @@ import {
     fetchGetTeamDataById,
     fetchPostCreateTeam, fetchPutEditTeam
 } from "../../DataFetcher";
+import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
 
 const TeamWindow = ({id, mode, title}) => {
     const[dynamicTitle, setDynamicTitle] = useState(title)
     document.title = dynamicTitle
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Ładowanie danych
     const [teamData, setTeamData] = useState(null);
