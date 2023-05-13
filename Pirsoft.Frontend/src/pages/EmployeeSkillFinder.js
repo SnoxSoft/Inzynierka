@@ -9,18 +9,16 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import {
     headerEmployeesFinder,
     headerEmployeesFinderList,
-    labelApprove,
-    labelClose, labelEmployeeFinderExchanceEmployeesBetween,
-    labelFind, pageNameEmployeesFinder,
-    serverIp, serverIpProd
+    labelClose,
+    labelFind, pageNameSkillsFinder
 } from "../GlobalAppConfig";
-import {endpointGetAllEmployees, endpointGetAllSkills} from "../EndpointAppConfig";
 import SkillPicker from "./SkillPicker";
 import {useNavigate} from "react-router-dom";
+import {fetchGetAllEmployees, fetchGetAllSkillsAndSort} from "../DataFetcher";
 
 const EmployeeSkillFinder = ({}) => {
 
-    document.title = pageNameEmployeesFinder;
+    document.title = pageNameSkillsFinder;
 
     const navigate = useNavigate();
 
@@ -40,21 +38,18 @@ const EmployeeSkillFinder = ({}) => {
     function loadAllEmployeesByFilter(){
         setEmployeePickerDataLoaded(false)
 
-        fetch(serverIpProd + "/" + endpointGetAllEmployees)
-            .then((response) => response.json())
-            .then((response) => {
-                let employeeLoad = []
+        fetchGetAllEmployees(navigate).then((response) => {
+            let employeeLoad = []
 
-                response.forEach((employee, employeeId) => {
-                    employeeLoad.push(
-                        <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee}/>
-                    )
-                })
-
-                setEmployeePickerData(employeeLoad)
-                setEmployeePickerDataLoaded(true)
+            response.forEach((employee, employeeId) => {
+                employeeLoad.push(
+                    <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee}/>
+                )
             })
-            .catch((err) => {
+
+            setEmployeePickerData(employeeLoad)
+            setEmployeePickerDataLoaded(true)
+        }).catch((err) => {
                 console.log(err.message);
             })
     }
@@ -63,14 +58,13 @@ const EmployeeSkillFinder = ({}) => {
     async function loadAllSkills(){
         setLoadedAllSkills([])
         let allSkillsLoad = []
-        const response = await fetch(serverIpProd + "/" + endpointGetAllSkills)
-        const skills = await response.json();
 
-        skills.forEach((s) => {
-            allSkillsLoad.push(s)
+        fetchGetAllSkillsAndSort(navigate).then((skills) => {
+            skills.forEach((s) => {
+                allSkillsLoad.push(s)
+            })
+            setLoadedAllSkills(allSkillsLoad)
         })
-
-        setLoadedAllSkills(allSkillsLoad)
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
