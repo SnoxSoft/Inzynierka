@@ -17,6 +17,7 @@ import {
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import AbsencesList from "../components/absences/AbsencesList";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 const RequestWindow = ({setAbsencesVisible = undefined,
                      setShowAddEmployeeAnAbsence = undefined, setEmployeeDataShow = undefined,
@@ -31,6 +32,9 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Lista rodzai urlopów
     const [absencesList, setAbsencesList] = useState(null)
@@ -47,7 +51,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
     useEffect(() => {
         // Załadowanie danych pracownika, dla którego wystawiamy wniosek
-        if (employee === null) {
+        if (employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
             setEmployee(null);
             fetchGetEmployeeDataById(requestData.employee_id !== undefined ? requestData.employee_id : requestData.employee_owner_id, navigate)
                 .then(employee => {
@@ -148,7 +152,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
     function rejectRequest(){
         const query = new URLSearchParams();
-        query.set("employeeApproverId", sessionStorage.getItem('USER'));
+        query.set("employeeApproverId", getLocalStorageKeyWithExpiry("loggedEmployee").UserId);
         query.set("absenceStatusId", 2);
 
         fetchPutEditAbsence(requestData.absence_id, query)
@@ -159,7 +163,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
     function approveRequest(){
         const query = new URLSearchParams();
-        query.set("employeeApproverId", sessionStorage.getItem('USER'));
+        query.set("employeeApproverId", getLocalStorageKeyWithExpiry("loggedEmployee").UserId);
         query.set("absenceStatusId", 3);
 
         fetchPutEditAbsence(requestData.absence_id, query)

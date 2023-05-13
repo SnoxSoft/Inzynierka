@@ -62,7 +62,7 @@ public class AbsenceController : ControllerBase
         }
     }
     
-    [HttpPost("delete/absence/{id}")]
+    [HttpDelete("delete/absence/{id}")]
     public async Task<IActionResult> DeleteAbsenceById(int id)
     {
         // Check if the absence exists

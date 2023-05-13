@@ -9,11 +9,9 @@ import {
     labelLogIn,
     labelPassword, pageNameHomePage,
     pageNameLogging,
-    serverIp,
     welcomeMessage,
     welcomeMessageShort
 } from "../GlobalAppConfig";
-import {endpointGetLogIn} from "../EndpointAppConfig";
 import {fetchLoginEmployee} from "../DataFetcher";
 import {getLocalStorageKeyWithExpiry, setLocalStorageKeyWithExpiryKey} from "../components/jwt/LocalStorage";
 import {parseJWT} from "../components/jwt/JwtParser";
@@ -38,12 +36,10 @@ function Logging(){
     }, []);
 
     const logIn = () => {
-        if (getLocalStorageKeyWithExpiry("loggedEmployee") === null)
-        {
-            fetchLoginEmployee(navigate, email, password)
+        if (getLocalStorageKeyWithExpiry("loggedEmployee") === null) {
+            fetchLoginEmployee(navigate, "wanda.123@gmail.com", "Wanda123@2113wanda")//email, password)
                 .then(employee => {
-                    switch (employee.statusCode)
-                    {
+                    switch (employee.statusCode) {
                         case 0:
                             const employeeTokenParsed = parseJWT(employee.token);
                             setLocalStorageKeyWithExpiryKey("loggedEmployee", employeeTokenParsed);
@@ -86,7 +82,7 @@ function Logging(){
                 <div className={"flex flex-col gap-4"}>
                     <label>{labelPassword}</label>
                     <div className={"flex flex-col gap-4 self-center"}>
-                        <LoggingPassword value={password} onChange={setPassword}/>
+                        <LoggingPassword id={"logging-password"} value={password} onChange={setPassword}/>
                     </div>
                 </div>
                 <div>

@@ -8,11 +8,15 @@ import {
     fetchGetAllTeamsAndAddZeroRecordAndSort
 } from "../../DataFetcher";
 import {useNavigate} from "react-router-dom";
+import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
 
 function Teams(){
     document.title = pageNameTeams;
 
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
@@ -82,9 +86,10 @@ function Teams(){
             style={{minWidth: 800}}>
                 <div className={"flex flex-cols justify-between p-4"}>
                     <ReusableButton id={"teams-finder-open"} value={labelSkillFinder}
-                                    link={"/employee-skill-finder"}
+                                    link={getLocalStorageKeyWithExpiry("loggedEmployee") !== null ? "/employee-skill-finder" : ""}
                                     color={"bg-blue-menu"} formatting={"border-2 border-b-workday min-w-min w-32 h-12"}/>
-                    <ReusableButton id={"teams-create-team"} value={labelCreateTeam} link={"/team-create"}/>
+                    <ReusableButton id={"teams-create-team"} value={labelCreateTeam}
+                                    link={getLocalStorageKeyWithExpiry("loggedEmployee") !== null ? "/team-create" : ""}/>
                 </div>
                 <hr/>
                 <div id={"schedule-company-list"}

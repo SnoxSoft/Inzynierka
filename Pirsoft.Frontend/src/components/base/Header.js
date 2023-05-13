@@ -15,7 +15,7 @@ const Header = () => {
                 <ReusableButton id={"header-home"} value={appName} link={"/"} />
             </div>
 
-                {getLocalStorageKeyWithExpiry("loggedEmployee") ?
+                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null ?
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         
                         {/*<ReusableButton*/}

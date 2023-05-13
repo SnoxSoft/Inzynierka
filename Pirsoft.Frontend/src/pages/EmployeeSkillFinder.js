@@ -15,12 +15,16 @@ import {
 import SkillPicker from "./SkillPicker";
 import {useNavigate} from "react-router-dom";
 import {fetchGetAllEmployees, fetchGetAllSkillsAndSort} from "../DataFetcher";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 const EmployeeSkillFinder = ({}) => {
 
     document.title = pageNameSkillsFinder;
 
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Opcje do filtrowania
     const [skillsPicked, setSkillsPicked] = useState([])

@@ -41,7 +41,7 @@ const RequestListItem = ({employeeAbsence, old = false,
     }
 
     function deleteAbsence() {
-        fetchDeleteAbsence(id)
+        fetchDeleteAbsence(employeeAbsence.absence_id)
             .then(r => {
                 filtrRequests()
             })
