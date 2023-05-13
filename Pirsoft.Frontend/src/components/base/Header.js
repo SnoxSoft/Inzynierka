@@ -1,10 +1,10 @@
 import ReusableButton from "./ReusableButton";
 import {FiLogOut} from "react-icons/fi";
 import { useNavigate } from  'react-router-dom';
-import {HiOutlineExclamationCircle} from "react-icons/hi";
-import {appName, avatarAlterText, employeeRegisterMenu} from "../../GlobalAppConfig";
+import {appName} from "../../GlobalAppConfig";
 import {BsPersonCircle} from "react-icons/bs";
 import React from "react";
+import {getLocalStorageKeyWithExpiry} from "../jwt/LocalStorage";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Header = () => {
                 <ReusableButton id={"header-home"} value={appName} link={"/"} />
             </div>
 
-                {sessionStorage.getItem('USER') ?
+                {getLocalStorageKeyWithExpiry("loggedEmployee") ?
                     <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
                         
                         {/*<ReusableButton*/}
@@ -33,7 +33,7 @@ const Header = () => {
                                 <BsPersonCircle fontSize={40}/>
                             }
                             onClick={() => {
-                                navigate('/employee/'+sessionStorage.getItem('USER'), { replace: true });
+                                navigate('/employee/'+getLocalStorageKeyWithExpiry("loggedEmployee").UserId, { replace: true });
                                 //window.location.reload()
                             }
                             }/>
@@ -42,7 +42,7 @@ const Header = () => {
                             id={"header-log-out"}
                             value={<FiLogOut  size={35}/>}
                             onClick={() => {
-                                            sessionStorage.removeItem('USER');
+                                            localStorage.removeItem("loggedEmployee");
                                             navigate("/", { replace: true });
                                             window.location.reload(false);
 
