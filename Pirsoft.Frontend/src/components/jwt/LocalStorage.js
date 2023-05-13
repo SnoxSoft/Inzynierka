@@ -10,7 +10,6 @@ export function getLocalStorageKeyWithExpiry(key)
 
     const localStrJson = JSON.parse(localStr);
 
-    console.log(localStrJson);
     const currentDate = new Date().getTime();
 
     if(currentDate > localStrJson.expiry)

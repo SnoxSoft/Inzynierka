@@ -19,7 +19,7 @@ import {getLocalStorageKeyWithExpiry, setLocalStorageKeyWithExpiryKey} from "../
 import {parseJWT} from "../components/jwt/JwtParser";
 
 function Logging(){
-    if(sessionStorage.getItem('USER') == null){
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") == null){
         document.title = pageNameLogging;
     }
     else {
@@ -38,7 +38,7 @@ function Logging(){
     }, []);
 
     const logIn = () => {
-        if (localStorage.getItem("loggedUser") === null)
+        if (getLocalStorageKeyWithExpiry("loggedEmployee") === null)
         {
             fetchLoginEmployee(navigate, email, password)
                 .then(employee => {
@@ -62,45 +62,18 @@ function Logging(){
                         default:
                             break;
                     }
-                    console.log(employee.token)
                 })
         }
-        // if (sessionStorage.getItem('USER') === null) {
-        //     fetch(serverIp + "/" + endpointGetLogIn + "/" + email + "/" + password)
-        //         .then((response) => {response.json()
-        //             .then((response) => {
-        //                 sessionStorage.setItem('USER', response[0].id)
-        //                 sessionStorage.setItem('FIRSTNAME', response[0].firstname)
-        //                 sessionStorage.setItem('LASTNAME', response[0].lastname)
-        //                 sessionStorage.setItem('AVATAR', response[0].avatar)
-        //                 sessionStorage.setItem('START', response[0].start)
-        //
-        //                 window.location.reload(false);
-        //             });
-        //         })
-        //         .catch((err) => {
-        //             console.log(err.message);
-        //             sessionStorage.setItem('USER', null)
-        //             sessionStorage.setItem('FIRSTNAME', null)
-        //             sessionStorage.setItem('LASTNAME', null)
-        //             sessionStorage.setItem('AVATAR', null)
-        //             sessionStorage.setItem('START', null)
-        //
-        //         })
-        // }
     }
 
     return <>
-        {sessionStorage.getItem('USER') === null ?
+        {getLocalStorageKeyWithExpiry("loggedEmployee") === null ?
         <div id={"home-logging-in"}
              className={"every-page-on-scroll hover:cursor-default"}
              style={{ height: wantedHeightsForList } }>
             <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                 <div>
-                    <p>{welcomeMessage+
-                        getLocalStorageKeyWithExpiry("loggedEmployee")+
-                        console.log(getLocalStorageKeyWithExpiry("loggedEmployee"))
-                    }</p>
+                    <p>{welcomeMessage}</p>
                 </div>
                 <div id={"login-error-message"} className={"text-red-600 font-bold"}></div>
                 <br></br>
@@ -131,8 +104,8 @@ function Logging(){
                 <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                     <div>
                         <p>{welcomeMessageShort+
-                            sessionStorage.getItem('FIRSTNAME')+' '+
-                            sessionStorage.getItem('LASTNAME')
+                            getLocalStorageKeyWithExpiry("loggedEmployee").FirstName+' '+
+                            getLocalStorageKeyWithExpiry("loggedEmployee").LastName
                         }</p>
                     </div>
                 </div>

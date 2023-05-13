@@ -1,10 +1,11 @@
 import {Outlet} from "react-router-dom";
 import Header from "../components/base/Header";
 import LeftMenu from "../components/base/LeftMenu";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 const Layout = () => {
 
-    let hideLeftPanel = sessionStorage.getItem('USER') === null
+    let hideLeftPanel = getLocalStorageKeyWithExpiry("loggedEmployee") === null
     let smallLeftMargin = "ml-2"
     if(hideLeftPanel){
         smallLeftMargin = ""
