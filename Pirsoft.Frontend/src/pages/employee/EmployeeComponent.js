@@ -15,26 +15,16 @@ import GrossSalary from "../../components/employee/fields/GrossSalary";
 import EmploymentStartDate from "../../components/employee/fields/EmploymentStartDate";
 import Contract from "../../components/employee/fields/Contract";
 import {
-    alertNewPasswordsAreIncompatible,
-    alertOldPasswordIsIncompatible,
-    alertPutNewPasswords,
     firstnameLabel,
-    headerPasswordChange,
-    labelApprove,
     labelBack,
     labelBankAccount,
     labelBirthDate,
-    labelChange,
     labelChangePassword,
-    labelClose,
     labelContractType,
     labelCreate,
     labelDelete,
     labelEdit,
     labelEmail,
-    labelGiveNewPassword,
-    labelGiveNewPasswordAgain,
-    labelGiveOldPassword,
     labelPESEL,
     labelPick,
     labelPosition,
@@ -47,11 +37,7 @@ import {
     pageNameEmployeeData,
     pageNameEmployeeRegister,
     pageNameEmployeeView,
-    serverIp,
     labelTeam,
-    legendLabel,
-    alertPasswordChanged,
-    alertUnexpectedError,
     alertWrongFirstName,
     alertWrongLastName,
     alertWrongBankAccount,
@@ -63,10 +49,8 @@ import {
     alertWrongPositionLevel,
     alertWrongTeam,
     alertWrongStartDate,
-    alertWrongEmail,
     alertWrongAddressEmail, labelLeaveDays, labelDemandDays, labelOverTenYears
 } from "../../GlobalAppConfig";
-import {endpointGetAllSkills} from "../../EndpointAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
 import SkillPicker from "../SkillPicker";
@@ -78,9 +62,7 @@ import {
     fetchPostCreateEmployee,
     fetchPutEditEmployee
 } from "../../DataFetcher";
-import Legend from "../../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
-import grossSalary from "../../components/employee/fields/GrossSalary";
 import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
 import RequestWindow from "../RequestWindow";
 import LeaveDays from "../../components/employee/fields/LeaveDays";
@@ -90,7 +72,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
     }
-    else if(id === getLocalStorageKeyWithExpiry("loggedEmployee")){
+    else if(id === getLocalStorageKeyWithExpiry("loggedEmployee").UserId){
         document.title = pageNameEmployeeData;
     }
     else document.title = pageNameEmployeeView;
@@ -490,7 +472,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </div>
             </div>
             {mode !== 'create' &&
-                getLocalStorageKeyWithExpiry("loggedEmployee") !== id ?
+                getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
                     <button
                         id={"employee-back"}
@@ -504,7 +486,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             <>
                                 <ReusableButton id={"employee-delete"} value={labelDelete} onClick={() => deleteEmployee()} />
                                 <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
-                                {getLocalStorageKeyWithExpiry("loggedEmployee") === id &&
+                                {getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id &&
                                 <ReusableButton id={"employee-password-change"} value={labelChangePassword}
                                         onClick={() => {
                                             setEmployeeDataShow(false);
