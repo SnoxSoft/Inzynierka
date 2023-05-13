@@ -388,9 +388,8 @@ export {
     fetchPostCreateAbsence,
     fetchPutEditAbsence,
     fetchDeleteAbsence,
-    fetchGetCompanyMonthDaysOff
     fetchGetOneEmployeeBetweenDatesDaysOff,
-    fetchGetAllEmployeesBetweenDatesDaysOff
+    fetchGetAllEmployeesBetweenDatesDaysOff,
 
     fetchLoginEmployee,
 }

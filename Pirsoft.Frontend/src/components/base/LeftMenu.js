@@ -3,10 +3,12 @@ import {
     absencesMenu,
     companyScheduleMenu,
     employeeRegisterMenu,
-    employeesMenu, gradesMenu, requestsMenu,
+    employeesMenu,
+    requestsMenu,
     scheduleMenu,
     teamsMenu
 } from "../../GlobalAppConfig";
+import {getLocalStorageKeyWithExpiry} from "../jwt/LocalStorage";
 function LeftMenu({hideLeftPanel = false}){
 
     let styleForLeftMenu = "left-menu-style";
@@ -17,7 +19,7 @@ function LeftMenu({hideLeftPanel = false}){
     return(
         <div id={"left-menu"}
              className={styleForLeftMenu}>
-            {sessionStorage.getItem('USER') ?
+            {getLocalStorageKeyWithExpiry("loggedEmployee") ?
                 <>
             <MenuButton id={"menu-employees"} link={"/employees"} value={employeesMenu}/>
             <MenuButton id={"menu-employee-register"} link={'/employee/-1'} value={employeeRegisterMenu}/>
