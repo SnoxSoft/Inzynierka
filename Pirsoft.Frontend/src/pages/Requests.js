@@ -294,6 +294,7 @@ function Requests(){
                                                      employeeTeam={employeeTeam.department_name}
                                                      absencesTypes={absencesTypes}
                                                      requestsStatus={requestsStatus}
+                                                     filtrRequests={filtrRequests}
                                                      window={"requests"}/>
                                 )
                                 row++;

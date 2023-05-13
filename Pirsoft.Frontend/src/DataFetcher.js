@@ -27,7 +27,12 @@ import {
     endpointPostCreateEmployee,
     endpointPostSendEmailForPasswordChange,
     endpointPutChangePassword,
-    endpointPutEditEmployee, endpointPostCreateAbsence, endpointCreateTeam, endpointDeleteTeam, endpointEditTeam
+    endpointPutEditEmployee,
+    endpointPostCreateAbsence,
+    endpointCreateTeam,
+    endpointDeleteTeam,
+    endpointEditTeam,
+    endpointPutEditAbsence, endpointDeleteAbsence
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -296,6 +301,19 @@ async function fetchGetAbsencesTypes(navigate) {
 async function fetchPostCreateAbsence(params) {
     return await axios.post(`${serverIpProd}/${endpointPostCreateAbsence}?${params}`)
 }
+
+async function fetchPutEditAbsence(id, query) {
+    return await axios.put(`${serverIpProd}/${endpointPutEditAbsence}/${id}?${query}`, {
+        headers: headers
+    })
+}
+
+async function fetchDeleteAbsence(id) {
+    return await axios.delete(`${serverIpProd}/${endpointDeleteAbsence}/${id}`, {
+        headers: headers
+    })
+}
+
 async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, dateTo) {
     try {
         const response = await axios.get(`${serverIpProd}/${endpointGetOneEmployeeBetweenDatesDaysOff}/${id}/${dateFrom}/${dateTo}`)
@@ -355,6 +373,8 @@ export {
     fetchGetAbsencesTypes,
 
     fetchPostCreateAbsence,
+    fetchPutEditAbsence,
+    fetchDeleteAbsence,
     fetchGetOneEmployeeBetweenDatesDaysOff,
     fetchGetAllEmployeesBetweenDatesDaysOff
 

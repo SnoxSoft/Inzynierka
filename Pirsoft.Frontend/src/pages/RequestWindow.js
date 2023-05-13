@@ -13,7 +13,7 @@ import {
 import {
     fetchGetAbsencesTypes,
     fetchGetEmployeeDataById,
-    fetchPostCreateAbsence
+    fetchPostCreateAbsence, fetchPutEditAbsence
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import AbsencesList from "../components/absences/AbsencesList";
@@ -131,22 +131,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     function createRequest(){
-        console.clear()
-        console.log(dateFrom)
-        console.log(dateTo)
-        console.log(absence)
-        console.log(noPay)
-
-        console.log(leaveDays)
-        console.log(demandDays)
-        //close()
-
         const query = new URLSearchParams();
         query.set("absenceStartDate", dateFrom);
         query.set("absenceEndDate", dateTo);
         query.set("unpaid", noPay ? 1 : 0);
         query.set("absenceTypeId", absence);
-        query.set("employeeApproverId", 1);
+        query.set("employeeApproverId", 0);
         query.set("employeeOwnerId", employee.employee_id);
         query.set("absenceStatusId", 1);
 
@@ -154,33 +144,28 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     .then(r => {
                         close()
                     })
-
     }
 
     function rejectRequest(){
-        // dodanie endpointu
-        console.clear()
-        console.log(dateFrom)
-        console.log(dateTo)
-        console.log(absence)
-        console.log(noPay)
+        const query = new URLSearchParams();
+        query.set("employeeApproverId", sessionStorage.getItem('USER'));
+        query.set("absenceStatusId", 2);
 
-        console.log(leaveDays)
-        console.log(demandDays)
-        //close()
+        fetchPutEditAbsence(requestData.absence_id, query)
+            .then(r => {
+                close()
+            })
     }
 
     function approveRequest(){
-        // dodanie onedpointu
-        console.clear()
-        console.log(dateFrom)
-        console.log(dateTo)
-        console.log(absence)
-        console.log(noPay)
+        const query = new URLSearchParams();
+        query.set("employeeApproverId", sessionStorage.getItem('USER'));
+        query.set("absenceStatusId", 3);
 
-        console.log(leaveDays)
-        console.log(demandDays)
-        //close()
+        fetchPutEditAbsence(requestData.absence_id, query)
+            .then(r => {
+                close()
+            })
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);

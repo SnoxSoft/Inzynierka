@@ -54,6 +54,9 @@ const endpointGetAllEmployeesBetweenDatesDaysOff = "get/all/employee/absences";
 
 const endpointPostCreateAbsence = "create/new/absence"
 
+const endpointPutEditAbsence = "edit/absence";
+const endpointDeleteAbsence = "delete/absence";
+
 
 // Umiejętności pracownika //
 
@@ -90,6 +93,8 @@ export {
     endpointGetRequestsStatuses,
     endpointGetAbsencesTypes, endpointPutEditEmployee,
     endpointPostCreateAbsence,
+    endpointPutEditAbsence,
+    endpointDeleteAbsence,
 
     endpointGetRequestApprovers,
 

@@ -139,6 +139,7 @@ function Absences(){
                                                  old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options)}
                                                  absencesTypes={absencesTypes}
                                                  requestsStatus={requestsStatus}
+                                                 filtrRequests={filtrAbsences}
                                                  window={"absences"}/>
                             )
                             row++;
