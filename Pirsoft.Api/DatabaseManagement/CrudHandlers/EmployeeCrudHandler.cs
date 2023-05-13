@@ -11,12 +11,24 @@ namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
 
         public async Task<EmployeeModel?> ReadEmployeeByIdAsync(int employeeId)
         {
-            return await _dbContext.Set<EmployeeModel>().Include(employee => employee.skills).FirstOrDefaultAsync(employee => employee.employee_id == employeeId);
+            return await _dbContext.Set<EmployeeModel>().
+                Include(employee => employee.skills)
+                .Include(employee => employee.employee_department)
+                .Include(employee => employee.employee_company_role)
+                .Include(employee => employee.employee_contract_type)
+                .Include(employee => employee.employee_seniority_level)
+                .FirstOrDefaultAsync(employee => employee.employee_id == employeeId);
         }
 
         public async Task<IQueryable<EmployeeModel?>> ReadAllEmployeesAsync()
         {
-            return await Task.FromResult(_dbContext.Set<EmployeeModel>().Include(employee => employee.skills));
+            return await Task.FromResult(_dbContext.Set<EmployeeModel>()
+                .Include(employee => employee.skills)
+                .Include(employee => employee.employee_department)
+                .Include(employee => employee.employee_company_role)
+                .Include(employee => employee.employee_contract_type)
+                .Include(employee => employee.employee_seniority_level)
+            );
         }
     }
 
