@@ -391,7 +391,6 @@ export {
     fetchGetAbsencesTypes,
 
     fetchPostCreateAbsence,
-    fetchGetCompanyMonthDaysOff
     fetchPutEditAbsence,
     fetchDeleteAbsence,
     fetchGetOneEmployeeBetweenDatesDaysOff,

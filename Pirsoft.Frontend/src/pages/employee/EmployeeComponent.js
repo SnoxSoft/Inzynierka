@@ -64,6 +64,7 @@ import {
 } from "../../DataFetcher";
 import {Popup} from "semantic-ui-react";
 import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
+import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
 import RequestWindow from "../RequestWindow";
 import LeaveDays from "../../components/employee/fields/LeaveDays";
 import DemandDays from "../../components/employee/fields/DemandDays";
@@ -124,7 +125,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
     // Reszta danych pracownika
     const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? undefined : undefined); //employee.avatar
-    const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
+    const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? skills : []);
 
     useEffect(() => {
         if(employee !== undefined && employee !== null && id !== '-1'){
@@ -145,7 +146,8 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setStart(employee.employment_start_date.substring(0, 10));
 
             setAvatarData(employee.avatar);
-            setSkillsData(employee.skills);
+            employee.skills.forEach((employee, index) => skills.push(employee.skill_name))
+            setSkillsData(skills);
         }
         else {
             clearWindowData();
