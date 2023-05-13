@@ -30,11 +30,22 @@ namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
                 .Include(employee => employee.employee_seniority_level)
             );
         }
+
+        public async Task<EmployeeModel?> ReadEmployeeByEmailAsync(string email)
+        {
+            return await _dbContext.Set<EmployeeModel>().Include(employee => employee.skills)
+                .Include(employee => employee.employee_department)
+                .Include(employee => employee.employee_company_role)
+                .Include(employee => employee.employee_contract_type)
+                .Include(employee => employee.employee_seniority_level)
+                .FirstOrDefaultAsync(employee => employee.email_address == email);
+        }
     }
 
     public interface IEmployeeCrudHandler
     {
         Task<EmployeeModel?> ReadEmployeeByIdAsync(int employeeId);
         Task<IQueryable<EmployeeModel?>> ReadAllEmployeesAsync();
+        Task<EmployeeModel?> ReadEmployeeByEmailAsync(string email);
     }
 }
