@@ -1,27 +1,23 @@
-﻿using System.Security.Claims;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MimeKit;
 using Pirsoft.Api.DatabaseManagement;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Security.Interfaces;
 using Pirsoft.Api.Services;
-using IAuthenticationService = Microsoft.AspNetCore.Authentication.IAuthenticationService;
 
 namespace Pirsoft.Api.Controllers;
 
 [ApiController]
-public class PasswordManagementController : ControllerBase
+public class PasswordManagementController : Controller
 {
     private readonly ICrudHandler _crudHandler;
     private readonly IUserManager<EmployeeModel> _userManager;
-    private readonly EmailService _emailService;
+    private readonly IMailService _emailService;
     private readonly PasswordService _passwordService;
     private readonly DatabaseContext _databasebContext;
 
-    public PasswordManagementController(ICrudHandler crudHandler, IUserManager<EmployeeModel> userManager, EmailService emailService, PasswordService passwordService, DatabaseContext databasebContext)
+    public PasswordManagementController(ICrudHandler crudHandler, IUserManager<EmployeeModel> userManager, IMailService emailService, PasswordService passwordService, DatabaseContext databasebContext)
     {
         _crudHandler = crudHandler;
         _userManager = userManager;
@@ -30,26 +26,19 @@ public class PasswordManagementController : ControllerBase
         _databasebContext = databasebContext;
     }
 
-    [HttpPost("/send/password/reset/{email}")]
-    public async Task<bool> SendPasswordResetEmail(string email)
+    [HttpPost("/send/password/reset")]
+    public async Task<IActionResult> SendMailAsync(MailModel mailData)
     {
-        var resetCode = _passwordService.GenerateResetCode();
-        var message = $"Your password reset code is: {resetCode}";
+        bool result = await _emailService.SendEmailAsync(mailData, new CancellationToken());
 
-        await _emailService.SendEmailAsync(email, "Password Reset Code", message);
-
-        // Store the reset code along with the user's email and a timestamp in the database
-        var resetToken = new PasswordResetTokenModel
+        if (result)
         {
-            email = email,
-            reset_code = resetCode,
-            expiration_time = DateTime.UtcNow.AddHours(1) // Valid for 1 hour
-        };
-
-        await _databasebContext.AddPasswordResetTokenAsync(resetToken);
-        await _databasebContext.SaveChangesAsync();
-
-        return true;
+            return StatusCode(StatusCodes.Status200OK, "Mail has successfully been sent.");
+        } 
+        else
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
+        }
     }
     
     [HttpPut("/reset/code/change/password")]
