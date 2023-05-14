@@ -40,11 +40,14 @@ import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
 import axios from "axios";
 import {getLocalStorageKeyWithExpiry} from "./components/jwt/LocalStorage";
 
-function getBearerToken(tokenStorage)
-{
+function getBearerToken(tokenStorage){
     if(tokenStorage !== null)
         return tokenStorage.token
     else return ""
+}
+
+function isTokenExpiredMessageFromApi(apiMessage){
+    return apiMessage === "token expired" ? true : false
 }
 
 const headers = {
@@ -60,6 +63,7 @@ function redirectToMainWindow(navigate, logOut = false){
 
         if(logOut){
             sessionStorage.clear()
+            localStorage.clear()
             window.location.reload();
         }
     }, 3000);
@@ -170,7 +174,7 @@ async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirectio
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -185,7 +189,7 @@ async function fetchGetTeamDataById(navigate, id) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -204,7 +208,7 @@ async function fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, addRecord = tru
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -222,7 +226,7 @@ async function fetchGetAllContractsAndAddZeroRecordAndSort(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -240,7 +244,7 @@ async function fetchGetAllPositionsAndAddZeroRecordAndSort(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -258,7 +262,7 @@ async function fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -275,7 +279,7 @@ async function fetchGetAllSkillsAndSort(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -290,7 +294,7 @@ async function fetchGetRequestsStatuses(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -305,7 +309,7 @@ async function fetchGetAbsencesTypes(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -342,7 +346,7 @@ async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, da
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -358,7 +362,7 @@ async function fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateT
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
