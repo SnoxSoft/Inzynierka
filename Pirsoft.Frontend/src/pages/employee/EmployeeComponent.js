@@ -64,7 +64,6 @@ import {
 } from "../../DataFetcher";
 import {Popup} from "semantic-ui-react";
 import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
-import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
 import RequestWindow from "../RequestWindow";
 import LeaveDays from "../../components/employee/fields/LeaveDays";
 import DemandDays from "../../components/employee/fields/DemandDays";

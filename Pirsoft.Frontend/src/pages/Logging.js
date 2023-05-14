@@ -67,7 +67,6 @@ function Logging(){
     }
 
     return <>
-        {console.log(getLocalStorageKeyWithExpiry("loggedEmployee").token)}
         {getLocalStorageKeyWithExpiry("loggedEmployee") === null ?
         <div id={"home-logging-in"}
              className={"every-page-on-scroll hover:cursor-default"}
