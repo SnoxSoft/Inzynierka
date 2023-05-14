@@ -156,6 +156,9 @@ public class EmployeeController : Controller
             employee_id = employeeModel.employee_id;
             first_name = employeeModel.first_name;
             last_name = employeeModel.last_name;
+            employee_company_role_id = employeeModel.employee_company_role_id;
+            employee_seniority_level_id = employeeModel.employee_seniority_level_id;
+            employee_department_id = employeeModel.employee_department_id;
             employee_department = new DepartmentModel
             {
                 ApiInternalId = employeeModel.employee_department.ApiInternalId,
@@ -180,11 +183,21 @@ public class EmployeeController : Controller
                 contract_id = employeeModel.employee_contract_type.contract_id,
                 contract_type_name = employeeModel.employee_contract_type.contract_type_name,
             };
+
+            employee_skills = employeeModel.skills.Select(skill => new SkillModel
+            {
+                ApiInternalId = skill.ApiInternalId,
+                skill_id = skill.skill_id,
+                skill_name = skill.skill_name
+            }).ToList();
         }
 
         public int employee_id { get; }
         public string first_name { get; }
         public string last_name { get; }
+        public int employee_department_id { get; }
+        public int employee_seniority_level_id { get; }
+        public int employee_company_role_id { get; }
         public DepartmentModel employee_department { get; }
         public SeniorityLevelModel employee_seniority_level { get; set; }
         public CompanyRoleModel employee_company_role { get; }

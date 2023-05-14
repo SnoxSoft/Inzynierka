@@ -7,6 +7,8 @@ using System.Text;
 using Newtonsoft.Json;
 using Pirsoft.Api.Security.Managers;
 using Pirsoft.Api.Security.Services;
+using System.Security.Authentication;
+using Newtonsoft.Json.Linq;
 
 namespace Pirsoft.Api.Configurators
 {
@@ -42,33 +44,45 @@ namespace Pirsoft.Api.Configurators
 
                 jwtBearerOptions.Events = new JwtBearerEvents()
                 {
-                    OnAuthenticationFailed = authenticationFailedContext =>
-                    {
-                        authenticationFailedContext.NoResult();
-                        authenticationFailedContext.Response.StatusCode = 500;
-                        authenticationFailedContext.Response.ContentType = "text/plain";
-
-                        return authenticationFailedContext.Response.WriteAsync(authenticationFailedContext.Exception.ToString());
-                    },
                     OnChallenge = bearerChallengeContext =>
                     {
                         bearerChallengeContext.HandleResponse();
-                        bearerChallengeContext.Response.StatusCode = 401;
+                        bearerChallengeContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         bearerChallengeContext.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject("401 Not authorized");
 
-                        return bearerChallengeContext.Response.WriteAsync(result);
-                    },
-                    OnForbidden = forbiddenContext =>
-                    {
-                        forbiddenContext.Response.StatusCode = 403;
-                        forbiddenContext.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject("403 Not authorized");
+                        if (string.IsNullOrEmpty(bearerChallengeContext.Error))
+                            bearerChallengeContext.Error = "invalid bearer token";
+                        if (string.IsNullOrEmpty(bearerChallengeContext.ErrorDescription))
+                            bearerChallengeContext.ErrorDescription = "Request requires valid JWT token";
 
-                        return forbiddenContext.Response.WriteAsync(result);
+                        if (bearerChallengeContext.AuthenticateFailure != null &&
+                            bearerChallengeContext.AuthenticateFailure.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            var authenticationException =
+                                bearerChallengeContext.AuthenticateFailure as SecurityTokenExpiredException;
+                            bearerChallengeContext.Response.Headers.Add("x-token-expired", authenticationException.Expires.ToString("o"));
+                            bearerChallengeContext.Error = "token expired";
+                            bearerChallengeContext.ErrorDescription = $"Bearer token expired on {authenticationException.Expires.ToString("o")}";
+                        }
+
+                        return bearerChallengeContext.Response.WriteAsync(
+                            JsonConvert.SerializeObject(
+                                new contextResponse(bearerChallengeContext.Error, bearerChallengeContext.ErrorDescription)));
                     },
                 };
             });
         }
     }
+    public struct contextResponse
+    {
+        public contextResponse(string error, string errorDescription)
+        {
+            Error = error;
+            error_description = errorDescription;
+        }
+
+        public string Error { get; set; }
+        public string error_description { get; set; }
+    }
 }
+
