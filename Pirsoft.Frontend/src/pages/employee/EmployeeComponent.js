@@ -49,7 +49,13 @@ import {
     alertWrongPositionLevel,
     alertWrongTeam,
     alertWrongStartDate,
-    alertWrongAddressEmail, labelLeaveDays, labelDemandDays, labelOverTenYears
+    alertWrongAddressEmail,
+    labelLeaveDays,
+    labelDemandDays,
+    labelOverTenYears,
+    alertSaved,
+    alertProblemOccured,
+    alertDeleted
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -69,13 +75,6 @@ import LeaveDays from "../../components/employee/fields/LeaveDays";
 import DemandDays from "../../components/employee/fields/DemandDays";
 import OverTenYears from "../../components/employee/fields/OverTenYears";
 function EmployeeComponent({id, mode, employee, teams, contracts, positions, positionsLevels}){
-    if(id === '-1'){
-        document.title = pageNameEmployeeRegister;
-    }
-    else if(id === getLocalStorageKeyWithExpiry("loggedEmployee").UserId){
-        document.title = pageNameEmployeeData;
-    }
-    else document.title = pageNameEmployeeView;
 
     // Możliwe rodzaje parametru mode:
     // create - do tworzenia
@@ -85,14 +84,23 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     const navigate = useNavigate();
     if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
         navigate("/");
+
     }
+
+    if(id === '-1'){
+        document.title = pageNameEmployeeRegister;
+    }
+    else if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && id === getLocalStorageKeyWithExpiry("loggedEmployee").UserId){
+        document.title = pageNameEmployeeData;
+    }
+    else document.title = pageNameEmployeeView;
 
     // Na razie od ręki ustationy przywilej i zapisany w sesji
     // Podział na widoczność pól według roli konta plus podział na możliwość edycji.
     // Tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
 
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
-    let disableData = getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id && mode !== 'create'
+    let disableData = getLocalStorageKeyWithExpiry("loggedEmployee") !== null ? getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id && mode !== 'create' : false
     
     // Do pokazania/ukrycia danych pracownika
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
@@ -212,9 +220,25 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     function deleteEmployee(){
         fetchDeleteEmployee(id)
             .then(r => {
-                clearWindowData();
-                navigate(-1);
-                console.log(r)})
+                if (r.status === 200) {
+                    setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
+                        {alertDeleted}
+                    </p>)
+                    setShowPopupWithProblems(true)
+
+                    setTimeout(() => {
+                        clearWindowData();
+                        navigate(-1);
+                    }, 3000);
+                } else {
+                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProblemOccured}
+                    </p>)
+                    setShowPopupWithProblems(true)
+                }
+
+
+            })
     }
 
 
@@ -314,7 +338,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("lastName", lastName);
         query.set("email", email);
         query.set("bankAccountNumber", bank);
-        query.set("dateOfBirth", birth);
+        query.set("birthDate", birth);
         query.set("password", "Wanda123@2113wanda");
         query.set("pesel", pesel);
         query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
@@ -327,8 +351,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("leaveDemandDays", demandDays);
         query.set("leaveIsSeniorityThreshold", overTenYears);
 
-        console.log(query)
-
         if(alerts.length > 0){
             setShowPopupWithProblems(true)
         }
@@ -336,16 +358,41 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             if(id === "-1") {
                 fetchPostCreateEmployee(query)
                     .then(r => {
-                        // Zapisanie umiejetnosci zaraz po tym
-                        console.log(skillsData)
-                        clearWindowData()})
+                        if (r.status === 200) {
+                            setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
+                                {alertSaved}
+                            </p>)
+                            setShowPopupWithProblems(true)
+
+                            // Zapisanie umiejetnosci zaraz po tym
+                            console.log(skillsData)
+                            clearWindowData();
+                        } else {
+                            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                                {alertProblemOccured}
+                            </p>)
+                            setShowPopupWithProblems(true)
+                        }
+                    })
             }
             else{
                 query.set("leaveIsSeniorityThreshold", overTenYears ? 1 : 0);
                 fetchPutEditEmployee(id, query)
                     .then(r => {
-                        //Zapisanie też nowych umiejetności zaraz po zapisaniu - endpoint
-                        console.log(skillsData)
+                        if (r.status === 200) {
+                            setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
+                                {alertSaved}
+                            </p>)
+                            setShowPopupWithProblems(true)
+
+                            // Zapisanie umiejetnosci zaraz po tym
+                            console.log(skillsData)
+                        } else {
+                            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                                {alertProblemOccured}
+                            </p>)
+                            setShowPopupWithProblems(true)
+                        }
                     })
             }
         }
@@ -455,7 +502,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     <ProfilePicture id={"employee-profile-picture"} picture={avatarData}/>
                     <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
-                        {getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === 'create' ?
+                        {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === 'create' ?
                             <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
                                 onClick={ () => {
@@ -470,8 +517,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     </div>
                 </div>
             </div>
-            {mode !== 'create' &&
-                getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
+            {mode !== 'create' && (getLocalStorageKeyWithExpiry("loggedEmployee") !== null && (getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id)) ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
                     <button
                         id={"employee-back"}
@@ -481,10 +527,16 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             }
             <div className={"grow-0 p-4 flex flex-row justify-around"}>
                     <>
-                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ?
+                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ?
                             <>
-                                <ReusableButton id={"employee-delete"} value={labelDelete} onClick={() => deleteEmployee()} />
-                                <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
+                                <Popup content={buildPopup} position={"top center"}
+                                       trigger={<ReusableButton id={"employee-delete"}
+                                                                value={labelDelete} onClick={() => deleteEmployee()}/>}
+                                />
+                                <Popup content={buildPopup} position={"top center"}
+                                    trigger={<ReusableButton id={"employee-save"}
+                                                             value={labelSave} onClick={() => saveEmployee()}/>}
+                                />
                                 {getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id &&
                                 <ReusableButton id={"employee-password-change"} value={labelChangePassword}
                                         onClick={() => {

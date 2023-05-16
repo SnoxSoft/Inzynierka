@@ -15,6 +15,7 @@ export function getLocalStorageKeyWithExpiry(key) {
     if(currentDate > localStrJson.expiry)
     {
         localStorage.removeItem(key);
+        window.location.reload();
         return null;
     }
 
