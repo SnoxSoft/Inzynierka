@@ -115,7 +115,7 @@ public class EmployeeController : Controller
     [HttpPut("edit/employee/{id}")]
     public async Task<IActionResult> UpdateEmployee(int id, string firstName, string lastName, string pesel, string bankAccountNumber,
         int departmentId, int leaveBaseDays, int leaveDemandDays, double grossSalary, byte leaveIsSeniorityThreshold,
-        DateTime dateOfBirth, DateTime employmentStartDate, int companyRole, int contractType, int seniorityLevel)
+        DateTime birthDate, DateTime employmentStartDate, int companyRole, int contractType, int seniorityLevel)
     {
         var existingEmployee = await _crudHandler.ReadAsync<EmployeeModel>(id);
 
@@ -127,7 +127,7 @@ public class EmployeeController : Controller
         existingEmployee.pesel = pesel;
         existingEmployee.bank_account_number = bankAccountNumber;
         existingEmployee.employment_start_date = employmentStartDate;
-        existingEmployee.birth_date = dateOfBirth;
+        existingEmployee.birth_date = birthDate;
         existingEmployee.salary_gross = grossSalary;
         existingEmployee.employee_contract_type_id = contractType;
         existingEmployee.employee_department_id = departmentId;
