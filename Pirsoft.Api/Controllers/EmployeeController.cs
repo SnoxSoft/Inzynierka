@@ -8,6 +8,7 @@ using Pirsoft.Api.Models.ModelCreators;
 using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Filesystem;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pirsoft.Api.Controllers;
 
