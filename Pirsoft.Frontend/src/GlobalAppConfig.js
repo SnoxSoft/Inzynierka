@@ -198,9 +198,10 @@ const alertMessageSent = "Wiadomość została wysłana";
 const alertPasswordChanged = "Hasło zostało zmienione. \nZa chwilę nastąpi przekierowanie";
 const alertWrongEmail = "Wprowadzony email jest błędny";
 const alertUnexpectedError = "Wystapił nieoczekiwany błąd, spróbuj ponownie za chwilę";
+const alertPasswordIncorrect = "Hasło powinno";
 const alertPutNewPasswords = "Wpisz nowe hasła w pola";
 const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
-const alertOldPasswordIsIncompatible = "Wpisane stare hasło jest błędne";
+const alertPasswordIsIncompatible = "Nowe hasło powinno mieć co najmniej 14 znaków, jeden znak Duży i jeden znak specjalny oraz znaki małe";
 const alertOldPasswordIsMissing = "Wpisz stare hasło";
 
 
@@ -287,7 +288,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     alertUnexpectedError,
     alertPutNewPasswords,
     alertNewPasswordsAreIncompatible,
-    alertOldPasswordIsIncompatible,
+    alertPasswordIsIncompatible,
     alertOldPasswordIsMissing,
 
     labelReceivedGrades, labelGivenGrades, labelQuarter,
