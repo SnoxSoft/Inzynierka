@@ -213,6 +213,7 @@ CREATE TABLE `employees` (
   `leave_base_days` int NOT NULL DEFAULT '0',
   `leave_demand_days` int NOT NULL DEFAULT '0',
   `leave_is_seniority_threshold` tinyint NOT NULL DEFAULT '0',
+  `avatar_file_path` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`employee_id`),
   UNIQUE KEY `id_UNIQUE` (`employee_id`),
   UNIQUE KEY `pesel_UNIQUE` (`pesel`),
@@ -344,4 +345,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-10 22:59:26
+-- Dump completed on 2023-05-15 22:01:14
