@@ -10,7 +10,7 @@ const TeamLeader = ({disableChange, mode, leaderData, setLeaderData, setEmployee
                                           setEmployeesFinderShowing={setEmployeesFinderShowing}/>)
     })
 
-    return (<div className={"flex flex-col gap-1"}>
+    return (<div className={"flex flex-col gap-2"}>
                 {showAllLeaders}
             </div>
     )
