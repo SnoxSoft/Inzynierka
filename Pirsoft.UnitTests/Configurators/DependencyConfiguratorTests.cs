@@ -19,6 +19,7 @@ namespace Pirsoft.UnitTests.Configurators
             typeof(IDatabaseModelBuilder),
             typeof(IEmployeeCrudHandler),
             typeof(IEmployeeModelValidator),
+            typeof(IAvatarFileValidator),
         };
 
         private DependencyConfigurator _sut = null!;
