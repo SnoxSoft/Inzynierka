@@ -51,7 +51,7 @@ function isTokenExpiredMessageFromApi(apiMessage){
 }
 
 const headers = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'multipart/form-data',
     'Authorization': `Bearer ${getBearerToken(getLocalStorageKeyWithExpiry("loggedEmployee"))}`,
     'charset': 'utf-8'
 }
@@ -141,13 +141,16 @@ async function fetchGetEmployeeDataById(id, navigate) {
 
 }
 
-async function fetchPostCreateEmployee(params) {
-    return await axios.post(`${serverIpProd}/${endpointPostCreateEmployee}?${params}`)
+async function fetchPostCreateEmployee(params, formData) {
+    return await axios.post(`${serverIpProd}/${endpointPostCreateEmployee}?${params}`, formData, {
+        formData
+    })
 }
 
-async function fetchPutEditEmployee(id, query) {
-    return await axios.put(`${serverIpProd}/${endpointPutEditEmployee}/${id}?${query}`, {
-        headers: headers
+async function fetchPutEditEmployee(id, query, formData) {
+    return await axios.put(`${serverIpProd}/${endpointPutEditEmployee}/${id}?${query}`, formData,{
+        headers: headers,
+        formData
     })
 }
 
@@ -367,15 +370,20 @@ async function fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateT
 }
 
 async function fetchLoginEmployee(navigate, email, password){
-    const response = await fetch(serverIpProd + "/" + endpointGetLogIn + "?email=" + email + "&password=" + password,
-        {
-            method: "POST",
-        })
-        .catch( err => console.error(err))
-    if (response.status === 200)
-        return response.json()
-    else
-        return []
+    try {
+        const response = await fetch(serverIpProd + "/" + endpointGetLogIn + "?email=" + email + "&password=" + password,
+            {
+                method: "POST",
+            })
+            .catch( err => console.error(err))
+        if (response && response.status === 200)
+            return response.json()
+        else
+            return []
+    } catch (error) {
+        console.error(error);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
+    }
 }
 
 export {
