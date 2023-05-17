@@ -13,7 +13,7 @@ using Pirsoft.Api.Validators;
 namespace Pirsoft.UnitTests.Configurators
 {
     [TestFixture]
-    public class DependencyConfiguratorTests
+    public class DependencyConfiguratorTests : BaseForConfiguratorTests<DependencyConfigurator>
     {
         private static readonly Type[] _expectedServiceInterfaces = new Type[]
         {
@@ -25,24 +25,6 @@ namespace Pirsoft.UnitTests.Configurators
             typeof(IEmployeeModelValidator),
         };
 
-        private DependencyConfigurator _sut = null!;
-
-        [SetUp]
-        public void SetUp() => _sut = DependencyConfigurator.Instance;
-
-        [Test]
-        public void Instance_ReturnsConfiguratorAsSingletonInstance()
-        {
-            //Arrange
-            DependencyConfigurator expectedInstance = DependencyConfigurator.Instance;
-
-            //Act
-            DependencyConfigurator result = _sut;
-
-            //Assert
-            result.Should().BeSameAs(expectedInstance);
-        }
-
         [TestCaseSource(nameof(typesSource))]
         public void Init_SuccessfullyRegistersServicesAsDependencies(Type expectedType)
         {
@@ -50,7 +32,7 @@ namespace Pirsoft.UnitTests.Configurators
             Mock<IServiceCollection> serviceCollectionMock = new();
 
             //Act
-            _sut.Init(serviceCollectionMock.Object);
+            sut.Init(serviceCollectionMock.Object);
 
             //Assert
             serviceCollectionMock
@@ -65,7 +47,7 @@ namespace Pirsoft.UnitTests.Configurators
             IServiceCollection fakeServices = new ServiceCollection();
 
             //Act
-            _sut.Init(fakeServices);
+            sut.Init(fakeServices);
 
             //Assert
             fakeServices

@@ -5,26 +5,9 @@ using Pirsoft.Api.Configurators;
 
 namespace Pirsoft.UnitTests.Configurators
 {
-    public class AppRunnerTests
+    [TestFixture]
+    public class AppRunnerTests : BaseForConfiguratorTests<AppRunner>
     {
-        private AppRunner _sut = null!;
-
-        [SetUp]
-        public void SetUp() => _sut = AppRunner.Instance;
-
-        [Test]
-        public void Instance_ReturnsConfiguratorAsSingletonInstance()
-        {
-            //Arrange
-            AppRunner expectedInstance = AppRunner.Instance;
-
-            //Act
-            AppRunner result = _sut;
-
-            //Assert
-            result.Should().BeSameAs(expectedInstance);
-        }
-
         [Test]
         public void Init_ShouldConfigureApplicationBuilderToRun()
         {
@@ -33,8 +16,8 @@ namespace Pirsoft.UnitTests.Configurators
             AppServicesConfigurator.Instance.Init(fakeBuilder);
 
             //Act
-            _sut.Init(fakeBuilder);
-            bool result = _sut.CanRun;
+            sut.Init(fakeBuilder);
+            bool result = sut.CanRun;
 
             //Assert
             result.Should().BeTrue();
