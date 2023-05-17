@@ -27,7 +27,6 @@ namespace Pirsoft.Api.Configurators
 
         private void configureAppBuild()
         {
-            // Configure the HTTP request pipeline.
             if (_app.Environment.IsDevelopment())
             {
                 _app.UseSwagger();
@@ -38,6 +37,8 @@ namespace Pirsoft.Api.Configurators
             _app.UseAuthentication();
             _app.UseAuthorization();
             _app.MapControllers();
+
+            StaticFilesConfigurator.Instance.Init(_app, _app.Configuration);
 
             CanRun = true;
         }
