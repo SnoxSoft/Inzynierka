@@ -354,7 +354,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("email", email);
         query.set("bankAccountNumber", bank);
         query.set("birthDate", birth);
-        query.set("password", "Wanda123@2113wanda");
+        query.set("password", "");
         query.set("pesel", pesel);
         query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
         query.set("departmentId", department);
