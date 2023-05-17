@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +42,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
             await _sut.CreateAsync(testEntity);
 
             //Assert
-            mockSet.Verify(m => m.Add(It.IsAny<TModel>()), Times.Once);
+            mockSet.Verify(m => m.AddAsync(It.IsAny<TModel>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
             //Assert
             await act.Should().ThrowAsync<ArgumentException>()
-                .WithMessage($"Passed model object with '{nameof(testEntity.ApiInternalId)}' property set, use {nameof(CrudHandler)}.{nameof(CrudHandler.UpdateAsync)} instead.");
+                .WithMessage($"Passed model object with '{nameof(testEntity.ApiInternalId)}' property set, use {nameof(CrudHandler)}.UpdateAsync instead.*");
         }
 
         [Test]
@@ -68,8 +69,8 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
             Mock<DbSet<TModel>> mockSet = DbSetMocks.CreateMock(testData);
             mockSet
-                .Setup(m => m.Find(It.IsAny<int>()))
-                .Returns(testEntity);
+                .Setup(m => m.FindAsync(It.IsAny<int>()))
+                .ReturnsAsync(testEntity);
 
             _databaseContextMock
                 .Setup(m => m.Set<TModel>())
@@ -80,7 +81,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
             //Assert
             result.Should().BeEquivalentTo(testEntity);
-            mockSet.Verify(m => m.Find(It.IsAny<int>()), Times.Once);
+            mockSet.Verify(m => m.FindAsync(It.IsAny<int>()), Times.Once);
         }
 
         [Test]
@@ -92,8 +93,8 @@ namespace Pirsoft.UnitTests.DatabaseManagement
 
             Mock<DbSet<TModel>> mockSet = DbSetMocks.CreateMock(testData);
             mockSet
-                .Setup(m => m.Find(It.IsAny<int>()))
-                .Returns((TModel?)null);
+                .Setup(m => m.FindAsync(It.IsAny<int>()))
+                .ReturnsAsync((TModel?)null);
 
             _databaseContextMock
                 .Setup(m => m.Set<TModel>())
@@ -103,7 +104,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
             TModel? result = await _sut.ReadAsync<TModel>(0);
 
             //Assert
-            mockSet.Verify(m => m.Find(It.IsAny<int>()), Times.Once);
+            mockSet.Verify(m => m.FindAsync(It.IsAny<int>()), Times.Once);
             result.Should().BeNull();
         }
 

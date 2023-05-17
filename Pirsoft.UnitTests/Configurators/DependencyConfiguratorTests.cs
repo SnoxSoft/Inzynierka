@@ -17,6 +17,7 @@ namespace Pirsoft.UnitTests.Configurators
         {
             typeof(ICrudHandler),
             typeof(IDatabaseModelBuilder),
+            typeof(IEmployeeCrudHandler),
             typeof(IEmployeeModelValidator),
         };
 
