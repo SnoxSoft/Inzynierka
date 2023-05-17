@@ -2,13 +2,23 @@
 {
     public class AvatarFileValidator : IAvatarFileValidator
     {
-        public AvatarFileValidator()
-        {
-        }
-
         public bool IsAvatarFileValid(IFormFile file)
         {
-            throw new NotImplementedException();
+            string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (extension != ".png" && extension != ".jpg")
+            {
+                return false;
+            }
+
+            long fileSize = file.Length;
+
+            if (fileSize < 125 || fileSize > 2097152)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 
