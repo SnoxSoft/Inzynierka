@@ -353,3 +353,4 @@ MigrationBackup/
 .idea
 Pirsoft.Api/appsettings.json
 Pirsoft.Frontend/src/GlobalAppConfig.js
+Pirsoft.Frontend/public/Resources/Avatars

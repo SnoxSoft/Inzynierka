@@ -39,7 +39,7 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                 // Tutaj pomyslimy jakie wartosci sprawdzic
                 if (newPassword.toString() === newRepeatPassword.toString()) {
 
-                    if (newPassword.match("^(?=.*[A-Z])(?=.*[@$!%*?&]).{14,}$") != null) {
+                    if (newPassword.match("^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$") != null) {
 
                     fetchPutEditOldPasswordInProfile(navigate,
                         employee.employee_id, oldPassword, newPassword, newRepeatPassword)
