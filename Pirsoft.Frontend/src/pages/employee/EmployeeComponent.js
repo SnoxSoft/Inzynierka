@@ -55,7 +55,7 @@ import {
     labelOverTenYears,
     alertSaved,
     alertProblemOccured,
-    alertDeleted
+    alertDeleted, alertProfilePictureTooBig
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -248,6 +248,20 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         // Sprawdzenie błędów
         setAlerts(<></>)
         let alerts = []
+
+        const profilePicture = document.getElementById('employee-profile-picture');
+        if(profilePicture !== null) {
+            console.log(profilePicture.naturalHeight)
+            console.log(profilePicture.naturalWidth)
+            if (profilePicture.naturalHeight > 301 || profilePicture.naturalWidth > 301) {
+                alerts.push(
+                    <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProfilePictureTooBig}
+                    </p>
+                )
+            }
+        }
+
         if(firstName.toString().trim().length === 0){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
@@ -532,7 +546,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             }
             <div className={"grow-0 p-4 flex flex-row justify-around"}>
                     <>
-                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ?
+                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
                             <>
                                 <Popup content={buildPopup} position={"top center"}
                                        trigger={<ReusableButton id={"employee-delete"}

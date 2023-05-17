@@ -206,6 +206,7 @@ public class EmployeeController : Controller
             employee_id = employeeModel.employee_id;
             first_name = employeeModel.first_name;
             last_name = employeeModel.last_name;
+            avatar_file_path = employeeModel.avatar_file_path;
             employee_company_role_id = employeeModel.employee_company_role_id;
             employee_seniority_level_id = employeeModel.employee_seniority_level_id;
             employee_department_id = employeeModel.employee_department_id;
@@ -245,6 +246,7 @@ public class EmployeeController : Controller
         public int employee_id { get; }
         public string first_name { get; }
         public string last_name { get; }
+        public string? avatar_file_path { get; }
         public int employee_department_id { get; }
         public int employee_seniority_level_id { get; }
         public int employee_company_role_id { get; }
