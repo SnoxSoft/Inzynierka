@@ -1,21 +1,21 @@
 import React, {useEffect, useState} from "react";
 import ReusableButton from "../components/base/ReusableButton";
-import FirstnameAndLastname from "../components/employeesFinder/FirstnameAndLastname";
 import SortingButton from "../components/employeesFinder/SortingButton";
 import SkillsList from "../components/employeesFinder/SkillsList";
 import SkillsPicker from "../components/employeesFinder/SkillsPicker";
 import EmployeePickerListItem from "../components/employeesFinder/EmployeePickerListItem";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {
-    headerEmployeesFinder,
-    headerEmployeesFinderList,
+    headerEmployeesFinder, headerEmployeesFinderEmployeeList,
+    headerEmployeesFinderList, headerEmployeesFinderSkillsList,
     labelClose,
-    labelFind, pageNameSkillsFinder
+    labelFind, labelFirstNameAndLastName, pageNameSkillsFinder
 } from "../GlobalAppConfig";
 import SkillPicker from "./SkillPicker";
 import {useNavigate} from "react-router-dom";
 import {fetchGetAllEmployees, fetchGetAllSkillsAndSort} from "../DataFetcher";
 import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
+import FirstnameAndLastname from "../components/employees/search/fields/FirstnameAndLastname";
 
 const EmployeeSkillFinder = ({}) => {
 
@@ -34,25 +34,73 @@ const EmployeeSkillFinder = ({}) => {
     const [skillsNotShows, setSkillsNotShows] = useState(true)
 
     const [skillsComponent, setSkillsComponent] = useState(<></>)
-    //const [skills, setSkills] = useState();
     const [skillsLoaded, setSkillsLoaded] = useState(false)
 
-    const [employeePickerData, setEmployeePickerData] = useState()
-    const [employeePickerDataLoaded, setEmployeePickerDataLoaded] = useState(false)
+    const [employeePickerData, setEmployeePickerData] = useState(null)
     function loadAllEmployeesByFilter(){
-        setEmployeePickerDataLoaded(false)
-
-        fetchGetAllEmployees(navigate).then((response) => {
-            let employeeLoad = []
-
+        fetchGetAllEmployees(navigate,true, order ? "ascending" : "descending").then((response) => {
+            let filteredEmployeeList = []
+            console.clear()
             response.forEach((employee, employeeId) => {
-                employeeLoad.push(
-                    <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee}/>
-                )
-            })
+                const employeeName = employee.first_name + " " + employee.last_name
+                // Jeśli tylko wpisana nazwa pracownika
+                if (firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0) {
+                    if (employeeName.includes(firstnameAndLastname)) {
+                        if(skillsPicked.length !== 0){
+                            let hasAllPickedSkills = true;
 
-            setEmployeePickerData(employeeLoad)
-            setEmployeePickerDataLoaded(true)
+                            skillsPicked.forEach(skillPicked => {
+                                const hasSkill = employee.employee_skills.some(employeeSkill => {
+                                    return employeeSkill.skill_id.toString().trim() === skillPicked.skill_id.toString().trim();
+                                });
+
+                                if (!hasSkill) {
+                                    hasAllPickedSkills = false;
+                                }
+                            });
+
+                            if (hasAllPickedSkills) {
+                                filteredEmployeeList.push(
+                                    <EmployeePickerListItem key={"finder-list-item-" + employeeId} employee={employee} />
+                                );
+                            }
+                        }
+                        else {
+                            console.log("nie wybralam nic")
+                            filteredEmployeeList.push(
+                                <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee}/>
+                            )
+                        }
+                    }
+                }
+                else {
+                    if(skillsPicked.length !== 0) {
+                        let hasAllPickedSkills = true;
+
+                        skillsPicked.forEach(skillPicked => {
+                            const hasSkill = employee.employee_skills.some(employeeSkill => {
+                                return employeeSkill.skill_id.toString().trim() === skillPicked.skill_id.toString().trim();
+                            });
+
+                            if (!hasSkill) {
+                                hasAllPickedSkills = false;
+                            }
+                        });
+
+                        if (hasAllPickedSkills) {
+                            filteredEmployeeList.push(
+                                <EmployeePickerListItem key={"finder-list-item-" + employeeId} employee={employee} />
+                            );
+                        }
+                    }
+                    else {
+                        filteredEmployeeList.push(
+                            <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee}/>
+                        )
+                    }
+                }
+            })
+            setEmployeePickerData(filteredEmployeeList)
         }).catch((err) => {
                 console.log(err.message);
             })
@@ -71,6 +119,10 @@ const EmployeeSkillFinder = ({}) => {
         })
     }
 
+    if(employeePickerData === null){
+        loadAllEmployeesByFilter();
+    }
+
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
         FunctionForResize("employee-picker", {setWantedHeightForList});
@@ -85,7 +137,12 @@ const EmployeeSkillFinder = ({}) => {
                         <div>{headerEmployeesFinder}</div>
                         <div className={"flex flex-row place-items-center gap-2"}>
                             <div className={"flex flex-col place-self-start m-2 gap-2"}>
-                                <FirstnameAndLastname id={"finder-firstname-lastname"} className={""} onChange={setFirstnameAndLastname}/>
+                                <div className={"flex flex-row gap-2"}>
+                                    <p className={""}>{labelFirstNameAndLastName}</p>
+                                    <FirstnameAndLastname id={"finder-firstname-lastname"} className={""}
+                                                          onChange={setFirstnameAndLastname}
+                                    value={firstnameAndLastname}/>
+                                </div>
                                     <SkillsPicker id={"finder-skill-picker"}
                                                   loadAllSkills={loadAllSkills}
                                                   setSkills={setSkillsPicked}
@@ -102,7 +159,10 @@ const EmployeeSkillFinder = ({}) => {
 
                     <div  id={"employee-picker"} className={"grow bg-brown-menu border-2 bg-opacity-30 border-workday menu rounded-md m-4 overflow-y-auto"}
                          style={{height: wantedHeightsForList - 100, minHeight:100}}>
-                        <div className={"p-4 pl-4"}>{headerEmployeesFinderList}</div>
+                        <div className={"p-4 pl-4 flex flex-row justify-self-start w-full place-content-between"}>
+                            <div>{headerEmployeesFinderEmployeeList}</div>
+                            <div>{headerEmployeesFinderSkillsList}</div>
+                        </div>
                         <hr/>
                         {employeePickerData}
                     </div>

@@ -184,8 +184,9 @@ const months = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
 
 const quarters = ["Q1","Q2","Q3","Q4"];
 
-const headerEmployeesFinder = "Wyszukiwarka pracowników";
-const headerEmployeesFinderList = "Imie i nazwisko, Zespół, Stanowisko, Umiejętności"
+const headerEmployeesFinder = "Wyszukiwarka umiejętności pracowników";
+const headerEmployeesFinderEmployeeList = "Imie i nazwisko, Zespół, Stanowisko"
+const headerEmployeesFinderSkillsList = "Umiejętności"
 const headerEmployees = "Wyszukaj pracownika";
 
 // Powiadomienia
@@ -295,7 +296,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
 
     labelReceivedGrades, labelGivenGrades, labelQuarter,
 
-    headerEmployeesFinder, headerEmployeesFinderList,
+    headerEmployeesFinder, headerEmployeesFinderEmployeeList, headerEmployeesFinderSkillsList,
 
     headerEmployees,
 
