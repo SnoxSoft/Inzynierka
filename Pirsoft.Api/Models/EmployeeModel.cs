@@ -16,6 +16,7 @@ public class EmployeeModel : IApiModel
     public string password { get; set; } = null!;
     public string pesel { get; set; } = null!;
     public string? bank_account_number { get; set; }
+    public string? avatar_file_path { get; set; }
     public int seniority_in_months { get; set; }
     public DateTime employment_start_date { get; set; }
     public byte is_active { get; set; }

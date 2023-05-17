@@ -19,6 +19,7 @@ namespace Pirsoft.UnitTests.ModelCreators
             string fakePassword = "testPass";
             string fakePesel = "12345678901";
             string fakeBankAccountNumber = "12341234123412341234123412";
+            string fakeAvatarFilePath = "fakeDirectory\\fakeFileName.jpg";
             int fakeDepartmentId = 1;
             int fakeLeaveBaseDays = 1;
             int fakeLeaveDemandDays = 1;
@@ -34,7 +35,7 @@ namespace Pirsoft.UnitTests.ModelCreators
             ESeniorityLevel fakeSeniorityLevel = ESeniorityLevel.Other;
 
             EmployeeCreator sut = new (
-                fakeFirstName, fakeLastName, fakeEmail, fakePassword, fakePesel, fakeBankAccountNumber,
+                fakeFirstName, fakeLastName, fakeEmail, fakePassword, fakePesel, fakeBankAccountNumber, fakeAvatarFilePath,
                 fakeDepartmentId, fakeLeaveBaseDays, fakeLeaveDemandDays, fakeSeniorityInMonths, fakeGrossSalary,
                 fakeIsActive, fakeLeaveIsSeniorityThreshold, fakePasswordReset,
                 fakeDateOfBirth, fakeEmploymentStartDate,

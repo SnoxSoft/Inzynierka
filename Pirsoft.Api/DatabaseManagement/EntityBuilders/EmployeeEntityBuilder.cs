@@ -20,6 +20,7 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
                 entity.HasIndex(e => e.employee_id, "id_UNIQUE").IsUnique();
                 entity.HasIndex(e => e.pesel, "pesel_UNIQUE").IsUnique();
 
+                entity.Property(e => e.avatar_file_path).HasMaxLength(1000);
                 entity.Property(e => e.bank_account_number).HasMaxLength(26);
                 entity.Property(e => e.birth_date).HasColumnType("date");
                 entity.Property(e => e.email_address).HasMaxLength(120);

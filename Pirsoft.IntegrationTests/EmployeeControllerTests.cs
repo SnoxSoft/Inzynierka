@@ -2,9 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using Azure;
 using FluentAssertions;
-using MySqlX.XDevAPI.Common;
 using NUnit.Framework;
 
 namespace Pirsoft.IntegrationTests;
@@ -24,6 +22,7 @@ public class EmployeeControllerTests
             password = "123qwe",
             pesel = "00112212345",
             bank_account_number = "12345678901234567890123456",
+            avatar_file_path = "fakeDirectory\\fakeFileName.jpg",
             seniority_in_months = 10,
             employment_start_date = (2020, 10, 10),
             is_active = Convert.ToByte(true),
@@ -53,6 +52,7 @@ public class EmployeeControllerTests
             password = "123qwe",
             pesel = "1",
             bank_account_number = "12345678901234567890123456",
+            avatar_file_path = "fakeDirectory\\fakeFileName.jpg",
             seniority_in_months = 10,
             employment_start_date = (2020, 10, 10),
             is_active = Convert.ToByte(true),
@@ -82,6 +82,7 @@ public class EmployeeControllerTests
             password = "123qwe",
             pesel = "00112212345",
             bank_account_number = "1",
+            avatar_file_path = "fakeDirectory\\fakeFileName.jpg",
             seniority_in_months = 10,
             employment_start_date = (2020, 10, 10),
             is_active = Convert.ToByte(true),

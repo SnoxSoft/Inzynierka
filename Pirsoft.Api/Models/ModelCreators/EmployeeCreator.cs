@@ -10,6 +10,7 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly string _password;
         private readonly string _pesel;
         private readonly string _bankAccountNumber;
+        private readonly string _avatarFilePath;
         private readonly int _departmentId;
         private readonly int _leaveBaseDays;
         private readonly int _leaveDemandDays;
@@ -24,7 +25,7 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly EContractType _contractType;
         private readonly ESeniorityLevel _seniorityLevel;
 
-        public EmployeeCreator(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber,
+        public EmployeeCreator(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, string avatarFilePath,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
         {
@@ -34,6 +35,7 @@ namespace Pirsoft.Api.Models.ModelCreators
             _password = password;
             _pesel = pesel;
             _bankAccountNumber = bankAccountNumber;
+            _avatarFilePath = avatarFilePath;
             _departmentId = departmentId;
             _leaveBaseDays = leaveBaseDays;
             _leaveDemandDays = leaveDemandDays;
@@ -57,6 +59,7 @@ namespace Pirsoft.Api.Models.ModelCreators
             password = _password,
             pesel = _pesel,
             bank_account_number = _bankAccountNumber,
+            avatar_file_path = _avatarFilePath,
             seniority_in_months = _seniorityInMonths,
             leave_base_days = _leaveBaseDays,
             leave_demand_days = _leaveDemandDays,
