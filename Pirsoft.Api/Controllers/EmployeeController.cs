@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pirsoft.Api.Models;
@@ -44,6 +44,25 @@ public class EmployeeController : Controller
             email = "Missing data";
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
             bankAccountNumber = "Missing data";
+
+        if (string.IsNullOrEmpty(password))
+        {
+            string upper_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string lower_letters = upper_letters.ToLower();
+            string numbers = "1234567890";
+            string special_chars = ",./;'[]{}()*&%$#@!\\?-+_";
+            string all = upper_letters + lower_letters + numbers + special_chars;
+            StringBuilder generatedPassword = new StringBuilder();
+            int pass_length = new Random().Next(12, 16);
+
+            for (int i = 0; i < pass_length; i++)
+            {
+                int randomChar = new Random().Next(0, all.Length - 1);
+                generatedPassword.Append(all[randomChar]);
+            }
+            password = generatedPassword.ToString();
+        }
+        
 
         string avatarFilePath = string.Empty;
 
