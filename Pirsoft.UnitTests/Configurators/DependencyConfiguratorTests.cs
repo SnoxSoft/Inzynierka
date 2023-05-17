@@ -7,19 +7,22 @@ using NUnit.Framework;
 using Pirsoft.Api.Configurators;
 using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
+using Pirsoft.Api.Filesystem;
 using Pirsoft.Api.Validators;
 
 namespace Pirsoft.UnitTests.Configurators
 {
+    [TestFixture]
     public class DependencyConfiguratorTests
     {
         private static readonly Type[] _expectedServiceInterfaces = new Type[]
         {
+            typeof(IAvatarFileUploadHandler),
+            typeof(IAvatarFileValidator),
             typeof(ICrudHandler),
             typeof(IDatabaseModelBuilder),
             typeof(IEmployeeCrudHandler),
             typeof(IEmployeeModelValidator),
-            typeof(IAvatarFileValidator),
         };
 
         private DependencyConfigurator _sut = null!;
