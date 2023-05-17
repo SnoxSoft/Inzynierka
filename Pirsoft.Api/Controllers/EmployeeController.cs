@@ -4,9 +4,10 @@ using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 using Pirsoft.Api.Enums;
 using Pirsoft.Api.Models.ModelCreators;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
+using Pirsoft.Api.Filesystem;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -15,19 +16,25 @@ namespace Pirsoft.Api.Controllers;
 //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class EmployeeController : Controller
 {
+    private readonly IAvatarFileUploadHandler _avatarFileUploadHandler;
     private readonly ICrudHandler _crudHandler;
-    private readonly IEmployeeModelValidator _validator;
     private readonly IEmployeeCrudHandler _employeeCrudHandler;
+    private readonly IEmployeeModelValidator _validator;
 
-    public EmployeeController(ICrudHandler crudHandler, IEmployeeModelValidator validator, IEmployeeCrudHandler employeeCrudHandler)
+    public EmployeeController(
+        IAvatarFileUploadHandler avatarFileUploadHandler,
+        ICrudHandler crudHandler,
+        IEmployeeCrudHandler employeeCrudHandler,
+        IEmployeeModelValidator validator)
     {
+        _avatarFileUploadHandler = avatarFileUploadHandler;
         _crudHandler = crudHandler;
-        _validator = validator;
         _employeeCrudHandler = employeeCrudHandler;
+        _validator = validator;
     }
 
     [HttpPost("create/new/employee")]
-    public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, string avatarFilePath,
+    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
@@ -38,12 +45,39 @@ public class EmployeeController : Controller
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
             bankAccountNumber = "Missing data";
 
+        string avatarFilePath = string.Empty;
+
+        if (Request.Form.Files.Any())
+        {
+            try
+            {
+                avatarFilePath = await _avatarFileUploadHandler.Upload(Request.Form);
+            }
+            catch (Exception ex) when (ex is ArgumentException)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, avatarFilePath,
             departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,
             birthDate, employmentStartDate, companyRole, contractType, seniorityLevel).CreateModel();
 
-        await _crudHandler.CreateAsync(newEmployee);
-        _crudHandler.PushChangesToDatabase();
+        try
+        {
+            await _crudHandler.CreateAsync(newEmployee);
+            _crudHandler.PushChangesToDatabase();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
     }
 
     [Authorize]
@@ -137,6 +171,22 @@ public class EmployeeController : Controller
         existingEmployee.leave_base_days = leaveBaseDays;
         existingEmployee.leave_demand_days = leaveDemandDays;
         existingEmployee.leave_is_seniority_threshold = leaveIsSeniorityThreshold;
+
+        if (Request.Form.Files.Any())
+        {
+            try
+            {
+                existingEmployee.avatar_file_path = await _avatarFileUploadHandler.Upload(Request.Form);
+            }
+            catch (Exception ex) when (ex is ArgumentException)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
 
         try
         {
