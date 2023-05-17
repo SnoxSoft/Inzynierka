@@ -40,9 +40,13 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                 if (newPassword.toString() === newRepeatPassword.toString()) {
 
                     if (newPassword.match("^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$") != null) {
+                        const query = new URLSearchParams();
+                        query.set("oldPassword", oldPassword);
+                        query.set("newPasswordOnce", newPassword);
+                        query.set("newPasswordTwice", newRepeatPassword);
+                        query.set("employeeId", employee.employee_id);
 
-                    fetchPutEditOldPasswordInProfile(navigate,
-                        employee.employee_id, oldPassword, newPassword, newRepeatPassword)
+                    fetchPutEditOldPasswordInProfile(navigate, query)
                         .then((response) => {
                             if (response.status === 200) {
                                 setPasswordChangedSuccesfully(true);

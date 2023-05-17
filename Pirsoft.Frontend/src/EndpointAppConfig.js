@@ -35,7 +35,7 @@ const endpointGetChangePassword = "get/change-password"
 const endpointPutChangePassword = "changePassword";
 
 // Edycja hasła pracownika w profilu
-const endpointEmployeeChangePassword = "changePassword"
+const endpointEmployeeChangePassword = "/change/password"
 
 
 // Logowanie sie //

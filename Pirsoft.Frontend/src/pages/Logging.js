@@ -37,7 +37,7 @@ function Logging(){
 
     const logIn = () => {
         if (getLocalStorageKeyWithExpiry("loggedEmployee") === null) {
-            fetchLoginEmployee(navigate, email, password)
+            fetchLoginEmployee(navigate, "administrator@com.pl", "Admin123@2113admin")
                 .then(employee => {
                     switch (employee.statusCode) {
                         case 0:

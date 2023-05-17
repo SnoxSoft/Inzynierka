@@ -8,7 +8,7 @@ const TeamMembers = ({employeeData, setEmployeeData}) => {
     })
 
     return (
-        <div className={"flex flex-col place-items-center gap-4"}>
+        <div className={"flex flex-col place-items-center gap-2"}>
             {showAllEmployees}
         </div>
     )

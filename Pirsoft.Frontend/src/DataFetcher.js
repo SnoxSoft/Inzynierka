@@ -69,16 +69,17 @@ function redirectToMainWindow(navigate, logOut = false){
     }, 3000);
 }
 
-async function fetchPutEditOldPasswordInProfile(navigate, id, oldPassword, newPassword, newRepeatPassword) {
-    return await fetch(serverIp + "/" + endpointEmployeeChangePassword,
-        {
-            method: 'PUT',
-            body: JSON.stringify({
-                employee_id: id,
-                employee_old_password: oldPassword,
-                new_employee_password: newPassword,
-                repeat_new_employee_password: newRepeatPassword})
-        })
+async function fetchPutEditOldPasswordInProfile(navigate, query){//id, oldPassword, newPassword, newRepeatPassword) {
+    // return await fetch(serverIp + "/" + endpointEmployeeChangePassword,
+    //     {
+    //         method: 'PUT',
+    //         body: JSON.stringify({
+    //             employee_id: id,
+    //             employee_old_password: oldPassword,
+    //             new_employee_password: newPassword,
+    //             repeat_new_employee_password: newRepeatPassword})
+    //     })
+    return await axios.put(`${serverIpProd}/${endpointEmployeeChangePassword}?${query}`)
 }
 
 async function fetchPostSendEmailForPasswordChange(navigate, email) {
