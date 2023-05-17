@@ -47,9 +47,13 @@ const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload}) => {
     }
 
     function removePathPart(path) {
-        var backslashes = path.split("\\");
-        var newPath = "\\" + backslashes.slice(-3).join("\\");
-        return newPath;
+        try {
+            var backslashes = path.split("\\");
+            var newPath = "\\" + backslashes.slice(-3).join("\\");
+            return newPath;
+        } catch (e) {
+            
+        }
     }
 
     const [couldFindPicture, setCouldFindPicture] = useState(true)
