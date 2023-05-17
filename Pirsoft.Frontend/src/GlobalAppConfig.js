@@ -219,6 +219,8 @@ const alertWrongPosition = "Wybierz prawidłowo pole " + labelPosition;
 const alertWrongPositionLevel = "Wybierz prawidłowo pole " + labelPositionLevel;
 const alertWrongTeam = "Wybierz prawidłowo pole " + labelTeam;
 const alertWrongStartDate = "Wybierz prawidłowo pole " + labelStartDate;
+const alertProfilePictureTooBig = "Wybrane zdjęcie profilowe jest zbyt duże, maksymalny rozmiar to 300px szerokości i 300px wysokości";
+const alertProfilePicture = "Wybrane zdjęcie profilowe jest nieprawidłowe ";
 
 
 // Odpowiedzi operacji
@@ -235,7 +237,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved,
 
     alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertWrongPESEL, alertWrongSalary, alertWrongContract,
-    alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate,
+    alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertProfilePictureTooBig, alertProfilePicture,
 
     labelNotifications,
 
