@@ -27,7 +27,7 @@ public class EmployeeController : Controller
     }
 
     [HttpPost("create/new/employee")]
-    public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber,
+    public async Task CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, string avatarFilePath,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
@@ -38,7 +38,7 @@ public class EmployeeController : Controller
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
             bankAccountNumber = "Missing data";
 
-        EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber,
+        EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, avatarFilePath,
             departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,
             birthDate, employmentStartDate, companyRole, contractType, seniorityLevel).CreateModel();
 
