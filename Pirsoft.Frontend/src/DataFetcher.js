@@ -23,19 +23,36 @@ import {
     endpointGetEmployeeData,
     endpointGetOneEmployeeBetweenDatesDaysOff,
     endpointGetRequestsStatuses,
+    endpointGetEmployeesRequests, endpointGetLogIn,
     endpointGetTeamData,
     endpointPostCreateEmployee,
     endpointPostSendEmailForPasswordChange,
     endpointPutChangePassword,
-    endpointPutEditEmployee, endpointPostCreateAbsence
+    endpointPutEditEmployee,
+    endpointPostCreateAbsence,
+    endpointCreateTeam,
+    endpointDeleteTeam,
+    endpointEditTeam,
+    endpointPutEditAbsence, endpointDeleteAbsence
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
 import axios from "axios";
+import {getLocalStorageKeyWithExpiry} from "./components/jwt/LocalStorage";
+
+function getBearerToken(tokenStorage){
+    if(tokenStorage !== null)
+        return tokenStorage.token
+    else return ""
+}
+
+function isTokenExpiredMessageFromApi(apiMessage){
+    return apiMessage === "token expired" ? true : false
+}
 
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'JWT fefege...',
+    'Authorization': `Bearer ${getBearerToken(getLocalStorageKeyWithExpiry("loggedEmployee"))}`,
     'charset': 'utf-8'
 }
 
@@ -46,6 +63,7 @@ function redirectToMainWindow(navigate, logOut = false){
 
         if(logOut){
             sessionStorage.clear()
+            localStorage.clear()
             window.location.reload();
         }
     }, 3000);
@@ -93,6 +111,18 @@ async function fetchPutChangePassword(navigate, employeeId, newPassword, newRepe
         })
 }
 
+async function fetchPostCreateTeam(params) {
+    return await axios.post(`${serverIpProd}/${endpointCreateTeam}?${params}`)
+}
+
+async function fetchPutEditTeam(id, body) {
+    return await axios.put(`${serverIpProd}/${endpointEditTeam}/${id}`, body)
+}
+
+async function fetchDeleteTeam(id) {
+    return await axios.delete(`${serverIpProd}/${endpointDeleteTeam}/${id}`)
+}
+
 async function fetchGetEmployeeDataById(id, navigate) {
     if (id !== '-1') {
         try {
@@ -115,14 +145,7 @@ async function fetchPostCreateEmployee(params) {
     return await axios.post(`${serverIpProd}/${endpointPostCreateEmployee}?${params}`)
 }
 
-async function fetchPutEditEmployee(id, body, query) {
-    // return await fetch(serverIpProd + "/" + endpointPutEditEmployee + "/" + id + "?" + query,
-    //     {
-    //         method: "PUT",
-    //         body: body,
-    //         headers: {'Content-Type': 'application/json', 'charset': 'utf-8'}
-    //     })
-
+async function fetchPutEditEmployee(id, query) {
     return await axios.put(`${serverIpProd}/${endpointPutEditEmployee}/${id}?${query}`, {
         headers: headers
     })
@@ -136,7 +159,9 @@ async function fetchDeleteEmployee(id) {
 
 async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirection = "ascending") {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAllEmployees}`)
+        const response = (await axios.get(`${serverIpProd}/${endpointGetAllEmployees}`, {
+            headers: headers
+        }))
         if (response && response.status === 200) {
             let newData = response.data;
             if (sortForTeams) {
@@ -149,7 +174,7 @@ async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirectio
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -164,7 +189,7 @@ async function fetchGetTeamDataById(navigate, id) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -183,7 +208,7 @@ async function fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, addRecord = tru
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -201,7 +226,7 @@ async function fetchGetAllContractsAndAddZeroRecordAndSort(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -219,7 +244,7 @@ async function fetchGetAllPositionsAndAddZeroRecordAndSort(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -237,7 +262,7 @@ async function fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -254,7 +279,7 @@ async function fetchGetAllSkillsAndSort(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -269,7 +294,7 @@ async function fetchGetRequestsStatuses(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -284,13 +309,31 @@ async function fetchGetAbsencesTypes(navigate) {
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
 async function fetchPostCreateAbsence(params) {
-    return await axios.post(`${serverIpProd}/${endpointPostCreateAbsence}?${params}`)
+    try {
+        return await axios.post(`${serverIpProd}/${endpointPostCreateAbsence}?${params}`)
+    } catch (error) {
+        console.error(error);
+        //redirectToMainWindow(navigate);
+    }
 }
+
+async function fetchPutEditAbsence(id, query) {
+    return await axios.put(`${serverIpProd}/${endpointPutEditAbsence}/${id}?${query}`, {
+        headers: headers
+    })
+}
+
+async function fetchDeleteAbsence(id) {
+    return await axios.delete(`${serverIpProd}/${endpointDeleteAbsence}/${id}`, {
+        headers: headers
+    })
+}
+
 async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, dateTo) {
     try {
         const response = await axios.get(`${serverIpProd}/${endpointGetOneEmployeeBetweenDatesDaysOff}/${id}/${dateFrom}/${dateTo}`)
@@ -303,7 +346,7 @@ async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, da
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
 }
 
@@ -319,8 +362,20 @@ async function fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateT
         }
     } catch (error) {
         console.error(error);
-        redirectToMainWindow(navigate);
+        redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
     }
+}
+
+async function fetchLoginEmployee(navigate, email, password){
+    const response = await fetch(serverIpProd + "/" + endpointGetLogIn + "?email=" + email + "&password=" + password,
+        {
+            method: "POST",
+        })
+        .catch( err => console.error(err))
+    if (response.status === 200)
+        return response.json()
+    else
+        return []
 }
 
 export {
@@ -337,6 +392,9 @@ export {
 
     fetchGetAllTeamsAndAddZeroRecordAndSort,
     fetchGetTeamDataById,
+    fetchPostCreateTeam,
+    fetchPutEditTeam,
+    fetchDeleteTeam,
 
     fetchGetAllContractsAndAddZeroRecordAndSort,
     fetchGetAllPositionsAndAddZeroRecordAndSort,
@@ -347,7 +405,10 @@ export {
     fetchGetAbsencesTypes,
 
     fetchPostCreateAbsence,
+    fetchPutEditAbsence,
+    fetchDeleteAbsence,
     fetchGetOneEmployeeBetweenDatesDaysOff,
-    fetchGetAllEmployeesBetweenDatesDaysOff
+    fetchGetAllEmployeesBetweenDatesDaysOff,
 
+    fetchLoginEmployee,
 }

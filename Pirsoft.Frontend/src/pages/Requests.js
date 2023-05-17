@@ -15,11 +15,15 @@ import {
 } from "../DataFetcher";
 import RequestWindow from "./RequestWindow";
 import RequestListItem from "../components/absences/RequestListItem";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 function Requests(){
     document.title = pageNameRequests;
 
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Opcje dla wyświetlenia daty w formacie tekstowym
     const options = {
@@ -127,7 +131,10 @@ function Requests(){
                         let addRequest = null
 
                         // Duza funkcja filtrujaca
-                        let currentUserId = sessionStorage.getItem('USER')
+                        let currentUserId = getLocalStorageKeyWithExpiry("loggedEmployee") !== null ? getLocalStorageKeyWithExpiry("loggedEmployee").UserId : null;
+                        if(currentUserId === null){
+                            return;
+                        }
 
                         if (checkWaiting && checkRefused && checkApproved && checkCreatedByCurrent && checkNotCreatedByCurrent) {
                             addRequest = request
@@ -294,6 +301,7 @@ function Requests(){
                                                      employeeTeam={employeeTeam.department_name}
                                                      absencesTypes={absencesTypes}
                                                      requestsStatus={requestsStatus}
+                                                     filtrRequests={filtrRequests}
                                                      window={"requests"}/>
                                 )
                                 row++;
@@ -304,6 +312,12 @@ function Requests(){
                 }
             })
     }
+
+    useEffect(() => {
+        if(requestsVisible && employeesList !== null && requestsStatus !== null && absencesTypes !== null) {
+            filtrRequests();
+        }
+    },[requestsVisible])
 
 
     return(

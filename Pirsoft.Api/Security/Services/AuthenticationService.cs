@@ -54,7 +54,6 @@ namespace Pirsoft.Api.Security.Services
 
         private async Task<JwtSecurityToken> GenerateToken(EmployeeModel employee)
         {
-            var userClaims = await _userManager.GetClaimsAsync(employee);
             var roles = await _userManager.GetRolesAsync(employee);
 
             var roleClaims = new List<Claim>();
@@ -66,13 +65,15 @@ namespace Pirsoft.Api.Security.Services
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, employee.email_address),
-                new Claim("uid", employee.employee_id.ToString()),
-                new Claim(ClaimTypes.Role, "user"),
+                new Claim("UserId", employee.employee_id.ToString()),
+                new Claim("FirstName", employee.first_name),
+                new Claim("LastName", employee.last_name),
+                new Claim("Email", employee.email_address),
+                new Claim("Role", employee.employee_company_role_id.ToString()),
+                new Claim("Department", employee.employee_department_id.ToString()),
+                new Claim("Department_name", employee.employee_department.department_name),
             }
-            .Union(userClaims)
-            .Union(roleClaims);
+                .Union(roleClaims);
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);

@@ -1,6 +1,6 @@
 import {
     alertNewPasswordsAreIncompatible,
-    alertOldPasswordIsMissing, alertPasswordChanged,
+    alertOldPasswordIsMissing, alertPasswordChanged, alertPasswordIsIncompatible,
     alertPutNewPasswords, alertUnexpectedError,
     headerPasswordChange, labelApprove, labelClose,
     labelGiveNewPassword,
@@ -26,6 +26,7 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
 
     const [passwordChangedSuccesfully, setPasswordChangedSuccesfully] = useState(false)
     const [problemOccured, setProblemOccured] = useState(false)
+    const [passwordIncorrect, setPasswordIncorrect] = useState(false)
     const [missingOldPassword, setMissingOldPassword] = useState(false)
     const [wrongNewPassword, setWrongNewPassword] = useState(false)
     const [notTheSame, setNotTheSame] = useState(false)
@@ -38,30 +39,38 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                 // Tutaj pomyslimy jakie wartosci sprawdzic
                 if (newPassword.toString() === newRepeatPassword.toString()) {
 
+                    if (newPassword.match("^(?=.*[A-Z])(?=.*[@$!%*?&]).{14,}$") != null) {
+
                     fetchPutEditOldPasswordInProfile(navigate,
                         employee.employee_id, oldPassword, newPassword, newRepeatPassword)
                         .then((response) => {
-                        if(response.status === 200){
-                            setPasswordChangedSuccesfully(true);
-                            setTimeout(() => {
-                                setPasswordChangedSuccesfully(false)
-                                setOldPassword('')
-                                setNewPassword('')
-                                setNewRepeatPassword('')
+                            if (response.status === 200) {
+                                setPasswordChangedSuccesfully(true);
+                                setTimeout(() => {
+                                    setPasswordChangedSuccesfully(false)
+                                    setOldPassword('')
+                                    setNewPassword('')
+                                    setNewRepeatPassword('')
 
-                                setEmployeeDataShow(true);
-                                setShowPasswordChangeFrame(false)
-                            }, 3000);
-                        }
-                        else{
-                            setProblemOccured(true);
-                            setTimeout(() => {setProblemOccured(false)}, 3000);
-                        }
-                    })
+                                    setEmployeeDataShow(true);
+                                    setShowPasswordChangeFrame(false)
+                                }, 3000);
+                            } else {
+                                setProblemOccured(true);
+                                setTimeout(() => {
+                                    setProblemOccured(false)
+                                }, 3000);
+                            }
+                        })
                         .catch((err) => {
                             console.log(err.message);
-
                         })
+                    } else {
+                        setPasswordIncorrect(true);
+                        setTimeout(() => {
+                            setPasswordIncorrect(false)
+                        }, 3000);
+                    }
                 } else {
                     setNotTheSame(true);
                     setTimeout(() => {
@@ -156,6 +165,10 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                     {problemOccured ?
                         <p className={"bg-red-700 rounded-md font-bold"}>
                             {alertUnexpectedError}
+                        </p> : <></> }
+                    {passwordIncorrect ?
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertPasswordIsIncompatible}
                         </p> : <></> }
                 </div>
             </div>

@@ -29,13 +29,56 @@ public class AbsenceController : ControllerBase
     }
     
     [HttpPost("create/new/absence")]
-    public async Task CreateNewAbsence(DateTime absenceStartDate, DateTime absenceEndDate, sbyte unpaid, int absenceTypeId, int employeeApproverId, int employeeOwnerId, int absenceStatusId)
+    public async Task CreateNewAbsence(DateTime absenceStartDate, DateTime absenceEndDate, 
+        sbyte unpaid, int absenceTypeId, int employeeApproverId, int employeeOwnerId, int absenceStatusId)
     {
         AbsenceModel newAbsence = (AbsenceModel)new AbsenceCreator(absenceStartDate, absenceEndDate, unpaid, 
             absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId).CreateModel();
     
         await _crudHandler.CreateAsync(newAbsence);
         _crudHandler.PushChangesToDatabase();
+    }
+    
+    //[Authorize(Roles = "Kadry")]
+    [HttpPut("edit/absence/{id}")]
+    public async Task<IActionResult> UpdateAbsence(int id, int employeeApproverId, int absenceStatusId)
+    {
+        var existingAbsence = await _crudHandler.ReadAsync<AbsenceModel>(id);
+
+        if (existingAbsence == null)
+            return NotFound();
+        
+        existingAbsence.employee_approver_id = employeeApproverId;
+        existingAbsence.absence_status_id = absenceStatusId;
+
+        try
+        {
+            await _crudHandler.UpdateAsync(existingAbsence);
+            return Ok();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict();
+        }
+    }
+    
+    [HttpDelete("delete/absence/{id}")]
+    public async Task<IActionResult> DeleteAbsenceById(int id)
+    {
+        // Check if the absence exists
+        var absence = await _crudHandler.ReadAsync<AbsenceModel>(id);
+        if (absence == null)
+            return NotFound();
+
+        try
+        {
+            await _crudHandler.DeleteAsync(absence);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 
     [HttpGet("get/employee/absences/{id}/{dateFrom}/{dateTo}")]

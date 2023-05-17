@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import LoggingEmail from "../components/logging/LoggingEmail";
 import LoggingPassword from "../components/logging/LoggingPassword";
 import {
@@ -9,19 +9,21 @@ import {
     labelLogIn,
     labelPassword, pageNameHomePage,
     pageNameLogging,
-    serverIp,
     welcomeMessage,
     welcomeMessageShort
 } from "../GlobalAppConfig";
-import {endpointGetLogIn} from "../EndpointAppConfig";
+import {fetchLoginEmployee} from "../DataFetcher";
+import {getLocalStorageKeyWithExpiry, setLocalStorageKeyWithExpiryKey} from "../components/jwt/LocalStorage";
+import {parseJWT} from "../components/jwt/JwtParser";
 
 function Logging(){
-    if(sessionStorage.getItem('USER') == null){
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") == null){
         document.title = pageNameLogging;
     }
     else {
         document.title = pageNameHomePage;
     }
+    const navigate = useNavigate();
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
@@ -34,33 +36,38 @@ function Logging(){
     }, []);
 
     const logIn = () => {
-        if (sessionStorage.getItem('USER') === null) {
-            fetch(serverIp + "/" + endpointGetLogIn + "/" + email + "/" + password)
-                .then((response) => {response.json()
-                    .then((response) => {
-                        sessionStorage.setItem('USER', response[0].id)
-                        sessionStorage.setItem('FIRSTNAME', response[0].firstname)
-                        sessionStorage.setItem('LASTNAME', response[0].lastname)
-                        sessionStorage.setItem('AVATAR', response[0].avatar)
-                        sessionStorage.setItem('START', response[0].start)
-
-                        window.location.reload(false);
-                    });
-                })
-                .catch((err) => {
-                    console.log(err.message);
-                    sessionStorage.setItem('USER', null)
-                    sessionStorage.setItem('FIRSTNAME', null)
-                    sessionStorage.setItem('LASTNAME', null)
-                    sessionStorage.setItem('AVATAR', null)
-                    sessionStorage.setItem('START', null)
-
+        if (getLocalStorageKeyWithExpiry("loggedEmployee") === null) {
+            fetchLoginEmployee(navigate, email, password)
+                .then(employee => {
+                    switch (employee.statusCode) {
+                        case 0:
+                            const employeeTokenParsed = parseJWT(employee.token);
+                            const token = [employeeTokenParsed].map((o) => ({
+                                ...o,
+                                token: employee.token
+                            }))
+                            setLocalStorageKeyWithExpiryKey("loggedEmployee", token[0]);
+                            window.location.reload();
+                            break;
+                        case 1:
+                        case 2:
+                            document.getElementById("login-error-message").innerText = "Niepoprawne hasło!";
+                            break;
+                        case 3:
+                            document.getElementById("login-error-message").innerText = "Konto nie istnieje!";
+                            break;
+                        case 4:
+                            document.getElementById("login-error-message").innerText = "Błędny adres email!";
+                            break;
+                        default:
+                            break;
+                    }
                 })
         }
     }
 
     return <>
-        {sessionStorage.getItem('USER') === null ?
+        {getLocalStorageKeyWithExpiry("loggedEmployee") === null ?
         <div id={"home-logging-in"}
              className={"every-page-on-scroll hover:cursor-default"}
              style={{ height: wantedHeightsForList } }>
@@ -68,6 +75,7 @@ function Logging(){
                 <div>
                     <p>{welcomeMessage}</p>
                 </div>
+                <div id={"login-error-message"} className={"text-red-600 font-bold"}></div>
                 <br></br>
 
                 <div className={"flex flex-col gap-4"}>
@@ -78,7 +86,7 @@ function Logging(){
                 <div className={"flex flex-col gap-4"}>
                     <label>{labelPassword}</label>
                     <div className={"flex flex-col gap-4 self-center"}>
-                        <LoggingPassword value={password} onChange={setPassword}/>
+                        <LoggingPassword id={"logging-password"} value={password} onChange={setPassword}/>
                     </div>
                 </div>
                 <div>
@@ -96,8 +104,9 @@ function Logging(){
                 <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                     <div>
                         <p>{welcomeMessageShort+
-                            sessionStorage.getItem('FIRSTNAME')+' '+
-                            sessionStorage.getItem('LASTNAME')}</p>
+                            getLocalStorageKeyWithExpiry("loggedEmployee").FirstName+' '+
+                            getLocalStorageKeyWithExpiry("loggedEmployee").LastName
+                        }</p>
                     </div>
                 </div>
             </div>

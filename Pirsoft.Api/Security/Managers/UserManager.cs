@@ -8,31 +8,20 @@ namespace Pirsoft.Api.Security.Managers
 {
     public class UserManager : IUserManager<EmployeeModel>
     {
-        private readonly ICrudHandler _crudHandler;
+        private readonly IEmployeeCrudHandler _employeeCrudHandler;
 
-        public UserManager(ICrudHandler crudHandler) => _crudHandler = crudHandler;
+        public UserManager(IEmployeeCrudHandler employeeCrudHandler) => _employeeCrudHandler = employeeCrudHandler;
 
         public async Task<EmployeeModel> FindByEmailAsync(string email)
         {
-            var users = await _crudHandler.ReadAllAsync<EmployeeModel>();
-            var user = users.FirstOrDefault(u => u.email_address.ToLowerInvariant().Equals(email.ToLowerInvariant()));
-            return user;
-        }
-
-        public Task<List<Claim>> GetClaimsAsync(EmployeeModel employee) 
-        {
-            Claim employeeClaim = new("MyCos", "MyValue");
-            var claims = new List<Claim>();
-            claims.Add(employeeClaim);
-            return Task.FromResult(claims);
+            return await _employeeCrudHandler.ReadEmployeeByEmailAsync(email);
         }
 
         public Task<List<string>> GetRolesAsync(EmployeeModel employee)
         {
-            string user = "User";
-            var lis = new List<string>();
-            lis.Add(user);
-            return Task.FromResult(lis);
+            string role = employee.employee_company_role.role_name;
+            var list = new List<string> { role };
+            return Task.FromResult(list);
         }
         
         public async Task<EmployeeModel> GetUserAsync(string email, string password)

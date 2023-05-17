@@ -20,11 +20,15 @@ import {
 import {useNavigate} from "react-router-dom";
 import FunctionForResize from "../components/base/FunctionForResize";
 import RequestWindow from "./RequestWindow";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 function Employees(){
     document.title = pageNameEmployees;
 
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Wybrane wartości w filtrze
     const[firstnameAndLastname, setFirstnameAndLastname] = useState('');

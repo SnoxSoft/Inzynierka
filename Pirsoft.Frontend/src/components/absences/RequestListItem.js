@@ -7,10 +7,12 @@ import {
     labelRequest,
     labelShowProfile
 } from "../../GlobalAppConfig";
+import {fetchDeleteAbsence} from "../../DataFetcher";
 
-const RequestListItem = ({employeeAbsence, employeeAbsenceTeam, old = false,
+const RequestListItem = ({employeeAbsence, old = false,
               absencesTypes, requestsStatus, id, window,
-                             setRequestsVisible, setRequestPickedData, employeeName, employeeTeam}) => {
+                             setRequestsVisible, setRequestPickedData, employeeName, employeeTeam,
+                             filtrRequests}) => {
 
     const [showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -39,9 +41,13 @@ const RequestListItem = ({employeeAbsence, employeeAbsenceTeam, old = false,
     }
 
     function deleteAbsence() {
+        fetchDeleteAbsence(employeeAbsence.absence_id)
+            .then(r => {
+                filtrRequests()
+            })
 
     }
-
+    
     return <>
         <div id={id} className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
@@ -59,7 +65,7 @@ const RequestListItem = ({employeeAbsence, employeeAbsenceTeam, old = false,
 
                 </div>
             }
-            <div className={"flex basis-1/12 place-content-center rounded-md "}>
+            <div className={"flex basis-1/12 place-content-center rounded-md cursor-default "}>
                 {requestStatus}
             </div>
             <div className={"flex justify-evenly basis-3/12"}>
@@ -68,13 +74,16 @@ const RequestListItem = ({employeeAbsence, employeeAbsenceTeam, old = false,
                         {!old ?
                             <>
                                 {window === "absences" ?
+                                    employeeAbsence.absence_status_id.toString().trim() === "1" ?
                                     <ReusableButton id={id + "-delete"} value={labelDelete}
                                                     onClick={() => deleteAbsence()}/> :
+                                    <></> :
                                     <>
 
-                                        {employeeAbsence.absence_status_id !== 1 &&
+                                        {employeeAbsence.absence_status_id.toString().trim() !== "1" ?
                                             <ReusableButton id={id + "-delete"} value={labelDelete}
-                                                    onClick={() => deleteAbsence()}/>
+                                                    onClick={() => deleteAbsence()}/> :
+                                            <></>
                                         }
 
                                         {employeeAbsence.absence_status_id === 1 &&

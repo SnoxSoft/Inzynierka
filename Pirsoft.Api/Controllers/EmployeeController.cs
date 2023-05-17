@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 using Pirsoft.Api.Enums;
@@ -45,7 +46,7 @@ public class EmployeeController : Controller
         _crudHandler.PushChangesToDatabase();
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet("/get/employees")]
     public async Task<IEnumerable<employeeDTO>> GetListOfAllEmployees()
     {
@@ -91,7 +92,7 @@ public class EmployeeController : Controller
     }
 
     [HttpDelete("delete/employee/{id}")]
-    [Authorize(Roles = "Kadry")] 
+    //[Authorize(Roles = "Kadry")] 
     public async Task<IActionResult> DeleteEmployeeById(int id)
     {
         // Check if the employee exists
@@ -110,31 +111,32 @@ public class EmployeeController : Controller
         }
     }
     
-    [Authorize(Roles = "Kadry")]
-    [HttpPut("employees/{id}")]
-    public async Task<IActionResult> UpdateEmployee(int id, EmployeeModel employee)
+    //[Authorize(Roles = "Kadry")]
+    [HttpPut("edit/employee/{id}")]
+    public async Task<IActionResult> UpdateEmployee(int id, string firstName, string lastName, string pesel, string bankAccountNumber,
+        int departmentId, int leaveBaseDays, int leaveDemandDays, double grossSalary, byte leaveIsSeniorityThreshold,
+        DateTime birthDate, DateTime employmentStartDate, int companyRole, int contractType, int seniorityLevel)
     {
         var existingEmployee = await _crudHandler.ReadAsync<EmployeeModel>(id);
 
         if (existingEmployee == null)
             return NotFound();
         
-        employee.email_address = existingEmployee.email_address;
-        
-        existingEmployee.first_name = employee.first_name;
-        existingEmployee.last_name = employee.last_name;
-        existingEmployee.pesel = employee.pesel;
-        existingEmployee.bank_account_number = employee.bank_account_number;
-        existingEmployee.seniority_in_months = employee.seniority_in_months;
-        existingEmployee.employment_start_date = employee.employment_start_date;
-        existingEmployee.is_active = employee.is_active;
-        existingEmployee.password_reset = employee.password_reset;
-        existingEmployee.birth_date = employee.birth_date;
-        existingEmployee.salary_gross = employee.salary_gross;
-        existingEmployee.employee_contract_type_id = employee.employee_contract_type_id;
-        existingEmployee.employee_department_id = employee.employee_department_id;
-        existingEmployee.employee_seniority_level_id = employee.employee_seniority_level_id;
-        existingEmployee.employee_company_role_id = employee.employee_company_role_id;
+        existingEmployee.first_name = firstName;
+        existingEmployee.last_name = lastName;
+        existingEmployee.pesel = pesel;
+        existingEmployee.bank_account_number = bankAccountNumber;
+        existingEmployee.employment_start_date = employmentStartDate;
+        existingEmployee.birth_date = birthDate;
+        existingEmployee.salary_gross = grossSalary;
+        existingEmployee.employee_contract_type_id = contractType;
+        existingEmployee.employee_department_id = departmentId;
+        existingEmployee.employee_seniority_level_id = seniorityLevel;
+        existingEmployee.employee_company_role_id = companyRole;
+
+        existingEmployee.leave_base_days = leaveBaseDays;
+        existingEmployee.leave_demand_days = leaveDemandDays;
+        existingEmployee.leave_is_seniority_threshold = leaveIsSeniorityThreshold;
 
         try
         {
@@ -154,9 +156,40 @@ public class EmployeeController : Controller
             employee_id = employeeModel.employee_id;
             first_name = employeeModel.first_name;
             last_name = employeeModel.last_name;
-            employee_department_id = employeeModel.employee_department_id;
-            employee_seniority_level_id = employeeModel.employee_seniority_level_id;
             employee_company_role_id = employeeModel.employee_company_role_id;
+            employee_seniority_level_id = employeeModel.employee_seniority_level_id;
+            employee_department_id = employeeModel.employee_department_id;
+            employee_department = new DepartmentModel
+            {
+                ApiInternalId = employeeModel.employee_department.ApiInternalId,
+                department_id = employeeModel.employee_department.department_id,
+                department_name = employeeModel.employee_department.department_name,
+            };
+            employee_seniority_level = new SeniorityLevelModel
+            {
+                ApiInternalId = employeeModel.employee_seniority_level.ApiInternalId,
+                seniority_level_id = employeeModel.employee_seniority_level.seniority_level_id,
+                seniority_level_name = employeeModel.employee_seniority_level.seniority_level_name,
+            };
+            employee_company_role = new CompanyRoleModel
+            {
+                ApiInternalId = employeeModel.employee_company_role.ApiInternalId,
+                role_id = employeeModel.employee_company_role.role_id,
+                role_name = employeeModel.employee_company_role.role_name,
+            };
+            employee_contract_type = new ContractTypeModel
+            {
+                ApiInternalId = employeeModel.employee_contract_type.ApiInternalId,
+                contract_id = employeeModel.employee_contract_type.contract_id,
+                contract_type_name = employeeModel.employee_contract_type.contract_type_name,
+            };
+
+            employee_skills = employeeModel.skills.Select(skill => new SkillModel
+            {
+                ApiInternalId = skill.ApiInternalId,
+                skill_id = skill.skill_id,
+                skill_name = skill.skill_name
+            }).ToList();
         }
 
         public int employee_id { get; }
@@ -165,6 +198,10 @@ public class EmployeeController : Controller
         public int employee_department_id { get; }
         public int employee_seniority_level_id { get; }
         public int employee_company_role_id { get; }
-
+        public DepartmentModel employee_department { get; }
+        public SeniorityLevelModel employee_seniority_level { get; set; }
+        public CompanyRoleModel employee_company_role { get; }
+        public ContractTypeModel employee_contract_type { get; }
+        public ICollection<SkillModel> employee_skills { get; }
     }
 }

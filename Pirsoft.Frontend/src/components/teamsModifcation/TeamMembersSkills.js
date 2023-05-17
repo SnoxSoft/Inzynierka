@@ -22,8 +22,8 @@ const TeamMembersSkills = ({skills}) => {
             }
             skillComponents.push(
                 <>
-                    <div id={"skill-name-" + skillId} key={skill.name + "" + skill.value} className={"col-start-1 text-center"}>{skill.name}</div>
-                    <div id={"skill-grade-" + skillId} key={skill.value + "" + skill.name}
+                    <div id={"skill-name-" + skillId} key={skill.skill_name + "" + skill.value} className={"col-start-1 text-center"}>{skill.skill_name}</div>
+                    <div id={"skill-grade-" + skillId} key={skill.value + "" + skill.skill_name}
                          className={"col-start-2 text-center " + colors[randomNumber] + " rounded-md"}>{skill.value}</div>
                 </>)
 

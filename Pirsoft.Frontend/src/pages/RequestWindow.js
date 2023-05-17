@@ -8,27 +8,33 @@ import {
     labelRequest,
     labelRequestApprovers,
     labelRequestNoPay,
-    labelRequestType, pageNameRequest,
-    serverIp
+    labelRequestType, pageNameAddEmployeeAnAbsence, pageNameApprovalOrRejectionRequest
 } from "../GlobalAppConfig";
 import {
-    fetchApproversForRequest,
     fetchGetAbsencesTypes,
     fetchGetEmployeeDataById,
-    fetchPostCreateAbsence,
-    fetchPostCreateEmployee
+    fetchPostCreateAbsence, fetchPutEditAbsence
 } from "../DataFetcher";
 import {useNavigate} from "react-router-dom";
 import AbsencesList from "../components/absences/AbsencesList";
-import demandDays from "../components/employee/fields/DemandDays";
+import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 
 const RequestWindow = ({setAbsencesVisible = undefined,
                      setShowAddEmployeeAnAbsence = undefined, setEmployeeDataShow = undefined,
                      setRequestsVisible = undefined,
                      requestData = undefined, mode = "create"}) =>{
-    document.title = pageNameRequest;
+
+    if(mode === "create"){
+        document.title = pageNameAddEmployeeAnAbsence;
+    }
+    else {
+        document.title = pageNameApprovalOrRejectionRequest;
+    }
 
     const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+    }
 
     // Lista rodzai urlopów
     const [absencesList, setAbsencesList] = useState(null)
@@ -45,7 +51,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
     useEffect(() => {
         // Załadowanie danych pracownika, dla którego wystawiamy wniosek
-        if (employee === null) {
+        if (employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
             setEmployee(null);
             fetchGetEmployeeDataById(requestData.employee_id !== undefined ? requestData.employee_id : requestData.employee_owner_id, navigate)
                 .then(employee => {
@@ -101,16 +107,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         month: "2-digit",
         day: "2-digit"
     }
-    const currentDate = new Date();
-    currentDate.setDate(1);
-    const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
-    const futureThreeMonthsDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate())
 
     // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(
-        requestData && mode !== 'create' ? requestData.absence_start_date : previousThreeMonthsDate.toLocaleDateString("sv", options));
+        requestData && mode !== 'create' ? requestData.absence_start_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(
-        requestData && mode !== 'create' ? requestData.absence_end_date : futureThreeMonthsDate.toLocaleDateString("sv", options));
+        requestData && mode !== 'create' ? requestData.absence_end_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
     const [absence, setAbsence] = useState(requestData ? requestData.absence_type_id : null)
     const [noPay, setNoPay] = useState(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? leaveDays === 0 : false)
     const disableChanges = mode === "approval"
@@ -133,54 +135,41 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     function createRequest(){
-        console.clear()
-        console.log(dateFrom)
-        console.log(dateTo)
-        console.log(absence)
-        console.log(noPay)
-
-        console.log(leaveDays)
-        console.log(demandDays)
-        //close()
-
         const query = new URLSearchParams();
         query.set("absenceStartDate", dateFrom);
         query.set("absenceEndDate", dateTo);
         query.set("unpaid", noPay ? 1 : 0);
         query.set("absenceTypeId", absence);
-        query.set("employeeApproverId", 1);
+        query.set("employeeApproverId", 0);
         query.set("employeeOwnerId", employee.employee_id);
         query.set("absenceStatusId", 1);
 
         fetchPostCreateAbsence(query)
-                    .then(r => console.log(r))
-
+                    .then(r => {
+                        close()
+                    })
     }
 
     function rejectRequest(){
-        // dodanie endpointu
-        console.clear()
-        console.log(dateFrom)
-        console.log(dateTo)
-        console.log(absence)
-        console.log(noPay)
+        const query = new URLSearchParams();
+        query.set("employeeApproverId", getLocalStorageKeyWithExpiry("loggedEmployee").UserId);
+        query.set("absenceStatusId", 2);
 
-        console.log(leaveDays)
-        console.log(demandDays)
-        //close()
+        fetchPutEditAbsence(requestData.absence_id, query)
+            .then(r => {
+                close()
+            })
     }
 
     function approveRequest(){
-        // dodanie onedpointu
-        console.clear()
-        console.log(dateFrom)
-        console.log(dateTo)
-        console.log(absence)
-        console.log(noPay)
+        const query = new URLSearchParams();
+        query.set("employeeApproverId", getLocalStorageKeyWithExpiry("loggedEmployee").UserId);
+        query.set("absenceStatusId", 3);
 
-        console.log(leaveDays)
-        console.log(demandDays)
-        //close()
+        fetchPutEditAbsence(requestData.absence_id, query)
+            .then(r => {
+                close()
+            })
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);

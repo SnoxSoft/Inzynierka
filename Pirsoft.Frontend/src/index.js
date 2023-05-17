@@ -19,6 +19,8 @@ import Requests from "./pages/Requests";
 import RemindChangePassword from "./pages/RemindChangePassword";
 import Grades from "./pages/grades/Grades";
 import Notifications from "./pages/notifications/Notifications";
+import EmployeeSkillFinder from "./pages/EmployeeSkillFinder";
+import {useState} from "react";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -34,6 +36,7 @@ root.render(
                     <Route path={"schedule"} element={<Schedule />}/>
                     <Route path={"company-schedule"} element={<CompanySchedule />}/>
                     <Route path={"teams"} element={<Teams />}/>
+                    <Route path={"employee-skill-finder"} element={<EmployeeSkillFinder />}/>
                     <Route path={"team-view/:id"} element={<TeamView />}/>
                     <Route path={"team-edit/:id"} element={<TeamEdit />}/>
                     <Route path={"team-create"} element={<TeamCreate />}/>

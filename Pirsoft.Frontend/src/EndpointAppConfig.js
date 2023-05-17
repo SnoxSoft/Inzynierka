@@ -5,7 +5,7 @@ const endpointGetEmployeeData = "get/employee";
 
 const endpointPostCreateEmployee = "create/new/employee";
 
-const endpointPutEditEmployee = "employees";
+const endpointPutEditEmployee = "edit/employee";
 
 const endpointDeleteEmployee = "delete/employee";
 
@@ -41,7 +41,7 @@ const endpointEmployeeChangePassword = "changePassword"
 // Logowanie sie //
 
 // Zalogowanie sie do aplikacji
-const endpointGetLogIn = "getEmployee";
+const endpointGetLogIn = "api/authenticate";
 
 
 // Harmonogram pracy //
@@ -53,6 +53,9 @@ const endpointGetOneEmployeeBetweenDatesDaysOff = "get/employee/absences";
 const endpointGetAllEmployeesBetweenDatesDaysOff = "get/all/employee/absences";
 
 const endpointPostCreateAbsence = "create/new/absence"
+
+const endpointPutEditAbsence = "edit/absence";
+const endpointDeleteAbsence = "delete/absence";
 
 
 // Umiejętności pracownika //
@@ -68,6 +71,10 @@ const endpointGetAllEmployees = "get/employees";
 // Lista zespołów //
 
 // Zwraca listę wszystkich zespołów w firmie
+const endpointCreateTeam = "create/department";
+const endpointEditTeam = "edit/department";
+const endpointDeleteTeam = "delete/department";
+
 const endpointGetAllTeams = "get/departments";
 
 // Zwraca pełne informacje na temat wybranego zespołu
@@ -86,6 +93,8 @@ export {
     endpointGetRequestsStatuses,
     endpointGetAbsencesTypes, endpointPutEditEmployee,
     endpointPostCreateAbsence,
+    endpointPutEditAbsence,
+    endpointDeleteAbsence,
 
     endpointGetRequestApprovers,
 
@@ -101,6 +110,7 @@ export {
     endpointGetAllEmployees,
 
     endpointGetAllTeams, endpointGetTeamData,
+    endpointCreateTeam, endpointDeleteTeam, endpointEditTeam,
 
     endpointGetEmployeeData, endpointPostCreateEmployee
 

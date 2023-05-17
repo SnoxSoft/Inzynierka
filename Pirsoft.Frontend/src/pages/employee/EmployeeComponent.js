@@ -15,26 +15,16 @@ import GrossSalary from "../../components/employee/fields/GrossSalary";
 import EmploymentStartDate from "../../components/employee/fields/EmploymentStartDate";
 import Contract from "../../components/employee/fields/Contract";
 import {
-    alertNewPasswordsAreIncompatible,
-    alertOldPasswordIsIncompatible,
-    alertPutNewPasswords,
     firstnameLabel,
-    headerPasswordChange,
-    labelApprove,
     labelBack,
     labelBankAccount,
     labelBirthDate,
-    labelChange,
     labelChangePassword,
-    labelClose,
     labelContractType,
     labelCreate,
     labelDelete,
     labelEdit,
     labelEmail,
-    labelGiveNewPassword,
-    labelGiveNewPasswordAgain,
-    labelGiveOldPassword,
     labelPESEL,
     labelPick,
     labelPosition,
@@ -47,11 +37,7 @@ import {
     pageNameEmployeeData,
     pageNameEmployeeRegister,
     pageNameEmployeeView,
-    serverIp,
     labelTeam,
-    legendLabel,
-    alertPasswordChanged,
-    alertUnexpectedError,
     alertWrongFirstName,
     alertWrongLastName,
     alertWrongBankAccount,
@@ -63,10 +49,14 @@ import {
     alertWrongPositionLevel,
     alertWrongTeam,
     alertWrongStartDate,
-    alertWrongEmail,
-    alertWrongAddressEmail, labelLeaveDays, labelDemandDays, labelOverTenYears
+    alertWrongAddressEmail,
+    labelLeaveDays,
+    labelDemandDays,
+    labelOverTenYears,
+    alertSaved,
+    alertProblemOccured,
+    alertDeleted
 } from "../../GlobalAppConfig";
-import {endpointGetAllSkills} from "../../EndpointAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
 import SkillPicker from "../SkillPicker";
@@ -78,39 +68,40 @@ import {
     fetchPostCreateEmployee,
     fetchPutEditEmployee
 } from "../../DataFetcher";
-import Legend from "../../components/legend/Legend";
 import {Popup} from "semantic-ui-react";
-import grossSalary from "../../components/employee/fields/GrossSalary";
+import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
 import RequestWindow from "../RequestWindow";
 import LeaveDays from "../../components/employee/fields/LeaveDays";
 import DemandDays from "../../components/employee/fields/DemandDays";
 import OverTenYears from "../../components/employee/fields/OverTenYears";
 function EmployeeComponent({id, mode, employee, teams, contracts, positions, positionsLevels}){
-    if(id === '-1'){
-        document.title = pageNameEmployeeRegister;
-    }
-    else if(id === sessionStorage.getItem('USER')){
-        document.title = pageNameEmployeeData;
-    }
-    else document.title = pageNameEmployeeView;
 
     // Możliwe rodzaje parametru mode:
     // create - do tworzenia
     // edit - osoba przeglądająca konto lub
     //        uprawniona do edycji kont lub właściciel konta
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
+
+    }
+
+    if(id === '-1'){
+        document.title = pageNameEmployeeRegister;
+    }
+    else if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && id === getLocalStorageKeyWithExpiry("loggedEmployee").UserId){
+        document.title = pageNameEmployeeData;
+    }
+    else document.title = pageNameEmployeeView;
 
     // Na razie od ręki ustationy przywilej i zapisany w sesji
     // Podział na widoczność pól według roli konta plus podział na możliwość edycji.
     // Tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
 
-    // Uprawnienia edycji oraz przeglądania danych konta pracownika według zalogowanego konta
-    sessionStorage.setItem("PRIVILEDGE", 'UNAUTHORIED')
-
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
-    let disableData = sessionStorage.getItem('USER') !== id && mode !== 'create'
-
+    let disableData = getLocalStorageKeyWithExpiry("loggedEmployee") !== null ? getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id && mode !== 'create' : false
+    
     // Do pokazania/ukrycia danych pracownika
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
     // Do pokazania/ukrycia okna do wyboru umiejętności
@@ -164,28 +155,32 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setSkillsData(employee.skills);
         }
         else {
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setBank('');
-            setBirth('');
-            setPesel('');
-            setSalary('');
-            setDepartment('');
-            setContract('');
-            setLeaveDays(0)
-            setDemandDays(0)
-            setOverTenYears(false)
-            setPosition('');
-            setPositionLevel('');
-            setStart('');
-
-            setAvatarData(undefined);
-            setSkillsData([]);
+            clearWindowData();
         }
         setEmployeeDataShow(true)
 
     }, [id]);
+
+    function clearWindowData(){
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setBank('');
+        setBirth('');
+        setPesel('');
+        setSalary('');
+        setDepartment('');
+        setContract('');
+        setLeaveDays(0)
+        setDemandDays(0)
+        setOverTenYears(false)
+        setPosition('');
+        setPositionLevel('');
+        setStart('');
+
+        setAvatarData(undefined);
+        setSkillsData([]);
+    }
 
     useEffect(() => {
         if(employee !== undefined && employee !== null && id !== '-1'){
@@ -224,7 +219,26 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     }
     function deleteEmployee(){
         fetchDeleteEmployee(id)
-            .then(r => console.log(r))
+            .then(r => {
+                if (r.status === 200) {
+                    setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
+                        {alertDeleted}
+                    </p>)
+                    setShowPopupWithProblems(true)
+
+                    setTimeout(() => {
+                        clearWindowData();
+                        navigate(-1);
+                    }, 3000);
+                } else {
+                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProblemOccured}
+                    </p>)
+                    setShowPopupWithProblems(true)
+                }
+
+
+            })
     }
 
 
@@ -233,98 +247,98 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         // Sprawdzenie błędów
         setAlerts(<></>)
         let alerts = []
-        // if(firstName.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongFirstName}
-        //         </p>
-        //     )
-        // }
-        // if(lastName.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongLastName}
-        //         </p>
-        //     )
-        // }
-        // if(email.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongAddressEmail}
-        //         </p>
-        //     )
-        // }
-        // if(bank.toString().trim().length !== 26 || Number(bank) === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongBankAccount}
-        //         </p>
-        //     )
-        // }
-        // if(birth.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongBirthDate}
-        //         </p>
-        //     )
-        // }
-        // if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongPESEL}
-        //         </p>
-        //     )
-        // }
-        // if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongSalary}
-        //         </p>
-        //     )
-        // }
-        // if(contract.toString().trim().length === 0 || contract === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongContract}
-        //         </p>
-        //     )
-        // }
-        // if(position.toString().trim().length === 0 || position === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongPosition}
-        //         </p>
-        //     )
-        // }
-        // if(positionLevel.toString().trim().length === 0 || positionLevel === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongPositionLevel}
-        //         </p>
-        //     )
-        // }
-        // if(department.toString().trim().length === 0 || department === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongTeam}
-        //         </p>
-        //     )
-        // }
-        // if(start.toString().trim().length === 0){
-        //     alerts.push(
-        //         <p className={"bg-red-700 rounded-md font-bold"}>
-        //             {alertWrongStartDate}
-        //         </p>
-        //     )
-        // }
-        // setAlerts(alerts)
+        if(firstName.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongFirstName}
+                </p>
+            )
+        }
+        if(lastName.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongLastName}
+                </p>
+            )
+        }
+        if(email.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongAddressEmail}
+                </p>
+            )
+        }
+        if(bank.toString().trim().length !== 26 || Number(bank) === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongBankAccount}
+                </p>
+            )
+        }
+        if(birth.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongBirthDate}
+                </p>
+            )
+        }
+        if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPESEL}
+                </p>
+            )
+        }
+        if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongSalary}
+                </p>
+            )
+        }
+        if(contract.toString().trim().length === 0 || contract === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongContract}
+                </p>
+            )
+        }
+        if(position.toString().trim().length === 0 || position === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPosition}
+                </p>
+            )
+        }
+        if(positionLevel.toString().trim().length === 0 || positionLevel === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongPositionLevel}
+                </p>
+            )
+        }
+        if(department.toString().trim().length === 0 || department === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongTeam}
+                </p>
+            )
+        }
+        if(start.toString().trim().length === 0){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertWrongStartDate}
+                </p>
+            )
+        }
+        setAlerts(alerts)
 
         const query = new URLSearchParams();
         query.set("firstName", firstName);
         query.set("lastName", lastName);
         query.set("email", email);
         query.set("bankAccountNumber", bank);
-        query.set("dateOfBirth", birth);
+        query.set("birthDate", birth);
         query.set("password", "Wanda123@2113wanda");
         query.set("pesel", pesel);
         query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
@@ -343,62 +357,45 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         else{
             if(id === "-1") {
                 fetchPostCreateEmployee(query)
-                    .then(r => console.log(r))
+                    .then(r => {
+                        if (r.status === 200) {
+                            setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
+                                {alertSaved}
+                            </p>)
+                            setShowPopupWithProblems(true)
+
+                            // Zapisanie umiejetnosci zaraz po tym
+                            console.log(skillsData)
+                            clearWindowData();
+                        } else {
+                            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                                {alertProblemOccured}
+                            </p>)
+                            setShowPopupWithProblems(true)
+                        }
+                    })
             }
             else{
-                let bodyEdit = {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    bankAccountNumber: bank,
-                    dateOfBirth: birth,
-                    //password: "Wanda123@2113wanda",
-                    pesel: pesel,
-                    grossSalary: salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary,
-                    departmentId: department,
-                    contractType: contract,
-                    companyRole: position,
-                    seniorityLevel: positionLevel,
-                    employmentStartDate: start,
-                    leaveBaseDays: leaveDays,
-                    leaveDemandDays: demandDays,
-                    leaveIsSeniorityThreshold: overTenYears
-
-                }
-
-                fetchPutEditEmployee(id, bodyEdit, query)
+                query.set("leaveIsSeniorityThreshold", overTenYears ? 1 : 0);
+                fetchPutEditEmployee(id, query)
                     .then(r => {
-                        if(r !== undefined){
-                            console.log(r)
-                            if(r.status){
+                        if (r.status === 200) {
+                            setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
+                                {alertSaved}
+                            </p>)
+                            setShowPopupWithProblems(true)
 
-                            }
+                            // Zapisanie umiejetnosci zaraz po tym
+                            console.log(skillsData)
+                        } else {
+                            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                                {alertProblemOccured}
+                            </p>)
+                            setShowPopupWithProblems(true)
                         }
                     })
             }
         }
-
-        // // Do celów testowych żeby widzieć dane w konsoli
-        // console.log(
-        //     "id:"+id+
-        //     "\n employee data: \n" +
-        //     firstName + ", \n" +
-        //     lastName + ", \n" +
-        //     email + ", \n" +
-        //     bank + ", \n" +
-        //     birth + ", \n" +
-        //     pesel + ", \n" +
-        //     salary + ", \n" +
-        //     department + ", \n" +
-        //     contract + ", \n" +
-        //     position + ", \n" +
-        //     positionLevel + ", \n" +
-        //     start + " \n \n" +
-        //     " skills: \n" +
-        //     skillsData +
-        //     " \n avatar: " //+
-        //     //avatarData
-        // )
     }
 
     // Ładowanie umiejętności dla okna wyboru umiejętności
@@ -411,6 +408,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
              className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default"}
              style={{minWidth:800} }>
             <div className={"grow flex flex-row"}>
+
                 <div className={"basis-4/5 grow p-4 flex flex-col justify-around"}>
                     <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {firstnameLabel} </label>
@@ -504,7 +502,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     <ProfilePicture id={"employee-profile-picture"} picture={avatarData}/>
                     <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
-                        {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' && sessionStorage.getItem('USER') === id || mode === 'create' ?
+                        {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === 'create' ?
                             <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
                                 onClick={ () => {
@@ -519,8 +517,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     </div>
                 </div>
             </div>
-            {mode !== 'create' &&
-                sessionStorage.getItem('USER') !== id ?
+            {mode !== 'create' && (getLocalStorageKeyWithExpiry("loggedEmployee") !== null && (getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id)) ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
                     <button
                         id={"employee-back"}
@@ -529,14 +526,18 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 : <></>
             }
             <div className={"grow-0 p-4 flex flex-row justify-around"}>
-
-                {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
                     <>
-                        {mode === 'edit' && sessionStorage.getItem('USER') === id ?
+                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ?
                             <>
-                                <ReusableButton id={"employee-delete"} value={labelDelete} onClick={() => deleteEmployee()} />
-                                <ReusableButton id={"employee-save"} value={labelSave} onClick={() => saveEmployee()}/>
-                                {sessionStorage.getItem('USER') === id &&
+                                <Popup content={buildPopup} position={"top center"}
+                                       trigger={<ReusableButton id={"employee-delete"}
+                                                                value={labelDelete} onClick={() => deleteEmployee()}/>}
+                                />
+                                <Popup content={buildPopup} position={"top center"}
+                                    trigger={<ReusableButton id={"employee-save"}
+                                                             value={labelSave} onClick={() => saveEmployee()}/>}
+                                />
+                                {getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id &&
                                 <ReusableButton id={"employee-password-change"} value={labelChangePassword}
                                         onClick={() => {
                                             setEmployeeDataShow(false);
@@ -560,7 +561,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             : <></>
                         }
                     </>
-                    : <></>}
             </div>
         </div>
         :

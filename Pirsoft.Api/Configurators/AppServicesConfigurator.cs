@@ -37,7 +37,7 @@ namespace Pirsoft.Api.Configurators
             _builder.Services
                 .AddControllers()
                 .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             _builder.Services
                 .AddEndpointsApiExplorer();

@@ -14,35 +14,6 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, 
         setShowHideButtons(false);
     }
 
-    function translateDepartmentName(department_id){
-        let returnDepartment = department_id
-        teams.map(team => {
-            if(team.department_id.toString().trim() === department_id.toString().trim())
-                returnDepartment = team.department_name
-        })
-        return returnDepartment
-    }
-
-    function translatePositionName(position_id){
-        let returnPosition = position_id
-        positions.map(position => {
-            if(position.role_id.toString().trim() === position_id.toString().trim() )
-                returnPosition = position.role_name
-        })
-
-        return returnPosition
-    }
-
-    function translatePositionLevelName(position_level_id){
-        let returnPositionLevel = position_level_id
-        positionLevels.map(positionLevel => {
-            if(positionLevel.seniority_level_id.toString().trim() === position_level_id.toString().trim() )
-                returnPositionLevel = positionLevel.seniority_level_name
-        })
-
-        return returnPositionLevel
-    }
-
     return <div id={id} className={"rounded-md grid grid-cols-6 m-2 p-4 hover:cursor-default hover:bg-opacity-80 hover:bg-brown-menu hover:border-b-workday hover:border-2"}
             onMouseOver={showOptions} onMouseLeave={hideOptions}>
                 <div className={"place-self-center"}>
@@ -56,13 +27,13 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, 
                     {employee.first_name} {employee.last_name}
                 </div>
                 <div className={"flex flex-row place-self-center"}>
-                    {translateDepartmentName(employee.employee_department_id)}
+                    {employee.employee_department.department_name}
                 </div>
                 <div className={"flex flex-row place-self-center"}>
-                    {translatePositionLevelName(employee.employee_seniority_level_id)}
+                    {employee.employee_seniority_level.seniority_level_name}
                 </div>
                 <div className={"flex flex-row place-self-center"}>
-                    {translatePositionName(employee.employee_company_role_id)}
+                    {employee.employee_company_role.role_name}
                 </div>
                 <div className={"grow flex flex-row place-self-center gap-x-2"}>
                     {showHideButtons && (
