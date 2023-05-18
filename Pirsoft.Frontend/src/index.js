@@ -31,7 +31,7 @@ root.render(
                 <Route path={"/"} element={<Layout />}>
                     <Route index element={<Logging />}/>
                     <Route path={"remind"} element={<RemindSendMail />}/>
-                    <Route path={"change-password/:code"} element={<RemindChangePassword />}/>
+                    <Route path={"change-password"} element={<RemindChangePassword />}/>
                     <Route path={"employees"} element={<Employees />}/>
                     <Route path={"schedule"} element={<Schedule />}/>
                     <Route path={"company-schedule"} element={<CompanySchedule />}/>
