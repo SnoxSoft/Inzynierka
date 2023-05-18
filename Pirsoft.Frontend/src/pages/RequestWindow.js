@@ -4,6 +4,10 @@ import Calendar from "../components/base/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {CgClose} from "react-icons/cg";
 import {
+    alertAbsence,
+    alertAccepted,
+    alertCreated, alertDateFrom, alertDateTo,
+    alertDeleted, alertProblemOccured, alertRefused,
     labelApprove, labelCreate, labelDisapprove,
     labelRequest,
     labelRequestApprovers,
@@ -18,6 +22,7 @@ import {
 import {useNavigate} from "react-router-dom";
 import AbsencesList from "../components/absences/AbsencesList";
 import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
+import {Popup} from "semantic-ui-react";
 
 const RequestWindow = ({setAbsencesVisible = undefined,
                      setShowAddEmployeeAnAbsence = undefined, setEmployeeDataShow = undefined,
@@ -66,18 +71,25 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                 });
         }
 
-        if (absencesList === null) {
+        if (absencesList === null && employee !== null) {
             setAbsencesList([]);
             fetchGetAbsencesTypes(navigate)
                 .then(absences => {
-                    setAbsencesList(absences)
+                    let loadAbsencesList = []
                     if(requestData !== undefined) {
                         absences.map((absence) => {
                             if (requestData.type === absence.absence_type_name) {
                                 setAbsence(absence.absence_type_name)
                             }
+                            if(demandDays === 0 && absence.absence_type_category !== "demand" || demandDays > 0){
+                                if((employee.employee_company_role_id !== 2 && absence.absence_type_category !== "absent" && absence.absence_type_category !== "sick") ||
+                                    employee.employee_company_role_id === 2){
+                                    loadAbsencesList.push(absence)
+                                }
+                            }
                         })
                     }
+                    setAbsencesList(loadAbsencesList)
                 });
         }
 
@@ -134,6 +146,17 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         }
     }
 
+    const [showPopupWithProblems, setShowPopupWithProblems] = useState(false);
+    const [alerts, setAlerts] = useState(<></>)
+
+    const buildPopup = () => {
+        return showPopupWithProblems ?
+            <div className={"flex flex-col items-center text-workday gap-2 p-2"}>
+                {alerts}
+            </div>:
+            <></>
+    }
+
     function createRequest(){
         const query = new URLSearchParams();
         query.set("absenceStartDate", dateFrom);
@@ -144,10 +167,44 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         query.set("employeeOwnerId", employee.employee_id);
         query.set("absenceStatusId", 1);
 
-        fetchPostCreateAbsence(query)
-                    .then(r => {
-                        close()
-                    })
+        setShowPopupWithProblems(false)
+        // Sprawdzenie błędów
+        setAlerts(<></>)
+        let alerts = []
+
+        if(dateFrom === ""){
+            alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertDateFrom}
+            </p>)
+        }
+        if(dateTo === ""){
+            alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertDateTo}
+            </p>)
+        }
+        if(absence === undefined){
+            alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertAbsence}
+            </p>)
+        }
+
+        setAlerts(alerts)
+        if(alerts.length > 0){
+            setShowPopupWithProblems(true)
+        }
+        else {
+            fetchPostCreateAbsence(query)
+                .then(r => {
+                    if (r.status === 200) {
+                            close()
+                    } else {
+                        setAlerts(<p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertProblemOccured}
+                        </p>)
+                        setShowPopupWithProblems(true)
+                    }
+                })
+        }
     }
 
     function rejectRequest(){
@@ -157,7 +214,14 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
         fetchPutEditAbsence(requestData.absence_id, query)
             .then(r => {
-                close()
+                if (r.status === 200) {
+                        close();
+                } else {
+                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProblemOccured}
+                    </p>)
+                    setShowPopupWithProblems(true)
+                }
             })
     }
 
@@ -168,7 +232,14 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
         fetchPutEditAbsence(requestData.absence_id, query)
             .then(r => {
-                close()
+                if (r.status === 200) {
+                        close()
+                } else {
+                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProblemOccured}
+                    </p>)
+                    setShowPopupWithProblems(true)
+                }
             })
     }
 
@@ -205,7 +276,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     </p>
                     <div className={"bg-workday text-black basis-1/3"}>
                         <AbsencesList value={absence} onChange={setAbsence} absences={absencesList}
-                                          disableChange={disableChanges}/>
+                                          disableChange={disableChanges} />
                     </div>
                 </div>
                 <div className={"flex flex-col place-self-center place-items-center"}>
@@ -232,13 +303,25 @@ const RequestWindow = ({setAbsencesVisible = undefined,
             <br/>
             {mode === "create" ?
                 <div className={"flex justify-evenly"} style={{ height: wantedHeightsForList}}>
-                    <ReusableButton value={labelCreate} onClick={() => createRequest()}/>
+                    <Popup
+                        content={buildPopup}
+                        position={"top center"}
+                        trigger={<ReusableButton id={"create-request"} value={labelCreate} onClick={() => createRequest()}/>}
+                    />
                 </div> :
                 <div id={"schedule-list"} className={"flex justify-evenly"}>
-                    <ReusableButton id={"approval-or-rejection-disapprove"}
-                                    value={labelDisapprove} onClick={() => rejectRequest()}/>
-                    <ReusableButton id={"approval-or-rejection-approve"}
-                                    value={labelApprove} onClick={() => approveRequest()}/>
+                    <Popup
+                        content={buildPopup}
+                        position={"top center"}
+                        trigger={<ReusableButton id={"approval-or-rejection-disapprove"}
+                                                 value={labelDisapprove} onClick={() => rejectRequest()}/>}
+                    />
+                    <Popup
+                        content={buildPopup}
+                        position={"top center"}
+                        trigger={<ReusableButton id={"approval-or-rejection-approve"}
+                                                 value={labelApprove} onClick={() => approveRequest()}/>}
+                    />
                 </div>
             }
         </div>

@@ -22,8 +22,8 @@ const EmployeePickerListItem = ({employee, id}) => {
             setCouldFindPicture(false);
         });
     function removePathPart(path) {
-        var backslashes = path.split("\\");
-        var newPath = "\\" + backslashes.slice(-3).join("\\");
+        var backslashes = path !== null ? path.split("\\") : "";
+        var newPath = backslashes !== "" ? "\\" + backslashes.slice(-3).join("\\") : "";
         return newPath;
     }
 
