@@ -9,7 +9,7 @@ import {
     headerEmployeesFinder, headerEmployeesFinderEmployeeList,
     headerEmployeesFinderList, headerEmployeesFinderSkillsList,
     labelClose,
-    labelFind, labelFirstNameAndLastName, pageNameSkillsFinder
+    labelFind, labelFirstNameAndLastName, labelSkillPicked, pageNameSkillsFinder
 } from "../GlobalAppConfig";
 import SkillPicker from "./SkillPicker";
 import {useNavigate} from "react-router-dom";
@@ -147,8 +147,12 @@ const EmployeeSkillFinder = ({}) => {
                                                   loadAllSkills={loadAllSkills}
                                                   setSkills={setSkillsPicked}
                                                   setSkillsNotShows={setSkillsNotShows}/>
+                                <div className={"flex flex-row gap-2"}>
+                                    <div>{labelSkillPicked}</div>
                                     <SkillsList id={"finder-skill-list"}
                                                 skillList={skillsPicked}/>
+                                </div>
+
                             </div>
 
                             <ReusableButton id={"finder-find"} value={labelFind}

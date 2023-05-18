@@ -101,6 +101,7 @@ const calendarLabelFrom = "Od:";
 const calendarLabelTo = "Do:";
 
 const skillsLabel = "Umiejętności";
+const labelSkillPicked = "Wybrane umiejętności:";
 
 const labelFirstNameAndLastName = "Imie i nazwisko:";
 
@@ -174,8 +175,10 @@ const labelGiveEmail = "Podaj e-mail";
 const labelVerificationCode = "Kod weryfikacyjny";
 const labelGiveOldPassword = "Podaj stare hasło";
 const labelGiveNewPassword = "Podaj nowe hasło";
+const labelCode = "Kod";
 const labelGiveNewPasswordAgain = "Powtórz nowe hasło";
-const labelSendVerificationEmail = "Wyślij email do zmiany hasła";
+const labelSendVerificationEmail = "Wyślij email z kodem do zmiany hasła";
+const labelReceivedACode = "Mam już kod";
 const headerPasswordChange = "Zmiana hasła";
 
 const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
@@ -200,7 +203,7 @@ const alertPasswordChanged = "Hasło zostało zmienione. \nZa chwilę nastąpi p
 const alertWrongEmail = "Wprowadzony email jest błędny";
 const alertUnexpectedError = "Wystapił nieoczekiwany błąd, spróbuj ponownie za chwilę";
 const alertPasswordIncorrect = "Hasło powinno";
-const alertPutNewPasswords = "Wpisz nowe hasła w pola";
+const alertPutNewPasswords = "Wpisz nowe hasła w pola i uzupełnij kod";
 const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
 const alertPasswordIsIncompatible = "Nowe hasło powinno mieć co najmniej 14 znaków, jeden znak Duży i jeden znak specjalny oraz znaki małe";
 const alertOldPasswordIsMissing = "Wpisz stare hasło";
@@ -264,7 +267,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
 
     labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition, labelPositionLevel,labelBankAccount,labelContractType,
 
-    skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
+    skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel, labelSkillPicked,
     employeeGradeText, employeeGradedText,
     firstnameLabel, lastnameLabel, labelTeam,
     labelLeaveDays, labelDemandDays, labelOverTenYears,
@@ -282,8 +285,8 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     requestStatusLabel, requestActionLabel, requestDescriptionLabel,
     labelRequestType, labelRequestNoPay, labelRequestApprovers,
 
-    labelSendVerificationEmail, labelRemindPassword, labelGiveEmail,
-    labelVerificationCode, labelGiveNewPassword, labelGiveNewPasswordAgain, labelGiveOldPassword, headerPasswordChange,
+    labelSendVerificationEmail, labelRemindPassword, labelGiveEmail, labelReceivedACode,
+    labelVerificationCode, labelGiveNewPassword, labelCode, labelGiveNewPasswordAgain, labelGiveOldPassword, headerPasswordChange,
 
     alertMessageSent,
     alertPasswordChanged,

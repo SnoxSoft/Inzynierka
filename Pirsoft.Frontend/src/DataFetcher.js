@@ -19,14 +19,13 @@ import {
     endpointGetAllPositionsLevels,
     endpointGetAllSkills,
     endpointGetAllTeams,
-    endpointGetChangePassword,
     endpointGetEmployeeData,
     endpointGetOneEmployeeBetweenDatesDaysOff,
     endpointGetRequestsStatuses,
-    endpointGetEmployeesRequests, endpointGetLogIn,
+    endpointGetLogIn,
     endpointGetTeamData,
     endpointPostCreateEmployee,
-    endpointPostSendEmailForPasswordChange,
+    endpointPostSendCodeInEmail,
     endpointPutChangePassword,
     endpointPutEditEmployee,
     endpointPostCreateAbsence,
@@ -69,47 +68,16 @@ function redirectToMainWindow(navigate, logOut = false){
     }, 3000);
 }
 
-async function fetchPutEditOldPasswordInProfile(navigate, query){//id, oldPassword, newPassword, newRepeatPassword) {
-    // return await fetch(serverIp + "/" + endpointEmployeeChangePassword,
-    //     {
-    //         method: 'PUT',
-    //         body: JSON.stringify({
-    //             employee_id: id,
-    //             employee_old_password: oldPassword,
-    //             new_employee_password: newPassword,
-    //             repeat_new_employee_password: newRepeatPassword})
-    //     })
+async function fetchPutEditOldPasswordInProfile(navigate, query){
     return await axios.put(`${serverIpProd}/${endpointEmployeeChangePassword}?${query}`)
 }
 
-async function fetchPostSendEmailForPasswordChange(navigate, email) {
-    return await fetch(serverIp + "/" + endpointPostSendEmailForPasswordChange + "/" + email,
-        {
-            method: 'POST'
-        })
+async function fetchPostSendEmailForPasswordChange(email) {
+    return await axios.post(`${serverIpProd}/${endpointPostSendCodeInEmail}/${email}`)
 }
 
-async function fetchGetChangePasswordData(navigate, code) {
-    const response = await fetch(serverIp + "/" + endpointGetChangePassword + "/" + code)
-        .catch( err => console.error(err))
-    if(response.status === 200){
-        const newData = await response.json();
-        return newData
-    }
-    else {
-        redirectToMainWindow(navigate)
-    }
-}
-
-async function fetchPutChangePassword(navigate, employeeId, newPassword, newRepeatPassword) {
-    return await fetch(serverIp + "/" + endpointPutChangePassword,
-        {
-            method: "PUT",
-            body: JSON.stringify({
-                employee_id: employeeId,
-                new_employee_password: newPassword,
-                repeat_new_employee_password: newRepeatPassword})
-        })
+async function fetchPutChangePassword(query) {
+    return await axios.put(`${serverIpProd}/${endpointPutChangePassword}?${query}`)
 }
 
 async function fetchPostCreateTeam(params) {
@@ -390,7 +358,6 @@ async function fetchLoginEmployee(navigate, email, password){
 export {
     fetchPutEditOldPasswordInProfile,
     fetchPostSendEmailForPasswordChange,
-    fetchGetChangePasswordData,
     fetchPutChangePassword,
 
     fetchGetEmployeeDataById,
