@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Security.Interfaces;
@@ -14,62 +13,47 @@ public class PasswordManagementController : Controller
     private readonly ICrudHandler _crudHandler;
     private readonly IUserManager<EmployeeModel> _userManager;
     private readonly IMailService _emailService;
-    private readonly PasswordService _passwordService;
-    private readonly DatabaseContext _databasebContext;
+    private readonly IPasswordService _passwordService;
 
-    public PasswordManagementController(ICrudHandler crudHandler, IUserManager<EmployeeModel> userManager, IMailService emailService, PasswordService passwordService, DatabaseContext databasebContext)
+    public PasswordManagementController(ICrudHandler crudHandler, IUserManager<EmployeeModel> userManager, IMailService emailService, IPasswordService passwordService)
     {
         _crudHandler = crudHandler;
         _userManager = userManager;
         _emailService = emailService;
         _passwordService = passwordService;
-        _databasebContext = databasebContext;
     }
 
     [HttpPost("/send/password/reset")]
-    public async Task<IActionResult> SendMailAsync(MailModel mailData)
+    public async Task<ActionResult> SendMailAsync(MailModel mailData)
     {
         bool result = await _emailService.SendEmailAsync(mailData, new CancellationToken());
 
         if (result)
-        {
             return StatusCode(StatusCodes.Status200OK, "Mail has successfully been sent.");
-        } 
-        else
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
-        }
+
+        return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
     }
     
     [HttpPut("/reset/code/change/password")]
     [Authorize(Roles = "Admin, Manager, Employee")]
-    public async Task<ActionResult> ChangePasswordWithResetCode(int employeeId, string passwordFirst, string passwordSecond)
+    public async Task<ActionResult> ChangePasswordWithResetCode(int resetCode, string passwordFirst, string passwordSecond)
     {
-        // Ensure current user is authorized to update this employee's password
-        var currentUser = await _userManager.GetUserAsync(User.Identity.Name, passwordFirst);
-        if (currentUser == null)
-            return Unauthorized();
-
-        var employeeToUpdate = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
-        if (employeeToUpdate == null)
+        var resetToken = await _crudHandler.ReadAsync<PasswordResetTokenModel>(resetCode);
+        if (resetToken.expiration_time < DateTime.Now.AddHours(-24))
             return NotFound();
-
-        // Ensure the current user is either an admin, manager, or the employee whose password is being updated
-        if (!User.IsInRole("Admin") && !User.IsInRole("Manager") && currentUser.employee_id != employeeToUpdate.employee_id)
-            return Unauthorized();
-
-        // Validate new password
+        
         if (passwordFirst != passwordSecond)
             return BadRequest("New passwords do not match");
-
-        // Update password and save changes
-        employeeToUpdate.password = passwordFirst;
-        await _crudHandler.UpdateAsync<EmployeeModel>(employeeToUpdate);
+        
+        var employee = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.employee_id);
+        employee.password = passwordFirst;
+        await _crudHandler.UpdateAsync(employee);
 
         return Ok();
     }
 
     [HttpPut("/change/password")]
+    [Authorize(Roles = "Admin, Manager, Employee")]
     public async Task<ActionResult> ChangePasswordFromProfileView(string oldPassword, string newPasswordOnce, string newPasswordTwice, int employeeId)
     {
         // Get the current user from the database using the employeeId parameter

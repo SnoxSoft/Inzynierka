@@ -13,4 +13,6 @@ public class PasswordResetTokenModel : IApiModel
     public string email { get; set; } = null!;
     public string reset_code { get; set; } = null!;
     public DateTime expiration_time { get; set; }
+    [ForeignKey("employee_id")]
+    public int employee_id { get; set; }
 }

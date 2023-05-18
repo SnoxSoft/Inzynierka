@@ -38,7 +38,7 @@ namespace Pirsoft.Api.Configurators
                 .AddControllers()
                 .AddJsonOptions(options =>
                     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            _builder.Services.Configure<MailConfigurator>(_builder.Configuration.GetSection(nameof(MailConfigurator)));
             _builder.Services
                 .AddEndpointsApiExplorer();
             _builder.Services.AddCors(options =>

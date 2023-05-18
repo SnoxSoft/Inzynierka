@@ -38,6 +38,7 @@ namespace Pirsoft.Api.Configurators
         private void configureEmailManagement()
         {
             _services.AddTransient<IMailService, MailService>();
+            _services.AddTransient<IPasswordService, PasswordService>();
         }
     }
 }

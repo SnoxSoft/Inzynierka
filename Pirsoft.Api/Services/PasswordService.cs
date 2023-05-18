@@ -1,6 +1,6 @@
 ﻿namespace Pirsoft.Api.Services;
 
-public class PasswordService
+public class PasswordService : IPasswordService
 {
     private const int ResetCodeLength = 48;
 
@@ -16,4 +16,9 @@ public class PasswordService
 
         return resetCode;
     }
+}
+
+public interface IPasswordService
+{
+    string GenerateResetCode();
 }
