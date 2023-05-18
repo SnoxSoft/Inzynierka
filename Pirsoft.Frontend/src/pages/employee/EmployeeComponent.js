@@ -276,7 +276,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </p>
             )
         }
-        if(email.toString().trim().length === 0){
+        if(email.toString().trim().length === 0 || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongAddressEmail}
