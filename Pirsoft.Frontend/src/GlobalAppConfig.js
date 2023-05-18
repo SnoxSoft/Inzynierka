@@ -227,21 +227,42 @@ const alertProfilePictureTooBig = "Wybrane zdjęcie profilowe jest zbyt duże, m
 const alertProfilePicture = "Wybrane zdjęcie profilowe jest nieprawidłowe ";
 
 
+/// Błędy przy tworzeniu wniosku
+
+const alertDateFrom = "Popraw datę 'od'";
+const alertDateTo = "Popraw datę 'do'";
+const alertAbsence = "Wybierz prawidłowy rodzaj wniosku";
+
 // Odpowiedzi operacji
 const alertSaved = "Zapisano";
 const alertDeleted = "Usunięto";
 const alertProblemOccured = "Wystąpił problem";
+const alertCreated = "Utworzono";
 const alertAccepted = "Zaakceptowano";
 const alertRefused = "Odrzucono";
 const alertChanged = "Zmieniono;"
 
+
+// Rodzaje kont w aplikacji - muszą mieć odpowiedniki w bazie
+
+const accountHR = "Kadry";
+const accountEmployee = "Pracownik";
+const accountTeamLeader = "Kierownik";
+const accountAccountant = "Księgowość";
+const accountPresident = "Prezes";
+const accountManagement = "Zarząd";
+
 export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
 
-    alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved,
+    accountEmployee, accountPresident, accountManagement, accountTeamLeader, accountAccountant, accountHR,
+
+    alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved, alertCreated,
 
     alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertWrongPESEL, alertWrongSalary, alertWrongContract,
     alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertProfilePictureTooBig, alertProfilePicture,
+
+    alertDateFrom, alertDateTo, alertAbsence,
 
     labelNotifications,
 

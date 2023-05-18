@@ -5,6 +5,8 @@ import {FiSettings} from "react-icons/fi";
 import {MdOpenInNew} from "react-icons/md";
 import ReusableButton from "../base/ReusableButton";
 import EmployeeRow from "./EmployeeRow";
+import {getLocalStorageKeyWithExpiry} from "../jwt/LocalStorage";
+import {accountHR, accountPresident} from "../../GlobalAppConfig";
 
 const TeamRow = ({team, row, setEmployeesVisible, id,
                      editOptions = false, isSchedule = false,
@@ -121,9 +123,14 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
                             formatting={""} color={""}
                             link={"/team-view/"+team.department_id}/>
 
+                    {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                        (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR ||
+                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident) ?
                     <ReusableButton id={id + "-edit-team"} value={<FiSettings/>}
                             formatting={""} color={""}
-                            link={"/team-edit/"+team.department_id}/>
+                            link={"/team-edit/"+team.department_id}/> :
+                        <></>
+                    }
                 </> : <></>
             }
         </div>

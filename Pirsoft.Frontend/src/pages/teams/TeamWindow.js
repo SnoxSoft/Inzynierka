@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
 import {
+    accountHR, accountPresident,
     labelClose,
     labelCreate, labelDelete,
     labelSave,
@@ -39,6 +40,11 @@ const TeamWindow = ({id, mode, title}) => {
     const [employeeSkillDataLoad, setEmployeeSkillDataLoad] = useState(false)
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && ((mode === "edit" || mode === "create") &&
+                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR || getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident))){
+                navigate("/teams");
+        }
+
         if(mode === 'view' || mode === 'edit') {
             // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
 
