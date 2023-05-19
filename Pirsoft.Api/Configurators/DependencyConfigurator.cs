@@ -1,6 +1,6 @@
-﻿using Pirsoft.Api.Controllers;
-using Pirsoft.Api.DatabaseManagement;
+﻿using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
+using Pirsoft.Api.Filesystem;
 using Pirsoft.Api.PatternsAbstraction;
 using Pirsoft.Api.Security.Interfaces;
 using Pirsoft.Api.Services;
@@ -21,6 +21,8 @@ namespace Pirsoft.Api.Configurators
             configureValidators();
 
             configureEmailManagement();
+
+            _services.AddScoped<IAvatarFileUploadHandler, AvatarFileUploadHandler>();
         }
 
         private void configureDatabaseManagement()
@@ -34,7 +36,7 @@ namespace Pirsoft.Api.Configurators
         {
             _services.AddScoped<IEmployeeModelValidator, EmployeeModelValidator>();
         }
-
+        
         private void configureEmailManagement()
         {
             _services.AddTransient<IMailService, MailService>();

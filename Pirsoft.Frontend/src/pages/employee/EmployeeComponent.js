@@ -55,7 +55,7 @@ import {
     labelOverTenYears,
     alertSaved,
     alertProblemOccured,
-    alertDeleted
+    alertDeleted, alertProfilePictureTooBig
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -111,7 +111,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // Do pokazania/Ukrycia okna do wystawiania wniosku urlopowego
     const [showAddEmployeeAnAbsence, setShowAddEmployeeAnAbsence] = useState(false)
 
-
     // Dane pracownika
     const[firstName, setFirstName] = useState(employee !== undefined && employee !== null ? employee.first_name : '');
     const[lastName, setLastName] = useState(employee !== undefined && employee !== null? employee.last_name : '');
@@ -130,7 +129,8 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     const[start, setStart] = useState(employee !== undefined && employee !== null ? employee.employment_start_date.substring(0, 10) : '');
 
     // Reszta danych pracownika
-    const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? undefined : undefined); //employee.avatar
+    const [avatarData, setAvatarData] = useState(employee !== undefined && employee !== null ? employee.avatar_file_path : undefined); //employee.avatar
+    const [fileToUpload, setFileToUpload] = useState(undefined);
     const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
     useEffect(() => {
@@ -152,6 +152,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             setStart(employee.employment_start_date.substring(0, 10));
 
             setAvatarData(employee.avatar);
+            setFileToUpload(undefined);
             setSkillsData(employee.skills);
         }
         else {
@@ -180,6 +181,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
         setAvatarData(undefined);
         setSkillsData([]);
+        setFileToUpload(undefined);
     }
 
     useEffect(() => {
@@ -202,6 +204,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
             setAvatarData(avatarData);
             setSkillsData(skillsData);
+            setFileToUpload(fileToUpload);
         }
 
     }, [employeeDataShow]);
@@ -236,8 +239,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     </p>)
                     setShowPopupWithProblems(true)
                 }
-
-
             })
     }
 
@@ -247,6 +248,20 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         // Sprawdzenie błędów
         setAlerts(<></>)
         let alerts = []
+
+        const profilePicture = document.getElementById('employee-profile-picture');
+        if(profilePicture !== null) {
+            console.log(profilePicture.naturalHeight)
+            console.log(profilePicture.naturalWidth)
+            if (profilePicture.naturalHeight > 301 || profilePicture.naturalWidth > 301) {
+                alerts.push(
+                    <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProfilePictureTooBig}
+                    </p>
+                )
+            }
+        }
+
         if(firstName.toString().trim().length === 0){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
@@ -351,12 +366,15 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("leaveDemandDays", demandDays);
         query.set("leaveIsSeniorityThreshold", overTenYears);
 
+        const formData = new FormData();
+        formData.append("employee_avatar", fileToUpload);
+
         if(alerts.length > 0){
             setShowPopupWithProblems(true)
         }
         else{
             if(id === "-1") {
-                fetchPostCreateEmployee(query)
+                fetchPostCreateEmployee(query, formData)
                     .then(r => {
                         if (r.status === 200) {
                             setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
@@ -377,7 +395,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             }
             else{
                 query.set("leaveIsSeniorityThreshold", overTenYears ? 1 : 0);
-                fetchPutEditEmployee(id, query)
+                fetchPutEditEmployee(id, query, formData)
                     .then(r => {
                         if (r.status === 200) {
                             setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
@@ -499,7 +517,8 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </div>
 
                 <div className={"flex flex-col p-4"}>
-                    <ProfilePicture id={"employee-profile-picture"} picture={avatarData}/>
+                    <ProfilePicture id={"employee-profile-picture"} picture={avatarData} avatarData={avatarData}
+                                    fileToUpload={fileToUpload} setFileToUpload={setFileToUpload}/>
                     <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
                         {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === 'create' ?
@@ -527,7 +546,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             }
             <div className={"grow-0 p-4 flex flex-row justify-around"}>
                     <>
-                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ?
+                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
                             <>
                                 <Popup content={buildPopup} position={"top center"}
                                        trigger={<ReusableButton id={"employee-delete"}

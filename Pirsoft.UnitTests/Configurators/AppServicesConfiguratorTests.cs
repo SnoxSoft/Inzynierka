@@ -7,26 +7,9 @@ using Pirsoft.Api.Configurators;
 
 namespace Pirsoft.UnitTests.Configurators
 {
-    public class AppServicesConfiguratorTests
+    [TestFixture]
+    public class AppServicesConfiguratorTests : BaseForConfiguratorTests<AppServicesConfigurator>
     {
-        private AppServicesConfigurator _sut = null!;
-
-        [SetUp]
-        public void SetUp() => _sut = AppServicesConfigurator.Instance;
-
-        [Test]
-        public void Instance_ReturnsConfiguratorAsSingletonInstance()
-        {
-            //Arrange
-            AppServicesConfigurator expectedInstance = AppServicesConfigurator.Instance;
-
-            //Act
-            AppServicesConfigurator result = _sut;
-
-            //Assert
-            result.Should().BeSameAs(expectedInstance);
-        }
-
         [Test]
         public void Init_ShouldRegisterNecessarryServices()
         {
@@ -35,7 +18,7 @@ namespace Pirsoft.UnitTests.Configurators
             ServiceDescriptor[] fakeInitialServices = fakeBuilder.Services.ToArray();
 
             //Act
-            _sut.Init(fakeBuilder);
+            sut.Init(fakeBuilder);
             ServiceDescriptor[] result = fakeBuilder.Services.ToArray();
 
             //Assert

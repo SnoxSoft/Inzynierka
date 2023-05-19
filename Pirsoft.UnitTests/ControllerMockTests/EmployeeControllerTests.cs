@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Pirsoft.Api.Controllers;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
+using Pirsoft.Api.Filesystem;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Validators;
 
@@ -22,7 +23,11 @@ public class EmployeeControllerTests
     public void SetUp()
     {
         _crudHandlerMock = new Mock<ICrudHandler>();
-        _employeeController = new EmployeeController(_crudHandlerMock.Object, Mock.Of<IEmployeeModelValidator>(), Mock.Of<IEmployeeCrudHandler>());
+        _employeeController = new EmployeeController(
+            Mock.Of<IAvatarFileUploadHandler>(),
+            _crudHandlerMock.Object,
+            Mock.Of<IEmployeeCrudHandler>(),
+            Mock.Of<IEmployeeModelValidator>());
     }
 
     [Test]
@@ -31,7 +36,7 @@ public class EmployeeControllerTests
         // Arrange
         var employeeId = 1;
         var employee = new EmployeeModel { ApiInternalId = employeeId };
-        _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(employeeId)).ReturnsAsync(employee);
+        _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(employeeId)).ReturnsAsync(employee);
 
         // Act
         var response = await _employeeController.DeleteEmployeeById(employeeId);
@@ -46,7 +51,7 @@ public class EmployeeControllerTests
         // Arrange
         var employeeId = 1;
         EmployeeModel employee = null;
-        _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(employeeId)).ReturnsAsync(employee);
+        _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(employeeId)).ReturnsAsync(employee);
 
         // Act
         var response = await _employeeController.DeleteEmployeeById(employeeId);
@@ -60,8 +65,8 @@ public class EmployeeControllerTests
     {
         // Arrange
         var employeeId = 1;
-        _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(employeeId)).ReturnsAsync(new EmployeeModel { ApiInternalId = employeeId });
-        _crudHandlerMock.Setup(x => x.DeleteAsync(It.IsAny<EmployeeModel>())).ThrowsAsync(new Exception());
+        _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(employeeId)).ReturnsAsync(new EmployeeModel { ApiInternalId = employeeId });
+        _crudHandlerMock.Setup(m => m.DeleteAsync(It.IsAny<EmployeeModel>())).ThrowsAsync(new Exception());
 
         // Act
         var result = await _employeeController.DeleteEmployeeById(employeeId);
@@ -77,13 +82,13 @@ public class EmployeeControllerTests
         // Arrange
         var employeeId = 1;
         var employee = new EmployeeModel { ApiInternalId = employeeId };
-        _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(employeeId)).ReturnsAsync(employee);
+        _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(employeeId)).ReturnsAsync(employee);
 
         // Act
         var response = await _employeeController.DeleteEmployeeById(employeeId);
 
         // Assert
-        _crudHandlerMock.Verify(x => x.DeleteAsync(employee), Times.Once);
+        _crudHandlerMock.Verify(m => m.DeleteAsync(employee), Times.Once);
     }
 
     [Test]
@@ -91,9 +96,29 @@ public class EmployeeControllerTests
     {
         // Arrange
         var id = 1;
-        
+
+        Mock<IFormCollection> formCollectionMock = new();
+        formCollectionMock
+            .Setup(m => m.Files)
+            .Returns(new FormFileCollection());
+
+        Mock<HttpRequest> requestMock = new();
+        requestMock.Setup(m => m.Scheme).Returns("http");
+        requestMock.Setup(m => m.Host).Returns(HostString.FromUriComponent("http://localhost:7120"));
+        requestMock.Setup(m => m.PathBase).Returns(PathString.FromUriComponent("/"));
+        requestMock.Setup(m => m.Form).Returns(formCollectionMock.Object);
+
+        HttpContext fakeHttpContext = Mock.Of<HttpContext>(_ => _.Request == requestMock.Object);
+
+        ControllerContext fakeControllerContext = new()
+        {
+            HttpContext = fakeHttpContext,
+        };
+
+        _employeeController.ControllerContext = fakeControllerContext;
+
         var existingEmployee = new EmployeeModel { employee_id = id, first_name = "Jane", last_name = "Doe", pesel = "12345678901", email_address = "jane.doe@example.com" };
-        _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync(existingEmployee);
+        _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(id)).ReturnsAsync(existingEmployee);
 
         // Act
         var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342",
@@ -102,7 +127,7 @@ public class EmployeeControllerTests
 
         // Assert
         result.Should().BeOfType<OkResult>();
-        _crudHandlerMock.Verify(x => x.UpdateAsync(existingEmployee), Times.Once);
+        _crudHandlerMock.Verify(m => m.UpdateAsync(existingEmployee), Times.Once);
     }
 
     [Test]
@@ -111,13 +136,12 @@ public class EmployeeControllerTests
         // Arrange
         var id = 1;
         
-        _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync((EmployeeModel)null);
+        _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(id)).ReturnsAsync((EmployeeModel)null);
 
         // Act
         var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342",
             1, 12,1, 3000, 0,
             new DateTime(2023,05,05), new DateTime(2023,10,12), 1, 2, 1);
-
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
