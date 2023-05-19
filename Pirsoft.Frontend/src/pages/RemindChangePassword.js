@@ -10,7 +10,7 @@ import {
     labelApprove, labelBack, labelChangePassword, labelCode,
     labelGiveNewPassword,
     labelGiveNewPasswordAgain, labelRemindPassword,
-    pagePasswordChange
+    pagePasswordChange, passwordRegex
 } from "../GlobalAppConfig";
 import {fetchGetChangePasswordData, fetchPutChangePassword} from "../DataFetcher";
 import {MdOutlineArrowBackIosNew} from "react-icons/md";
@@ -66,7 +66,7 @@ function Remind(){
             if (newPassword !== undefined && newRepeatPassword !== undefined && code !== undefined &&
             newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0 && code.toString() > 0) {
             if(newPassword.toString() === newRepeatPassword.toString()){
-                if(newPassword.match("^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$") != null) {
+                if(passwordRegex.test(newPassword)) {
                     const query = new URLSearchParams();
                     query.set("code", code);
                     query.set("passwordFirst", newPassword);

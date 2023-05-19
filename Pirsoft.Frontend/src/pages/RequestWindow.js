@@ -4,6 +4,7 @@ import Calendar from "../components/base/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {CgClose} from "react-icons/cg";
 import {
+    accountHR, accountPresident, accountTeamLeader,
     alertAbsence,
     alertAccepted,
     alertCreated, alertDateFrom, alertDateTo,
@@ -92,6 +93,20 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     setAbsencesList(loadAbsencesList)
                 });
         }
+
+        // if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && employee !== null && (
+        //     ((mode === "approval" &&
+        //         (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountTeamLeader ||
+        //         (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
+        //         getLocalStorageKeyWithExpiry("loggedEmployee").Department !== employee.employee_department.department_id.toString()) ||
+        //     getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR))) ||
+        //     (mode === "create" &&
+        //         (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident &&
+        //             (getLocalStorageKeyWithExpiry("loggedEmployee").UserId === employee.employee_id.toString()) ||
+        //         (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === employee.employee_id.toString())))
+        // )){
+        //     navigate("/");
+        // }
 
         // // Pobranie listy osób, które mogą zatwierdzić wniosek
         // if (approversList === null) {

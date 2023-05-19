@@ -4,6 +4,10 @@ const serverIp = "http://127.0.0.1:3001";
 
 const serverIpProd = "https://localhost:7120";
 
+const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+const passwordRegex = /^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$/;
+
 // Nazwa aplikacji
 const appName = "PIRSOFT";
 
@@ -252,7 +256,9 @@ const accountAccountant = "Księgowość";
 const accountPresident = "Prezes";
 const accountManagement = "Zarząd";
 
-export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
+export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
+
+    avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
 
     accountEmployee, accountPresident, accountManagement, accountTeamLeader, accountAccountant, accountHR,
