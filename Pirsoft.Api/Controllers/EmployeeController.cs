@@ -34,7 +34,7 @@ public class EmployeeController : Controller
     }
 
     [HttpPost("create/new/employee")]
-    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber,
+    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
