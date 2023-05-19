@@ -8,7 +8,7 @@ import {
     accountHR, accountManagement, accountPresident, accountTeamLeader,
     alertAbsence,
     alertAccepted,
-    alertCreated, alertDateFrom, alertDateTo,
+    alertCreated, alertDateFrom, alertDateFromBiggerThanDateTo, alertDateTo,
     alertDeleted, alertProblemOccured, alertRefused,
     labelApprove, labelCreate, labelDisapprove,
     labelRequest,
@@ -209,6 +209,11 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         if(absence === undefined){
             alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
                 {alertAbsence}
+            </p>)
+        }
+        if(dateFrom !== "" && dateTo !== "" && dateFrom > dateTo){
+            alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertDateFromBiggerThanDateTo}
             </p>)
         }
 

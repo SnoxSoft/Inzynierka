@@ -29,14 +29,52 @@ public class AbsenceController : ControllerBase
     }
     
     [HttpPost("create/new/absence")]
-    public async Task CreateNewAbsence(DateTime absenceStartDate, DateTime absenceEndDate, 
+    public async Task<IActionResult> CreateNewAbsence(DateTime absenceStartDate, DateTime absenceEndDate, 
         sbyte unpaid, int absenceTypeId, int employeeApproverId, int employeeOwnerId, int absenceStatusId)
     {
-        AbsenceModel newAbsence = (AbsenceModel)new AbsenceCreator(absenceStartDate, absenceEndDate, unpaid, 
-            absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId).CreateModel();
-    
-        await _crudHandler.CreateAsync(newAbsence);
-        _crudHandler.PushChangesToDatabase();
+        var existingEmployee = await _crudHandler.ReadAsync<EmployeeModel>(employeeOwnerId);
+
+        if (existingEmployee != null)
+        {
+            int actualLeaveDays = existingEmployee.leave_base_days;
+            int actualDemandDays = existingEmployee.leave_demand_days;
+
+            // Obliczenie dni nieobecności
+            TimeSpan calculateDuration = absenceEndDate.Subtract(absenceStartDate);
+            int durationDays = calculateDuration.Days + 1;
+
+            // Jeżeli unpaid to nie zabiermy dni z urlopu pracownika
+            Console.WriteLine(unpaid);
+            // Jeżeli typ na żądanie to zabieramy z dni na żądanie i z dni urlopowych, jeżeli nie zostało wybrane unpaid
+            var query = await _crudHandler.ReadAllAsync<AbsenceTypeModel>();
+            var getAbsenceCategory = query.Where(absenceType => absenceType.absence_type_id == absenceTypeId).First();
+            bool isDemand = getAbsenceCategory.absence_type_category == "demand";
+
+            int newLeaveDays = unpaid == 1 ? actualLeaveDays : actualLeaveDays - durationDays;
+            int newDemandDays = isDemand ? actualDemandDays - durationDays : actualDemandDays;
+
+            if (newLeaveDays >= 0 && newDemandDays >= 0)
+            {
+                existingEmployee.leave_base_days = newLeaveDays;
+                existingEmployee.leave_demand_days = newDemandDays;
+
+                AbsenceModel newAbsence = (AbsenceModel)new AbsenceCreator(absenceStartDate, absenceEndDate, unpaid,
+                    absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId, durationDays).CreateModel();
+
+                await _crudHandler.CreateAsync(newAbsence);
+                await _crudHandler.UpdateAsync(existingEmployee);
+                _crudHandler.PushChangesToDatabase();
+                return Ok();
+            }
+            else
+            {
+                return Problem();
+            }
+        }
+        else
+        {
+            return NotFound();
+        }
     }
     
     //[Authorize(Roles = "Kadry")]

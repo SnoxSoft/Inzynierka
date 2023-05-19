@@ -480,16 +480,20 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             <BankAccountNumber id={"employee-bank-number"} value={bank} onChange={setBank} disableChange={disableData}/>
                         </div>
 
-                        <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> {labelBirthDate} </label>
-                            <DateOfBirth id={"employee-birth-date"} value={birth} onChange={setBirth} disableChange={disableData}/>
-                        </div>
+                        {getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountAccountant ?
+                            <>
+                            <div className={"flex flex-row justify-between text-right gap-4"}>
+                                <label className={"basis-1/3"}> {labelBirthDate} </label>
+                                <DateOfBirth id={"employee-birth-date"} value={birth} onChange={setBirth} disableChange={disableData}/>
+                            </div>
 
-                        <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> {labelPESEL} </label>
-                            <Pesel id={"employee-pesel"} value={pesel} onChange={setPesel} disableChange={disableData}/>
-                        </div>
-
+                            <div className={"flex flex-row justify-between text-right gap-4"}>
+                                <label className={"basis-1/3"}> {labelPESEL} </label>
+                                <Pesel id={"employee-pesel"} value={pesel} onChange={setPesel} disableChange={disableData}/>
+                            </div>
+                            </>:
+                        <></>
+                        }
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelSalary} </label>
                             <GrossSalary id={"employee-salary"} value={salary} onChange={setSalary} disableChange={disableData}/>
