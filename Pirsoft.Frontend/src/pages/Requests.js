@@ -117,19 +117,6 @@ function Requests(){
     // Filtrowanie wniosków
     function filtrRequests() {
 
-        console.log(firstNameAndLastName)
-        console.log(team)
-        //
-        // console.log(checkWaiting)
-        // console.log(checkApproved)
-        // console.log(checkRefused)
-        //
-        // console.log(checkCreatedByCurrent)
-        // console.log(checkNotCreatedByCurrent)
-        //
-        // console.log(dateFrom)
-        // console.log(dateTo)
-
         setRequestsList([])
         let row = 0;
         fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateTo)
@@ -321,6 +308,7 @@ function Requests(){
                                                      setRequestPickedData={setRequestPickedData}
                                                      employeeName={employeeName}
                                                      employeeTeam={employeeTeam.department_name}
+                                                     employeeRole={employeeRole}
                                                      absencesTypes={absencesTypes}
                                                      requestsStatus={requestsStatus}
                                                      filtrRequests={filtrRequests}

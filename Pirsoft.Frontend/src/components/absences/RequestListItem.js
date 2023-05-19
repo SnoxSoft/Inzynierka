@@ -12,7 +12,7 @@ import {fetchDeleteAbsence} from "../../DataFetcher";
 const RequestListItem = ({employeeAbsence, old = false,
               absencesTypes, requestsStatus, id, window,
                              setRequestsVisible, setRequestPickedData, employeeName, employeeTeam,
-                             filtrRequests}) => {
+                             filtrRequests, employeeRole = ""}) => {
 
     const [showHideButtons, setShowHideButtons] = useState(false);
     const showOptions = () => {
@@ -57,7 +57,7 @@ const RequestListItem = ({employeeAbsence, old = false,
                 </div> :
                 <div className={"p-2 flex rounded-md basis-8/12 flex-col cursor-default"}>
                     <div>
-                        {employeeName}, {employeeTeam},
+                        {employeeName}, {employeeTeam}, {employeeRole}
                     </div>
                     <div>
                         {absenceType}, {labelFromTimeOfRequest} {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}
