@@ -245,6 +245,8 @@ const alertDateFrom = "Popraw datę 'od'";
 const alertDateTo = "Popraw datę 'do'";
 const alertAbsence = "Wybierz prawidłowy rodzaj wniosku";
 
+const alertDateFromBiggerThanDateTo= "Data od nie może być większa od daty do";
+
 // Odpowiedzi operacji
 const alertSaved = "Zapisano";
 const alertDeleted = "Usunięto";
@@ -276,7 +278,7 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertBirthDateFromFuture, alertWrongPESEL, alertWrongSalary, alertWrongContract,
     alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertStartDateFromFuture, alertProfilePictureTooBig, alertProfilePicture,
 
-    alertDateFrom, alertDateTo, alertAbsence,
+    alertDateFrom, alertDateTo, alertAbsence, alertDateFromBiggerThanDateTo,
 
     labelNotifications,
 
