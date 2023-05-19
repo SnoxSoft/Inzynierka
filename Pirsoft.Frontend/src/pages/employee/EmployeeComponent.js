@@ -88,10 +88,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     //        uprawniona do edycji kont lub właściciel konta
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-
-    }
 
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -143,6 +139,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
         if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
             getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && mode === "create"){
             navigate("/")
@@ -445,9 +444,11 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // Ładowanie umiejętności dla okna wyboru umiejętności
     const [loadedAllSkills, setLoadedAllSkills] = useState([])
 
+
+    console.log(getLocalStorageKeyWithExpiry("loggedEmployee"))
     return(
         <>
-        {employeeDataShow ?
+        {employeeDataShow && getLocalStorageKeyWithExpiry("loggedEmployee") !== null ?
         <div id={"employee-info"}
              className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default"}
              style={{minWidth:800} }>
