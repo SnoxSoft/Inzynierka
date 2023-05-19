@@ -34,6 +34,7 @@ namespace Pirsoft.Api.Configurators
 
         private void configureValidators()
         {
+            _services.AddScoped<IAvatarFileValidator, AvatarFileValidator>();
             _services.AddScoped<IEmployeeModelValidator, EmployeeModelValidator>();
         }
         
