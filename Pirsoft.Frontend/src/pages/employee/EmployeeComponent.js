@@ -137,6 +137,10 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+            getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && mode === "create"){
+            navigate("/")
+        }
         if(employee !== undefined && employee !== null && id !== '-1'){
             setFirstName(employee.first_name);
             setLastName(employee.last_name);
