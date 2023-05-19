@@ -178,14 +178,18 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     function createRequest(){
+        const isAutoApprove = getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident ||
+            getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountManagement ||
+            (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString());
+
         const query = new URLSearchParams();
         query.set("absenceStartDate", dateFrom);
         query.set("absenceEndDate", dateTo);
         query.set("unpaid", noPay ? 1 : 0);
         query.set("absenceTypeId", absence);
-        query.set("employeeApproverId", 0);
+        query.set("employeeApproverId", isAutoApprove ? getLocalStorageKeyWithExpiry("loggedEmployee").UserId : 0);
         query.set("employeeOwnerId", employee.employee_id);
-        query.set("absenceStatusId", 1);
+        query.set("absenceStatusId", isAutoApprove ? 3 : 1);
 
         setShowPopupWithProblems(false)
         // Sprawdzenie błędów
@@ -270,81 +274,93 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }, []);
 
     return(
-        <div id={"RequestWindow"}
-             className={"every-page-on-scroll flex text-center flex-col bg-blue-menu text-workday p-4 hover:cursor-default"}
-             style={{minWidth: 800}}>
-            <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
-                <div className={"col-start-1 row-start-1 place-self-center"}>
-                    {labelRequest}
-                </div>
-                <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
-                    <ReusableButton value={<CgClose  size={30}/>}
-                                    onClick={() => close()}
-                    formatting={""} color={""}/>
-                </div>
-            </div>
-            {requestData ? <div>{requestData.first_name} {requestData.last_name}</div> : <></>}
-            <br/>
-            <div className={"flex p-4 gap-8 text-center flex-col"}>
-                <div className={"flex justify-center"}>
-                    <Calendar id={"request"} setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom} to={dateTo}
-                    disabled={disableChanges}/>
-                </div>
-                <div className={"flex "}>
-                    <p className={"basis-1/3 text-end pr-4"}>
-                        {labelRequestType}
-                    </p>
-                    <div className={"bg-workday text-black basis-1/3"}>
-                        <AbsencesList value={absence} onChange={setAbsence} absences={absencesList}
-                                          disableChange={disableChanges} />
+        <>
+        {employee !== null ?
+            <div id={"RequestWindow"}
+                 className={"every-page-on-scroll flex text-center flex-col bg-blue-menu text-workday p-4 hover:cursor-default"}
+                 style={{minWidth: 800}}>
+                <div className={"grid grid-cols-1 grid-rows-1 place-items-end"}>
+                    <div className={"col-start-1 row-start-1 place-self-center"}>
+                        {labelRequest}
+                    </div>
+                    <div className={"col-start-1 col-end-1 row-start-1 row-end-1 flex flex-row"}>
+                        <ReusableButton value={<CgClose size={30}/>}
+                                        onClick={() => close()}
+                                        formatting={""} color={""}/>
                     </div>
                 </div>
-                <div className={"flex flex-col place-self-center place-items-center"}>
-                    <p className={"basis-1/3 text-end pr-4"}>
-                        {labelRequestNoPay}
-                    </p>
-                    <input id={"request-type-no-pay"} type={"checkbox"}
-                           className={"h-5 w-5 accent-workday"}
-                           onChange={(e) => setNoPay(e.target.checked)}
-                           checked={noPay} disabled={disableChanges || mode === "create" && leaveDays === 0}/>
-                </div>
-                {mode === "create" && !hideApproversListOnHierearchy ?
-                <div id={"schedule-list"} className={"flex"}>
-                    <p className={"text-end basis-1/3 pr-4"}>
-                        {labelRequestApprovers}
-                    </p>
-                    <div className={"flex flex-col basis-4/12 justify-start bg-workday rounded-md gap-1"}>
-                        {approversList}
+                {requestData ? <div>{requestData.first_name} {requestData.last_name}</div> : <></>}
+                <br/>
+                <div className={"flex p-4 gap-8 text-center flex-col"}>
+                    <div className={"flex justify-center"}>
+                        <Calendar id={"request"} setDateTo={setDateTo} setDateFrom={setDateFrom} from={dateFrom}
+                                  to={dateTo}
+                                  disabled={disableChanges}/>
                     </div>
-                </div> :
-                    <></>
+                    <div className={"flex "}>
+                        <p className={"basis-1/3 text-end pr-4"}>
+                            {labelRequestType}
+                        </p>
+                        <div className={"bg-workday text-black basis-1/3"}>
+                            <AbsencesList value={absence} onChange={setAbsence} absences={absencesList}
+                                          disableChange={disableChanges}/>
+                        </div>
+                    </div>
+                    <div className={"flex flex-col place-self-center place-items-center"}>
+                        <p className={"basis-1/3 text-end pr-4"}>
+                            {labelRequestNoPay}
+                        </p>
+                        <input id={"request-type-no-pay"} type={"checkbox"}
+                               className={"h-5 w-5 accent-workday"}
+                               onChange={(e) => setNoPay(e.target.checked)}
+                               checked={noPay} disabled={disableChanges || mode === "create" && leaveDays === 0}/>
+                    </div>
+                    {mode === "create" &&
+                    (getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident &&
+                            getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountManagement &&
+                            ((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === employee.employee_id.toString()) ||
+                            getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR)) ?
+                        <div id={"schedule-list"} className={"flex"}>
+                            <p className={"text-end basis-1/3 pr-4"}>
+                                {labelRequestApprovers}
+                            </p>
+                            <div className={"flex flex-col basis-4/12 justify-start bg-workday rounded-md gap-1"}>
+                                {approversList}
+                            </div>
+                        </div> :
+                        <></>
+                    }
+                </div>
+                <br/>
+                {mode === "create" ?
+                    <div className={"flex justify-evenly"} style={{height: wantedHeightsForList}}>
+                        <Popup
+                            content={buildPopup}
+                            position={"top center"}
+                            trigger={<ReusableButton id={"create-request"} value={labelCreate}
+                                                     onClick={() => createRequest()}/>}
+                        />
+                    </div> :
+                    <div id={"schedule-list"} className={"flex justify-evenly"}>
+                        <Popup
+                            content={buildPopup}
+                            position={"top center"}
+                            trigger={<ReusableButton id={"approval-or-rejection-disapprove"}
+                                                     value={labelDisapprove} onClick={() => rejectRequest()}/>}
+                        />
+                        <Popup
+                            content={buildPopup}
+                            position={"top center"}
+                            trigger={<ReusableButton id={"approval-or-rejection-approve"}
+                                                     value={labelApprove} onClick={() => approveRequest()}/>}
+                        />
+                    </div>
                 }
-            </div>
-            <br/>
-            {mode === "create" ?
-                <div className={"flex justify-evenly"} style={{ height: wantedHeightsForList}}>
-                    <Popup
-                        content={buildPopup}
-                        position={"top center"}
-                        trigger={<ReusableButton id={"create-request"} value={labelCreate} onClick={() => createRequest()}/>}
-                    />
-                </div> :
-                <div id={"schedule-list"} className={"flex justify-evenly"}>
-                    <Popup
-                        content={buildPopup}
-                        position={"top center"}
-                        trigger={<ReusableButton id={"approval-or-rejection-disapprove"}
-                                                 value={labelDisapprove} onClick={() => rejectRequest()}/>}
-                    />
-                    <Popup
-                        content={buildPopup}
-                        position={"top center"}
-                        trigger={<ReusableButton id={"approval-or-rejection-approve"}
-                                                 value={labelApprove} onClick={() => approveRequest()}/>}
-                    />
-                </div>
-            }
-        </div>
+            </div> :
+            <></>
+        }
+        </>
     )
 }
 export default RequestWindow;
