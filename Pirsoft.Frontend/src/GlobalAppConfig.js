@@ -215,18 +215,26 @@ const alertOldPasswordIsMissing = "Wpisz stare hasło";
 
 // Błędy w tworzeniu użytkownika
 
-const alertWrongFirstName = "Uzupełnij prawidłowo pole " + firstnameLabel;
-const alertWrongLastName = "Uzupełnij prawidłowo pole " + lastnameLabel;
-const alertWrongAddressEmail = "Uzupełnij prawidłowo pole " + labelEmail;
-const alertWrongBankAccount = "Uzupełnij prawidłowo pole " + labelBankAccount;
-const alertWrongBirthDate = "Wybierz prawidłowo pole " + labelBirthDate;
-const alertWrongPESEL = "Uzupełnij prawidłowo pole " + labelPESEL;
-const alertWrongSalary = "Uzupełnij prawidłowo pole " + labelSalary;
-const alertWrongContract = "Wybierz prawidłowo pole " + labelContractType;
-const alertWrongPosition = "Wybierz prawidłowo pole " + labelPosition;
-const alertWrongPositionLevel = "Wybierz prawidłowo pole " + labelPositionLevel;
-const alertWrongTeam = "Wybierz prawidłowo pole " + labelTeam;
-const alertWrongStartDate = "Wybierz prawidłowo pole " + labelStartDate;
+const fillInFieldProperly = "Uzupełnij prawidłowo pole "
+const pickFieldProperly = "Wybierz prawidłowo pole "
+const dateFromFuture = "Data nie może być z przyszłości dla pola "
+
+const alertWrongFirstName = fillInFieldProperly + firstnameLabel;
+const alertWrongLastName = fillInFieldProperly + lastnameLabel;
+const alertWrongAddressEmail = fillInFieldProperly + labelEmail;
+const alertWrongBankAccount = fillInFieldProperly + labelBankAccount;
+const alertWrongBirthDate = pickFieldProperly + labelBirthDate;
+
+const alertBirthDateFromFuture = dateFromFuture + labelBirthDate
+const alertWrongPESEL = fillInFieldProperly + labelPESEL;
+const alertWrongSalary = fillInFieldProperly + labelSalary;
+const alertWrongContract = pickFieldProperly + labelContractType;
+const alertWrongPosition = pickFieldProperly + labelPosition;
+const alertWrongPositionLevel = pickFieldProperly + labelPositionLevel;
+const alertWrongTeam = pickFieldProperly + labelTeam;
+const alertWrongStartDate = pickFieldProperly + labelStartDate;
+
+const alertStartDateFromFuture = dateFromFuture + labelStartDate
 const alertProfilePictureTooBig = "Wybrane zdjęcie profilowe jest zbyt duże, maksymalny rozmiar to 300px szerokości i 300px wysokości";
 const alertProfilePicture = "Wybrane zdjęcie profilowe jest nieprawidłowe ";
 
@@ -265,8 +273,8 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
 
     alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved, alertCreated,
 
-    alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertWrongPESEL, alertWrongSalary, alertWrongContract,
-    alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertProfilePictureTooBig, alertProfilePicture,
+    alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertBirthDateFromFuture, alertWrongPESEL, alertWrongSalary, alertWrongContract,
+    alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertStartDateFromFuture, alertProfilePictureTooBig, alertProfilePicture,
 
     alertDateFrom, alertDateTo, alertAbsence,
 
