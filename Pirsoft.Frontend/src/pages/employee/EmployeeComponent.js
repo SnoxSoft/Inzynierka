@@ -61,7 +61,7 @@ import {
     accountPresident,
     accountTeamLeader,
     emailRegex,
-    alertStartDateFromFuture, alertBirthDateFromFuture
+    alertStartDateFromFuture, alertBirthDateFromFuture, accountEmployee, accountAccountant, accountManagement
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -469,7 +469,11 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                         <Email id={"employee-email"} value={email} onChange={setEmail} disableChange={mode !== 'create'}/>
                     </div>
 
-                    {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ? <>
+                    {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                        ((getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountAccountant) ||
+                            mode === "create" || getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR) ?
+
+                    <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelBankAccount} </label>
                             <BankAccountNumber id={"employee-bank-number"} value={bank} onChange={setBank} disableChange={disableData}/>
@@ -515,7 +519,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                                    teams={teams} placement={'top'} formatting={"rounded-full text-left grow"}/>
                     </div>
 
-                    {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
+                    {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === "create" ||
+                    getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR   ?
                         <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelStartDate} </label>
@@ -564,7 +570,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     </div>
                 </div>
             </div>
-            {mode !== 'create' && (getLocalStorageKeyWithExpiry("loggedEmployee") !== null && (getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id)) ?
+            {mode !== 'create' &&
+            (getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                (getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id)) ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
                     <button
                         id={"employee-back"}
