@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {
+    accountEmployee,
     accountHR, accountManagement, accountPresident, accountTeamLeader,
     pageNameRequests,
     requestActionLabel,
@@ -75,6 +76,13 @@ function Requests(){
     const [employeesList, setEmployeesList] = useState(null)
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+            (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR &&
+                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident &&
+                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountTeamLeader)){
+            navigate("/")
+        }
+
         // Załadowanie statusów wniosków
         if (requestsStatus === null) {
             setRequestsStatus(null);
@@ -249,12 +257,14 @@ function Requests(){
                         // Tutaj ładuje dane pracownika
                         let employeeName = null
                         let employeeTeam = null
+                        let employeeRole = null
                         let employeeId = null
                         if(employeesList !== undefined && employeesList !== null) {
                             employeesList.map(employee => {
                                 if (request.employee_owner_id === employee.employee_id) {
                                     employeeName = employee.first_name + " " + employee.last_name;
                                     employeeId = employee.employee_id;
+                                    employeeRole = employee.employee_company_role.role_name;
                                     teamsList.map(team => {
                                         if (team.department_id === employee.employee_department_id) {
                                             employeeTeam = team
@@ -300,6 +310,7 @@ function Requests(){
                                     getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident ||
                                     (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
                                         getLocalStorageKeyWithExpiry("loggedEmployee").Department_name === employeeTeam.department_name &&
+                                        employeeRole === accountEmployee &&
                                         getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employeeId.toString()))
                                 ){
                                 requestsListLoad.push(

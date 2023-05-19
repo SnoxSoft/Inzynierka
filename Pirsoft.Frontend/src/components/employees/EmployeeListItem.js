@@ -1,6 +1,13 @@
 import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
-import {accountHR, accountPresident, accountTeamLeader, labelRequest, labelShowProfile} from "../../GlobalAppConfig";
+import {
+    accountEmployee,
+    accountHR,
+    accountPresident,
+    accountTeamLeader,
+    labelRequest,
+    labelShowProfile
+} from "../../GlobalAppConfig";
 import {BsPersonCircle} from "react-icons/bs";
 import axios from "axios";
 import {getLocalStorageKeyWithExpiry} from "../jwt/LocalStorage";
@@ -64,9 +71,11 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, 
                         {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && (
                             ((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
                                         getLocalStorageKeyWithExpiry("loggedEmployee").Department === employee.employee_department.department_id.toString() &&
-                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString() &&
+                                    employee.employee_company_role.role_name === accountEmployee) ||
 
-                                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+                                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
 
                                 getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident))
 
