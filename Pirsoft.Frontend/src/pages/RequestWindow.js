@@ -4,7 +4,8 @@ import Calendar from "../components/base/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {CgClose} from "react-icons/cg";
 import {
-    accountHR, accountPresident, accountTeamLeader,
+    accountEmployee,
+    accountHR, accountManagement, accountPresident, accountTeamLeader,
     alertAbsence,
     alertAccepted,
     alertCreated, alertDateFrom, alertDateTo,
@@ -16,7 +17,7 @@ import {
     labelRequestType, pageNameAddEmployeeAnAbsence, pageNameApprovalOrRejectionRequest
 } from "../GlobalAppConfig";
 import {
-    fetchGetAbsencesTypes,
+    fetchGetAbsencesTypes, fetchGetAllEmployees,
     fetchGetEmployeeDataById,
     fetchPostCreateAbsence, fetchPutEditAbsence
 } from "../DataFetcher";
@@ -55,6 +56,8 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     const [demandDays, setDemandDays] = useState(0);
     const [leaveDays, setLeaveDays] = useState(0);
 
+    const [hideApproversListOnHierearchy, setHideApproversListOnHierearchy] = useState(true);
+
     useEffect(() => {
         // Załadowanie danych pracownika, dla którego wystawiamy wniosek
         if (employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
@@ -68,6 +71,11 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                         setNoPay(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? employee.leave_base_days === 0 : false)
 
                         setEmployee(employee);
+                        setHideApproversListOnHierearchy((getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                            (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountManagement &&
+                                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR
+                                    && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()))))
                     }
                 });
         }
@@ -94,37 +102,34 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                 });
         }
 
-        // if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && employee !== null && (
-        //     ((mode === "approval" &&
-        //         (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountTeamLeader ||
-        //         (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
-        //         getLocalStorageKeyWithExpiry("loggedEmployee").Department !== employee.employee_department.department_id.toString()) ||
-        //     getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR))) ||
-        //     (mode === "create" &&
-        //         (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident &&
-        //             (getLocalStorageKeyWithExpiry("loggedEmployee").UserId === employee.employee_id.toString()) ||
-        //         (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === employee.employee_id.toString())))
-        // )){
-        //     navigate("/");
-        // }
+        // Pobranie listy osób, które mogą zatwierdzić wniosek
+        if (approversList === null && !hideApproversListOnHierearchy && employee !== null) {
+            fetchGetAllEmployees(navigate, true)
+                .then(approvers => {
+                    let approversListLoad = [];
+                    let approverId = 1;
+                    if(approvers !== undefined) {
+                        approvers.map((approver) => {
+                            if((approver.employee_company_role.role_name === accountHR &&
+                                    approver.employee_id.toString() !== employee.employee_id.toString()) ||
+                                approver.employee_company_role.role_name === accountPresident ||
+                                    (approver.employee_company_role.role_name === accountTeamLeader &&
+                                        approver.employee_department.department_name === employee.employee_department.department_name &&
+                                        approver.employee_id.toString() !== employee.employee_id.toString())){
 
-        // // Pobranie listy osób, które mogą zatwierdzić wniosek
-        // if (approversList === null) {
-        //     fetchApproversForRequest(navigate, requestData.employee_id)
-        //         .then(approvers => {
-        //             let approversListLoad = [];
-        //             let approverId = 1;
-        //             for (const i of approvers) {
-        //                 approversListLoad.push(
-        //                     <div key={"approver-item-" + approverId} className={"text-black"}>
-        //                         {i.name}, {i.role}
-        //                     </div>
-        //                 )
-        //                 approverId++;
-        //             }
-        //             setApproversList(approversListLoad)
-        //         })
-        // }
+                                approversListLoad.push(
+                                    <div key={"approver-item-" + approverId} className={"text-black"}>
+                                        {approver.first_name} {approver.last_name}, {approver.employee_company_role.role_name}
+                                    </div>
+                                )
+                                approverId++;
+                            }
+                            //console.log(approver)
+                        })
+                    }
+                    setApproversList(approversListLoad)
+                })
+        }
     })
 
 
@@ -303,7 +308,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                            onChange={(e) => setNoPay(e.target.checked)}
                            checked={noPay} disabled={disableChanges || mode === "create" && leaveDays === 0}/>
                 </div>
-                {mode === "create" ?
+                {mode === "create" && !hideApproversListOnHierearchy ?
                 <div id={"schedule-list"} className={"flex"}>
                     <p className={"text-end basis-1/3 pr-4"}>
                         {labelRequestApprovers}
