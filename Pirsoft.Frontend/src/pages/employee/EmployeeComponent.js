@@ -502,20 +502,22 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
                     </> : <></>}
                     <div className={"flex flex-row justify-between text-right gap-4"}>
-                        <label className={"basis-1/3"}> {labelPosition} </label>
-                        <PositionsList id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData}
-                                       positions={positions} formatting={"rounded-full text-left grow "}/>
-                    </div>
-
-                    <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelPositionLevel} </label>
                         <PositionLevel id={"employee-position-level"} value={positionLevel} onChange={setPositionLevel}
                                        disableChange={disableData} positionLevels={positionsLevels}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
+                        <label className={"basis-1/3"}> {labelPosition} </label>
+                        <PositionsList id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData}
+                                       positions={positions} formatting={"rounded-full text-left grow "}/>
+                    </div>
+                    <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelTeam} </label>
-                        <TeamsList id={"employee-team"} value={department} onChange={setDepartment} disableChange={disableData}
+                        <TeamsList id={"employee-team"} value={department} onChange={setDepartment}
+                                   disableChange={disableData && !(
+                                       getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                       getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident)}
                                    teams={teams} placement={'top'} formatting={"rounded-full text-left grow"}/>
                     </div>
 
