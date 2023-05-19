@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
-import {labelRequest, labelShowProfile} from "../../GlobalAppConfig";
+import {accountHR, accountPresident, accountTeamLeader, labelRequest, labelShowProfile} from "../../GlobalAppConfig";
 import {BsPersonCircle} from "react-icons/bs";
 import axios from "axios";
+import {getLocalStorageKeyWithExpiry} from "../jwt/LocalStorage";
 
 const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, positionLevels}) => {
     const[showHideButtons, setShowHideButtons] = useState(false);
@@ -60,10 +61,22 @@ const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, 
                 <div className={"grow flex flex-row place-self-center gap-x-2"}>
                     {showHideButtons && (
                         <>
+                        {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && (
+                            ((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").Department === employee.employee_department.department_id.toString() &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+
+                                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+
+                                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident))
+
+                            ?
                             <ReusableButton id={id + "-request"} value={labelRequest} onClick={() => {
                                 action(employee)
                                 showRequest(true)
-                            }}></ReusableButton>
+                            }}></ReusableButton> :
+                            <></>
+                        }
                             <ReusableButton id={id + "-profile"} value={labelShowProfile} link={`/employee/${employee.employee_id}`}></ReusableButton>
                         </>
                     )

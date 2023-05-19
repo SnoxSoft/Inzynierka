@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {
+    accountHR, accountManagement, accountPresident, accountTeamLeader,
     pageNameRequests,
     requestActionLabel,
     requestDescriptionLabel,
@@ -248,10 +249,12 @@ function Requests(){
                         // Tutaj ładuje dane pracownika
                         let employeeName = null
                         let employeeTeam = null
+                        let employeeId = null
                         if(employeesList !== undefined && employeesList !== null) {
                             employeesList.map(employee => {
                                 if (request.employee_owner_id === employee.employee_id) {
-                                    employeeName = employee.first_name + " " + employee.last_name
+                                    employeeName = employee.first_name + " " + employee.last_name;
+                                    employeeId = employee.employee_id;
                                     teamsList.map(team => {
                                         if (team.department_id === employee.employee_department_id) {
                                             employeeTeam = team
@@ -290,7 +293,15 @@ function Requests(){
                                 }
                             }
 
-                            if(addRequest !== null) {
+                            if(addRequest !== null &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                ((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employeeId.toString()) ||
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident ||
+                                    (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").Department_name === employeeTeam.department_name &&
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employeeId.toString()))
+                                ){
                                 requestsListLoad.push(
                                     <RequestListItem id={"request-list-item-" + row} employeeAbsence={addRequest}
                                                      key={row}

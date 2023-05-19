@@ -7,7 +7,7 @@ import {MdOutlineArrowBackIosNew} from "react-icons/md";
 import {
     alertMessageSent,
     alertUnexpectedError,
-    alertWrongEmail,
+    alertWrongEmail, emailRegex,
     labelBack,
     labelGiveEmail, labelReceivedACode,
     labelRemindPassword,
@@ -35,7 +35,7 @@ function RemindSendMail(){
 
     const sendVerifyEmail = () => {
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@') &&
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+            emailRegex.test(email)) {
             fetchPostSendEmailForPasswordChange(email).then((response) => {
                 if(response.status === 200){
                     setMailSentAlert(true);

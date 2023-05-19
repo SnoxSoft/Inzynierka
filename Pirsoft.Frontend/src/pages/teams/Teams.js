@@ -94,7 +94,7 @@ function Teams(){
                     <ReusableButton id={"teams-create-team"} value={labelCreateTeam}
                                     link={getLocalStorageKeyWithExpiry("loggedEmployee") !== null ? "/team-create" : ""}
                                     disabled={getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
-                                        (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR ||
+                                        (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR &&
                                             getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident)}/> :
                         <></>
                     }

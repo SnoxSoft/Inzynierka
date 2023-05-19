@@ -55,7 +55,7 @@ import {
     labelOverTenYears,
     alertSaved,
     alertProblemOccured,
-    alertDeleted, alertProfilePictureTooBig
+    alertDeleted, alertProfilePictureTooBig, accountHR, accountPresident, accountTeamLeader, emailRegex
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -100,7 +100,10 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // Tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
 
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
-    let disableData = getLocalStorageKeyWithExpiry("loggedEmployee") !== null ? getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id && mode !== 'create' : false
+    console.log(mode)
+    let disableData = !
+        (getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+            getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR || mode === 'create')
     
     // Do pokazania/ukrycia danych pracownika
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
@@ -276,14 +279,14 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </p>
             )
         }
-        if(email.toString().trim().length === 0 || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)){
+        if(email.toString().trim().length === 0 || !emailRegex.test(email)){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongAddressEmail}
                 </p>
             )
         }
-        if(bank.toString().trim().length !== 26 || Number(bank) === 0){
+        if(bank.toString().trim().length !== 26){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongBankAccount}
@@ -297,14 +300,14 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </p>
             )
         }
-        if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
+        if(pesel.toString().trim().length !== 11 || Number(pesel) < 0){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongPESEL}
                 </p>
             )
         }
-        if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
+        if(salary.toString().trim().length === 0 || Number(salary) < 0){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongSalary}
@@ -518,10 +521,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
                 <div className={"flex flex-col p-4"}>
                     <ProfilePicture id={"employee-profile-picture"} picture={avatarData} avatarData={avatarData}
-                                    fileToUpload={fileToUpload} setFileToUpload={setFileToUpload}/>
+                                    fileToUpload={fileToUpload} setFileToUpload={setFileToUpload} employeeId={id}/>
                     <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
-                        {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === 'create' ?
+                        {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                        getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id.toString() ||
+                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR ?
                             <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
                                 onClick={ () => {
@@ -546,31 +551,54 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             }
             <div className={"grow-0 p-4 flex flex-row justify-around"}>
                     <>
-                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
+                        {mode === 'edit' ?
                             <>
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
                                 <Popup content={buildPopup} position={"top center"}
                                        trigger={<ReusableButton id={"employee-delete"}
                                                                 value={labelDelete} onClick={() => deleteEmployee()}/>}
-                                />
+                                /> :
+                                    <></>
+                                }
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                    (getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ||
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR ||
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident) ?
                                 <Popup content={buildPopup} position={"top center"}
                                     trigger={<ReusableButton id={"employee-save"}
                                                              value={labelSave} onClick={() => saveEmployee()}/>}
-                                />
-                                {getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id &&
+                                /> :
+                                    <></>
+                                }
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id &&
                                 <ReusableButton id={"employee-password-change"} value={labelChangePassword}
                                         onClick={() => {
                                             setEmployeeDataShow(false);
                                             setShowPasswordChangeFrame(true);
                                         }}/>}
 
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && (
+                                ((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").Department === employee.employee_department.department_id.toString() &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+
+                                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+
+                                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident)) ?
                                 <ReusableButton id={"employee-request"} value={labelRequest} onClick={() => {
                                     setShowAddEmployeeAnAbsence(true);
                                     setEmployeeDataShow(false);
-                                }}/>
+                                }}/> :
+                                    <></>
+                                }
                             </>
                             : <></>
                         }
-                        {mode === 'create' ?
+                        {mode === 'create' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR ?
                             <Popup
                                 content={buildPopup}
                                 position={"top center"}

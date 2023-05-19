@@ -41,7 +41,7 @@ const TeamWindow = ({id, mode, title}) => {
 
     useEffect(() => {
         if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && ((mode === "edit" || mode === "create") &&
-                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR || getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident))){
+                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident))){
                 navigate("/teams");
         }
 
