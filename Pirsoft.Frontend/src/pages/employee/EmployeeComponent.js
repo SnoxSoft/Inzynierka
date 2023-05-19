@@ -55,7 +55,13 @@ import {
     labelOverTenYears,
     alertSaved,
     alertProblemOccured,
-    alertDeleted, alertProfilePictureTooBig, accountHR, accountPresident, accountTeamLeader, emailRegex
+    alertDeleted,
+    alertProfilePictureTooBig,
+    accountHR,
+    accountPresident,
+    accountTeamLeader,
+    emailRegex,
+    alertStartDateFromFuture, alertBirthDateFromFuture
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -303,6 +309,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     {alertWrongBirthDate}
                 </p>
             )
+        }else if(new Date(birth) > new Date()){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertBirthDateFromFuture}
+                </p>
+            )
         }
         if(pesel.toString().trim().length !== 11 || Number(pesel) < 0){
             alerts.push(
@@ -350,6 +362,13 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongStartDate}
+                </p>
+            )
+        }
+        else if(new Date(start) > new Date()){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertStartDateFromFuture}
                 </p>
             )
         }
