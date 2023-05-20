@@ -40,21 +40,32 @@ public class EmployeeController : Controller
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
+        {
             pesel = "Missing data";
+            return StatusCode(StatusCodes.Status400BadRequest);
+        }
+
         if (!_validator.IsEmailAddressValid(email))
+        {
             email = "Missing data";
+            return StatusCode(StatusCodes.Status400BadRequest);
+        }
+
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
+        {
             bankAccountNumber = "Missing data";
+            return StatusCode(StatusCodes.Status400BadRequest);
+        }
 
         if (string.IsNullOrEmpty(password))
         {
             string upper_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             string lower_letters = upper_letters.ToLower();
             string numbers = "1234567890";
-            string special_chars = ",./;'[]{}()*&%$#@!\\?-+_";
+            string special_chars = "!@#$%^&*";
             string all = upper_letters + lower_letters + numbers + special_chars;
             StringBuilder generatedPassword = new StringBuilder();
-            int pass_length = new Random().Next(12, 16);
+            int pass_length = new Random().Next(14, 18);
 
             for (int i = 0; i < pass_length; i++)
             {
