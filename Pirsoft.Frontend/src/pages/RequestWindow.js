@@ -9,7 +9,7 @@ import {
     alertAbsence,
     alertAccepted,
     alertCreated, alertDateFrom, alertDateFromBiggerThanDateTo, alertDateTo,
-    alertDeleted, alertProblemOccured, alertRefused,
+    alertDeleted, alertProblemOccured, alertRefused, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand,
     labelApprove, labelCreate, labelDisapprove,
     labelRequest,
     labelRequestApprovers,
@@ -68,7 +68,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                         setDemandDays(employee.leave_demand_days);
                         setLeaveDays(employee.leave_base_days);
 
-                        setNoPay(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? employee.leave_base_days === 0 : false)
+                        setUnpaid(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? employee.leave_base_days === 0 : false)
 
                         setEmployee(employee);
                         setHideApproversListOnHierearchy((getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
@@ -146,7 +146,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     const [dateTo, setDateTo] = useState(
         requestData && mode !== 'create' ? requestData.absence_end_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
     const [absence, setAbsence] = useState(requestData ? requestData.absence_type_id : null)
-    const [noPay, setNoPay] = useState(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? leaveDays === 0 : false)
+    const [unpaid, setUnpaid] = useState(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? leaveDays === 0 : false)
     const disableChanges = mode === "approval"
 
     function close(){
@@ -185,7 +185,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         const query = new URLSearchParams();
         query.set("absenceStartDate", dateFrom);
         query.set("absenceEndDate", dateTo);
-        query.set("unpaid", noPay ? 1 : 0);
+        query.set("unpaid", unpaid ? 1 : 0);
         query.set("absenceTypeId", absence);
         query.set("employeeApproverId", isAutoApprove ? getLocalStorageKeyWithExpiry("loggedEmployee").UserId : 0);
         query.set("employeeOwnerId", employee.employee_id);
@@ -215,6 +215,34 @@ const RequestWindow = ({setAbsencesVisible = undefined,
             alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
                 {alertDateFromBiggerThanDateTo}
             </p>)
+        }
+        if(dateFrom !== "" && dateTo !== "") {
+            let countingDays = 0;
+            for (let d = new Date(dateFrom); d <= new Date(dateTo); d.setDate(d.getDate() + 1)) {
+                let newDate = new Date(d)
+                if((newDate.getDay() !== 6) && (newDate.getDay()  !== 0)){
+                    countingDays += 1;
+                }
+            }
+            if(countingDays > leaveDays && !unpaid){
+                alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertTooManyDaysTaken}
+                </p>)
+            }
+            if(countingDays > 1){
+                //Sprawdzam czy wziete dni na żądanie
+                let absenceType = ""
+                absencesList.map((absenceFromList) => {
+                    if(absenceFromList.absence_type_id.toString() === absence.toString()){
+                        absenceType = absenceFromList.absence_type_category;
+                    }
+                })
+                if(absenceType === "demand"){
+                    alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertTooManyDaysTakenOnDemand}
+                    </p>)
+                }
+            }
         }
 
         setAlerts(alerts)
@@ -317,8 +345,8 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                         </p>
                         <input id={"request-type-no-pay"} type={"checkbox"}
                                className={"h-5 w-5 accent-workday"}
-                               onChange={(e) => setNoPay(e.target.checked)}
-                               checked={noPay} disabled={disableChanges || mode === "create" && leaveDays === 0}/>
+                               onChange={(e) => setUnpaid(e.target.checked)}
+                               checked={unpaid} disabled={disableChanges || mode === "create" && leaveDays === 0}/>
                     </div>
                     {mode === "create" &&
                     (getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&

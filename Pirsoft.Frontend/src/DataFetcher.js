@@ -73,7 +73,15 @@ async function fetchPutEditOldPasswordInProfile(navigate, query){
 }
 
 async function fetchPostSendEmailForPasswordChange(email) {
-    return await axios.post(`${serverIpProd}/${endpointPostSendCodeInEmail}/${email}`)
+    return await axios.post(`${serverIpProd}/${endpointPostSendCodeInEmail}`, {
+        "to": [
+            email
+    ],
+        "from": "string",
+        "displayName": "string",
+        "subject": "string",
+        "body": "string"
+    })
 }
 
 async function fetchPutChangePassword(query) {

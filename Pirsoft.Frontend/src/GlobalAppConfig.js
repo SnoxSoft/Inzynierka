@@ -247,6 +247,10 @@ const alertAbsence = "Wybierz prawidłowy rodzaj wniosku";
 
 const alertDateFromBiggerThanDateTo= "Data od nie może być większa od daty do";
 
+const alertTooManyDaysTaken= "Przekroczono liczbę dostępnych dni urlopowych";
+
+const alertTooManyDaysTakenOnDemand= "Nie można wziąć jednorazowo więcej niż 1 dzień na żądanie";
+
 // Odpowiedzi operacji
 const alertSaved = "Zapisano";
 const alertDeleted = "Usunięto";
@@ -278,7 +282,7 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertBirthDateFromFuture, alertWrongPESEL, alertWrongSalary, alertWrongContract,
     alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertStartDateFromFuture, alertProfilePictureTooBig, alertProfilePicture,
 
-    alertDateFrom, alertDateTo, alertAbsence, alertDateFromBiggerThanDateTo,
+    alertDateFrom, alertDateTo, alertAbsence, alertDateFromBiggerThanDateTo, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand,
 
     labelNotifications,
 
