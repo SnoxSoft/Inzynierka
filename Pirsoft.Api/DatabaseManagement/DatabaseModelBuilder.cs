@@ -25,6 +25,7 @@ namespace Pirsoft.Api.DatabaseManagement
                 new ContractTypeEntityBuilder(modelBuilder),
                 new DepartmentEntityBuilder(modelBuilder),
                 new EmployeeEntityBuilder(modelBuilder),
+                new PasswordResetTokenEntityBuilder(modelBuilder),
                 new SeniorityLevelEntityBuilder(modelBuilder),
                 new SkillEntityBuilder(modelBuilder),
             };
