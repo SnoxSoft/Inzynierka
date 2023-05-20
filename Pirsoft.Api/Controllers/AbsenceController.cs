@@ -70,7 +70,7 @@ public class AbsenceController : ControllerBase
 
                 await _crudHandler.CreateAsync(newAbsence);
                 await _crudHandler.UpdateAsync(existingEmployee);
-                _crudHandler.PushChangesToDatabase();
+                //_crudHandler.PushChangesToDatabase();
                 return Ok();
             }
             else
