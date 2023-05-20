@@ -1,10 +1,7 @@
-﻿using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore;
-using Pirsoft.Api.Models;
+﻿using Pirsoft.Api.Models;
 
 namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
 {
-    // -- DI as Singleton
     public sealed class CrudHandler : ICrudHandler
     {
         private readonly DatabaseContext _dbContext;
