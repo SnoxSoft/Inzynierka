@@ -2,12 +2,11 @@
 {
     public enum ECompanyRole
     {
-        Accounting     = 1,
-        Administrator  = 2,
-        BoardMember    = 3,
-        Ceo            = 4,
-        Employee       = 5,
-        HumanResources = 6,
-        Manager        = 7,
+        HumanResources = 1,
+        Manager        = 2,
+        Accounting     = 3,
+        Employee       = 4,
+        Ceo            = 5,
+        BoardMember    = 6,
     }
 }
