@@ -36,5 +36,6 @@ public class EmployeeModel : IApiModel
     public virtual DepartmentModel employee_department { get; set; } = null!;
     public virtual SeniorityLevelModel employee_seniority_level { get; set; } = null!;
     public virtual ICollection<AbsenceModel> absences { get; set; } = new List<AbsenceModel>();
+    public virtual ICollection<PasswordResetTokenModel> password_reset_tokens { get; set; } = new List<PasswordResetTokenModel>();
     public virtual ICollection<SkillModel> skills { get; } = new List<SkillModel>();
 }
