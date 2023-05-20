@@ -121,7 +121,7 @@ public class EmployeeControllerTests
         _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(id)).ReturnsAsync(existingEmployee);
 
         // Act
-        var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342",
+        var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342", "1,2,3,4",
             1, 12,1, 3000, 0,
             new DateTime(2023,05,05), new DateTime(2023,10,12), 1, 2, 1);
 
@@ -139,7 +139,7 @@ public class EmployeeControllerTests
         _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(id)).ReturnsAsync((EmployeeModel)null);
 
         // Act
-        var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342",
+        var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342", "1,2,3,4",
             1, 12,1, 3000, 0,
             new DateTime(2023,05,05), new DateTime(2023,10,12), 1, 2, 1);
 
