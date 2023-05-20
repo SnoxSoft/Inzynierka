@@ -8,6 +8,8 @@ using Pirsoft.Api.Configurators;
 using Pirsoft.Api.DatabaseManagement;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Filesystem;
+using Pirsoft.Api.Security.Interfaces;
+using Pirsoft.Api.Services;
 using Pirsoft.Api.Validators;
 
 namespace Pirsoft.UnitTests.Configurators
@@ -23,6 +25,8 @@ namespace Pirsoft.UnitTests.Configurators
             typeof(IDatabaseModelBuilder),
             typeof(IEmployeeCrudHandler),
             typeof(IEmployeeModelValidator),
+            typeof(IMailService),
+            typeof(IPasswordService),
         };
 
         [TestCaseSource(nameof(typesSource))]
