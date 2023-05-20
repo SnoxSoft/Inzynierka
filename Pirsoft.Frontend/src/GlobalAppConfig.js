@@ -255,19 +255,25 @@ const alertTooManyDaysTakenOnDemand= "Nie można wziąć jednorazowo więcej ni�
 const alertSaved = "Zapisano";
 const alertDeleted = "Usunięto";
 const alertProblemOccured = "Wystąpił problem";
+
+const alertEmployeesStillInTeam = "W zespole są pracownicy";
+
+const alertNoTeamName = "Wpisz nazwę zespołu";
 const alertCreated = "Utworzono";
 const alertAccepted = "Zaakceptowano";
 const alertRefused = "Odrzucono";
 const alertChanged = "Zmieniono;"
 
 
-// Rodzaje nieobecnosci
+// Rodzaje nieobecnosci - muszą zgadzać
 
 const dayoff = "dayoff";
 const demand = "demand";
 const occasional = "occasional";
 const sick = "sick";
 const absent = "absent";
+
+
 // Rodzaje kont w aplikacji - muszą mieć odpowiedniki w bazie
 
 const accountHR = "Kadry";
@@ -284,7 +290,7 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
 
     accountEmployee, accountPresident, accountManagement, accountTeamLeader, accountAccountant, accountHR,
 
-    alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved, alertCreated,
+    alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved, alertCreated, alertEmployeesStillInTeam, alertNoTeamName,
 
     alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertBirthDateFromFuture, alertWrongPESEL, alertWrongSalary, alertWrongContract,
     alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertStartDateFromFuture, alertProfilePictureTooBig, alertProfilePicture,

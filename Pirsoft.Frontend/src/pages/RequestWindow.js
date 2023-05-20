@@ -9,12 +9,12 @@ import {
     alertAbsence,
     alertAccepted,
     alertCreated, alertDateFrom, alertDateFromBiggerThanDateTo, alertDateTo,
-    alertDeleted, alertProblemOccured, alertRefused, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand,
+    alertDeleted, alertProblemOccured, alertRefused, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand, demand,
     labelApprove, labelCreate, labelDisapprove,
     labelRequest,
     labelRequestApprovers,
     labelRequestNoPay,
-    labelRequestType, pageNameAddEmployeeAnAbsence, pageNameApprovalOrRejectionRequest
+    labelRequestType, occasional, pageNameAddEmployeeAnAbsence, pageNameApprovalOrRejectionRequest
 } from "../GlobalAppConfig";
 import {
     fetchGetAbsencesTypes, fetchGetAllEmployees,
@@ -225,9 +225,19 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                 }
             }
             if(countingDays > leaveDays && !unpaid){
-                alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertTooManyDaysTaken}
-                </p>)
+                // Sprawdzenie czy jest to urlop okazjonalny
+
+                let absenceType = ""
+                absencesList.map((absenceFromList) => {
+                    if(absenceFromList.absence_type_id.toString() === absence.toString()){
+                        absenceType = absenceFromList.absence_type_category;
+                    }
+                })
+                if(absenceType !== occasional) {
+                    alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertTooManyDaysTaken}
+                    </p>)
+                }
             }
             if(countingDays > 1){
                 //Sprawdzam czy wziete dni na żądanie
@@ -237,7 +247,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                         absenceType = absenceFromList.absence_type_category;
                     }
                 })
-                if(absenceType === "demand"){
+                if(absenceType === demand){
                     alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
                         {alertTooManyDaysTakenOnDemand}
                     </p>)

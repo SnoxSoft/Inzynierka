@@ -3,12 +3,12 @@ import TeamName from "../../components/teamsModifcation/TeamName";
 import TeamMembers from "../../components/teamsModifcation/TeamMembers";
 import TeamLeader from "../../components/teamsModifcation/TeamLeader";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
 import {
-    accountHR, accountPresident,
+    accountHR, accountPresident, alertEmployeesStillInTeam, alertNoTeamName, alertProblemOccured,
     labelClose,
-    labelCreate, labelDelete,
+    labelCreate, labelDelete, labelDisapprove,
     labelSave,
     labelStrongSkills,
     labelTeamManager, labelTeamMembers,
@@ -21,6 +21,7 @@ import {
     fetchPostCreateTeam, fetchPutEditTeam
 } from "../../DataFetcher";
 import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
+import {Popup} from "semantic-ui-react";
 
 const TeamWindow = ({id, mode, title}) => {
     const[dynamicTitle, setDynamicTitle] = useState(title)
@@ -111,7 +112,19 @@ const TeamWindow = ({id, mode, title}) => {
         }
     }
 
+    const [showPopupWithProblems, setShowPopupWithProblems] = useState(false);
+    const [alerts, setAlerts] = useState(<></>)
+
+    const buildPopup = () => {
+        return showPopupWithProblems ?
+            <div className={"flex flex-col items-center text-workday gap-2 p-2"}>
+                {alerts}
+            </div>:
+            <></>
+    }
+
     function saveTeam(){
+        setAlerts(<></>)
         let bodyEditTeam = {
                 apiInternalId: fullTeamData.apiInternalId,
                 department_id: fullTeamData.department_id,
@@ -120,27 +133,61 @@ const TeamWindow = ({id, mode, title}) => {
         fetchPutEditTeam(id, bodyEditTeam)
             .then(r => {
                 navigate(-1);
+        }).catch(e => {
+            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertProblemOccured}
+            </p>)
+            setShowPopupWithProblems(true)
         })
     }
 
     function createTeam(){
+        setAlerts(<></>)
         const query = new URLSearchParams();
         query.set("departmentName", teamData);
 
-        if(teamData !== null) {
+        if(teamData !== null && teamData.toString().length > 0) {
             fetchPostCreateTeam(query)
                 .then(r => {
                     navigate(-1);
-                })
+                }).catch(e => {
+                setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertProblemOccured}
+                </p>)
+                setShowPopupWithProblems(true)
+            })
+        } else {
+            setAlerts(<p className={"bg-red-700 rounded-md font-bold"}>
+                {alertNoTeamName}
+            </p>)
+            setShowPopupWithProblems(true)
         }
     }
 
     function deleteTeam(){
-        // Tutaj jeszcze muszę dodać edycje wszystkich pracowników w zespole i zmiane zespołu na 1 - brak
-        fetchDeleteTeam(id)
-            .then(r => {
-                navigate(-1);
+        setAlerts(<></>)
+        if(leaderData.length === 0 && employeeData === 0) {
+            fetchDeleteTeam(id)
+                .then(r => {
+                    navigate(-1);
+                }).catch(e => {
+                setAlerts(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertProblemOccured}
+                </p>)
+                setShowPopupWithProblems(true)
             })
+        }
+        else {
+            setAlerts(<>
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertProblemOccured}
+                        </p>
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertEmployeesStillInTeam}
+                        </p>
+                    </>)
+            setShowPopupWithProblems(true)
+        }
     }
 
     return (
@@ -169,16 +216,30 @@ const TeamWindow = ({id, mode, title}) => {
                         <div className={"flex flex-row gap-2"}>
                             <ReusableButton id={"team-close"} value={labelClose} onClick={() => navigate(-1)}/>
                             {mode === 'create' ?
-                                <ReusableButton id={"team-create"} value={labelCreate} onClick={() => createTeam()}/> :
+                                <Popup
+                                    content={buildPopup}
+                                    position={"top center"}
+                                    trigger={<ReusableButton id={"team-create"} value={labelCreate} onClick={() => createTeam()}/>}
+                                />
+                                :
                                 <></>
                             }
                             {mode === 'edit' ?
                                 <>
                                     {id.toString().trim() !== "1" ?
-                                        <ReusableButton id={"team-delete"} value={labelDelete} onClick={() => deleteTeam()}/> :
+                                        <Popup
+                                            content={buildPopup}
+                                            position={"top center"}
+                                            trigger={<ReusableButton id={"team-delete"} value={labelDelete} onClick={() => deleteTeam()}/>}
+                                        />
+                                        :
                                         <></>
                                     }
-                                    <ReusableButton id={"team-save"} value={labelSave} onClick={() => saveTeam()}/>
+                                    <Popup
+                                        content={buildPopup}
+                                        position={"top center"}
+                                        trigger={<ReusableButton id={"team-save"} value={labelSave} onClick={() => saveTeam()}/>}
+                                    />
                                 </> :
                                 <></>
                             }
