@@ -55,8 +55,9 @@ public class AbsenceController : ControllerBase
             var query = await _crudHandler.ReadAllAsync<AbsenceTypeModel>();
             var getAbsenceCategory = query.Where(absenceType => absenceType.absence_type_id == absenceTypeId).First();
             bool isDemand = getAbsenceCategory.absence_type_category == "demand";
+            bool isDayOff = getAbsenceCategory.absence_type_category != "dayoff";
 
-            int newLeaveDays = unpaid == 1 ? actualLeaveDays : actualLeaveDays - countedDuration;
+            int newLeaveDays = unpaid == 1 || isDayOff ? actualLeaveDays : actualLeaveDays - countedDuration;
             int newDemandDays = isDemand ? actualDemandDays - countedDuration : actualDemandDays;
 
             if (newLeaveDays >= 0 && newDemandDays >= 0)

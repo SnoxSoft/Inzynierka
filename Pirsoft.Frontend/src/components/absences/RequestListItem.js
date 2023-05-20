@@ -49,18 +49,28 @@ const RequestListItem = ({employeeAbsence, old = false,
     }
     
     return <>
-        <div id={id} className={'text-start m-4 items-center h-16 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
+        <div id={id} className={'text-start m-4 items-center h-28 rounded-md flex hover:bg-brown-menu hover:border-2 hover:border-workday ' + (old &&  "text-weekend")}
              onMouseOver={showOptions} onMouseLeave={hideOptions}>
             {window === "absences" ?
-                <div className={"p-2 flex rounded-md basis-8/12"}>
-                    {labelFromTimeOfAbsence} {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}, {absenceType}
+
+                <div className={"p-2 flex rounded-md basis-8/12 flex-col cursor-default"}>
+                    <div>
+                        {absenceType}
+                    </div>
+                    <div>
+                        {labelFromTimeOfAbsence}: {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}
+                    </div>
+
                 </div> :
                 <div className={"p-2 flex rounded-md basis-8/12 flex-col cursor-default"}>
                     <div>
                         {employeeName}, {employeeTeam}, {employeeRole}
                     </div>
                     <div>
-                        {absenceType}, {labelFromTimeOfRequest} {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}
+                        {absenceType}
+                    </div>
+                    <div>
+                        {labelFromTimeOfAbsence}: {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}
                     </div>
 
                 </div>
@@ -74,7 +84,7 @@ const RequestListItem = ({employeeAbsence, old = false,
                         {!old ?
                             <>
                                 {window === "absences" ?
-                                    employeeAbsence.absence_status_id.toString().trim() === "1" ?
+                                    employeeAbsence.absence_status_id.toString().trim() !== "3" ?
                                     <ReusableButton id={id + "-delete"} value={labelDelete}
                                                     onClick={() => deleteAbsence()}/> :
                                     <></> :

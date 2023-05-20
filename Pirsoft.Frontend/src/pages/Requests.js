@@ -304,7 +304,8 @@ function Requests(){
                                     <RequestListItem id={"request-list-item-" + row} employeeAbsence={addRequest}
                                                      key={row}
                                                      setRequestsVisible={setRequestsVisible}
-                                                     old={addRequest.absence_start_date <= new Date().toLocaleDateString("sv", options)}
+                                                     old={addRequest.absence_start_date <= new Date().toLocaleDateString("sv", options) &&
+                                                         addRequest.absence_status_id.toString() === "3"}
                                                      setRequestPickedData={setRequestPickedData}
                                                      employeeName={employeeName}
                                                      employeeTeam={employeeTeam.department_name}

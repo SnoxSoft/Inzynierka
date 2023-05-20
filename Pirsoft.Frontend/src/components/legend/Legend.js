@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {fetchGetAbsencesTypes} from "../../DataFetcher";
 import {useNavigate} from "react-router-dom";
+import {absent, dayoff, demand, occasional} from "../../GlobalAppConfig";
 
 function Legend({bigLegend = false, id}){
 
@@ -32,11 +33,11 @@ function Legend({bigLegend = false, id}){
                 <div>Weekend</div>
             </div>)
         legendItems.forEach((l, lId) => {
-            if(bigLegend || bigLegend === false && l.absence_type_category === "absent") {
+            if(bigLegend || bigLegend === false && l.absence_type_category === absent) {
                 legendComponent.push(
                     <div key={"legend-item-" + lId + 2} className={"flex flex-row gap-1"}>
                         <div
-                            className={"h-6 w-6 bg-" + (l.absence_type_category === "demand" ? "dayoff" : l.absence_type_category) + " rounded-md border-2"}></div>
+                            className={"h-6 w-6 bg-" + (l.absence_type_category === demand || l.absence_type_category.toString() === occasional ? dayoff : l.absence_type_category) + " rounded-md border-2"}></div>
                         <div>{l.absence_type_name}</div>
                     </div>
                 )

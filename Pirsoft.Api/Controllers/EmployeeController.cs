@@ -41,19 +41,19 @@ public class EmployeeController : Controller
     {
         if (!_validator.IsPeselValid(pesel))
         {
-            pesel = "Missing data";
+            //pesel = "Missing data";
             return StatusCode(StatusCodes.Status400BadRequest);
         }
 
         if (!_validator.IsEmailAddressValid(email))
         {
-            email = "Missing data";
+            //email = "Missing data";
             return StatusCode(StatusCodes.Status400BadRequest);
         }
 
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
         {
-            bankAccountNumber = "Missing data";
+            //bankAccountNumber = "Missing data";
             return StatusCode(StatusCodes.Status400BadRequest);
         }
 

@@ -261,6 +261,13 @@ const alertRefused = "Odrzucono";
 const alertChanged = "Zmieniono;"
 
 
+// Rodzaje nieobecnosci
+
+const dayoff = "dayoff";
+const demand = "demand";
+const occasional = "occasional";
+const sick = "sick";
+const absent = "absent";
 // Rodzaje kont w aplikacji - muszą mieć odpowiedniki w bazie
 
 const accountHR = "Kadry";
@@ -347,5 +354,6 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
 
     labelStrongSkills, labelTeamManager, labelTeamMembers, labelTeamName,
-    labelCreateTeam, labelSkillFinder
+    labelCreateTeam, labelSkillFinder,
+    absent, sick, dayoff, demand, occasional
 };

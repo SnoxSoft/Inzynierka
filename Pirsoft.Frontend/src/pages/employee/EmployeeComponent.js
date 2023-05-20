@@ -251,7 +251,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     </p>)
                     setShowPopupWithProblems(true)
                 }
-            })
+            }).catch(e => {
+            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertProblemOccured}
+            </p>)
+            setShowPopupWithProblems(true)
+        })
     }
 
 
@@ -416,7 +421,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             </p>)
                             setShowPopupWithProblems(true)
                         }
-                    })
+                    }).catch(e => {
+                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProblemOccured}
+                    </p>)
+                    setShowPopupWithProblems(true)
+                })
             }
             else{
                 query.set("leaveIsSeniorityThreshold", overTenYears ? 1 : 0);
@@ -436,7 +446,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             </p>)
                             setShowPopupWithProblems(true)
                         }
-                    })
+                    }).catch(e => {
+                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProblemOccured}
+                    </p>)
+                    setShowPopupWithProblems(true)
+                })
             }
         }
     }

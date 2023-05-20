@@ -163,7 +163,7 @@ function Absences(){
                             absencesListLoad.push(
                                 <RequestListItem id={"absences-list-item-" + row} key={row} employeeAbsence={addAbsence}
                                                  old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options) &&
-                                                     addAbsence.absence_status_id.toString() !== "1"}
+                                                     addAbsence.absence_status_id.toString() === "3"}
                                                  absencesTypes={absencesTypes}
                                                  requestsStatus={requestsStatus}
                                                  filtrRequests={filtrAbsences}
