@@ -8,13 +8,11 @@ using Pirsoft.Api.Models.ModelCreators;
 using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Filesystem;
-using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace Pirsoft.Api.Controllers;
 
-//[Authorize]
-[ApiController] 
-//[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+[ApiController]
 public class EmployeeController : Controller
 {
     private readonly IAvatarFileUploadHandler _avatarFileUploadHandler;
@@ -35,46 +33,49 @@ public class EmployeeController : Controller
     }
 
     [HttpPost("create/new/employee")]
-    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber,
+    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber, string skills,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
         {
-            //pesel = "Missing data";
-            return StatusCode(StatusCodes.Status400BadRequest);
+            return BadRequest("Provided PESEL number is invalid.");
         }
 
         if (!_validator.IsEmailAddressValid(email))
         {
-            //email = "Missing data";
-            return StatusCode(StatusCodes.Status400BadRequest);
+            return BadRequest("Provided e-mail address is invalid.");
         }
 
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
         {
-            //bankAccountNumber = "Missing data";
-            return StatusCode(StatusCodes.Status400BadRequest);
+            return BadRequest("Provided bank account number is invalid.");
+        }
+
+        if (!Regex.IsMatch(skills, "^(?:\\d|,)+$"))
+        {
+            return BadRequest($"Provided {nameof(skills)} string contains invalid characters, please pass comma-separated array of integers, eg. '1,2,3,4'");
         }
 
         if (string.IsNullOrEmpty(password))
         {
-            string upper_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string lower_letters = upper_letters.ToLower();
+            string upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string lowerLetters = upperLetters.ToLower();
             string numbers = "1234567890";
-            string special_chars = "!@#$%^&*";
-            string all = upper_letters + lower_letters + numbers + special_chars;
-            StringBuilder generatedPassword = new StringBuilder();
-            int pass_length = new Random().Next(14, 18);
+            string specialChars = "!@#$%^&*";
+            string all = upperLetters + lowerLetters + numbers + specialChars;
 
-            for (int i = 0; i < pass_length; i++)
+            StringBuilder generatedPassword = new StringBuilder();
+
+            int passLength = new Random().Next(14, 18);
+
+            for (int i = 0; i < passLength; i++)
             {
                 int randomChar = new Random().Next(0, all.Length - 1);
                 generatedPassword.Append(all[randomChar]);
             }
             password = generatedPassword.ToString();
         }
-        
 
         string avatarFilePath = string.Empty;
 
@@ -98,10 +99,19 @@ public class EmployeeController : Controller
             departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,
             birthDate, employmentStartDate, companyRole, contractType, seniorityLevel).CreateModel();
 
+        foreach (int skillId in skills.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse))
+        {
+            SkillModel? skillEntity = await _crudHandler.ReadAsync<SkillModel>(skillId);
+
+            if (skillEntity != null)
+            {
+                newEmployee.skills.Add(skillEntity);
+            }
+        }
+
         try
         {
             await _crudHandler.CreateAsync(newEmployee);
-            _crudHandler.PushChangesToDatabase();
 
             return Ok();
         }
@@ -178,7 +188,7 @@ public class EmployeeController : Controller
     
     //[Authorize(Roles = "Kadry")]
     [HttpPut("edit/employee/{id}")]
-    public async Task<IActionResult> UpdateEmployee(int id, string firstName, string lastName, string pesel, string bankAccountNumber,
+    public async Task<IActionResult> UpdateEmployee(int id, string firstName, string lastName, string pesel, string bankAccountNumber, string skills,
         int departmentId, int leaveBaseDays, int leaveDemandDays, double grossSalary, byte leaveIsSeniorityThreshold,
         DateTime birthDate, DateTime employmentStartDate, int companyRole, int contractType, int seniorityLevel)
     {
@@ -198,10 +208,28 @@ public class EmployeeController : Controller
         existingEmployee.employee_department_id = departmentId;
         existingEmployee.employee_seniority_level_id = seniorityLevel;
         existingEmployee.employee_company_role_id = companyRole;
-
         existingEmployee.leave_base_days = leaveBaseDays;
         existingEmployee.leave_demand_days = leaveDemandDays;
         existingEmployee.leave_is_seniority_threshold = leaveIsSeniorityThreshold;
+
+        ICollection<SkillModel> newSkillset = new List<SkillModel>();
+
+        foreach (int skillId in skills.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse))
+        {
+            SkillModel? skillEntity = await _crudHandler.ReadAsync<SkillModel>(skillId);
+
+            if (skillEntity != null)
+            {
+                newSkillset.Add(skillEntity);
+            }
+        }
+
+        existingEmployee.skills.Clear();
+        
+        foreach (SkillModel skillEntity in newSkillset)
+        {
+            existingEmployee.skills.Add(skillEntity);
+        }
 
         if (Request.Form.Files.Any())
         {
