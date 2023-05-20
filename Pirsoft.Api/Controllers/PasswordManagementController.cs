@@ -45,7 +45,7 @@ public class PasswordManagementController : Controller
         if (passwordFirst != passwordSecond)
             return BadRequest("New passwords do not match");
         
-        var employee = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.employee_id);
+        var employee = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.token_employee_id);
         employee.password = passwordFirst;
         await _crudHandler.UpdateAsync(employee);
 

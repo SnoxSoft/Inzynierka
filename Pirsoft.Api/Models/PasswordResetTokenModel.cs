@@ -3,16 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pirsoft.Api.Models;
 
-public class PasswordResetTokenModel : IApiModel
+public partial class PasswordResetTokenModel : IApiModel
 {
     [NotMapped]
     public int ApiInternalId { get; set; }
-    
+
     [Key]
-    public int token_id { get; set; }
+    public int token_id { get => ApiInternalId; set => ApiInternalId = value; }
+
     public string email { get; set; } = null!;
-    public string reset_code { get; set; } = null!;
+
+    public int reset_code { get; set; }
+
     public DateTime expiration_time { get; set; }
-    [ForeignKey("employee_id")]
-    public int employee_id { get; set; }
+
+    public int token_employee_id { get; set; }
+
+    public virtual EmployeeModel token_employee { get; set; } = null!;
 }
