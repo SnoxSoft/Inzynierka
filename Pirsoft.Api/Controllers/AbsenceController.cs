@@ -55,9 +55,9 @@ public class AbsenceController : ControllerBase
             var query = await _crudHandler.ReadAllAsync<AbsenceTypeModel>();
             var getAbsenceCategory = query.Where(absenceType => absenceType.absence_type_id == absenceTypeId).First();
             bool isDemand = getAbsenceCategory.absence_type_category == "demand";
-            bool isDayOff = getAbsenceCategory.absence_type_category != "dayoff";
+            bool isNotADayOff = getAbsenceCategory.absence_type_category != "dayoff";
 
-            int newLeaveDays = unpaid == 1 || isDayOff ? actualLeaveDays : actualLeaveDays - countedDuration;
+            int newLeaveDays = unpaid == 1 || isNotADayOff ? actualLeaveDays : actualLeaveDays - countedDuration;
             int newDemandDays = isDemand ? actualDemandDays - countedDuration : actualDemandDays;
 
             if (newLeaveDays >= 0 && newDemandDays >= 0)
@@ -66,7 +66,7 @@ public class AbsenceController : ControllerBase
                 existingEmployee.leave_demand_days = newDemandDays;
 
                 AbsenceModel newAbsence = (AbsenceModel)new AbsenceCreator(absenceStartDate, absenceEndDate, unpaid,
-                    absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId, countedDuration).CreateModel();
+                    absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId, isNotADayOff ? countedDuration : 0).CreateModel();
 
                 await _crudHandler.CreateAsync(newAbsence);
                 await _crudHandler.UpdateAsync(existingEmployee);
