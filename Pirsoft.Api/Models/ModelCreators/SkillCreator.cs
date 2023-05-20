@@ -8,9 +8,9 @@ namespace Pirsoft.Api.Models.ModelCreators
 
         public SkillCreator(ESkill skill) => _skill = skill;
 
-        public override IApiModel CreateModel()
+        public override IApiModel CreateModel() => new SkillModel()
         {
-            throw new NotImplementedException();
-        }
+            skill_name = _skill.ToString(),
+        };
     }
 }
