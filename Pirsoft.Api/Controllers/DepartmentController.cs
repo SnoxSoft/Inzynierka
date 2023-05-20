@@ -40,7 +40,7 @@ public class DepartmentController : Controller
         };
         
         await _crudHandler.CreateAsync(newDepartment);
-        _crudHandler.PushChangesToDatabase();
+        //_crudHandler.PushChangesToDatabase();
     }
 
     [HttpDelete("/delete/department/{id}")]
