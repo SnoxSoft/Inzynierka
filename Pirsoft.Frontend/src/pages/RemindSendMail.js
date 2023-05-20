@@ -36,6 +36,10 @@ function RemindSendMail(){
     const sendVerifyEmail = () => {
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@') &&
             emailRegex.test(email)) {
+
+            const query = new URLSearchParams();
+            query.set("to", email);
+
             fetchPostSendEmailForPasswordChange(email).then((response) => {
                 if(response.status === 200){
                     setMailSentAlert(true);

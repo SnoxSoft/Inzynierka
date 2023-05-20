@@ -235,7 +235,7 @@ function Requests(){
                                 currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 2) &&
+                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 1) &&
                                 checkCreatedByCurrent && checkNotCreatedByCurrent) {
                                 addRequest = request
                             }

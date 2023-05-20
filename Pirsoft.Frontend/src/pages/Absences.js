@@ -147,7 +147,7 @@ function Absences(){
                             addAbsence = absence
                         } else if ((!checkWaiting && checkRefused && checkApproved) && (absence.absence_status_id === 2 || absence.absence_status_id === 3)) {
                             addAbsence = absence
-                        } else if ((checkWaiting && !checkRefused && checkApproved) && (absence.absence_status_id === 3 || absence.absence_status_id === 2)) {
+                        } else if ((checkWaiting && !checkRefused && checkApproved) && (absence.absence_status_id === 3 || absence.absence_status_id === 1)) {
                             addAbsence = absence
                         }
 
@@ -158,9 +158,12 @@ function Absences(){
                         }
 
                         if (addAbsence !== null) {
+                            console.log("abcences")
+                            console.log(addAbsence)
                             absencesListLoad.push(
                                 <RequestListItem id={"absences-list-item-" + row} key={row} employeeAbsence={addAbsence}
-                                                 old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options)}
+                                                 old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options) &&
+                                                     addAbsence.absence_status_id.toString() !== "1"}
                                                  absencesTypes={absencesTypes}
                                                  requestsStatus={requestsStatus}
                                                  filtrRequests={filtrAbsences}

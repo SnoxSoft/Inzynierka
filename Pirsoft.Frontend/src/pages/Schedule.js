@@ -202,9 +202,6 @@ function Schedule(){
         if(day.isCurrentMonth){
             color = 'bg-workday'
         }
-        if(day.weekend !== undefined && day.weekend){
-            color = 'bg-weekend'
-        }
 
         if(day.reason !== undefined){
             if(day.reason === 'absent'){
@@ -216,6 +213,10 @@ function Schedule(){
             if(day.reason === 'sick'){
                 color = 'bg-sick'
             }
+        }
+
+        if(day.weekend !== undefined && day.weekend){
+            color = 'bg-weekend'
         }
 
         let border = ''

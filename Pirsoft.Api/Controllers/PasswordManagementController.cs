@@ -35,7 +35,7 @@ public class PasswordManagementController : Controller
     }
     
     [HttpPut("/reset/code/change/password")]
-    [Authorize(Roles = "Admin, Manager, Employee")]
+    //[Authorize(Roles = "Admin, Manager, Employee")]
     public async Task<ActionResult> ChangePasswordWithResetCode(int resetCode, string passwordFirst, string passwordSecond)
     {
         var resetToken = await _crudHandler.ReadAsync<PasswordResetTokenModel>(resetCode);
@@ -53,7 +53,7 @@ public class PasswordManagementController : Controller
     }
 
     [HttpPut("/change/password")]
-    [Authorize(Roles = "Admin, Manager, Employee")]
+    //[Authorize(Roles = "Admin, Manager, Employee")]
     public async Task<ActionResult> ChangePasswordFromProfileView(string oldPassword, string newPasswordOnce, string newPasswordTwice, int employeeId)
     {
         // Get the current user from the database using the employeeId parameter

@@ -444,8 +444,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // Ładowanie umiejętności dla okna wyboru umiejętności
     const [loadedAllSkills, setLoadedAllSkills] = useState([])
 
-
-    console.log(getLocalStorageKeyWithExpiry("loggedEmployee"))
     return(
         <>
         {employeeDataShow && getLocalStorageKeyWithExpiry("loggedEmployee") !== null ?
