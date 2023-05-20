@@ -83,7 +83,7 @@ namespace Pirsoft.UnitTests.ControllerMockTests;
             var resetToken = new PasswordResetTokenModel
             {
                 expiration_time = DateTime.Now.AddHours(1), // Valid token
-                employee_id = 456
+                token_employee_id = 456
             };
 
             var employee = new EmployeeModel
