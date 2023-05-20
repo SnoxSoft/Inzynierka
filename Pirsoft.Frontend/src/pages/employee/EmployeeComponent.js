@@ -383,6 +383,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("lastName", lastName);
         query.set("email", email);
         query.set("bankAccountNumber", bank);
+        query.set("skills", "1,2,3,4"); // TU TRZEBA PODMIENIĆ LISTĘ SKILLI
         query.set("birthDate", birth);
         query.set("password", "");
         query.set("pesel", pesel);
