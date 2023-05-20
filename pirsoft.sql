@@ -66,7 +66,7 @@ CREATE TABLE `absence_types` (
 
 LOCK TABLES `absence_types` WRITE;
 /*!40000 ALTER TABLE `absence_types` DISABLE KEYS */;
-INSERT INTO `absence_types` VALUES (1,'Nieobecność','absent'),(2,'Urlop chorobowy','sick'),(3,'Urlop dla poratowania zdrowia','dayoff'),(4,'Urlop macierzyński','dayoff'),(5,'Urlop na oddanie krwi','dayoff'),(6,'Urlop na poszukiwanie pracy','dayoff'),(7,'Urlop na żądanie','demand'),(8,'Urlop ojcowski','dayoff'),(9,'Urlop okolicznościowy','dayoff'),(10,'Urlop szkoleniowy','dayoff'),(11,'Urlop wypoczynkowy','dayoff'),(12,'Urlop wychowawczy','dayoff'),(13,'Urlop za święto w sobotę','dayoff');
+INSERT INTO `absence_types` VALUES (1,'Nieobecność','absent'),(2,'Urlop chorobowy','sick'),(3,'Urlop dla poratowania zdrowia','occasional'),(4,'Urlop macierzyński','occasional'),(5,'Urlop na oddanie krwi','occasional'),(6,'Urlop na poszukiwanie pracy','occasional'),(7,'Urlop na żądanie','demand'),(8,'Urlop ojcowski','occasional'),(9,'Urlop okolicznościowy','occasional'),(10,'Urlop szkoleniowy','occasional'),(11,'Urlop wypoczynkowy','dayoff'),(12,'Urlop wychowawczy','occasional'),(13,'Urlop za święto w sobotę','occasional');
 /*!40000 ALTER TABLE `absence_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,7 +120,7 @@ CREATE TABLE `company_roles` (
   PRIMARY KEY (`role_id`),
   UNIQUE KEY `id_UNIQUE` (`role_id`),
   UNIQUE KEY `roleName_UNIQUE` (`role_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=cp1250;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +129,7 @@ CREATE TABLE `company_roles` (
 
 LOCK TABLES `company_roles` WRITE;
 /*!40000 ALTER TABLE `company_roles` DISABLE KEYS */;
-INSERT INTO `company_roles` VALUES (1,'Administrator'),(2,'Kadry'),(3,'Kierownik'),(4,'Księgowość'),(5,'Pracownik'),(6,'Prezes'),(7,'Zarząd');
+INSERT INTO `company_roles` VALUES (1,'Kadry'),(2,'Kierownik'),(3,'Księgowość'),(4,'Pracownik'),(5,'Prezes'),(6,'Zarząd');
 /*!40000 ALTER TABLE `company_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,7 +172,7 @@ CREATE TABLE `departments` (
   PRIMARY KEY (`department_id`),
   UNIQUE KEY `id_UNIQUE` (`department_id`),
   UNIQUE KEY `departamentName_UNIQUE` (`department_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=cp1250;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,7 +181,7 @@ CREATE TABLE `departments` (
 
 LOCK TABLES `departments` WRITE;
 /*!40000 ALTER TABLE `departments` DISABLE KEYS */;
-INSERT INTO `departments` VALUES (1,'brak');
+INSERT INTO `departments` VALUES (1,'Brak zespołu'),(2,'Kadry');
 /*!40000 ALTER TABLE `departments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,7 +226,7 @@ CREATE TABLE `employees` (
   CONSTRAINT `fk_employee_contract_type` FOREIGN KEY (`employee_contract_type_id`) REFERENCES `contract_types` (`contract_id`),
   CONSTRAINT `fk_employee_department` FOREIGN KEY (`employee_department_id`) REFERENCES `departments` (`department_id`),
   CONSTRAINT `fk_employee_seniority_level` FOREIGN KEY (`employee_seniority_level_id`) REFERENCES `seniority_levels` (`seniority_level_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,6 +235,7 @@ CREATE TABLE `employees` (
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
+INSERT INTO `employees` VALUES (1,'Kadry','Start','kadry.start@gmail.com','Kadry123@konto','00000000000','00000000000000000000000000',0,'1900-01-02',0,0,'1900-01-01',0,2,2,1,1,0,0,0,'');
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -296,9 +297,12 @@ CREATE TABLE `password_reset_tokens` (
   `email` varchar(45) NOT NULL,
   `reset_code` int NOT NULL,
   `expiration_time` datetime NOT NULL,
+  `token_employee_id` int NOT NULL,
   PRIMARY KEY (`token_id`),
   UNIQUE KEY `token_id_UNIQUE` (`token_id`),
-  UNIQUE KEY `reset_code_UNIQUE` (`reset_code`)
+  UNIQUE KEY `reset_code_UNIQUE` (`reset_code`),
+  KEY `fk_token_employee_id_idx` (`token_employee_id`),
+  CONSTRAINT `fk_token_employee_id` FOREIGN KEY (`token_employee_id`) REFERENCES `employees` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -372,4 +376,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-15 22:01:14
+-- Dump completed on 2023-05-20 20:34:21
