@@ -27,7 +27,7 @@ const endpointPostSendCodeInEmail = "send/password/reset";
 const endpointPutChangePassword = "reset/code/change/password";
 
 // Edycja hasła pracownika w profilu
-const endpointEmployeeChangePassword = "/change/password"
+const endpointEmployeeChangePassword = "change/password"
 
 
 // Logowanie sie //
