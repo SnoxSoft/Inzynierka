@@ -158,8 +158,6 @@ function Absences(){
                         }
 
                         if (addAbsence !== null) {
-                            console.log("abcences")
-                            console.log(addAbsence)
                             absencesListLoad.push(
                                 <RequestListItem id={"absences-list-item-" + row} key={row} employeeAbsence={addAbsence}
                                                  old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options) &&

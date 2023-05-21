@@ -35,7 +35,7 @@ function Schedule(){
 
     useEffect(() => {
         // Pobranie szczegółowych danych pracownika
-        if(employee === null) {
+        if(employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
             fetchGetEmployeeDataById(getLocalStorageKeyWithExpiry("loggedEmployee").UserId, navigate)
                 .then(employee => {
                     setFrom(
