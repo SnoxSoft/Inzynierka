@@ -17,6 +17,7 @@ namespace Pirsoft.UnitTests.ControllerMockTests;
     {
         private PasswordManagementController _controller;
         private Mock<ICrudHandler> _crudHandlerMock;
+        private Mock<IEmployeeCrudHandler> _employeeCrudHandlerMock;
         private Mock<IUserManager<EmployeeModel>> _userManagerMock;
         private Mock<IMailService> _emailServiceMock;
         private Mock<IPasswordService> _passwordServiceMock;
@@ -25,6 +26,7 @@ namespace Pirsoft.UnitTests.ControllerMockTests;
         public void Setup()
         {
             _crudHandlerMock = new Mock<ICrudHandler>();
+            _employeeCrudHandlerMock = new Mock<IEmployeeCrudHandler>();
             _userManagerMock = new Mock<IUserManager<EmployeeModel>>();
             _emailServiceMock = new Mock<IMailService>();
             _passwordServiceMock = new Mock<IPasswordService>();
@@ -33,7 +35,8 @@ namespace Pirsoft.UnitTests.ControllerMockTests;
                 _crudHandlerMock.Object,
                 _userManagerMock.Object,
                 _emailServiceMock.Object,
-                _passwordServiceMock.Object
+                _passwordServiceMock.Object,
+                _employeeCrudHandlerMock.Object
             );
         }
 

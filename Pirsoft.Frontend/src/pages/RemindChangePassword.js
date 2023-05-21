@@ -68,7 +68,7 @@ function Remind(){
             if(newPassword.toString() === newRepeatPassword.toString()){
                 if(passwordRegex.test(newPassword)) {
                     const query = new URLSearchParams();
-                    query.set("code", code);
+                    query.set("resetCode", code);
                     query.set("passwordFirst", newPassword);
                     query.set("passwordSecond", newRepeatPassword);
                     fetchPutChangePassword(query)
