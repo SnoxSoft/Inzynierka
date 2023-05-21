@@ -270,7 +270,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         if(profilePicture !== null) {
             console.log(profilePicture.naturalHeight)
             console.log(profilePicture.naturalWidth)
-            if (profilePicture.naturalHeight > 301 || profilePicture.naturalWidth > 301) {
+            if (profilePicture.naturalHeight > 351 || profilePicture.naturalWidth > 351) {
                 alerts.push(
                     <p className={"bg-red-700 rounded-md font-bold"}>
                         {alertProfilePictureTooBig}
