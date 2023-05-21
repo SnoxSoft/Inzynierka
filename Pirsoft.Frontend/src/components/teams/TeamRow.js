@@ -5,6 +5,8 @@ import {FiSettings} from "react-icons/fi";
 import {MdOpenInNew} from "react-icons/md";
 import ReusableButton from "../base/ReusableButton";
 import EmployeeRow from "./EmployeeRow";
+import {getLocalStorageKeyWithExpiry} from "../jwt/LocalStorage";
+import {accountHR, accountPresident} from "../../GlobalAppConfig";
 
 const TeamRow = ({team, row, setEmployeesVisible, id,
                      editOptions = false, isSchedule = false,
@@ -35,15 +37,15 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
     function appendDay(day, row, col, daysOff, employeeId, dayId) {
         let color = 'bg-workday'
 
-        if(day.weekend !== undefined && day.weekend){
-            color = 'bg-weekend'
-        }
-
         daysOff.forEach((d) => {
             if(day.date === d){
                 color = 'bg-absent'
             }
         })
+
+        if(day.weekend !== undefined && day.weekend){
+            color = 'bg-weekend'
+        }
 
         return <div id={id+"-employee-"+employeeId+"-day-"+dayId}
                     key={id+"-employee-"+employeeId+"-day-"+dayId}
@@ -121,9 +123,14 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
                             formatting={""} color={""}
                             link={"/team-view/"+team.department_id}/>
 
+                    {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                        (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR ||
+                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident) ?
                     <ReusableButton id={id + "-edit-team"} value={<FiSettings/>}
                             formatting={""} color={""}
-                            link={"/team-edit/"+team.department_id}/>
+                            link={"/team-edit/"+team.department_id}/> :
+                        <></>
+                    }
                 </> : <></>
             }
         </div>

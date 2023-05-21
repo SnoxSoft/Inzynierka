@@ -56,6 +56,9 @@ function Absences(){
     const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
     const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
 
+    const [demandDays, setDemandDays] = useState(0);
+    const [leaveDays, setLeaveDays] = useState(0);
+
     // Zmienne do ładowania statusów i typów nieobecności
     const [requestsStatus, setRequestsStatus] = useState(null);
     const [absencesTypes, setAbsencesTypes] = useState(null);
@@ -72,7 +75,13 @@ function Absences(){
         if (employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
             setEmployee(null);
             fetchGetEmployeeDataById(getLocalStorageKeyWithExpiry("loggedEmployee").UserId, navigate)
-                .then(employee => setEmployee(employee));
+                .then(employee => {
+                    if(employee !== null && employee !== undefined){
+                        setDemandDays(employee.leave_demand_days);
+                        setLeaveDays(employee.leave_base_days);
+                        setEmployee(employee)
+                    }
+                });
         }
 
         // Załadowanie statusów wniosków
@@ -104,6 +113,17 @@ function Absences(){
         // console.log(dateTo)
 
         //Trzeba wyczyścić listę przed każdym filtrem
+
+        fetchGetEmployeeDataById(getLocalStorageKeyWithExpiry("loggedEmployee").UserId, navigate)
+            .then(employee => {
+                // Ładowanie tych wartości z informacji pracownika
+                if(employee !== null && employee !== undefined){
+                    setDemandDays(employee.leave_demand_days);
+                    setLeaveDays(employee.leave_base_days);
+                    setEmployee(employee)
+                }
+            });
+
         setAbsencesList([])
 
         fetchGetOneEmployeeBetweenDatesDaysOff(navigate, getLocalStorageKeyWithExpiry("loggedEmployee").UserId, dateFrom, dateTo)
@@ -127,7 +147,7 @@ function Absences(){
                             addAbsence = absence
                         } else if ((!checkWaiting && checkRefused && checkApproved) && (absence.absence_status_id === 2 || absence.absence_status_id === 3)) {
                             addAbsence = absence
-                        } else if ((checkWaiting && !checkRefused && checkApproved) && (absence.absence_status_id === 3 || absence.absence_status_id === 2)) {
+                        } else if ((checkWaiting && !checkRefused && checkApproved) && (absence.absence_status_id === 3 || absence.absence_status_id === 1)) {
                             addAbsence = absence
                         }
 
@@ -138,9 +158,12 @@ function Absences(){
                         }
 
                         if (addAbsence !== null) {
+                            console.log("abcences")
+                            console.log(addAbsence)
                             absencesListLoad.push(
                                 <RequestListItem id={"absences-list-item-" + row} key={row} employeeAbsence={addAbsence}
-                                                 old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options)}
+                                                 old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options) &&
+                                                     addAbsence.absence_status_id.toString() === "3"}
                                                  absencesTypes={absencesTypes}
                                                  requestsStatus={requestsStatus}
                                                  filtrRequests={filtrAbsences}
@@ -157,17 +180,9 @@ function Absences(){
     useEffect(() => {
         if(absencesVisible && employee !== null && requestsStatus !== null && absencesTypes !== null) {
             filtrAbsences();
+            // window.location.reload();
         }
     },[absencesVisible])
-
-    // Ładowanie tych wartości z informacji pracownika
-    let demandDays = 0;
-    let leaveDays = 0;
-
-    if(employee !== null && employee !== undefined){
-        demandDays = employee.leave_demand_days;
-        leaveDays = employee.leave_base_days;
-    }
 
     return(
         <>

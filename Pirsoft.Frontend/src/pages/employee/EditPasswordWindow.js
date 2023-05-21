@@ -5,7 +5,7 @@ import {
     headerPasswordChange, labelApprove, labelClose,
     labelGiveNewPassword,
     labelGiveNewPasswordAgain,
-    labelGiveOldPassword, pagePasswordEdit, serverIp
+    labelGiveOldPassword, pagePasswordEdit, passwordRegex, serverIp
 } from "../../GlobalAppConfig";
 import LoggingPassword from "../../components/logging/LoggingPassword";
 import ReusableButton from "../../components/base/ReusableButton";
@@ -39,10 +39,14 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                 // Tutaj pomyslimy jakie wartosci sprawdzic
                 if (newPassword.toString() === newRepeatPassword.toString()) {
 
-                    if (newPassword.match("^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$") != null) {
+                    if (passwordRegex.test(newPassword)) {
+                        const query = new URLSearchParams();
+                        query.set("oldPassword", oldPassword);
+                        query.set("newPasswordOnce", newPassword);
+                        query.set("newPasswordTwice", newRepeatPassword);
+                        query.set("employeeId", employee.employee_id);
 
-                    fetchPutEditOldPasswordInProfile(navigate,
-                        employee.employee_id, oldPassword, newPassword, newRepeatPassword)
+                    fetchPutEditOldPasswordInProfile(navigate, query)
                         .then((response) => {
                             if (response.status === 200) {
                                 setPasswordChangedSuccesfully(true);
@@ -113,7 +117,7 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                         <label>{labelGiveNewPassword}</label>
                         <div className={"flex flex-col gap-4 self-center"}>
                             <LoggingPassword id={"employee-password-change-new-password"}
-                                             value={newPassword} onChange={setNewPassword} showHide={false}/>
+                                             value={newPassword} onChange={setNewPassword} showHide={true}/>
                         </div>
                     </div>
                     <div className={"flex flex-col gap-4"}>

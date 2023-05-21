@@ -11,9 +11,10 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly int _employeeApproverId;
         private readonly int _employeeOwnerId;
         private readonly int _absenceStatusId;
+        private readonly int _absenceDuration;
         
         public AbsenceCreator(DateTime absenceStartDate, DateTime absenceEndDate, sbyte unpaid, 
-            int absenceTypeId, int employeeApproverId, int employeeOwnerId, int absenceStatusId)
+            int absenceTypeId, int employeeApproverId, int employeeOwnerId, int absenceStatusId, int absenceDuration)
         {
             _absenceStartDate = absenceStartDate;
             _absenceEndDate = absenceEndDate;
@@ -22,6 +23,7 @@ namespace Pirsoft.Api.Models.ModelCreators
             _employeeApproverId = employeeApproverId;
             _employeeOwnerId = employeeOwnerId;
             _absenceStatusId = absenceStatusId;
+            _absenceDuration = absenceDuration;
         }
 
         public override IApiModel CreateModel() => new AbsenceModel
@@ -32,7 +34,8 @@ namespace Pirsoft.Api.Models.ModelCreators
             absence_type_id = (int)_absenceTypeId,
             employee_approver_id = (int)_employeeApproverId,
             employee_owner_id = (int)_employeeOwnerId,
-            absence_status_id = (int)_absenceStatusId
+            absence_status_id = (int)_absenceStatusId,
+            duration = (int)_absenceDuration
         };
     }
 }

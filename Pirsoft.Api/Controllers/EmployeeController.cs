@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pirsoft.Api.Models;
@@ -8,6 +8,7 @@ using Pirsoft.Api.Models.ModelCreators;
 using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Filesystem;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -34,16 +35,46 @@ public class EmployeeController : Controller
     }
 
     [HttpPost("create/new/employee")]
-    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber,
+    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
-            pesel = "Missing data";
+        {
+            //pesel = "Missing data";
+            return StatusCode(StatusCodes.Status400BadRequest);
+        }
+
         if (!_validator.IsEmailAddressValid(email))
-            email = "Missing data";
+        {
+            //email = "Missing data";
+            return StatusCode(StatusCodes.Status400BadRequest);
+        }
+
         if (!_validator.IsBankAccountNumberValid(bankAccountNumber))
-            bankAccountNumber = "Missing data";
+        {
+            //bankAccountNumber = "Missing data";
+            return StatusCode(StatusCodes.Status400BadRequest);
+        }
+
+        if (string.IsNullOrEmpty(password))
+        {
+            string upper_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string lower_letters = upper_letters.ToLower();
+            string numbers = "1234567890";
+            string special_chars = "!@#$%^&*";
+            string all = upper_letters + lower_letters + numbers + special_chars;
+            StringBuilder generatedPassword = new StringBuilder();
+            int pass_length = new Random().Next(14, 18);
+
+            for (int i = 0; i < pass_length; i++)
+            {
+                int randomChar = new Random().Next(0, all.Length - 1);
+                generatedPassword.Append(all[randomChar]);
+            }
+            password = generatedPassword.ToString();
+        }
+        
 
         string avatarFilePath = string.Empty;
 

@@ -7,9 +7,9 @@ import {MdOutlineArrowBackIosNew} from "react-icons/md";
 import {
     alertMessageSent,
     alertUnexpectedError,
-    alertWrongEmail,
+    alertWrongEmail, emailRegex,
     labelBack,
-    labelGiveEmail,
+    labelGiveEmail, labelReceivedACode,
     labelRemindPassword,
     labelSendVerificationEmail,
     pageNameRemind
@@ -34,8 +34,13 @@ function RemindSendMail(){
     }, []);
 
     const sendVerifyEmail = () => {
-        if (email !== undefined && email.toString().length > 0 && email.toString().includes('@')) {
-            fetchPostSendEmailForPasswordChange(navigate, email).then((response) => {
+        if (email !== undefined && email.toString().length > 0 && email.toString().includes('@') &&
+            emailRegex.test(email)) {
+
+            const query = new URLSearchParams();
+            query.set("to", email);
+
+            fetchPostSendEmailForPasswordChange(email).then((response) => {
                 if(response.status === 200){
                     setMailSentAlert(true);
                     setTimeout(() => {setMailSentAlert(false)}, 3000);
@@ -46,6 +51,8 @@ function RemindSendMail(){
                 }
             }).catch((err) => {
                 console.log(err.message);
+                setProblemOccured(true);
+                setTimeout(() => {setProblemOccured(false)}, 3000);
             })
         }
         else {
@@ -75,11 +82,15 @@ function RemindSendMail(){
                     <RemindEmail value={email} onChange={setEmail}/>
                 </div>
                 <br/>
-                    <div className={"self-center"}>
+                    <div className={"self-center gap-2 flex flex-col"}>
                         <ReusableButton id={"remind-send-verification-email"}
                             formatting={"border-2 border-b-workday min-w-min h-12"}
                             value={labelSendVerificationEmail}
                             onClick={() => sendVerifyEmail()}/>
+                        <ReusableButton id={"remind-send-verification-email"}
+                                        value={labelReceivedACode}
+                                        formatting={"self-center h-8 border-2 w-32"}
+                                        link={'/change-password'}/>
                     </div>
             </div>
             <div className={"flex flex-col items-center text-workday"}>

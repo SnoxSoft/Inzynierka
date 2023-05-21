@@ -4,6 +4,10 @@ const serverIp = "http://127.0.0.1:3001";
 
 const serverIpProd = "https://localhost:7120";
 
+const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+const passwordRegex = /^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$/;
+
 // Nazwa aplikacji
 const appName = "PIRSOFT";
 
@@ -101,6 +105,7 @@ const calendarLabelFrom = "Od:";
 const calendarLabelTo = "Do:";
 
 const skillsLabel = "Umiejętności";
+const labelSkillPicked = "Wybrane umiejętności:";
 
 const labelFirstNameAndLastName = "Imie i nazwisko:";
 
@@ -174,8 +179,10 @@ const labelGiveEmail = "Podaj e-mail";
 const labelVerificationCode = "Kod weryfikacyjny";
 const labelGiveOldPassword = "Podaj stare hasło";
 const labelGiveNewPassword = "Podaj nowe hasło";
+const labelCode = "Kod";
 const labelGiveNewPasswordAgain = "Powtórz nowe hasło";
-const labelSendVerificationEmail = "Wyślij email do zmiany hasła";
+const labelSendVerificationEmail = "Wyślij email z kodem do zmiany hasła";
+const labelReceivedACode = "Mam już kod";
 const headerPasswordChange = "Zmiana hasła";
 
 const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Ndz"];
@@ -184,8 +191,9 @@ const months = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
 
 const quarters = ["Q1","Q2","Q3","Q4"];
 
-const headerEmployeesFinder = "Wyszukiwarka pracowników";
-const headerEmployeesFinderList = "Imie i nazwisko, Zespół, Stanowisko, Umiejętności"
+const headerEmployeesFinder = "Wyszukiwarka umiejętności pracowników";
+const headerEmployeesFinderEmployeeList = "Imie i nazwisko, Zespół, Stanowisko"
+const headerEmployeesFinderSkillsList = "Umiejętności"
 const headerEmployees = "Wyszukaj pracownika";
 
 // Powiadomienia
@@ -199,7 +207,7 @@ const alertPasswordChanged = "Hasło zostało zmienione. \nZa chwilę nastąpi p
 const alertWrongEmail = "Wprowadzony email jest błędny";
 const alertUnexpectedError = "Wystapił nieoczekiwany błąd, spróbuj ponownie za chwilę";
 const alertPasswordIncorrect = "Hasło powinno";
-const alertPutNewPasswords = "Wpisz nowe hasła w pola";
+const alertPutNewPasswords = "Wpisz nowe hasła w pola i uzupełnij kod";
 const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
 const alertPasswordIsIncompatible = "Nowe hasło powinno mieć co najmniej 14 znaków, jeden znak Duży i jeden znak specjalny oraz znaki małe";
 const alertOldPasswordIsMissing = "Wpisz stare hasło";
@@ -207,37 +215,87 @@ const alertOldPasswordIsMissing = "Wpisz stare hasło";
 
 // Błędy w tworzeniu użytkownika
 
-const alertWrongFirstName = "Uzupełnij prawidłowo pole " + firstnameLabel;
-const alertWrongLastName = "Uzupełnij prawidłowo pole " + lastnameLabel;
-const alertWrongAddressEmail = "Uzupełnij prawidłowo pole " + labelEmail;
-const alertWrongBankAccount = "Uzupełnij prawidłowo pole " + labelBankAccount;
-const alertWrongBirthDate = "Wybierz prawidłowo pole " + labelBirthDate;
-const alertWrongPESEL = "Uzupełnij prawidłowo pole " + labelPESEL;
-const alertWrongSalary = "Uzupełnij prawidłowo pole " + labelSalary;
-const alertWrongContract = "Wybierz prawidłowo pole " + labelContractType;
-const alertWrongPosition = "Wybierz prawidłowo pole " + labelPosition;
-const alertWrongPositionLevel = "Wybierz prawidłowo pole " + labelPositionLevel;
-const alertWrongTeam = "Wybierz prawidłowo pole " + labelTeam;
-const alertWrongStartDate = "Wybierz prawidłowo pole " + labelStartDate;
+const fillInFieldProperly = "Uzupełnij prawidłowo pole "
+const pickFieldProperly = "Wybierz prawidłowo pole "
+const dateFromFuture = "Data nie może być z przyszłości dla pola "
+
+const alertWrongFirstName = fillInFieldProperly + firstnameLabel;
+const alertWrongLastName = fillInFieldProperly + lastnameLabel;
+const alertWrongAddressEmail = fillInFieldProperly + labelEmail;
+const alertWrongBankAccount = fillInFieldProperly + labelBankAccount;
+const alertWrongBirthDate = pickFieldProperly + labelBirthDate;
+
+const alertBirthDateFromFuture = dateFromFuture + labelBirthDate
+const alertWrongPESEL = fillInFieldProperly + labelPESEL;
+const alertWrongSalary = fillInFieldProperly + labelSalary;
+const alertWrongContract = pickFieldProperly + labelContractType;
+const alertWrongPosition = pickFieldProperly + labelPosition;
+const alertWrongPositionLevel = pickFieldProperly + labelPositionLevel;
+const alertWrongTeam = pickFieldProperly + labelTeam;
+const alertWrongStartDate = pickFieldProperly + labelStartDate;
+
+const alertStartDateFromFuture = dateFromFuture + labelStartDate
 const alertProfilePictureTooBig = "Wybrane zdjęcie profilowe jest zbyt duże, maksymalny rozmiar to 300px szerokości i 300px wysokości";
 const alertProfilePicture = "Wybrane zdjęcie profilowe jest nieprawidłowe ";
 
+
+/// Błędy przy tworzeniu wniosku
+
+const alertDateFrom = "Popraw datę 'od'";
+const alertDateTo = "Popraw datę 'do'";
+const alertAbsence = "Wybierz prawidłowy rodzaj wniosku";
+
+const alertDateFromBiggerThanDateTo= "Data od nie może być większa od daty do";
+
+const alertTooManyDaysTaken= "Przekroczono liczbę dostępnych dni urlopowych";
+
+const alertTooManyDaysTakenOnDemand= "Nie można wziąć jednorazowo więcej niż 1 dzień na żądanie";
 
 // Odpowiedzi operacji
 const alertSaved = "Zapisano";
 const alertDeleted = "Usunięto";
 const alertProblemOccured = "Wystąpił problem";
+
+const alertEmployeesStillInTeam = "W zespole są pracownicy";
+
+const alertNoTeamName = "Wpisz nazwę zespołu";
+const alertCreated = "Utworzono";
 const alertAccepted = "Zaakceptowano";
 const alertRefused = "Odrzucono";
 const alertChanged = "Zmieniono;"
 
-export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
+
+// Rodzaje nieobecnosci - muszą zgadzać
+
+const dayoff = "dayoff";
+const demand = "demand";
+const occasional = "occasional";
+const sick = "sick";
+const absent = "absent";
+
+
+// Rodzaje kont w aplikacji - muszą mieć odpowiedniki w bazie
+
+const accountHR = "Kadry";
+const accountEmployee = "Pracownik";
+const accountTeamLeader = "Kierownik";
+const accountAccountant = "Księgowość";
+const accountPresident = "Prezes";
+const accountManagement = "Zarząd";
+
+export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
+
+    avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
 
-    alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved,
+    accountEmployee, accountPresident, accountManagement, accountTeamLeader, accountAccountant, accountHR,
 
-    alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertWrongPESEL, alertWrongSalary, alertWrongContract,
-    alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertProfilePictureTooBig, alertProfilePicture,
+    alertDeleted, alertAccepted, alertChanged, alertRefused, alertProblemOccured, alertSaved, alertCreated, alertEmployeesStillInTeam, alertNoTeamName,
+
+    alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertBirthDateFromFuture, alertWrongPESEL, alertWrongSalary, alertWrongContract,
+    alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertStartDateFromFuture, alertProfilePictureTooBig, alertProfilePicture,
+
+    alertDateFrom, alertDateTo, alertAbsence, alertDateFromBiggerThanDateTo, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand,
 
     labelNotifications,
 
@@ -263,7 +321,7 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
 
     labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition, labelPositionLevel,labelBankAccount,labelContractType,
 
-    skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel,
+    skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel, labelSkillPicked,
     employeeGradeText, employeeGradedText,
     firstnameLabel, lastnameLabel, labelTeam,
     labelLeaveDays, labelDemandDays, labelOverTenYears,
@@ -281,8 +339,8 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
     requestStatusLabel, requestActionLabel, requestDescriptionLabel,
     labelRequestType, labelRequestNoPay, labelRequestApprovers,
 
-    labelSendVerificationEmail, labelRemindPassword, labelGiveEmail,
-    labelVerificationCode, labelGiveNewPassword, labelGiveNewPasswordAgain, labelGiveOldPassword, headerPasswordChange,
+    labelSendVerificationEmail, labelRemindPassword, labelGiveEmail, labelReceivedACode,
+    labelVerificationCode, labelGiveNewPassword, labelCode, labelGiveNewPasswordAgain, labelGiveOldPassword, headerPasswordChange,
 
     alertMessageSent,
     alertPasswordChanged,
@@ -295,12 +353,13 @@ export {serverIp, serverIpProd, appName, avatarAlterText, welcomeMessage, welcom
 
     labelReceivedGrades, labelGivenGrades, labelQuarter,
 
-    headerEmployeesFinder, headerEmployeesFinderList,
+    headerEmployeesFinder, headerEmployeesFinderEmployeeList, headerEmployeesFinderSkillsList,
 
     headerEmployees,
 
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
 
     labelStrongSkills, labelTeamManager, labelTeamMembers, labelTeamName,
-    labelCreateTeam, labelSkillFinder
+    labelCreateTeam, labelSkillFinder,
+    absent, sick, dayoff, demand, occasional
 };

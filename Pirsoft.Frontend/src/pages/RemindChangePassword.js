@@ -4,43 +4,44 @@ import ReusableButton from "../components/base/ReusableButton";
 import {useNavigate, useParams} from "react-router-dom";
 import LoggingPassword from "../components/logging/LoggingPassword";
 import {
-    alertNewPasswordsAreIncompatible, alertPasswordChanged,
+    alertNewPasswordsAreIncompatible, alertPasswordChanged, alertPasswordIsIncompatible,
     alertPutNewPasswords,
     alertUnexpectedError,
-    labelApprove, labelChangePassword,
+    labelApprove, labelBack, labelChangePassword, labelCode,
     labelGiveNewPassword,
-    labelGiveNewPasswordAgain,
-    pagePasswordChange
+    labelGiveNewPasswordAgain, labelRemindPassword,
+    pagePasswordChange, passwordRegex
 } from "../GlobalAppConfig";
 import {fetchGetChangePasswordData, fetchPutChangePassword} from "../DataFetcher";
+import {MdOutlineArrowBackIosNew} from "react-icons/md";
 
 function Remind(){
     document.title = pagePasswordChange;
 
     const navigate = useNavigate()
-    const {code} = useParams();
 
-    const [employee, setEmployee] = useState([])
-    const [employeeId, setEmployeeId] = useState(null);
-    const [employeeName, setEmployeeName] = useState('');
+    // const [employee, setEmployee] = useState([])
+    // const [employeeId, setEmployeeId] = useState(null);
+    // const [employeeName, setEmployeeName] = useState('');
 
     useEffect(() => {
-        fetchGetChangePasswordData(navigate, code)
-            .then(employeeItem => {
-                if(employee.length === 0){
-                    setEmployee(employeeItem)
-                }
-            })
+        // fetchGetChangePasswordData(navigate, "")
+        //     .then(employeeItem => {
+        //         if(employee.length === 0){
+        //             setEmployee(employeeItem)
+        //         }
+        //     })
     })
 
-    useEffect(() => {
-        if(employee.length !== 0 && employeeId === null){
-            let employeeItem = employee.pop()
-            setEmployeeId(employeeItem.employee_id)
-            setEmployeeName(employeeItem.first_name + " " + employeeItem.last_name)
-        }
-    }, [employee])
+    // useEffect(() => {
+    //     if(employee.length !== 0 && employeeId === null){
+    //         let employeeItem = employee.pop()
+    //         setEmployeeId(employeeItem.employee_id)
+    //         setEmployeeName(employeeItem.first_name + " " + employeeItem.last_name)
+    //     }
+    // }, [employee])
 
+    const [code, setCode] = useState();
     const [newPassword, setNewPassword] = useState();
     const [newRepeatPassword, setNewRepeatPassword] = useState();
 
@@ -48,6 +49,7 @@ function Remind(){
     const [problemOccured, setProblemOccured] = useState(false)
     const [wrongPasswords, setWrongPassword] = useState(false)
     const [notTheSame, setNotTheSame] = useState(false)
+    const [passwordDoNotMatch, setPasswordDoNotMatch] = useState(false)
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
@@ -56,32 +58,47 @@ function Remind(){
     }, []);
 
     const changePassword = () => {
-        if(employeeId === null){
-            setProblemOccured(true);
-            setTimeout(() => {setProblemOccured(false)}, 3000);
-        }
-        else if (newPassword !== undefined && newRepeatPassword !== undefined &&
-            newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0) {
-
+        // if(employeeId === null){
+        //     setProblemOccured(true);
+        //     setTimeout(() => {setProblemOccured(false)}, 3000);
+        // }
+        // else
+            if (newPassword !== undefined && newRepeatPassword !== undefined && code !== undefined &&
+            newPassword.toString().length > 0 && newRepeatPassword.toString().length > 0 && code.toString() > 0) {
             if(newPassword.toString() === newRepeatPassword.toString()){
-                fetchPutChangePassword(navigate, employeeId, newPassword, newRepeatPassword)
-                    .then((response) => {
-                        if(response.status === 200){
-                            setPasswordChangedSuccesfully(true);
-                            setTimeout(() => {setPasswordChangedSuccesfully(false)}, 3000);
-                            setTimeout(function() {
-                                navigate("/")
-                            }, 5000);
-                        }
-                        else{
+                if(passwordRegex.test(newPassword)) {
+                    const query = new URLSearchParams();
+                    query.set("code", code);
+                    query.set("passwordFirst", newPassword);
+                    query.set("passwordSecond", newRepeatPassword);
+                    fetchPutChangePassword(query)
+                        .then((response) => {
+                            if (response.status === 200) {
+                                setPasswordChangedSuccesfully(true);
+                                setTimeout(() => {
+                                    setPasswordChangedSuccesfully(false)
+                                }, 3000);
+                                setTimeout(function () {
+                                    navigate("/")
+                                }, 5000);
+                            } else {
+                                setProblemOccured(true);
+                                setTimeout(() => {
+                                    setProblemOccured(false)
+                                }, 3000);
+                            }
+                        })
+                        .catch((err) => {
                             setProblemOccured(true);
-                            setTimeout(() => {setProblemOccured(false)}, 3000);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
-
-                    })
+                            setTimeout(() => {
+                                setProblemOccured(false)
+                            }, 3000);
+                        })
+                }
+                else{
+                    setPasswordDoNotMatch(true);
+                    setTimeout(() => {setPasswordDoNotMatch(false)}, 3000);
+                }
             }else {
                 setNotTheSame(true);
                 setTimeout(() => {setNotTheSame(false)}, 3000);
@@ -98,16 +115,31 @@ function Remind(){
                  style={{ height: wantedHeightsForList } }>
                 <div className={"flex flex-col text-workday m-4 text-center gap-4"}>
                     <div>
+                        <div className={"grow-0 p-4 flex flex-row justify-start"}>
+                            <button id={"remind-back"}
+                                    onClick={() => navigate(-1)}><MdOutlineArrowBackIosNew />
+                                {labelBack}
+                            </button>
+                        </div>
                         <p>{labelChangePassword}</p>
-                        <p>{employeeName}</p>
+                        {/*<p>{employeeName}</p>*/}
                     </div>
                     <br/><br/>
+                    <div className={"flex flex-col gap-4"}>
+                        <label>{labelCode}</label>
+                        <div className={"flex flex-col gap-4 self-center"}>
+                            <input id={"code-new-password"}
+                                   className={"border text-black rounded-md text-center h-6 w-72 self-center"}
+                                   type={"text"}
+                                   onChange={(e) => setCode(e.target.value)} value={code}></input>
+                        </div>
+                    </div>
                     <div className={"flex flex-col gap-4"}>
                         <label>{labelGiveNewPassword}</label>
                         <div className={"flex flex-col gap-4 self-center"}>
                             <LoggingPassword
                                 id={"remind-new-password"}
-                                value={newPassword} onChange={setNewPassword} showHide={false}/>
+                                value={newPassword} onChange={setNewPassword} showHide={true}/>
                         </div>
                     </div>
                     <div className={"flex flex-col gap-4"}>
@@ -115,7 +147,7 @@ function Remind(){
                         <div className={"flex flex-col gap-4 self-center"}>
                             <LoggingPassword
                                 id={"remind-repeat-password"}
-                                value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={false}/>
+                                value={newRepeatPassword} onChange={setNewRepeatPassword} showHide={true}/>
                         </div>
                     </div>
                     <br/>
@@ -140,6 +172,10 @@ function Remind(){
                     {notTheSame ?
                         <p className={"bg-red-700 rounded-md font-bold"}>
                             {alertNewPasswordsAreIncompatible}
+                        </p> : <></> }
+                    {passwordDoNotMatch ?
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertPasswordIsIncompatible}
                         </p> : <></> }
                 </div>
             </div>

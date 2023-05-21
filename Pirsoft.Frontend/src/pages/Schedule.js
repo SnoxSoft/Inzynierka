@@ -5,12 +5,13 @@ import ScheduleListItem from "../components/schedule/ScheduleListItem";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
 import {
+    absent,
     alertCantGoFurther,
     calendarLabelFrom,
-    calendarLabelTo, labelBack,
+    calendarLabelTo, dayoff, demand, labelBack,
     labelFilter,
     legendLabel, months,
-    monthsOfYourWorkLabel, pageNameSchedule,
+    monthsOfYourWorkLabel, occasional, pageNameSchedule, sick,
     weekdays
 } from "../GlobalAppConfig";
 import Legend from "../components/legend/Legend";
@@ -30,16 +31,18 @@ function Schedule(){
     // Ładowanie listy do wybrania miesiąca
     const [monthList, setMonthList] = useState([])
     const [absencesTypes, setAbsencesTypes] = useState(null)
+    const [employee, setEmployee] = useState(null)
 
     useEffect(() => {
         // Pobranie szczegółowych danych pracownika
-        if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
+        if(employee === null) {
             fetchGetEmployeeDataById(getLocalStorageKeyWithExpiry("loggedEmployee").UserId, navigate)
                 .then(employee => {
                     setFrom(
                         dateTodayMinusThreeMonthsFormatted < dateStart ?
                             employee.employment_start_date.toString().substring(0, 7) :
                             dateTodayMinusThreeMonthsFormatted);
+                    setEmployee(employee);
                     filtrSchedule()
                         .then(scheduleList => setMonthList(scheduleList))
                 });
@@ -202,20 +205,22 @@ function Schedule(){
         if(day.isCurrentMonth){
             color = 'bg-workday'
         }
-        if(day.weekend !== undefined && day.weekend){
-            color = 'bg-weekend'
-        }
 
         if(day.reason !== undefined){
-            if(day.reason === 'absent'){
+            if(day.reason === absent){
                 color = 'bg-absent'
             }
-            if(day.reason === 'dayoff' || day.reason === 'demand'){
+            if(day.reason === dayoff || day.reason === demand || day.reason === occasional){
                 color = 'bg-dayoff'
             }
-            if(day.reason === 'sick'){
+            if(day.reason === sick){
                 color = 'bg-sick'
             }
+        }
+
+        if(day.weekend !== undefined && day.weekend){
+            color = 'bg-weekend'
+            day.name = "";
         }
 
         let border = ''

@@ -17,25 +17,17 @@ const endpointGetRequestsStatuses = "get/absence/statuses";
 // Zwraca rodzaje dni nieobecności / wniosków urlopowych
 const endpointGetAbsencesTypes = "get/absence/types";
 
-// Wystawianie wniosku urlopowego //
-
-// Zwraca listę osób, która otrzyma wniosek uropowy do wiadomości, do potwierdzenia
-const endpointGetRequestApprovers = "getApprovers";
-
-
 // Przypominanie hasła //
 
 // Wysłanie kodu weryfikacyjnego na adres email
-const endpointPostSendEmailForPasswordChange = "sendVerifyCode";
-
-const endpointGetChangePassword = "get/change-password"
+const endpointPostSendCodeInEmail = "send/password/reset";
 
 // Zmiana hasła po potwierdzeniu kodu weryfikacyjnego
 
-const endpointPutChangePassword = "changePassword";
+const endpointPutChangePassword = "reset/code/change/password";
 
 // Edycja hasła pracownika w profilu
-const endpointEmployeeChangePassword = "changePassword"
+const endpointEmployeeChangePassword = "change/password"
 
 
 // Logowanie sie //
@@ -96,9 +88,7 @@ export {
     endpointPutEditAbsence,
     endpointDeleteAbsence,
 
-    endpointGetRequestApprovers,
-
-    endpointPostSendEmailForPasswordChange, endpointGetChangePassword,
+    endpointPostSendCodeInEmail,
     endpointPutChangePassword, endpointEmployeeChangePassword, endpointDeleteEmployee,
 
     endpointGetLogIn,

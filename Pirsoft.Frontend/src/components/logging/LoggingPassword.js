@@ -1,11 +1,11 @@
 import {BiHide, BiShow} from "react-icons/bi";
 import {useState} from "react";
 
-const LoggingPassword = ({onChange, value, showHide = true, id = "\"logging-password\""}) => {
+const LoggingPassword = ({onChange, value, showHide = true, id = "logging-password"}) => {
 
     const[changeVisibilityIcon, setChangeVisibilityIcon] = useState(<BiHide/>);
     function changeVisibilityForPassword() {
-        const password_component = document.getElementById("logging-password");
+        const password_component = document.getElementById(id);
         if (password_component.type === "password") {
             password_component.type = "text";
             setChangeVisibilityIcon(<BiShow />);

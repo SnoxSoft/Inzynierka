@@ -1,11 +1,18 @@
 import {BsPersonCircle} from "react-icons/bs";
 import React, {useEffect, useState} from "react";
-import {alertProblemOccured, alertProfilePicture, labelCreate} from "../../../GlobalAppConfig";
+import {
+    accountHR,
+    accountPresident,
+    alertProblemOccured,
+    alertProfilePicture,
+    labelCreate
+} from "../../../GlobalAppConfig";
 import ReusableButton from "../../base/ReusableButton";
 import {Popup} from "semantic-ui-react";
 import axios from "axios";
+import {getLocalStorageKeyWithExpiry} from "../../jwt/LocalStorage";
 
-const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload}) => {
+const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload, employeeId}) => {
 
     const [ picture, setPicture] = useState("")
 
@@ -47,9 +54,13 @@ const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload}) => {
     }
 
     function removePathPart(path) {
-        var backslashes = path.split("\\");
-        var newPath = "\\" + backslashes.slice(-3).join("\\");
-        return newPath;
+        try {
+            var backslashes = path.split("\\");
+            var newPath = "\\" + backslashes.slice(-3).join("\\");
+            return newPath;
+        } catch (e) {
+            
+        }
     }
 
     const [couldFindPicture, setCouldFindPicture] = useState(true)
@@ -81,10 +92,15 @@ const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload}) => {
                     }
                 </>
             }
+            {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+            (getLocalStorageKeyWithExpiry("loggedEmployee").UserId === employeeId ||
+                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR) ?
             <input name="" type="file" accept="image/png, image/jpeg"
                 className={"rounded-md"}
                 onChange={onImageChange}
-            />
+            /> :
+                <></>
+            }
 
         </div>
     )

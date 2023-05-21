@@ -29,14 +29,59 @@ public class AbsenceController : ControllerBase
     }
     
     [HttpPost("create/new/absence")]
-    public async Task CreateNewAbsence(DateTime absenceStartDate, DateTime absenceEndDate, 
+    public async Task<IActionResult> CreateNewAbsence(DateTime absenceStartDate, DateTime absenceEndDate, 
         sbyte unpaid, int absenceTypeId, int employeeApproverId, int employeeOwnerId, int absenceStatusId)
     {
-        AbsenceModel newAbsence = (AbsenceModel)new AbsenceCreator(absenceStartDate, absenceEndDate, unpaid, 
-            absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId).CreateModel();
-    
-        await _crudHandler.CreateAsync(newAbsence);
-        _crudHandler.PushChangesToDatabase();
+        var existingEmployee = await _crudHandler.ReadAsync<EmployeeModel>(employeeOwnerId);
+
+        if (existingEmployee != null)
+        {
+            int actualLeaveDays = existingEmployee.leave_base_days;
+            int actualDemandDays = existingEmployee.leave_demand_days;
+
+            // Obliczenie dni nieobecności
+            int countedDuration = 0;
+
+            for (var day = absenceStartDate.Date; day.Date <= absenceEndDate.Date; day = day.AddDays(1))
+            {
+                if (day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    countedDuration += 1;
+                }
+            }
+            
+            // Jeżeli unpaid to nie zabiermy dni z urlopu pracownika
+            // Jeżeli typ na żądanie to zabieramy z dni na żądanie i z dni urlopowych, jeżeli nie zostało wybrane unpaid
+            var query = await _crudHandler.ReadAllAsync<AbsenceTypeModel>();
+            var getAbsenceCategory = query.Where(absenceType => absenceType.absence_type_id == absenceTypeId).First();
+            bool isDemand = getAbsenceCategory.absence_type_category == "demand";
+            bool isNotADayOff = getAbsenceCategory.absence_type_category != "dayoff";
+
+            int newLeaveDays = unpaid == 1 || isNotADayOff ? actualLeaveDays : actualLeaveDays - countedDuration;
+            int newDemandDays = isDemand ? actualDemandDays - countedDuration : actualDemandDays;
+
+            if (newLeaveDays >= 0 && newDemandDays >= 0)
+            {
+                existingEmployee.leave_base_days = newLeaveDays;
+                existingEmployee.leave_demand_days = newDemandDays;
+
+                AbsenceModel newAbsence = (AbsenceModel)new AbsenceCreator(absenceStartDate, absenceEndDate, unpaid,
+                    absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId, isNotADayOff ? countedDuration : 0).CreateModel();
+
+                await _crudHandler.CreateAsync(newAbsence);
+                await _crudHandler.UpdateAsync(existingEmployee);
+                _crudHandler.PushChangesToDatabase();
+                return Ok();
+            }
+            else
+            {
+                return Problem();
+            }
+        }
+        else
+        {
+            return NotFound();
+        }
     }
     
     //[Authorize(Roles = "Kadry")]

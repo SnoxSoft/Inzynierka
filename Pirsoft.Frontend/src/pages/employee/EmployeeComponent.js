@@ -55,7 +55,13 @@ import {
     labelOverTenYears,
     alertSaved,
     alertProblemOccured,
-    alertDeleted, alertProfilePictureTooBig
+    alertDeleted,
+    alertProfilePictureTooBig,
+    accountHR,
+    accountPresident,
+    accountTeamLeader,
+    emailRegex,
+    alertStartDateFromFuture, alertBirthDateFromFuture, accountEmployee, accountAccountant, accountManagement
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -82,10 +88,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     //        uprawniona do edycji kont lub właściciel konta
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-
-    }
 
     if(id === '-1'){
         document.title = pageNameEmployeeRegister;
@@ -100,7 +102,10 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // Tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
 
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
-    let disableData = getLocalStorageKeyWithExpiry("loggedEmployee") !== null ? getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id && mode !== 'create' : false
+    console.log(mode)
+    let disableData = !
+        (getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+            getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR || mode === 'create')
     
     // Do pokazania/ukrycia danych pracownika
     const [employeeDataShow, setEmployeeDataShow] = useState(true);
@@ -134,6 +139,13 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     const [skillsData, setSkillsData] = useState(employee !== undefined && employee !== null ? employee.skills : []);
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+            getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && mode === "create"){
+            navigate("/")
+        }
         if(employee !== undefined && employee !== null && id !== '-1'){
             setFirstName(employee.first_name);
             setLastName(employee.last_name);
@@ -239,7 +251,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     </p>)
                     setShowPopupWithProblems(true)
                 }
-            })
+            }).catch(e => {
+            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertProblemOccured}
+            </p>)
+            setShowPopupWithProblems(true)
+        })
     }
 
 
@@ -276,14 +293,14 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </p>
             )
         }
-        if(email.toString().trim().length === 0){
+        if(email.toString().trim().length === 0 || !emailRegex.test(email)){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongAddressEmail}
                 </p>
             )
         }
-        if(bank.toString().trim().length !== 26 || Number(bank) === 0){
+        if(bank.toString().trim().length !== 26){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongBankAccount}
@@ -296,15 +313,21 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     {alertWrongBirthDate}
                 </p>
             )
+        }else if(new Date(birth) > new Date()){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertBirthDateFromFuture}
+                </p>
+            )
         }
-        if(pesel.toString().trim().length !== 11 || Number(pesel) === 0 || Number(pesel) < 0){
+        if(pesel.toString().trim().length !== 11 || Number(pesel) < 0){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongPESEL}
                 </p>
             )
         }
-        if(salary.toString().trim().length === 0 || Number(salary) === 0 || Number(salary) < 0){
+        if(salary.toString().trim().length === 0 || Number(salary) < 0){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongSalary}
@@ -346,6 +369,13 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </p>
             )
         }
+        else if(new Date(start) > new Date()){
+            alerts.push(
+                <p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertStartDateFromFuture}
+                </p>
+            )
+        }
         setAlerts(alerts)
 
         const query = new URLSearchParams();
@@ -354,7 +384,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("email", email);
         query.set("bankAccountNumber", bank);
         query.set("birthDate", birth);
-        query.set("password", "Wanda123@2113wanda");
+        query.set("password", "");
         query.set("pesel", pesel);
         query.set("grossSalary", salary.toString().indexOf(".") ? salary.toString().replace(",", ".") : salary);
         query.set("departmentId", department);
@@ -391,7 +421,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             </p>)
                             setShowPopupWithProblems(true)
                         }
-                    })
+                    }).catch(e => {
+                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProblemOccured}
+                    </p>)
+                    setShowPopupWithProblems(true)
+                })
             }
             else{
                 query.set("leaveIsSeniorityThreshold", overTenYears ? 1 : 0);
@@ -411,7 +446,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             </p>)
                             setShowPopupWithProblems(true)
                         }
-                    })
+                    }).catch(e => {
+                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                        {alertProblemOccured}
+                    </p>)
+                    setShowPopupWithProblems(true)
+                })
             }
         }
     }
@@ -421,7 +461,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
     return(
         <>
-        {employeeDataShow ?
+        {employeeDataShow && getLocalStorageKeyWithExpiry("loggedEmployee") !== null ?
         <div id={"employee-info"}
              className={"every-page-on-scroll flex flex-col text-workday overflow-x-auto hover:cursor-default"}
              style={{minWidth:800} }>
@@ -443,22 +483,30 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                         <Email id={"employee-email"} value={email} onChange={setEmail} disableChange={mode !== 'create'}/>
                     </div>
 
-                    {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ? <>
+                    {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                        ((getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountAccountant) ||
+                            mode === "create" || getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR) ?
+
+                    <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelBankAccount} </label>
                             <BankAccountNumber id={"employee-bank-number"} value={bank} onChange={setBank} disableChange={disableData}/>
                         </div>
 
-                        <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> {labelBirthDate} </label>
-                            <DateOfBirth id={"employee-birth-date"} value={birth} onChange={setBirth} disableChange={disableData}/>
-                        </div>
+                        {getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountAccountant ?
+                            <>
+                            <div className={"flex flex-row justify-between text-right gap-4"}>
+                                <label className={"basis-1/3"}> {labelBirthDate} </label>
+                                <DateOfBirth id={"employee-birth-date"} value={birth} onChange={setBirth} disableChange={disableData}/>
+                            </div>
 
-                        <div className={"flex flex-row justify-between text-right gap-4"}>
-                            <label className={"basis-1/3"}> {labelPESEL} </label>
-                            <Pesel id={"employee-pesel"} value={pesel} onChange={setPesel} disableChange={disableData}/>
-                        </div>
-
+                            <div className={"flex flex-row justify-between text-right gap-4"}>
+                                <label className={"basis-1/3"}> {labelPESEL} </label>
+                                <Pesel id={"employee-pesel"} value={pesel} onChange={setPesel} disableChange={disableData}/>
+                            </div>
+                            </>:
+                        <></>
+                        }
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelSalary} </label>
                             <GrossSalary id={"employee-salary"} value={salary} onChange={setSalary} disableChange={disableData}/>
@@ -472,24 +520,28 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
                     </> : <></>}
                     <div className={"flex flex-row justify-between text-right gap-4"}>
-                        <label className={"basis-1/3"}> {labelPosition} </label>
-                        <PositionsList id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData}
-                                       positions={positions} formatting={"rounded-full text-left grow "}/>
-                    </div>
-
-                    <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelPositionLevel} </label>
                         <PositionLevel id={"employee-position-level"} value={positionLevel} onChange={setPositionLevel}
                                        disableChange={disableData} positionLevels={positionsLevels}/>
                     </div>
 
                     <div className={"flex flex-row justify-between text-right gap-4"}>
+                        <label className={"basis-1/3"}> {labelPosition} </label>
+                        <PositionsList id={"employee-position"} value={position} onChange={setPosition} disableChange={disableData}
+                                       positions={positions} formatting={"rounded-full text-left grow "}/>
+                    </div>
+                    <div className={"flex flex-row justify-between text-right gap-4"}>
                         <label className={"basis-1/3"}> {labelTeam} </label>
-                        <TeamsList id={"employee-team"} value={department} onChange={setDepartment} disableChange={disableData}
+                        <TeamsList id={"employee-team"} value={department} onChange={setDepartment}
+                                   disableChange={disableData && !(
+                                       getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                       getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident)}
                                    teams={teams} placement={'top'} formatting={"rounded-full text-left grow"}/>
                     </div>
 
-                    {sessionStorage.getItem("PRIVILEDGE") !== 'UNAUTHORISED' ?
+                    {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === "create" ||
+                    getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR   ?
                         <>
                         <div className={"flex flex-row justify-between text-right gap-4"}>
                             <label className={"basis-1/3"}> {labelStartDate} </label>
@@ -518,10 +570,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
                 <div className={"flex flex-col p-4"}>
                     <ProfilePicture id={"employee-profile-picture"} picture={avatarData} avatarData={avatarData}
-                                    fileToUpload={fileToUpload} setFileToUpload={setFileToUpload}/>
+                                    fileToUpload={fileToUpload} setFileToUpload={setFileToUpload} employeeId={id}/>
                     <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
-                        {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id || mode === 'create' ?
+                        {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                        getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id.toString() ||
+                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR ?
                             <ReusableButton id={"employee-skill-pick"} value={employee !== undefined &&
                                 employee !== null ? labelEdit : labelPick}
                                 onClick={ () => {
@@ -536,7 +590,9 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                     </div>
                 </div>
             </div>
-            {mode !== 'create' && (getLocalStorageKeyWithExpiry("loggedEmployee") !== null && (getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id)) ?
+            {mode !== 'create' &&
+            (getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                (getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id)) ?
                 <div className={"grow-0 p-4 flex flex-row justify-start"}>
                     <button
                         id={"employee-back"}
@@ -546,31 +602,54 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
             }
             <div className={"grow-0 p-4 flex flex-row justify-around"}>
                     <>
-                        {mode === 'edit' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
+                        {mode === 'edit' ?
                             <>
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
                                 <Popup content={buildPopup} position={"top center"}
                                        trigger={<ReusableButton id={"employee-delete"}
                                                                 value={labelDelete} onClick={() => deleteEmployee()}/>}
-                                />
+                                /> :
+                                    <></>
+                                }
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                    (getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ||
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR ||
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident) ?
                                 <Popup content={buildPopup} position={"top center"}
                                     trigger={<ReusableButton id={"employee-save"}
                                                              value={labelSave} onClick={() => saveEmployee()}/>}
-                                />
-                                {getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id &&
+                                /> :
+                                    <></>
+                                }
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id &&
                                 <ReusableButton id={"employee-password-change"} value={labelChangePassword}
                                         onClick={() => {
                                             setEmployeeDataShow(false);
                                             setShowPasswordChangeFrame(true);
                                         }}/>}
 
+                                {getLocalStorageKeyWithExpiry("loggedEmployee") !== null && (
+                                ((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").Department === employee.employee_department.department_id.toString() &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+
+                                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+
+                                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident)) ?
                                 <ReusableButton id={"employee-request"} value={labelRequest} onClick={() => {
                                     setShowAddEmployeeAnAbsence(true);
                                     setEmployeeDataShow(false);
-                                }}/>
+                                }}/> :
+                                    <></>
+                                }
                             </>
                             : <></>
                         }
-                        {mode === 'create' ?
+                        {mode === 'create' && getLocalStorageKeyWithExpiry("loggedEmployee") !== null && getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR ?
                             <Popup
                                 content={buildPopup}
                                 position={"top center"}

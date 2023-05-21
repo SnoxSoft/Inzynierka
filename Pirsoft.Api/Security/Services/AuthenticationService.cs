@@ -72,6 +72,8 @@ namespace Pirsoft.Api.Security.Services
                 new Claim("Role", employee.employee_company_role_id.ToString()),
                 new Claim("Department", employee.employee_department_id.ToString()),
                 new Claim("Department_name", employee.employee_department.department_name),
+                new Claim("Role", employee.employee_company_role_id.ToString()),
+                new Claim("Role_name", employee.employee_company_role.role_name),
             }
                 .Union(roleClaims);
 

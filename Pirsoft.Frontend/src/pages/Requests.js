@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {
+    accountEmployee,
+    accountHR, accountManagement, accountPresident, accountTeamLeader,
     pageNameRequests,
     requestActionLabel,
     requestDescriptionLabel,
@@ -74,6 +76,13 @@ function Requests(){
     const [employeesList, setEmployeesList] = useState(null)
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+            (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR &&
+                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident &&
+                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountTeamLeader)){
+            navigate("/")
+        }
+
         // Załadowanie statusów wniosków
         if (requestsStatus === null) {
             setRequestsStatus(null);
@@ -107,19 +116,6 @@ function Requests(){
 
     // Filtrowanie wniosków
     function filtrRequests() {
-
-        console.log(firstNameAndLastName)
-        console.log(team)
-        //
-        // console.log(checkWaiting)
-        // console.log(checkApproved)
-        // console.log(checkRefused)
-        //
-        // console.log(checkCreatedByCurrent)
-        // console.log(checkNotCreatedByCurrent)
-        //
-        // console.log(dateFrom)
-        // console.log(dateTo)
 
         setRequestsList([])
         let row = 0;
@@ -239,7 +235,7 @@ function Requests(){
                                 currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 2) &&
+                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 1) &&
                                 checkCreatedByCurrent && checkNotCreatedByCurrent) {
                                 addRequest = request
                             }
@@ -248,10 +244,14 @@ function Requests(){
                         // Tutaj ładuje dane pracownika
                         let employeeName = null
                         let employeeTeam = null
+                        let employeeRole = null
+                        let employeeId = null
                         if(employeesList !== undefined && employeesList !== null) {
                             employeesList.map(employee => {
                                 if (request.employee_owner_id === employee.employee_id) {
-                                    employeeName = employee.first_name + " " + employee.last_name
+                                    employeeName = employee.first_name + " " + employee.last_name;
+                                    employeeId = employee.employee_id;
+                                    employeeRole = employee.employee_company_role.role_name;
                                     teamsList.map(team => {
                                         if (team.department_id === employee.employee_department_id) {
                                             employeeTeam = team
@@ -290,15 +290,26 @@ function Requests(){
                                 }
                             }
 
-                            if(addRequest !== null) {
+                            if(addRequest !== null &&
+                                getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
+                                ((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employeeId.toString()) ||
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident ||
+                                    (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").Department_name === employeeTeam.department_name &&
+                                        employeeRole === accountEmployee &&
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employeeId.toString()))
+                                ){
                                 requestsListLoad.push(
                                     <RequestListItem id={"request-list-item-" + row} employeeAbsence={addRequest}
                                                      key={row}
                                                      setRequestsVisible={setRequestsVisible}
-                                                     old={addRequest.absence_start_date <= new Date().toLocaleDateString("sv", options)}
+                                                     old={addRequest.absence_start_date <= new Date().toLocaleDateString("sv", options) &&
+                                                         addRequest.absence_status_id.toString() === "3"}
                                                      setRequestPickedData={setRequestPickedData}
                                                      employeeName={employeeName}
                                                      employeeTeam={employeeTeam.department_name}
+                                                     employeeRole={employeeRole}
                                                      absencesTypes={absencesTypes}
                                                      requestsStatus={requestsStatus}
                                                      filtrRequests={filtrRequests}
