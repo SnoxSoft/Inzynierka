@@ -383,7 +383,22 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         query.set("lastName", lastName);
         query.set("email", email);
         query.set("bankAccountNumber", bank);
-        query.set("skills", "1,2,3,4"); // TU TRZEBA PODMIENIĆ LISTĘ SKILLI
+        //query.set("skills", "1,2,3,4"); // TU TRZEBA PODMIENIĆ LISTĘ SKILLI
+
+        console.log("tu wyppisuje skille")
+
+        let skills = "";
+        let skillArray = []
+        if(skillsData !== null && skillsData !== undefined){
+            skillsData.map((skill) => {
+                console.log(skill.skill_id)
+                skillArray.push(skill.skill_id);
+            })
+        }
+        console.log(skillArray.join(","))
+        console.log("1,2,3,4")
+
+        query.set("skills", "5"); // TU TRZEBA PODMIENIĆ LISTĘ SKILLI
         query.set("birthDate", birth);
         query.set("password", "");
         query.set("pesel", pesel);

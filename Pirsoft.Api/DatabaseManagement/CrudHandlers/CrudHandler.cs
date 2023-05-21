@@ -49,8 +49,8 @@ namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
             await _dbContext.SaveChangesAsync();
         }
 
-        public int PushChangesToDatabase()
-            => _dbContext.SaveChanges(true);
+        public async Task<int> PushChangesToDatabaseAsync()
+            => await _dbContext.SaveChangesAsync(true);
     }
 
     public interface ICrudHandler
@@ -60,6 +60,6 @@ namespace Pirsoft.Api.DatabaseManagement.CrudHandlers
         Task<IQueryable<TModel>> ReadAllAsync<TModel>() where TModel : class, IApiModel;
         Task UpdateAsync<TModel>(TModel entity) where TModel : class, IApiModel;
         Task DeleteAsync<TModel>(TModel entity) where TModel : class, IApiModel;
-        int PushChangesToDatabase();
+        Task<int> PushChangesToDatabaseAsync();
     }
 }

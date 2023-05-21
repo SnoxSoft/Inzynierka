@@ -223,8 +223,23 @@ public class EmployeeController : Controller
                 newSkillset.Add(skillEntity);
             }
         }
+        Console.WriteLine("NDSDSHJSHDSJHDJSDHSDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+        foreach (SkillModel skillExisting in existingEmployee.skills)
+        {
+            Console.WriteLine(skillExisting);
+            Console.WriteLine("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+        }
 
         existingEmployee.skills.Clear();
+        
+        foreach (SkillModel skillExisting in existingEmployee.skills)
+        {
+            Console.WriteLine(skillExisting);
+        }
+        
+        await _crudHandler.UpdateAsync(existingEmployee);
+        await _crudHandler.PushChangesToDatabaseAsync();
+        
         
         foreach (SkillModel skillEntity in newSkillset)
         {

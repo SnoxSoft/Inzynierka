@@ -199,7 +199,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
         }
 
         [Test]
-        public void PushChangesToDatabase_InvokesSuccessfully()
+        public async Task PushChangesToDatabase_InvokesSuccessfully()
         {
             //Arrange
             int expectedResult = 1;
@@ -209,7 +209,7 @@ namespace Pirsoft.UnitTests.DatabaseManagement
                 .Returns(expectedResult);
 
             //Act
-            int result = _sut.PushChangesToDatabase();
+            int result = await _sut.PushChangesToDatabaseAsync();
 
             //Assert
             _databaseContextMock.Verify(m => m.SaveChanges(It.Is<bool>(val => val.Equals(true))), Times.Once);
