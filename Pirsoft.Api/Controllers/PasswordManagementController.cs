@@ -11,16 +11,18 @@ namespace Pirsoft.Api.Controllers;
 public class PasswordManagementController : Controller
 {
     private readonly ICrudHandler _crudHandler;
+    private readonly IEmployeeCrudHandler _employeeCrudHandler;
     private readonly IUserManager<EmployeeModel> _userManager;
     private readonly IMailService _emailService;
     private readonly IPasswordService _passwordService;
 
-    public PasswordManagementController(ICrudHandler crudHandler, IUserManager<EmployeeModel> userManager, IMailService emailService, IPasswordService passwordService)
+    public PasswordManagementController(ICrudHandler crudHandler, IUserManager<EmployeeModel> userManager, IMailService emailService, IPasswordService passwordService, IEmployeeCrudHandler employeeCrudHandler)
     {
         _crudHandler = crudHandler;
         _userManager = userManager;
         _emailService = emailService;
         _passwordService = passwordService;
+        _employeeCrudHandler = employeeCrudHandler;
     }
 
     [HttpPost("/send/password/reset")]
@@ -45,7 +47,7 @@ public class PasswordManagementController : Controller
         if (passwordFirst != passwordSecond)
             return BadRequest("New passwords do not match");
         
-        var employee = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.employee_id);
+        var employee = await _employeeCrudHandler.ReadEmployeeByIdAsync(resetToken.employee_id);
         employee.password = passwordFirst;
         await _crudHandler.UpdateAsync(employee);
 
@@ -56,29 +58,16 @@ public class PasswordManagementController : Controller
     //[Authorize(Roles = "Admin, Manager, Employee")]
     public async Task<ActionResult> ChangePasswordFromProfileView(string oldPassword, string newPasswordOnce, string newPasswordTwice, int employeeId)
     {
-        // Get the current user from the database using the employeeId parameter
-        var user = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
-        if (user == null)
-        {
-            return NotFound();
-        }
+        var currentUser = await _employeeCrudHandler.ReadEmployeeByIdAsync(employeeId); 
 
-        // Ensure the current user is authorized to update their own password
-        var currentUser = await _userManager.GetUserAsync(User.Identity.Name, oldPassword);
-        if (currentUser == null || currentUser.employee_id != user.employee_id)
-            return Unauthorized();
-
-        // Validate old password
-        if (user.password != oldPassword)
+        if (currentUser.password != oldPassword)
             return BadRequest("Old password is incorrect");
-
-        // Validate new password
+        
         if (newPasswordOnce != newPasswordTwice)
             return BadRequest("New passwords do not match");
-
-        // Update password and save changes
-        user.password = newPasswordOnce;
-        await _crudHandler.UpdateAsync<EmployeeModel>(user);
+        
+        currentUser.password = newPasswordOnce;
+        await _crudHandler.UpdateAsync<EmployeeModel>(currentUser);
 
         return Ok();
     }
