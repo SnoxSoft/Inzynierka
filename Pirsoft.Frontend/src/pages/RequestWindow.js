@@ -5,16 +5,33 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import {CgClose} from "react-icons/cg";
 import {
     accountEmployee,
-    accountHR, accountManagement, accountPresident, accountTeamLeader,
+    accountHR,
+    accountManagement,
+    accountPresident,
+    accountTeamLeader,
     alertAbsence,
     alertAccepted,
-    alertCreated, alertDateFrom, alertDateFromBiggerThanDateTo, alertDateTo,
-    alertDeleted, alertProblemOccured, alertRefused, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand, demand,
-    labelApprove, labelCreate, labelDisapprove,
+    alertCreated,
+    alertDateFrom,
+    alertDateFromBiggerThanDateTo,
+    alertDateTo,
+    alertDeleted,
+    alertProblemOccured,
+    alertRefused, alertRequestFromThePast,
+    alertTooManyDaysTaken,
+    alertTooManyDaysTakenOnDemand,
+    dayoff,
+    demand,
+    labelApprove,
+    labelCreate,
+    labelDisapprove,
     labelRequest,
     labelRequestApprovers,
     labelRequestNoPay,
-    labelRequestType, occasional, pageNameAddEmployeeAnAbsence, pageNameApprovalOrRejectionRequest
+    labelRequestType,
+    occasional,
+    pageNameAddEmployeeAnAbsence,
+    pageNameApprovalOrRejectionRequest
 } from "../GlobalAppConfig";
 import {
     fetchGetAbsencesTypes, fetchGetAllEmployees,
@@ -178,9 +195,16 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     function createRequest(){
+        let absenceType = ""
+        absencesList.map((absenceFromList) => {
+            if(absenceFromList.absence_type_id.toString() === absence.toString()){
+                absenceType = absenceFromList.absence_type_category;
+            }
+        })
         const isAutoApprove = getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident ||
             getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountManagement ||
-            (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString());
+            (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+            absenceType === demand;
 
         const query = new URLSearchParams();
         query.set("absenceStartDate", dateFrom);
@@ -224,16 +248,14 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     countingDays += 1;
                 }
             }
+            if(new Date(dateFrom).getDate() < new Date().getDate()){
+                alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertRequestFromThePast}
+                </p>)
+            }
             if(countingDays > leaveDays && !unpaid){
                 // Sprawdzenie czy jest to urlop okazjonalny
-
-                let absenceType = ""
-                absencesList.map((absenceFromList) => {
-                    if(absenceFromList.absence_type_id.toString() === absence.toString()){
-                        absenceType = absenceFromList.absence_type_category;
-                    }
-                })
-                if(absenceType !== occasional) {
+                if(absenceType === dayoff) {
                     alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
                         {alertTooManyDaysTaken}
                     </p>)
@@ -241,12 +263,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
             }
             if(countingDays > 1){
                 //Sprawdzam czy wziete dni na żądanie
-                let absenceType = ""
-                absencesList.map((absenceFromList) => {
-                    if(absenceFromList.absence_type_id.toString() === absence.toString()){
-                        absenceType = absenceFromList.absence_type_category;
-                    }
-                })
                 if(absenceType === demand){
                     alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
                         {alertTooManyDaysTakenOnDemand}

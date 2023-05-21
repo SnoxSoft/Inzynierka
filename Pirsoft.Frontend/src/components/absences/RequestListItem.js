@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 import {
+    labelDaysTaken,
     labelDelete,
     labelFromTimeOfAbsence,
     labelFromTimeOfRequest,
@@ -55,7 +56,7 @@ const RequestListItem = ({employeeAbsence, old = false,
 
                 <div className={"p-2 flex rounded-md basis-8/12 flex-col cursor-default"}>
                     <div>
-                        {absenceType}
+                        {absenceType}{(employeeAbsence.duration.toString() !== "0") ? ", " + labelDaysTaken + " " + employeeAbsence.duration : ""}
                     </div>
                     <div>
                         {labelFromTimeOfAbsence}: {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}
@@ -67,7 +68,7 @@ const RequestListItem = ({employeeAbsence, old = false,
                         {employeeName}, {employeeTeam}, {employeeRole}
                     </div>
                     <div>
-                        {absenceType}
+                        {absenceType}{(employeeAbsence.duration.toString() !== "0") ? ", " + labelDaysTaken + " " + employeeAbsence.duration : ""}
                     </div>
                     <div>
                         {labelFromTimeOfAbsence}: {employeeAbsence.absence_start_date.substring(0, 10)} - {employeeAbsence.absence_end_date.substring(0, 10)}
