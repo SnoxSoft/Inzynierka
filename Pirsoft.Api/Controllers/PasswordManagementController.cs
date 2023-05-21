@@ -29,29 +29,36 @@ public class PasswordManagementController : Controller
     public async Task<ActionResult> SendMailAsync(MailModel mailData)
     {
         bool result = await _emailService.SendEmailAsync(mailData, new CancellationToken());
-
+        Console.WriteLine(result);
         if (result)
             return StatusCode(StatusCodes.Status200OK, "Mail has successfully been sent.");
 
         return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
     }
-    
+
     [HttpPut("/reset/code/change/password")]
     //[Authorize(Roles = "Admin, Manager, Employee")]
-    public async Task<ActionResult> ChangePasswordWithResetCode(int resetCode, string passwordFirst, string passwordSecond)
+    public async Task<ActionResult> ChangePasswordWithResetCode(int resetCode, string passwordFirst,
+        string passwordSecond)
     {
-        var resetToken = await _crudHandler.ReadAsync<PasswordResetTokenModel>(resetCode);
-        if (resetToken.expiration_time < DateTime.Now.AddHours(-24))
-            return NotFound();
+        var query = await _crudHandler.ReadAllAsync<PasswordResetTokenModel>();
+        var resetToken = query.First(tokens => tokens.reset_code == resetCode);
+        if (resetToken != null)
+        {
+            Console.WriteLine(resetToken.reset_code);
+            if (resetToken.expiration_time < DateTime.Now.AddHours(-24))
+                return NotFound();
         
-        if (passwordFirst != passwordSecond)
-            return BadRequest("New passwords do not match");
+            if (passwordFirst != passwordSecond)
+                return BadRequest("New passwords do not match");
         
-        var employee = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.token_employee_id);
-        employee.password = passwordFirst;
-        await _crudHandler.UpdateAsync(employee);
-
-        return Ok();
+            var currentUser = await _employeeCrudHandler.ReadEmployeeByIdAsync(resetToken.token_employee_id);
+            currentUser.password = passwordFirst;
+            await _crudHandler.UpdateAsync<EmployeeModel>(currentUser);
+        
+            return Ok();
+        }
+        return Conflict();
     }
 
     [HttpPut("/change/password")]
