@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -17,16 +18,20 @@ namespace Pirsoft.UnitTests.ControllerMockTests;
 public class EmployeeControllerTests
 {
     private Mock<ICrudHandler> _crudHandlerMock = null!;
+    private Mock<IEmployeeCrudHandler> _employeeCrudHandlerMock = null!;
+
     private EmployeeController _employeeController = null!;
 
     [SetUp]
     public void SetUp()
     {
         _crudHandlerMock = new Mock<ICrudHandler>();
+        _employeeCrudHandlerMock = new Mock<IEmployeeCrudHandler>();
+
         _employeeController = new EmployeeController(
             Mock.Of<IAvatarFileUploadHandler>(),
             _crudHandlerMock.Object,
-            Mock.Of<IEmployeeCrudHandler>(),
+            _employeeCrudHandlerMock.Object,
             Mock.Of<IEmployeeModelValidator>());
     }
 
@@ -95,7 +100,46 @@ public class EmployeeControllerTests
     public async Task UpdateEmployee_WithValidData_ShouldReturnOk()
     {
         // Arrange
-        var id = 1;
+        int fakeId = 1;
+        int[] fakeSkillsIds = new int[] { fakeId };
+
+        EmployeeModel fakeExistingEmployee = new()
+        {
+            employee_id = fakeId,
+
+            first_name = "Jane",
+            last_name = "Doe",
+            email_address = "jane.doe@example.com",
+            password = "SecretPassword!1234",
+            pesel = "00000000000",
+            bank_account_number = "00000000000000000000000000",
+            avatar_file_path = "fake\\path.png",
+
+            is_active = 1,
+            password_reset = 1,
+            leave_is_seniority_threshold = 1,
+
+            seniority_in_months = 1,
+            leave_base_days = 1,
+            leave_demand_days = 1,
+            salary_gross = 1.0,
+
+            employment_start_date = DateTime.Now,
+            birth_date = DateTime.Now,
+
+            employee_contract_type_id = 1,
+            employee_department_id = 1,
+            employee_seniority_level_id = 1,
+            employee_company_role_id = 1,
+        };
+
+        SkillModel fakeSkill = new()
+        {
+            skill_id = fakeId,
+            skill_name = "FakeName"
+        };
+
+        List<SkillModel> fakeSkills = new List<SkillModel>() { fakeSkill };
 
         Mock<IFormCollection> formCollectionMock = new();
         formCollectionMock
@@ -117,17 +161,31 @@ public class EmployeeControllerTests
 
         _employeeController.ControllerContext = fakeControllerContext;
 
-        var existingEmployee = new EmployeeModel { employee_id = id, first_name = "Jane", last_name = "Doe", pesel = "12345678901", email_address = "jane.doe@example.com" };
-        _crudHandlerMock.Setup(m => m.ReadAsync<EmployeeModel>(id)).ReturnsAsync(existingEmployee);
+        _employeeCrudHandlerMock
+            .Setup(m => m.ReadEmployeeByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(fakeExistingEmployee);
+        _employeeCrudHandlerMock
+            .Setup(m => m.ReadSkillsByIdsAsync(It.IsAny<IEnumerable<int>>()))
+            .ReturnsAsync(fakeSkills);
+        _employeeCrudHandlerMock
+            .Setup(m => m.UpdateAsync(It.IsAny<EmployeeModel>()))
+            .ReturnsAsync(await Task.FromResult(fakeId));
 
         // Act
-        var result = await _employeeController.UpdateEmployee(id, "John", "Doe", "12345654643", "64532253411143242324342342", "1,2,3,4",
+        var result = await _employeeController.UpdateEmployee(fakeId, "John", "Doe", "12345654643", "64532253411143242324342342", "1,2,3,4",
             1, 12,1, 3000, 0,
             new DateTime(2023,05,05), new DateTime(2023,10,12), 1, 2, 1);
 
         // Assert
         result.Should().BeOfType<OkResult>();
-        _crudHandlerMock.Verify(m => m.UpdateAsync(existingEmployee), Times.Once);
+
+        _employeeCrudHandlerMock
+            .Verify(m => m.ReadEmployeeByIdAsync(It.IsAny<int>()), Times.Once);
+        _employeeCrudHandlerMock
+            .Verify(m => m.ReadSkillsByIdsAsync(It.IsAny<IEnumerable<int>>()), Times.Once);
+        _employeeCrudHandlerMock
+            .Verify(m => m.UpdateAsync(fakeExistingEmployee), Times.Once);
+
     }
 
     [Test]
