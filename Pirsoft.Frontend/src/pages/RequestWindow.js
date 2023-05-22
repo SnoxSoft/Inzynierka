@@ -4,20 +4,15 @@ import Calendar from "../components/base/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {CgClose} from "react-icons/cg";
 import {
-    accountEmployee,
     accountHR,
     accountManagement,
     accountPresident,
     accountTeamLeader,
     alertAbsence,
-    alertAccepted,
-    alertCreated,
     alertDateFrom,
     alertDateFromBiggerThanDateTo,
     alertDateTo,
-    alertDeleted,
     alertProblemOccured,
-    alertRefused, alertRequestFromThePast,
     alertTooManyDaysTaken,
     alertTooManyDaysTakenOnDemand,
     dayoff,
@@ -29,7 +24,7 @@ import {
     labelRequestApprovers,
     labelRequestNoPay,
     labelRequestType,
-    occasional,
+    optionsForDateYYYY_MM_DD,
     pageNameAddEmployeeAnAbsence,
     pageNameApprovalOrRejectionRequest
 } from "../GlobalAppConfig";
@@ -111,7 +106,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                                 if((employee.employee_company_role_id !== 2 && absence.absence_type_category !== "absent" && absence.absence_type_category !== "sick") ||
                                     employee.employee_company_role_id === 2){
                                     loadAbsencesList.push(absence)
-                                }
+                               }
                             }
                         })
                     }
@@ -141,7 +136,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                                 )
                                 approverId++;
                             }
-                            //console.log(approver)
                         })
                     }
                     setApproversList(approversListLoad)
@@ -149,19 +143,11 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         }
     })
 
-
-    // Opcje dla wyświetlenia daty w formacie tekstowym
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }
-
     // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(
-        requestData && mode !== 'create' ? requestData.absence_start_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
+        requestData && mode !== 'create' ? requestData.absence_start_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
     const [dateTo, setDateTo] = useState(
-        requestData && mode !== 'create' ? requestData.absence_end_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
+        requestData && mode !== 'create' ? requestData.absence_end_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
     const [absence, setAbsence] = useState(requestData ? requestData.absence_type_id : null)
     const [unpaid, setUnpaid] = useState(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? leaveDays === 0 : false)
     const disableChanges = mode === "approval"
@@ -196,11 +182,13 @@ const RequestWindow = ({setAbsencesVisible = undefined,
 
     function createRequest(){
         let absenceType = ""
-        absencesList.map((absenceFromList) => {
-            if(absenceFromList.absence_type_id.toString() === absence.toString()){
-                absenceType = absenceFromList.absence_type_category;
-            }
-        })
+        if(absence !== undefined) {
+            absencesList.map((absenceFromList) => {
+                if (absenceFromList.absence_type_id.toString() === absence.toString()) {
+                    absenceType = absenceFromList.absence_type_category;
+                }
+            })
+        }
         const isAutoApprove = getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident ||
             getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountManagement ||
             (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
@@ -248,11 +236,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     countingDays += 1;
                 }
             }
-            if(new Date(dateFrom).getDate() < new Date().getDate()){
-                alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
-                    {alertRequestFromThePast}
-                </p>)
-            }
             if(countingDays > leaveDays && !unpaid){
                 // Sprawdzenie czy jest to urlop okazjonalny
                 if(absenceType === dayoff) {
@@ -278,7 +261,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         else {
             fetchPostCreateAbsence(query)
                 .then(r => {
-                    if (r.status === 200) {
+                    if (r !== undefined && r.status === 200) {
                             close()
                     } else {
                         setAlerts(<p className={"bg-red-700 rounded-md font-bold"}>
@@ -286,7 +269,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                         </p>)
                         setShowPopupWithProblems(true)
                     }
-                })
+                }).catch(e => {
+                setAlerts(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertProblemOccured}
+                </p>)
+                setShowPopupWithProblems(true)
+            })
         }
     }
 
@@ -305,7 +293,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     </p>)
                     setShowPopupWithProblems(true)
                 }
-            })
+            }).catch(e => {
+            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertProblemOccured}
+            </p>)
+            setShowPopupWithProblems(true)
+        })
     }
 
     function approveRequest(){
@@ -323,7 +316,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     </p>)
                     setShowPopupWithProblems(true)
                 }
-            })
+            }).catch(e => {
+            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertProblemOccured}
+            </p>)
+            setShowPopupWithProblems(true)
+        })
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);

@@ -56,17 +56,22 @@ public class AbsenceController : ControllerBase
             var getAbsenceCategory = query.First(absenceType => absenceType.absence_type_id == absenceTypeId);
             bool isDemand = getAbsenceCategory.absence_type_category == "demand";
             bool isADayOff = getAbsenceCategory.absence_type_category == "dayoff";
+            bool isAOccasional = getAbsenceCategory.absence_type_category == "occasional";
+            bool isAbsent = getAbsenceCategory.absence_type_category == "absent";
+            bool isSick = getAbsenceCategory.absence_type_category == "sick";
 
-            int newLeaveDays = (unpaid == 0 || (isDemand && unpaid == 0) || (!isADayOff && !(isDemand && unpaid == 1))) ? actualLeaveDays - countedDuration : actualLeaveDays;
+            int newLeaveDays = !isAbsent && !isSick && !isAOccasional && ((isADayOff && unpaid == 0) || (isDemand && unpaid == 0)) ? actualLeaveDays - countedDuration : actualLeaveDays;
             int newDemandDays = isDemand ? actualDemandDays - countedDuration : actualDemandDays;
 
+            Console.WriteLine(newLeaveDays);
+            Console.WriteLine(newDemandDays);
             if (newLeaveDays >= 0 && newDemandDays >= 0)
             {
                 existingEmployee.leave_base_days = newLeaveDays;
                 existingEmployee.leave_demand_days = newDemandDays;
 
                 AbsenceModel newAbsence = (AbsenceModel)new AbsenceCreator(absenceStartDate, absenceEndDate, unpaid,
-                    absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId, isADayOff || (isDemand && unpaid == 0) ? countedDuration : 0).CreateModel();
+                    absenceTypeId, employeeApproverId, employeeOwnerId, absenceStatusId, ((isADayOff && unpaid == 0) || (isDemand && unpaid == 0)) ? countedDuration : 0).CreateModel();
 
                 await _crudHandler.CreateAsync(newAbsence);
                 await _crudHandler.UpdateAsync(existingEmployee);
@@ -86,10 +91,9 @@ public class AbsenceController : ControllerBase
     
     //[Authorize(Roles = "Kadry")]
     [HttpPut("edit/absence/{id}")]
-    public async Task<IActionResult> UpdateAbsence(int id, int employeeApproverId, int absenceStatusId)
+    public async Task<IActionResult> UpdateAbsence(int id, int employeeApproverId, int absenceStatusId, DateTime? endDateTime)
     {
         var existingAbsence = await _crudHandler.ReadAsync<AbsenceModel>(id);
-
         if (existingAbsence == null)
             return NotFound();
         
@@ -101,7 +105,7 @@ public class AbsenceController : ControllerBase
             var query = await _crudHandler.ReadAllAsync<AbsenceTypeModel>();
             var getAbsenceCategory = query.First(absenceType => absenceType.absence_type_id == existingAbsence.absence_type_id);
             if (absenceStatusId is 2 or 3 && (existingAbsence.duration > 0 || 
-                                              (existingAbsence.duration == 0 && getAbsenceCategory.absence_type_category == "demand")))
+                                              (existingAbsence.duration == 0 && getAbsenceCategory.absence_type_category == "demand") || endDateTime != null))
             {
                 var existingEmployee = await _crudHandler.ReadAsync<EmployeeModel>(existingAbsence.employee_owner_id);
                 if (existingEmployee != null)
@@ -111,9 +115,30 @@ public class AbsenceController : ControllerBase
                     
                     bool leaveDaysChanged = false;
                     if (getAbsenceCategory.absence_type_category == "dayoff"  || 
-                        (getAbsenceCategory.absence_type_category == "demand" && existingAbsence.unpaid == 0))
+                        (getAbsenceCategory.absence_type_category == "demand" && existingAbsence.unpaid == 0) || endDateTime != null)
                     {
-                        actualLeaveDays += existingAbsence.duration;
+                        int durationOfAbsence = existingAbsence.duration;
+                        int returnedDays = 0;
+                        if (endDateTime != null)
+                        {
+                            // Zmniajszamy dni i zapisujemy krótszy urlop jesli dni pobrane są > 0
+                            for (var day = existingAbsence.absence_start_date; day.Date <= existingAbsence.absence_end_date; day = day.AddDays(1))
+                            {
+                                if (day > DateTime.Today && existingAbsence.duration > 0 && day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)
+                                {
+                                    returnedDays += 1;
+                                }
+                            }
+                            durationOfAbsence -= returnedDays;
+                            existingAbsence.absence_end_date = (DateTime)endDateTime;
+                        }
+                        if(absenceStatusId is 2){
+                            actualLeaveDays += durationOfAbsence;
+                        }
+                        if(absenceStatusId is 3 && endDateTime != null){
+                            actualLeaveDays += returnedDays;
+                        }
+
                         leaveDaysChanged = actualLeaveDays != existingEmployee.leave_base_days;
                         existingEmployee.leave_base_days = actualLeaveDays;
                         

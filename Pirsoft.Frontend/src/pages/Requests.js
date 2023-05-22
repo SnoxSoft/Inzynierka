@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {
     accountEmployee,
-    accountHR, accountManagement, accountPresident, accountTeamLeader,
+    accountHR, accountManagement, accountPresident, accountTeamLeader, optionsForDateYYYY_MM_DD,
     pageNameRequests,
     requestActionLabel,
     requestDescriptionLabel,
@@ -27,12 +27,6 @@ function Requests(){
         navigate("/");
     }
 
-    // Opcje dla wyświetlenia daty w formacie tekstowym
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }
     const currentDate = new Date();
     currentDate.setDate(1);
     const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
@@ -52,11 +46,11 @@ function Requests(){
     const [checkNotCreatedByCurrent, setCheckNotCreatedByCurrent] = useState(true)
 
     // Gettery i settery dla filtra kalendarza
-    const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
-    const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
+    const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
+    const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
 
     // Imie i nazwisko dla filtra
-    const [firstNameAndLastName, setFirstNameAndLastName] = useState('')
+    const [firstNameAndLastNameNormal, setFirstNameAndLastNameNormal] = useState('')
 
     // Zespół do filtrowania
     const[team, setTeam] = useState();
@@ -243,6 +237,7 @@ function Requests(){
 
                         // Tutaj ładuje dane pracownika
                         let employeeName = null
+                        let employeeNameNormal = null
                         let employeeTeam = null
                         let employeeRole = null
                         let employeeId = null
@@ -250,6 +245,7 @@ function Requests(){
                             employeesList.map(employee => {
                                 if (request.employee_owner_id === employee.employee_id) {
                                     employeeName = employee.first_name + " " + employee.last_name;
+                                    employeeNameNormal = employeeName;
                                     employeeId = employee.employee_id;
                                     employeeRole = employee.employee_company_role.role_name;
                                     teamsList.map(team => {
@@ -260,6 +256,12 @@ function Requests(){
                                 }
                             })
                         }
+
+                        if(employeeName !== null){
+                            employeeName = employeeName.toString().toLowerCase();
+                        }
+
+                        let firstNameAndLastName = firstNameAndLastNameNormal !== undefined ? firstNameAndLastNameNormal.toString().toLowerCase() : "";
 
                         // ostatni etap filtra - szukanie nazwy i zespolu
                         if(addRequest !== null && employeeName !== null && employeeTeam !== null) {
@@ -293,7 +295,7 @@ function Requests(){
                             if(addRequest !== null &&
                                 getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
                                 ((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
-                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employeeId.toString()) ||
+                                        getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employeeId.toString()) ||
                                     getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident ||
                                     (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountTeamLeader &&
                                         getLocalStorageKeyWithExpiry("loggedEmployee").Department_name === employeeTeam.department_name &&
@@ -304,10 +306,10 @@ function Requests(){
                                     <RequestListItem id={"request-list-item-" + row} employeeAbsence={addRequest}
                                                      key={row}
                                                      setRequestsVisible={setRequestsVisible}
-                                                     old={addRequest.absence_start_date <= new Date().toLocaleDateString("sv", options) &&
+                                                     old={addRequest.absence_start_date <= new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD) &&
                                                          addRequest.absence_status_id.toString() === "3"}
                                                      setRequestPickedData={setRequestPickedData}
-                                                     employeeName={employeeName}
+                                                     employeeName={employeeNameNormal}
                                                      employeeTeam={employeeTeam.department_name}
                                                      employeeRole={employeeRole}
                                                      absencesTypes={absencesTypes}
@@ -337,7 +339,7 @@ function Requests(){
             <div id={"absences"} className={"every-page-on-scroll flex flex-col text-workday"}
                 style={{minWidth: 800}}>
                 <RequestsFilter
-                    setFirstNameAndLastName={setFirstNameAndLastName} firstNameAndLastName={firstNameAndLastName}
+                    setFirstNameAndLastName={setFirstNameAndLastNameNormal} firstNameAndLastName={firstNameAndLastNameNormal}
                     setTeam={setTeam} team={team}
                     teamsList={teamsList}
                     setCheckWaiting={setCheckWaiting}

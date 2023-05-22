@@ -39,7 +39,7 @@ public class AbsenceControllerTest
         _crudHandlerMock.Setup(x => x.ReadAsync<AbsenceModel>(absenceId)).ReturnsAsync(existingAbsence);
 
         // Act
-        var result = await _absenceController.UpdateAbsence(absenceId, 1, 3);
+        var result = await _absenceController.UpdateAbsence(absenceId, 1, 3, null);
 
         // Assert
         result.Should().BeOfType<OkResult>();
@@ -70,7 +70,7 @@ public class AbsenceControllerTest
         _crudHandlerMock.Setup(x => x.ReadAsync<AbsenceModel>(id)).ReturnsAsync((AbsenceModel)null);
 
         // Act
-        var result = await _absenceController.UpdateAbsence(id, 1, 3);
+        var result = await _absenceController.UpdateAbsence(id, 1, 3, null);
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
