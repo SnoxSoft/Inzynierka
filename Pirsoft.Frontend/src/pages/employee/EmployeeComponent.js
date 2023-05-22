@@ -378,12 +378,18 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         }
         setAlerts(alerts)
 
+        const skillsDataAsString = () => {
+            if (skillsData !== null && skillsData !== undefined) {
+                return skillsData.map((skill) => skill.skill_id);
+            }
+        }
+
         const query = new URLSearchParams();
         query.set("firstName", firstName);
         query.set("lastName", lastName);
         query.set("email", email);
         query.set("bankAccountNumber", bank);
-        query.set("skills", "1,2,3,4"); // TU TRZEBA PODMIENIĆ LISTĘ SKILLI
+        query.set("skills", skillsDataAsString());
         query.set("birthDate", birth);
         query.set("password", "");
         query.set("pesel", pesel);
