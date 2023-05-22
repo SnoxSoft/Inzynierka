@@ -33,7 +33,7 @@ public class EmployeeController : Controller
     }
 
     [HttpPost("create/new/employee")]
-    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber, string skills,
+    public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber, string? skills,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
@@ -52,7 +52,7 @@ public class EmployeeController : Controller
             return BadRequest("Provided bank account number is invalid.");
         }
 
-        if (!Regex.IsMatch(skills, "^(?:\\d|,)+$"))
+        if (skills != null && !Regex.IsMatch(skills, "^(?:\\d|,)+$"))
         {
             return BadRequest($"Provided {nameof(skills)} string contains invalid characters, please pass comma-separated array of integers, eg. '1,2,3,4'");
         }
@@ -99,7 +99,11 @@ public class EmployeeController : Controller
             departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,
             birthDate, employmentStartDate, companyRole, contractType, seniorityLevel).CreateModel();
 
-        foreach (int skillId in skills.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse))
+        IEnumerable<int> parsedSkillsIds = skills != null
+            ? skills.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)
+            : Enumerable.Empty<int>();
+
+        foreach (int skillId in parsedSkillsIds)
         {
             SkillModel? skillEntity = await _crudHandler.ReadAsync<SkillModel>(skillId);
 
@@ -188,11 +192,11 @@ public class EmployeeController : Controller
     
     //[Authorize(Roles = "Kadry")]
     [HttpPut("edit/employee/{id}")]
-    public async Task<IActionResult> UpdateEmployee(int id, string firstName, string lastName, string pesel, string bankAccountNumber, string skills,
+    public async Task<IActionResult> UpdateEmployee(int id, string firstName, string lastName, string pesel, string bankAccountNumber, string? skills,
         int departmentId, int leaveBaseDays, int leaveDemandDays, double grossSalary, byte leaveIsSeniorityThreshold,
         DateTime birthDate, DateTime employmentStartDate, int companyRole, int contractType, int seniorityLevel)
     {
-        var existingEmployee = await _crudHandler.ReadAsync<EmployeeModel>(id);
+        EmployeeModel? existingEmployee = await _employeeCrudHandler.ReadEmployeeByIdAsync(id);
 
         if (existingEmployee == null)
             return NotFound();
@@ -212,23 +216,17 @@ public class EmployeeController : Controller
         existingEmployee.leave_demand_days = leaveDemandDays;
         existingEmployee.leave_is_seniority_threshold = leaveIsSeniorityThreshold;
 
-        ICollection<SkillModel> newSkillset = new List<SkillModel>();
-
-        foreach (int skillId in skills.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse))
-        {
-            SkillModel? skillEntity = await _crudHandler.ReadAsync<SkillModel>(skillId);
-
-            if (skillEntity != null)
-            {
-                newSkillset.Add(skillEntity);
-            }
-        }
-
         existingEmployee.skills.Clear();
-        
-        foreach (SkillModel skillEntity in newSkillset)
+
+        IEnumerable<int> parsedSkillsIds = skills != null
+            ? skills.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)
+            : Enumerable.Empty<int>();
+
+        List<SkillModel> skillsToSet = await _employeeCrudHandler.ReadSkillsByIdsAsync(parsedSkillsIds);
+
+        foreach (SkillModel skill in skillsToSet)
         {
-            existingEmployee.skills.Add(skillEntity);
+            existingEmployee.skills.Add(skill);
         }
 
         if (Request.Form.Files.Any())
@@ -249,7 +247,7 @@ public class EmployeeController : Controller
 
         try
         {
-            await _crudHandler.UpdateAsync(existingEmployee);
+            await _employeeCrudHandler.UpdateAsync(existingEmployee);
             return Ok();
         }
         catch (DbUpdateConcurrencyException)
