@@ -8,6 +8,12 @@ const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 const passwordRegex = /^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$/;
 
+const optionsForDateYYYY_MM_DD = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+}
+
 // Nazwa aplikacji
 const appName = "PIRSOFT";
 
@@ -98,6 +104,8 @@ const labelFromTimeOfAbsence = "W terminie";
 const labelDaysTaken = "dni:";
 const labelFromTimeOfRequest = "w terminie";
 const labelShowProfile = "Pokaż profil";
+
+const labelEndRequest = "Zakończ";
 
 const alertCantGoFurther = "Nie możesz przejść poza zakres...";
 
@@ -236,7 +244,7 @@ const alertWrongTeam = pickFieldProperly + labelTeam;
 const alertWrongStartDate = pickFieldProperly + labelStartDate;
 
 const alertStartDateFromFuture = dateFromFuture + labelStartDate
-const alertProfilePictureTooBig = "Wybrane zdjęcie profilowe jest zbyt duże, maksymalny rozmiar to 300px szerokości i 300px wysokości";
+const alertProfilePictureTooBig = "Wybrane zdjęcie profilowe jest zbyt duże, maksymalny rozmiar to 350px szerokości i 350px wysokości";
 const alertProfilePicture = "Wybrane zdjęcie profilowe jest nieprawidłowe ";
 
 
@@ -249,9 +257,13 @@ const alertAbsence = "Wybierz prawidłowy rodzaj wniosku";
 const alertDateFromBiggerThanDateTo= "Data od nie może być większa od daty do";
 
 const alertTooManyDaysTaken= "Przekroczono liczbę dostępnych dni urlopowych";
-const alertRequestFromThePast= "Nie można tworzyć wniosku z przeszłości";
-
 const alertTooManyDaysTakenOnDemand= "Nie można wziąć jednorazowo więcej niż 1 dzień na żądanie";
+
+const questionDoDeleteRequest = "Czy na pewno usunąć wniosek?";
+
+const questionDoDeleteEmployee = "Czy na pewno usunąć konto pracownika?";
+
+const questionDoEndRequest = "Czy zakończyć aktywny urlop z końcem dnia?";
 
 // Odpowiedzi operacji
 const alertSaved = "Zapisano";
@@ -297,7 +309,8 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     alertWrongFirstName, alertWrongLastName, alertWrongAddressEmail, alertWrongBankAccount, alertWrongBirthDate, alertBirthDateFromFuture, alertWrongPESEL, alertWrongSalary, alertWrongContract,
     alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertStartDateFromFuture, alertProfilePictureTooBig, alertProfilePicture,
 
-    alertDateFrom, alertDateTo, alertAbsence, alertDateFromBiggerThanDateTo, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand, alertRequestFromThePast,
+    alertDateFrom, alertDateTo, alertAbsence, alertDateFromBiggerThanDateTo, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand,
+    questionDoDeleteRequest, questionDoEndRequest, questionDoDeleteEmployee,
 
     labelNotifications,
 
@@ -308,7 +321,7 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     pagePasswordChange,
 
     calendarLabelFrom, calendarLabelTo,
-    labelRequest, labelShowProfile, alertCantGoFurther,
+    labelRequest, labelShowProfile, alertCantGoFurther, labelEndRequest,
     labelFromTimeOfAbsence, labelFromTimeOfRequest, labelDaysTaken,
     teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow, absencesAdditionalRow,
     employeesMenu,
@@ -363,5 +376,7 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
 
     labelStrongSkills, labelTeamManager, labelTeamMembers, labelTeamName,
     labelCreateTeam, labelSkillFinder,
-    absent, sick, dayoff, demand, occasional
+    absent, sick, dayoff, demand, occasional,
+
+    optionsForDateYYYY_MM_DD
 };

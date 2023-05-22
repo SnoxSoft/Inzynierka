@@ -62,12 +62,23 @@ public class EmployeeController : Controller
             string upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             string lowerLetters = upperLetters.ToLower();
             string numbers = "1234567890";
-            string specialChars = "!@#$%^&*";
+            string specialChars = "!@#$%^*";
             string all = upperLetters + lowerLetters + numbers + specialChars;
 
-            StringBuilder generatedPassword = new StringBuilder();
+            string generatedPassword = "";
 
             int passLength = new Random().Next(14, 18);
+            var regex = new Regex("^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^*]+)[0-9A-Za-z!@#$%^*]{14,}$");
+            
+            do
+            {
+                generatedPassword = "";
+                for (int i = 0; i < passLength; i++)
+                {
+                    int randomChar = new Random().Next(0, all.Length - 1);
+                    generatedPassword += (all[randomChar]);
+                }
+            } while (!(regex.IsMatch(generatedPassword)));
 
             for (int i = 0; i < passLength; i++)
             {
