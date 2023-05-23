@@ -409,16 +409,16 @@ function Schedule(){
                 pickedMonthTextDate.getMonth()+1,
                 1)
 
-            if(pickedMonthTextDatePlusOne.toLocaleDateString("sv", options) > to){
-                setShowingAlert(true);
-                setTimeout(() => {setShowingAlert(false)}, 3000);
-            }
-            else {
+            // if(pickedMonthTextDatePlusOne.toLocaleDateString("sv", options) > to){
+            //     setShowingAlert(true);
+            //     setTimeout(() => {setShowingAlert(false)}, 3000);
+            // }
+            // else {
                 loadWholeMonthData({
                     text: months[pickedMonthTextDatePlusOne.getMonth()].toUpperCase()+" "
                         +pickedMonthTextDatePlusOne.getFullYear(),
                     date: pickedMonthTextDatePlusOne.toLocaleDateString("sv", options)})
-            }
+            //}
         }
     }
 
