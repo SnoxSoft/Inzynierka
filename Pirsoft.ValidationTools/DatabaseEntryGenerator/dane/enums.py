@@ -2,20 +2,19 @@ from enum import Enum
 
 
 class SeniorityLevel(Enum):
-    Junior = 1
-    Inny = 2
+    Inny = 1
+    Junior = 2
     Mid = 3
     Senior = 4
 
 
 class CompanyRoles(Enum):
-    Administrator = 1
-    Kadry = 2
-    Kierownik = 3
-    Ksiegowosc = 4
-    Pracownik = 5
-    Prezes = 6
-    Zarzad = 7
+    Kadry = 1
+    Kierownik = 2
+    Ksiegowosc = 3
+    Pracownik = 4
+    Prezes = 5
+    Zarzad = 6
 
 
 class ContractTypes(Enum):
