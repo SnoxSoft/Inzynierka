@@ -24,13 +24,14 @@ def generate(amount):
             gender = str(random.randint(0, 9999)).zfill(4)
 
             year_str = str(year)[-2:]
+            month_str = ""
             if year < 2000:
                 month_str = str(month)
                 if month < 10:
                     month_str = '0' + str(month)
             else:
                 month_str = str(month + 20)
-
+                print(month_str)
             month_str = str(month)
             if month < 10:
                 month_str = '0' + str(month)

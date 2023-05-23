@@ -3,6 +3,7 @@ import password_generator
 import pesel_generator
 import bank_number_generator
 import employee_generator
+import start_date_generator
 
 
 def clear_console():
@@ -18,8 +19,9 @@ def main():
         print("1. Wygeneruj hasla")
         print("2. Wygeneruj numery PESEL")
         print("3. Wygeneruj numery kont bankowych")
-        print("4. Wygeneruj pracownika")
-        print("5. Wylacz program :C")
+        print("4. Wygeneruj daty startowe")
+        print("9. Wygeneruj pracownika")
+        print("0. Wylacz program :C")
         menu_input = input("\nPodaj numer wybranej opcji: ")
         print(menu_input)
         if menu_input == "1":
@@ -47,9 +49,18 @@ def main():
             bank_number_generator.generate(int(bank_generated_amount))
             input("Nacisnij dowolna litere aby kontynuowac...")
         elif menu_input == "4":
+            clear_console()
+            while True:
+                date_generated_amount = input("Podaj liczbe numerow dat startowych do wygenerowania: ")
+                if date_generated_amount is not None:
+                    break
+            start_date_generator.generate(int(date_generated_amount))
+            input("Nacisnij dowolna litere aby kontynuowac...")
+        elif menu_input == "9":
+            clear_console()
             employee_generator.generate()
             input("Nacisnij dowolna litere aby kontynuowac...")
-        elif menu_input == "5":
+        elif menu_input == "0":
             break
 
 
