@@ -191,6 +191,22 @@ const RequestListItem = ({employeeAbsence, old = false,
                                         :
                                     <></>
                                 }
+                                {employeeAbsence.absence_end_date <= tomorrow.toLocaleDateString("sv", optionsForDateYYYY_MM_DD) && window !== "absences" &&
+                                    employeeAbsence.absence_status_id === 3?
+                                    <>
+                                        {showQuestion ?
+                                            <div className={"flex flex-col items-center justify-center text-workday gap-1 p-1 mr-2  h-28 "}>
+                                                <div className={"text-center cursor-default"}>{questionDoDeleteRequest}</div>
+                                                <ReusableButton value={"Tak"} formatting={"border-2 border-b-workday min-w-min w-12 h-6"}
+                                                                onClick={() => {deleteAbsence()}}/>
+                                            </div>
+                                            :
+                                            <ReusableButton id={"-delete"} value={labelDelete} onClick={() => {setShowQuestion(!showQuestion)}}/>
+                                        }
+                                    </>
+                                    :
+                                    <></>
+                                }
                             </>
                         }
                     </>
