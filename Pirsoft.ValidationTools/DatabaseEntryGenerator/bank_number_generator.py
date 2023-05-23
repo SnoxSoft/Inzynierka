@@ -5,6 +5,7 @@ import re
 
 bank_regex = "^[0-9]+$"
 
+
 def generate(amount):
     f = open("dane/bank_nr.txt", "a")
     for x in range(amount):
