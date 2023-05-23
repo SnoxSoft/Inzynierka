@@ -358,3 +358,6 @@ Pirsoft.Frontend/public/Resources/Avatars
 Pirsoft.ValidationTools/DatabaseEntryGenerator/dane/haslo.txt
 Pirsoft.ValidationTools/DatabaseEntryGenerator/dane/pesel.txt
 Pirsoft.ValidationTools/DatabaseEntryGenerator/dane/bank_nr.txt
+/Pirsoft.ValidationTools/DatabaseEntryGenerator/wynik/employee_Ksiegowosc
+/Pirsoft.ValidationTools/DatabaseEntryGenerator/wynik/employee_Pracownik
+/Pirsoft.ValidationTools/DatabaseEntryGenerator/dane/start_date.txt

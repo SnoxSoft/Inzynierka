@@ -31,7 +31,6 @@ def generate(amount):
                     month_str = '0' + str(month)
             else:
                 month_str = str(month + 20)
-                print(month_str)
             month_str = str(month)
             if month < 10:
                 month_str = '0' + str(month)
