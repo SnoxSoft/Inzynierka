@@ -95,7 +95,7 @@ def generate():
             seniority_id = seniority_array[random.randint(0, len(seniority_array)-1)]
             contract_type_id = contract_type_array[random.randint(0, len(contract_type_array)-1)]
             department_id = random.randint(1, 10)
-            seniority_threshold = random.randint(0,1)
+            seniority_threshold = random.randint(0, 1)
             if seniority_threshold == 0:
                 leave_base_days = 20
             else:

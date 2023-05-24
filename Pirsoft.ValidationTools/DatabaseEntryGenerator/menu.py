@@ -4,7 +4,7 @@ import pesel_generator
 import bank_number_generator
 import employee_generator
 import start_date_generator
-
+import department_generator
 
 def clear_console():
     os.system('cls')
@@ -20,6 +20,7 @@ def main():
         print("2. Wygeneruj numery PESEL")
         print("3. Wygeneruj numery kont bankowych")
         print("4. Wygeneruj daty startowe")
+        print("8. Wygeneruj departamenty")
         print("9. Wygeneruj pracownika")
         print("0. Wylacz program :C")
         menu_input = input("\nPodaj numer wybranej opcji: ")
@@ -55,6 +56,14 @@ def main():
                 if date_generated_amount is not None:
                     break
             start_date_generator.generate(int(date_generated_amount))
+            input("Nacisnij dowolna litere aby kontynuowac...")
+        elif menu_input == "8":
+            clear_console()
+            while True:
+                departments_amount = input("Podaj liczbe departamentow do wygenerowania: ")
+                if departments_amount is not None:
+                    break
+            department_generator.generate(int(departments_amount))
             input("Nacisnij dowolna litere aby kontynuowac...")
         elif menu_input == "9":
             clear_console()
