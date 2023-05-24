@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from helper_functions import check_if_wynik_folder_exists
 
 
 def generate(amount):
@@ -9,6 +10,7 @@ def generate(amount):
             zwierzeta_array = np.array([line.rstrip() for line in file])
         random_department_number = random.randint(0, len(zwierzeta_array)-1)
         department_list.append(zwierzeta_array[random_department_number])
+    check_if_wynik_folder_exists()
     f = open("wynik/departments.txt", "w", encoding="utf-8")
     f.write("insert into pirsoft.departments(department_name) values \n")
     counter = 0
