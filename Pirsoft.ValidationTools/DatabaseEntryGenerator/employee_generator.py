@@ -2,7 +2,7 @@ import dane.enums as enums
 import os
 import numpy as np
 import random
-
+from helper_functions import removeAccents
 
 def clear_console():
     os.system('cls')
@@ -86,7 +86,7 @@ def generate():
         for i in range(int(employee_count)):
             imie = imiona_array[random.randint(0, len(imiona_array)-1)]
             nazwisko = nazwiska_array[random.randint(0, len(nazwiska_array)-1)]
-            email = imie+"."+nazwisko+"@pirsoft.com"
+            email = removeAccents(imie) + "." + removeAccents(nazwisko) + "@pirsoft.com"
             pesel = pesel_array[random.randint(0, len(pesel_array)-1)]
             data_urodzenia = date_of_birth_from_pesel(pesel)
             bank_nr = bank_nr_array[random.randint(0, len(bank_nr_array)-1)]
