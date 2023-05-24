@@ -5,9 +5,7 @@ import bank_number_generator
 import employee_generator
 import start_date_generator
 import department_generator
-
-def clear_console():
-    os.system('cls')
+from helper_functions import clear_console
 
 
 def main():

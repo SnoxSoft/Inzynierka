@@ -2,10 +2,7 @@ import dane.enums as enums
 import os
 import numpy as np
 import random
-from helper_functions import removeAccents
-
-def clear_console():
-    os.system('cls')
+from helper_functions import removeAccents, check_if_wynik_folder_exists, clear_console
 
 
 def date_of_birth_from_pesel(pesel):
@@ -127,7 +124,7 @@ def generate():
                 employee_seniority_level_id=seniority_id,
                 employee_company_role_id=employee_role
             ))
-
+        check_if_wynik_folder_exists()
         f = open("wynik/employee_{}".format(employee_role_name), "w", encoding="utf-8")
         f.write('insert into pirsoft.employees(first_name, last_name, email_address, password, pesel, bank_account_number, seniority_in_months, employment_start_date,is_active, password_reset, birth_date, salary_gross, leave_base_days,leave_demand_days, leave_is_seniority_threshold, employee_contract_type_id,employee_department_id, employee_seniority_level_id, employee_company_role_id) values\n')
         counter = 0
