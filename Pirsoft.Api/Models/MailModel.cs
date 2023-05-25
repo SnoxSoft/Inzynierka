@@ -2,16 +2,16 @@
 
 public class MailModel
 {
-    public List<string> To { get; }
+    public string To { get; set;  }
     public string? From { get; }
 
     public string? DisplayName { get; }
     
     public string Subject { get; }
 
-    public string? Body { get; }
+    public string? ResetCode { get; set; }
 
-    public MailModel(List<string> to, string subject, string? body = null, string? from = null, string? displayName = null)
+    public MailModel(string to, string? resetCode = null, string? from = null, string? displayName = null)
     {
         // Receiver
         To = to;
@@ -21,7 +21,7 @@ public class MailModel
         DisplayName = displayName;
 
         // Content
-        Subject = subject;
-        Body = body;
+        Subject = "Kod do zresetowania hasła - ważny 24 godziny";
+        ResetCode = resetCode;
     }
 }

@@ -26,10 +26,25 @@ public class PasswordManagementController : Controller
     }
 
     [HttpPost("/send/password/reset")]
-    public async Task<ActionResult> SendMailAsync(MailModel mailData)
+    public async Task<ActionResult> SendMailAsync(MailModel mailData, string email)
     {
+        var generatedResetCode = _passwordService.GenerateResetCode();
+
+        var passwordToken = new PasswordResetTokenModel()
+        {
+            expiration_time = DateTime.Now.AddHours(24),
+            reset_code = Convert.ToInt32(generatedResetCode),
+            email = email,
+        };
+        
+
+        mailData.ResetCode = generatedResetCode;
+        mailData.To = passwordToken.email;
+        
+        
+        await _crudHandler.CreateAsync(passwordToken);
+        
         bool result = await _emailService.SendEmailAsync(mailData, new CancellationToken());
-        Console.WriteLine(result);
         if (result)
             return StatusCode(StatusCodes.Status200OK, "Mail has successfully been sent.");
 
@@ -45,7 +60,6 @@ public class PasswordManagementController : Controller
         var resetToken = query.First(tokens => tokens.reset_code == resetCode);
         if (resetToken != null)
         {
-            Console.WriteLine(resetToken.reset_code);
             if (resetToken.expiration_time < DateTime.Now.AddHours(-24))
                 return NotFound();
         
