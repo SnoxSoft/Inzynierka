@@ -11,7 +11,7 @@ import {
     calendarLabelTo, dayoff, demand, labelBack,
     labelFilter,
     legendLabel, months,
-    monthsOfYourWorkLabel, occasional, pageNameSchedule, sick,
+    monthsOfYourWorkLabel, occasional, optionsForDateYYYY_MM, optionsForDateYYYY_MM_DD, pageNameSchedule, sick,
     weekdays
 } from "../GlobalAppConfig";
 import Legend from "../components/legend/Legend";
@@ -24,9 +24,6 @@ function Schedule(){
     document.title = pageNameSchedule;
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     // Ładowanie listy do wybrania miesiąca
     const [monthList, setMonthList] = useState([])
@@ -34,11 +31,19 @@ function Schedule(){
     const [employee, setEmployee] = useState(null)
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         // Pobranie szczegółowych danych pracownika
         if(employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
             fetchGetEmployeeDataById(getLocalStorageKeyWithExpiry("loggedEmployee").UserId, navigate)
                 .then(employee => {
                     setFrom(
+                        dateTodayMinusThreeMonthsFormatted < dateStart ?
+                            employee.employment_start_date.toString().substring(0, 7) :
+                            dateTodayMinusThreeMonthsFormatted);
+                    setCalendarDateFrom(
                         dateTodayMinusThreeMonthsFormatted < dateStart ?
                             employee.employment_start_date.toString().substring(0, 7) :
                             dateTodayMinusThreeMonthsFormatted);
@@ -61,29 +66,21 @@ function Schedule(){
         }
     })
 
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-    }
-
-    const optionsForEndpoint = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }
-
-    const dateToday = new Date().toLocaleDateString("sv", options)
-    const dateStart = new Date().toLocaleDateString("sv", options)
+    const dateToday = new Date().toLocaleDateString("sv", optionsForDateYYYY_MM)
+    const dateStart = new Date().toLocaleDateString("sv", optionsForDateYYYY_MM)
 
     const dateTodayMinusThreeMonths = new Date()
     dateTodayMinusThreeMonths.setMonth(dateTodayMinusThreeMonths.getMonth() - 2);
-    const dateTodayMinusThreeMonthsFormatted = dateTodayMinusThreeMonths.toLocaleDateString("sv", options)
+    const dateTodayMinusThreeMonthsFormatted = dateTodayMinusThreeMonths.toLocaleDateString("sv", optionsForDateYYYY_MM)
 
     const [from, setFrom] = useState(
         dateTodayMinusThreeMonthsFormatted < dateStart ?
             dateStart :
             dateTodayMinusThreeMonthsFormatted);
     const [to, setTo] = useState(dateToday);
+
+    const [calendarDateFrom, setCalendarDateFrom] = useState(from);
+    const [calendarDateTo, setCalendarDateTo] = useState(to);
 
     async function filtrSchedule(){
         const dateFrom = new Date(from);
@@ -101,7 +98,7 @@ function Schedule(){
             localList.push(
                 {
                     text: months[ newDate.getMonth()]+" "+newDate.getFullYear(),
-                    date: newDate.toLocaleDateString("sv", options)
+                    date: newDate.toLocaleDateString("sv", optionsForDateYYYY_MM)
                 });
         }
         return localList
@@ -141,8 +138,8 @@ function Schedule(){
         const firstDayOfCurrentMonth = new Date(pickedYearCurrently, pickedMonthCurrently, 1)
         const lastDayOfCurrentMonth = new Date(pickedYearCurrently, pickedMonthCurrently+1, 0)
 
-        const firstDayOfMonthForEndpoint = firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint)
-        const lastDayOfMonthForEndpoint = lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint)
+        const firstDayOfMonthForEndpoint = firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD)
+        const lastDayOfMonthForEndpoint = lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD)
 
         // Ładowanie dni wolnych po załadowaniu okna a nie na bieżąco
         fetchGetOneEmployeeBetweenDatesDaysOff(navigate, getLocalStorageKeyWithExpiry("loggedEmployee").UserId, firstDayOfMonthForEndpoint, lastDayOfMonthForEndpoint)
@@ -168,7 +165,7 @@ function Schedule(){
 
                             for(let day = 0; day <= dayDifference; day++){
                                let dayData =  {
-                                    date: absenceDateStart.toLocaleDateString("sv", optionsForEndpoint),
+                                    date: absenceDateStart.toLocaleDateString("sv", optionsForDateYYYY_MM_DD),
                                     reason: absenceTypeForDay,
                                     name: absenceNameForDay
                                 }
@@ -391,7 +388,7 @@ function Schedule(){
                 pickedMonthTextDate.getMonth(),
                 0)
 
-            if(pickedMonthTextDateMinusOne.toLocaleDateString("sv", options) < from){
+            if(pickedMonthTextDateMinusOne.toLocaleDateString("sv", optionsForDateYYYY_MM) < from){
                 setShowingAlert(true);
                 setTimeout(() => {setShowingAlert(false)}, 3000);
             }
@@ -399,7 +396,7 @@ function Schedule(){
                 loadWholeMonthData({
                     text: months[pickedMonthTextDateMinusOne.getMonth()].toUpperCase()+" "
                         +pickedMonthTextDateMinusOne.getFullYear(),
-                    date: pickedMonthTextDateMinusOne.toLocaleDateString("sv", options)})
+                    date: pickedMonthTextDateMinusOne.toLocaleDateString("sv", optionsForDateYYYY_MM)})
             }
         }
 
@@ -417,7 +414,7 @@ function Schedule(){
                 loadWholeMonthData({
                     text: months[pickedMonthTextDatePlusOne.getMonth()].toUpperCase()+" "
                         +pickedMonthTextDatePlusOne.getFullYear(),
-                    date: pickedMonthTextDatePlusOne.toLocaleDateString("sv", options)})
+                    date: pickedMonthTextDatePlusOne.toLocaleDateString("sv", optionsForDateYYYY_MM)})
             //}
         }
     }
@@ -500,8 +497,8 @@ function Schedule(){
                                    type="month"
                                    name="month"
                                    value={from}
-                                   min={dateStart}
-                                   max={dateToday}
+                                   min={calendarDateFrom}
+                                   max={calendarDateTo}
                                    required
                                    pattern="[0-9]{4}-[0-9]{2}"
                                    onChange={(e) => {
@@ -521,8 +518,8 @@ function Schedule(){
                                    type="month"
                                    name="month"
                                    value={to}
-                                   min={dateStart}
-                                   max={dateToday}
+                                   min={calendarDateFrom}
+                                   max={calendarDateTo}
                                    required
                                    pattern="[0-9]{4}-[0-9]{2}"
                                    onChange={(e) => {

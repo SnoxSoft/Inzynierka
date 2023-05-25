@@ -81,6 +81,29 @@ const endpointGetAllContracts = "get/contracts";
 //Zwraca listę wszystkich poziomów zatrudnień
 const endpointGetAllPositionsLevels = "get/seniority/levels";
 
+// Powiadomienia
+
+// Zwraca listę powiadomień dla danego użytkownika
+const endpointGetEmployeeNotifications = "get/notifications";
+
+// Usuwanie pojedynczego wpisu powiadomienia
+const endpointDeleteNotification = "delete/notification";
+
+
+// Oceny kwartalne
+
+// Zwraca listę otrzymanych ocen dla zalogowanego użytkownika na określony rok
+
+const endpointGetReceivedGrades = "get/received/grades";
+
+const endpointGetGivenGrades = "get/given/grades";
+
+const endpointGetYears = "get/years";
+
+const endpointGetAvailableQuarters ="get/available/quartets";
+
+const endpointPostCreateGrade = "create/new/grade";
+
 export {
     endpointGetRequestsStatuses,
     endpointGetAbsencesTypes, endpointPutEditEmployee,
@@ -102,6 +125,10 @@ export {
     endpointGetAllTeams, endpointGetTeamData,
     endpointCreateTeam, endpointDeleteTeam, endpointEditTeam,
 
-    endpointGetEmployeeData, endpointPostCreateEmployee
+    endpointGetEmployeeData, endpointPostCreateEmployee,
+
+    endpointGetEmployeeNotifications, endpointDeleteNotification,
+
+    endpointGetReceivedGrades, endpointGetGivenGrades, endpointGetYears, endpointGetAvailableQuarters, endpointPostCreateGrade
 
     }

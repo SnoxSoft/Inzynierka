@@ -23,9 +23,6 @@ function Requests(){
     document.title = pageNameRequests;
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     const currentDate = new Date();
     currentDate.setDate(1);
@@ -70,6 +67,10 @@ function Requests(){
     const [employeesList, setEmployeesList] = useState(null)
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
             (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR &&
                 getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident &&

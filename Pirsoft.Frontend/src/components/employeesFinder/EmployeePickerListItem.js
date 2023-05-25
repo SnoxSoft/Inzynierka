@@ -3,7 +3,7 @@ import ReusableButton from "../base/ReusableButton";
 import {BsPersonCircle} from "react-icons/bs";
 import axios from "axios";
 
-const EmployeePickerListItem = ({employee, id}) => {
+const EmployeePickerListItem = ({employee, id, mode = "", setPickedPerson}) => {
 
     let skillList = []
 
@@ -31,6 +31,14 @@ const EmployeePickerListItem = ({employee, id}) => {
                            value={(
                                <div className={"flex flex-row justify-self-start p-2 gap-2 w-full place-content-between"}>
                                    <div className={"flex flex-row gap-2 grow items-center"}>
+                                       {mode === "grade" ?
+                                           <>
+                                           <input id={id + "-check"} type={"radio"} name={"shetty-group"} className={"w-5 h-5 hover:cursor-pointer"}
+                                                  onChange={(e) => setPickedPerson(employee)}/>
+                                           </>
+                                           :
+                                           <></>
+                                       }
                                         <div className={"grow-0"}>
                                             {avatarData !== undefined && avatarData !== "" && couldFindPicture ?
                                                 <img
@@ -52,7 +60,7 @@ const EmployeePickerListItem = ({employee, id}) => {
                                    </div>
                                </div>
                            )}
-                           link={`/employee/${employee.employee_id}`}
+                           link={mode !== "grade" ? `/employee/${employee.employee_id}`:""}
             >
         </ReusableButton>
 

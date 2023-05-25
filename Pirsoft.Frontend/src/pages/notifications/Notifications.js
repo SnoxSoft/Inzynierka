@@ -1,70 +1,74 @@
 import React, {useEffect, useState} from "react";
-import {labelNotifications, pageNameNotifications, serverIp} from "../../GlobalAppConfig";
+import {
+    accountHR,
+    accountPresident,
+    accountTeamLeader,
+    labelNotifications,
+    pageNameNotifications,
+    serverIp
+} from "../../GlobalAppConfig";
 import NotificationItem from "./NotificationItem";
-import {endpointGetNotifications} from "../../EndpointAppConfig";
+import {fetchGetEmployeeNotifications} from "../../DataFetcher";
+import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
+import {useNavigate} from "react-router-dom";
 
-const Notifications = (props) => {
+const Notifications = () => {
     document.title = pageNameNotifications;
 
-    const [employeeNotifications, setEmployeeNotifications] = useState(Array);
-    const fetchingEmployeeNotifications = () => {
-        fetch(serverIp + "/getNotifications/" + sessionStorage.getItem("USER"))
-            .then((response) => {response.json()
-                .then((response) => {
-                    setEmployeeNotifications(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-        //reloading notifications endpoint
+    const navigate = useNavigate();
+    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+        navigate("/");
     }
+
+    const [employeeNotifications, setEmployeeNotifications] = useState(null);
     const [notificationsList, setNotificationsList] = useState([]);
 
-    if (employeeNotifications[0] === undefined) {
-        fetchingEmployeeNotifications()
-    }
-
     function reloadNotifications(){
-        let notificationsListLoad = [];
-        let notificationItemId = 0;
-        for (const i of employeeNotifications) {
-            notificationsListLoad.push(
-                <>
-                    <NotificationItem id={"notifications-list-item-" + notificationItemId} employeeNotification={i}
-                                      employeeNotifications={employeeNotifications}
-                                      setEmployeeNotifications={setEmployeeNotifications} />
-                    <hr />
-                </>
-            );
-            notificationItemId++;
+        setNotificationsList([]);
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
+            fetchGetEmployeeNotifications(getLocalStorageKeyWithExpiry("loggedEmployee").UserId)
+                .then(employeeNotifications => {
+                    let notificationsListLoad = [];
+                    if (employeeNotifications !== undefined) {
+                        employeeNotifications.map((employeeNotification, employeeNotificationId) => {
+                            notificationsListLoad.push(
+                                <>
+                                    <NotificationItem id={"notifications-list-item-" + employeeNotificationId} employeeNotification={employeeNotification}
+                                                      employeeNotifications={employeeNotifications}
+                                                      setEmployeeNotifications={setEmployeeNotifications} />
+                                    <hr />
+                                </>
+                            );
+                        });
+                    }
+                    setNotificationsList(notificationsListLoad);
+                });
         }
-        setNotificationsList(notificationsListLoad);
-    }
-
-    if (employeeNotifications[0] !== undefined && notificationsList.length === 0) {
-        reloadNotifications();
     }
 
     useEffect(() => {
-        reloadNotifications()
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
+        if (employeeNotifications === null) {
+            reloadNotifications()
+        }
+    },[])
+
+
+    useEffect(() => {
+        if(employeeNotifications !== null && employeeNotifications !== undefined)
+            reloadNotifications()
     }, [employeeNotifications])
 
     return <>
         <div className={"every-page-on-scroll bg-blue-menu rounded-xl flex flex-col"}
-             style={{minWidth: 800}}// style={{minHeight:300, maxHeight: 800, height: 800}}
-        >
+             style={{minWidth: 800}}>
                 <div className={"row-start-1 place-self-center text-workday font-bold p-4"}>
                     {labelNotifications}
                 </div>
-                {/*<div className={"flex flex-row row-start-1 p-2"}>*/}
-                {/*    <ReusableButton value={<CgClose  size={30}/>}*/}
-                {/*                    onClick={props.onClose} formatting={""} color={""}/>*/}
-                {/*</div>*/}
-
             <div id={"notifications-list"} className={"flex flex-col col-start-1 col-span-2 gap-2 p-2"}>
-
-            {/*max-h-full overflow-y-auto"}>*/}
                 {notificationsList}
             </div>
         </div>

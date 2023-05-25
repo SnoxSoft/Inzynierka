@@ -66,7 +66,7 @@ import {
     accountEmployee,
     accountAccountant,
     accountManagement,
-    questionDoEndRequest, questionDoDeleteRequest, questionDoDeleteEmployee
+    questionDoEndRequest, questionDoDeleteRequest, questionDoDeleteEmployee, peselRegex
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -344,7 +344,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </p>
             )
         }
-        if(pesel.toString().trim().length !== 11 || Number(pesel) < 0){
+        if(pesel.toString().trim().length !== 11 || Number(pesel) < 0 || !peselRegex.test(pesel)){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongPESEL}

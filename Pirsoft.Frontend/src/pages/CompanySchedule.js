@@ -3,7 +3,15 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import ReusableButton from "../components/base/ReusableButton";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
-import {legendLabel, legendToday, months, pageNameCompanySchedule, serverIp, weekdays} from "../GlobalAppConfig";
+import {
+    legendLabel,
+    legendToday,
+    months, optionsForDateYYYY_MM,
+    optionsForDateYYYY_MM_DD,
+    pageNameCompanySchedule,
+    serverIp,
+    weekdays
+} from "../GlobalAppConfig";
 import {Popup} from "semantic-ui-react";
 import Legend from "../components/legend/Legend";
 import {
@@ -18,20 +26,6 @@ function CompanySchedule(){
     document.title = pageNameCompanySchedule;
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
-
-    const optionsForFormatDate = {
-        year: "numeric",
-        month: "2-digit",
-    }
-
-    const optionsForEndpoint = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }
 
     // Zmienna pozwalająca wyświetlić cały komponent kalendarza
     const [allTeamsAreLoadedInDivs, setAllTeamsAreLoadedInDivs] = useState(false)
@@ -41,6 +35,10 @@ function CompanySchedule(){
     const [employees, setEmployees] = useState(null);
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         // Załadowanie wszystkich zespołów
         if(teams === null) {
             fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, false)
@@ -63,8 +61,8 @@ function CompanySchedule(){
             lastDayOfCurrentMonth.setDate(0)
 
             fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
-                firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint),
-                lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint))
+                firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD),
+                lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
                 .then(companyMonthDaysOff => {
                     createDataForCalendar(new Date(), companyMonthDaysOff)
                 })
@@ -85,7 +83,7 @@ function CompanySchedule(){
 
                     let daysForCurrentEmployee = []
                     for(let day = 0; day <= dayDifference; day++){
-                        daysForCurrentEmployee.push(absenceDateStart.toLocaleDateString("sv", optionsForEndpoint))
+                        daysForCurrentEmployee.push(absenceDateStart.toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
                         absenceDateStart.setDate(absenceDateStart.getDate() + 1)
                     }
                     preparedMonthDaysOff.push({
@@ -136,7 +134,7 @@ function CompanySchedule(){
         const days = loadWholeMonthData({
             text: months[today.getMonth()]+" "
                 +today.getFullYear(),
-            date: today.toLocaleDateString("sv", optionsForFormatDate)})
+            date: today.toLocaleDateString("sv", optionsForDateYYYY_MM)})
 
         let allTeamsLoad = []
 
@@ -213,8 +211,8 @@ function CompanySchedule(){
                 0)
 
             fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
-                firstDayOfPreviousMonth.toLocaleDateString("sv", optionsForEndpoint),
-                lastDayOfPreviousMonth.toLocaleDateString("sv", optionsForEndpoint))
+                firstDayOfPreviousMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD),
+                lastDayOfPreviousMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
                 .then(companyMonthDaysOff => {
                     createDataForCalendar(firstDayOfPreviousMonth, companyMonthDaysOff)
                 })
@@ -234,8 +232,8 @@ function CompanySchedule(){
             lastDayOfNextMonth.setDate(0)
 
             fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
-                firstDayOfNextMonth.toLocaleDateString("sv", optionsForEndpoint),
-                lastDayOfNextMonth.toLocaleDateString("sv", optionsForEndpoint))
+                firstDayOfNextMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD),
+                lastDayOfNextMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
                 .then(companyMonthDaysOff => {
                     createDataForCalendar(firstDayOfNextMonth, companyMonthDaysOff)
                 })
@@ -265,8 +263,8 @@ function CompanySchedule(){
                                     lastDayOfCurrentMonth.setMonth(firstDayOfCurrentMonth.getMonth() + 1)
                                     lastDayOfCurrentMonth.setDate(0)
                                     fetchGetAllEmployeesBetweenDatesDaysOff(navigate,
-                                        firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint),
-                                        lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForEndpoint))
+                                        firstDayOfCurrentMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD),
+                                        lastDayOfCurrentMonth.toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
                                     .then(companyMonthDaysOff => {
                                         createDataForCalendar(new Date(), companyMonthDaysOff)
                                     })}}/>

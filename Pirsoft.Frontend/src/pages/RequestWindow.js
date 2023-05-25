@@ -51,9 +51,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     // Lista rodzai urlopów
     const [absencesList, setAbsencesList] = useState(null)
@@ -71,6 +68,10 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     const [hideApproversListOnHierearchy, setHideApproversListOnHierearchy] = useState(true);
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         // Załadowanie danych pracownika, dla którego wystawiamy wniosek
         if (employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
             setEmployee(null);
