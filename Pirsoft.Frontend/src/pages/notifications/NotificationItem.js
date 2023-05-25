@@ -4,6 +4,7 @@ import {AiTwotoneDelete} from "react-icons/ai";
 import {serverIp} from "../../GlobalAppConfig";
 import {endpointDeleteNotification, endpointGetNotifications} from "../../EndpointAppConfig";
 import {useNavigate} from "react-router-dom";
+import {fetchDeleteNotification} from "../../DataFetcher";
 
 const NotificationItem = ({id, employeeNotification, employeeNotifications, setEmployeeNotifications}) => {
     const navigate = useNavigate()
@@ -18,11 +19,8 @@ const NotificationItem = ({id, employeeNotification, employeeNotifications, setE
 
     // Endpoint do usuwania wposu powiadomienia
     function deleteNotification(id){
-        // Wysyłanie informacji na backend o odznaczeniu endpointa
-        fetch(serverIp + "/deleteNotification/" + id)
-            .catch((err) => {
-                console.log(err.message);
-            })
+        fetchDeleteNotification(id).then(r => {
+        })
 
         let employeeNotificationsCopy = [];
         employeeNotifications.forEach((n) => {
@@ -35,15 +33,10 @@ const NotificationItem = ({id, employeeNotification, employeeNotifications, setE
         if(employeeNotificationsCopy.length === 0){
             navigate("/");
         }
-
-        // Bez przeładowania całej listy, po prostu zniknie opcja z listy załadowanej a w tle wyśle się usunięcie
     }
 
     return (
-        <div id={id} className={"text-start items-center rounded-md flex hover:cursor-default hover:bg-dayoffmonth"}
-             // bg-brown-menu border-2 hover:border-workday hover:cursor-pointer"}
-             // onMouseOver={showOptions} onMouseLeave={hideOptions}
-        >
+        <div id={id} className={"text-start items-center rounded-md flex hover:cursor-default hover:border-2 hover:border-workday"}>
             <div className={"p-2 flex rounded-md basis-11/12 text-workday"}>
                 {employeeNotification.notification_name}
             </div>
@@ -52,7 +45,7 @@ const NotificationItem = ({id, employeeNotification, employeeNotifications, setE
                     <ReusableButton
                         id={id + "-delete"}
                         value={<AiTwotoneDelete />}
-                        onClick={() => deleteNotification(employeeNotification.id)}
+                        onClick={() => deleteNotification(employeeNotification.notification_id)}
                         formatting={"border-2 border-b-workday min-w-min w-8 h-8"}/>
                 )
                 }

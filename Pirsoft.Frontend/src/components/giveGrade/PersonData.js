@@ -3,7 +3,7 @@ import {MdOpenInNew} from "react-icons/md";
 import React from "react";
 import {gradePersonLabel} from "../../GlobalAppConfig";
 
-const PersonData = ({id, onChange, value, find = false, setPersonId, setHideFinder}) => {
+const PersonData = ({id, onChange, value, find = false, setHideFinder}) => {
 
         return (
         <div className={"flex flex-col gap-2"}>

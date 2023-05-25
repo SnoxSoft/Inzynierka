@@ -6,12 +6,19 @@ const serverIpProd = "https://localhost:7120";
 
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
+const peselRegex = /^(?:(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1-2][0-9]|3[0-1]))|(?:[0-9]{2}(?:0[13-9]|1[0-2])(?:0[1-9]|[1-2][0-9]|30))|(?:[0-9]{2}02(?:0[1-9]|1[0-9]|2[0-8]))|(?:[0-9]{2}(?:02)(?:29)))(?:[0-9]{5})$/;
+
 const passwordRegex = /^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$/;
 
 const optionsForDateYYYY_MM_DD = {
     year: "numeric",
     month: "2-digit",
     day: "2-digit"
+}
+
+const optionsForDateYYYY_MM = {
+    year: "numeric",
+    month: "2-digit"
 }
 
 // Nazwa aplikacji
@@ -92,8 +99,6 @@ const positionAdditionalRow = "Wybierz stanowisko...";
 const positionLevelAdditionalRow = "Wybierz poziom stanowiska...";
 const absencesAdditionalRow = "Wybierz powód wniosku...";
 const contractAdditionalRow = "Wybierz rodzaj umowy...";
-
-const yearAdditionalRow = "Wybierz rok...";
 
 // Wybieranie wniosku urlopowego komponenty
 const labelRequestType = "Rodzaj";
@@ -265,6 +270,18 @@ const questionDoDeleteEmployee = "Czy na pewno usunąć konto pracownika?";
 
 const questionDoEndRequest = "Czy zakończyć aktywny urlop z końcem dnia?";
 
+// Błędy przy tworzeniu oceny kwartalnej
+
+const alertPickAPerson = "Należy wybrać osobę, której dotyczy ocena kwartalna";
+
+const alertQuarter = "Należy wybrać kwartał";
+
+const alertTitle = "Należy wpisać tytuł";
+
+const alertMessage = "Należy wpisać wiadomość";
+
+const alertRating = "Należy wybrać ocenę kwartalną";
+
 // Odpowiedzi operacji
 const alertSaved = "Zapisano";
 const alertDeleted = "Usunięto";
@@ -297,7 +314,7 @@ const accountAccountant = "Księgowość";
 const accountPresident = "Prezes";
 const accountManagement = "Zarząd";
 
-export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
+export {serverIp, serverIpProd, appName, emailRegex, peselRegex, passwordRegex,
 
     avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
@@ -323,7 +340,7 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     calendarLabelFrom, calendarLabelTo,
     labelRequest, labelShowProfile, alertCantGoFurther, labelEndRequest,
     labelFromTimeOfAbsence, labelFromTimeOfRequest, labelDaysTaken,
-    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow, absencesAdditionalRow,
+    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, absencesAdditionalRow,
     employeesMenu,
     employeeRegisterMenu,
     scheduleMenu,
@@ -378,5 +395,7 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     labelCreateTeam, labelSkillFinder,
     absent, sick, dayoff, demand, occasional,
 
-    optionsForDateYYYY_MM_DD
+    optionsForDateYYYY_MM_DD, optionsForDateYYYY_MM,
+
+    alertPickAPerson, alertQuarter ,alertTitle, alertMessage, alertRating
 };

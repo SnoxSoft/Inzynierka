@@ -32,7 +32,15 @@ import {
     endpointCreateTeam,
     endpointDeleteTeam,
     endpointEditTeam,
-    endpointPutEditAbsence, endpointDeleteAbsence
+    endpointPutEditAbsence,
+    endpointDeleteAbsence,
+    endpointGetEmployeeNotifications,
+    endpointDeleteNotification,
+    endpointGetYears,
+    endpointGetReceivedGrades,
+    endpointGetGivenGrades,
+    endpointGetAvailableQuartets,
+    endpointGetAvailableQuarters, endpointPostCreateGrade
 } from "./EndpointAppConfig";
 import React from "react";
 import FunctionForSortingJson from "./components/base/FunctionForSortingJson";
@@ -346,6 +354,92 @@ async function fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateT
     }
 }
 
+async function fetchGetEmployeeNotifications(id) {
+    try {
+        const response = await axios.get(`${serverIp}/${endpointGetEmployeeNotifications}/${id}`)
+        if (response && response.status === 200) {
+            const newData = await response.data;
+            newData.sort(FunctionForSortingJson("absence_start_date", "descending"))
+            return newData;
+        } else {
+            return []
+        }
+    } catch (error) {
+        console.error(error);
+        return []
+    }
+}
+
+async function fetchDeleteNotification(id) {
+    try {
+        return await axios.delete(`${serverIp}/${endpointDeleteNotification}/${id}`, {
+            headers: headers
+        })
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function fetchGetYears(id) {
+    try {
+        const response = await axios.get(`${serverIp}/${endpointGetYears}/${id}`)
+        if (response && response.status === 200) {
+            return await response.data;
+        } else {
+            return []
+        }
+    } catch (error) {
+        console.error(error);
+        return []
+    }
+}
+
+async function fetchGetReceivedGrades(id, year) {
+    try {
+        const response = await axios.get(`${serverIp}/${endpointGetReceivedGrades}/${id}/${year}`)
+        if (response && response.status === 200) {
+            return await response.data;
+        } else {
+            return []
+        }
+    } catch (error) {
+        console.error(error);
+        return []
+    }
+}
+
+async function fetchGetGivenGrades(id, year) {
+    try {
+        const response = await axios.get(`${serverIp}/${endpointGetGivenGrades}/${id}/${year}`)
+        if (response && response.status === 200) {
+            return await response.data;
+        } else {
+            return []
+        }
+    } catch (error) {
+        console.error(error);
+        return []
+    }
+}
+
+async function fetchGetAvailableQuarters(id, year) {
+    try {
+        const response = await axios.get(`${serverIp}/${endpointGetAvailableQuarters}/${id}`)
+        if (response && response.status === 200) {
+            return await response.data;
+        } else {
+            return []
+        }
+    } catch (error) {
+        console.error(error);
+        return []
+    }
+}
+
+async function fetchPostCreateGrade(params) {
+    return await axios.post(`${serverIp}/${endpointPostCreateGrade}?${params}`)
+}
+
 async function fetchLoginEmployee(navigate, email, password){
     try {
         const response = await fetch(serverIpProd + "/" + endpointGetLogIn + "?email=" + email + "&password=" + password,
@@ -395,4 +489,8 @@ export {
     fetchGetAllEmployeesBetweenDatesDaysOff,
 
     fetchLoginEmployee,
+
+    fetchGetEmployeeNotifications, fetchDeleteNotification,
+
+    fetchGetYears, fetchGetReceivedGrades, fetchGetGivenGrades, fetchGetAvailableQuarters, fetchPostCreateGrade
 }

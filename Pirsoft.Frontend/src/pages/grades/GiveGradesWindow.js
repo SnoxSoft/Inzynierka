@@ -1,10 +1,12 @@
 import {
+    alertMessage, alertPickAPerson, alertQuarter, alertRating, alertTitle,
     gradeMenu,
     labelApprove,
     labelClose,
-    labelDisapprove, pageNameGiveGradesWindowGive,
-    pageNameGiveGradesWindowView, quarters,
-    serverIp
+    labelDisapprove,
+    pageNameGiveGradesWindowGive,
+    pageNameGiveGradesWindowView,
+    quarters
 } from "../../GlobalAppConfig";
 import ReusableButton from "../../components/base/ReusableButton";
 import {CgClose} from "react-icons/cg";
@@ -13,10 +15,16 @@ import YearQuarters from "../../components/giveGrade/YearQuarters";
 import GradeTitle from "../../components/giveGrade/GradeTitle";
 import GradeMessage from "../../components/giveGrade/GradeMessage";
 import GradeRating from "../../components/grades/GradeRating";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import EmployeeSkillFinder from "../EmployeeSkillFinder";
+import {fetchGetAvailableQuarters} from "../../DataFetcher";
+import {useNavigate} from "react-router-dom";
+import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
+import {Popup} from "semantic-ui-react";
 
 function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
+
+    const navigate = useNavigate();
 
     const [title, setTitle] = useState("")
     if(title === ""){
@@ -30,9 +38,15 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
 
     document.title = title
 
-    const[pickedPersonId, setPickedPersonId] = useState("")
-    const[pickedPersonName, setPickedPersonName] = useState("")
-    const[pickedQuartet, setPickedQuartet] = useState("")
+    useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
+    }, []);
+
+    const[pickedPerson, setPickedPerson] = useState(null)
+    const[pickedQuarter, setPickedQuarter] = useState("")
     const[gradeTitle, setGradeTitle] = useState("")
     const[gradeMessage, setGradeMessage] = useState("")
     const[gradeRating, setGradeRating] = useState("")
@@ -41,36 +55,102 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
 
     async function loadAvailableQuartets(){
         let availableQuartetsLoad = []
-        if(pickedPersonId !== ""){
-            const response = await fetch(serverIp + "/getAvailableQuartets/" + pickedPersonId)
-            const quarters = await response.json();
-             quarters.forEach((q) => {
-                 availableQuartetsLoad.push(q.quarter_name)
-             })
+        if(pickedPerson !== null){
+            fetchGetAvailableQuarters(pickedPerson.employee_id)
+                .then((quarters) => {
+                    if(quarters !== undefined){
+                        quarters.map((quarter) => {
+                            availableQuartetsLoad.push(quarter.quarter_name)
+                        })
+                    }
+                })
         }
 
-        if(pickedPersonId !== ""){
+        if(pickedPerson !== null){
             setAvailableQuartets(availableQuartetsLoad)
         }
         else {
             setAvailableQuartets(quarters)
         }
-
     }
 
     useEffect(() => {
         loadAvailableQuartets()
-    }, [pickedPersonId])
+    }, [pickedPerson])
 
     function closeGradeWindow(){
         setGradesVisible(true);
     }
 
-    function giveGrade(){
-        if(pickedPersonId !== ""){
-            setGradesVisible(true);
+    const [showPopupWithProblems, setShowPopupWithProblems] = useState(false);
+    const [alerts, setAlerts] = useState(<></>)
 
-            // Podpiąć wysłanie danych na endpoint
+    const buildPopup = () => {
+        return showPopupWithProblems ?
+            <div className={"flex flex-col items-center text-workday gap-2 p-2"}>
+                {alerts}
+            </div>:
+            <></>
+    }
+
+    function giveGrade(){
+        setShowPopupWithProblems(false)
+        if (pickedPerson === null) {
+            setAlerts(<p className={"bg-red-700 rounded-md font-bold"}>
+                {alertPickAPerson}
+            </p>)
+            setShowPopupWithProblems(true)
+        }
+        if(pickedPerson !== null) {
+            const params = new URLSearchParams();
+            params.set("quarter", pickedQuarter);
+            params.set("title", gradeTitle);
+            params.set("message", gradeMessage);
+            params.set("rating", gradeRating);
+            params.set("gradeOwner", pickedPerson.employee_id);
+            params.set("gradeCreator", getLocalStorageKeyWithExpiry("loggedEmployee").UserId);
+
+            setShowPopupWithProblems(false)
+            // Sprawdzenie błędów
+            setAlerts(<></>)
+            let alerts = []
+
+            if (pickedPerson === null) {
+                alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertPickAPerson}
+                </p>)
+            }
+            if (pickedQuarter === "") {
+                alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertQuarter}
+                </p>)
+            }
+            if (gradeTitle === "") {
+                alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertTitle}
+                </p>)
+            }
+            if (gradeMessage === "") {
+                alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertMessage}
+                </p>)
+            }
+            if (gradeRating === "") {
+                alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertRating}
+                </p>)
+            }
+
+            setAlerts(alerts)
+            if (alerts.length > 0) {
+                setShowPopupWithProblems(true)
+            } else {
+                // Podpiąć wysłanie danych na endpoint
+                // fetchPostCreateGrade(params).then(r => {
+                //     setGradesVisible(true);
+                // }).catch(e => {
+                //     })
+            }
         }
     }
 
@@ -96,13 +176,11 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
             </div>
 
             <PersonData id={"give-grade-person"} find={mode === "create"}
-                        value={pickedGradeData ? pickedGradeData.grade_creator_name : pickedPersonName}
-                        onChange={setPickedPersonName}
-                        setHideFinder={setHideFinder}
-                        setPersonId={setPickedPersonId}/>
+                        value={pickedGradeData ? pickedGradeData.grade_creator_name : pickedPerson !== null ? pickedPerson.first_name + " " + pickedPerson.last_name : ""}
+                        setHideFinder={setHideFinder}/>
             <YearQuarters id={"give-grade-quarters"} createMode={mode === "create"}
-                          value={pickedGradeData ? pickedGradeData.quarter_name : pickedQuartet}
-                          onChange={setPickedQuartet}
+                          value={pickedGradeData ? pickedGradeData.quarter_name : pickedQuarter}
+                          onChange={setPickedQuarter}
                           availableQuartets={availableQuartets}/>
             <GradeTitle id={"give-grade-title"} enable={mode === "create"}
                         value={pickedGradeData ? pickedGradeData.grade_title : gradeTitle}
@@ -125,9 +203,12 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
                             <ReusableButton
                                 id={"give-grade-disapprove"}
                                 value={labelDisapprove} onClick={() => closeGradeWindow()}/>
-                            <ReusableButton
-                                id={"give-grade-approve"}
-                                value={labelApprove} onClick={() => giveGrade()}/>
+                            <Popup
+                                content={buildPopup}
+                                position={"top center"}
+                                trigger={<ReusableButton id={"give-grade-approve"}
+                                                         value={labelApprove} onClick={() => giveGrade()}/>}
+                            />
                         </> :
                             <ReusableButton
                                 id={"give-grade-close"}
@@ -135,13 +216,10 @@ function GiveGradesWindow({setGradesVisible, mode = "view", pickedGradeData}){
                 }
             </div>
         </div> :
-                <EmployeeSkillFinder title={title}
-                                     setTitle={setTitle}
-                                     setEmployeesFinderShowing={setHideFinder}
-                                     setPickedPersonId={setPickedPersonId}
-                                     setPickedPersonName={setPickedPersonName}
-                                     methodToUse={"grade"}
-
+                <EmployeeSkillFinder
+                                     setHideFinder={setHideFinder}
+                                     setPickedPerson={setPickedPerson}
+                                     mode={"grade"}
                 />
             }
         </>

@@ -7,7 +7,7 @@ import EmployeePickerListItem from "../components/employeesFinder/EmployeePicker
 import FunctionForResize from "../components/base/FunctionForResize";
 import {
     headerEmployeesFinder, headerEmployeesFinderEmployeeList,
-    headerEmployeesFinderList, headerEmployeesFinderSkillsList,
+    headerEmployeesFinderList, headerEmployeesFinderSkillsList, labelApprove,
     labelClose,
     labelFind, labelFirstNameAndLastName, labelSkillPicked, pageNameSkillsFinder
 } from "../GlobalAppConfig";
@@ -17,14 +17,17 @@ import {fetchGetAllEmployees, fetchGetAllSkillsAndSort} from "../DataFetcher";
 import {getLocalStorageKeyWithExpiry} from "../components/jwt/LocalStorage";
 import FirstnameAndLastname from "../components/employees/search/fields/FirstnameAndLastname";
 
-const EmployeeSkillFinder = ({}) => {
+const EmployeeSkillFinder = ({mode = "", setHideFinder, setPickedPerson}) => {
 
     document.title = pageNameSkillsFinder;
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
+
+    useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+    },[])
 
     // Opcje do filtrowania
     const [skillsPicked, setSkillsPicked] = useState([])
@@ -32,9 +35,6 @@ const EmployeeSkillFinder = ({}) => {
     const [firstnameAndLastname, setFirstnameAndLastname] = useState();
 
     const [skillsNotShows, setSkillsNotShows] = useState(true)
-
-    const [skillsComponent, setSkillsComponent] = useState(<></>)
-    const [skillsLoaded, setSkillsLoaded] = useState(false)
 
     const [employeePickerData, setEmployeePickerData] = useState(null)
     function loadAllEmployeesByFilter(){
@@ -61,14 +61,14 @@ const EmployeeSkillFinder = ({}) => {
 
                             if (hasAllPickedSkills) {
                                 filteredEmployeeList.push(
-                                    <EmployeePickerListItem key={"finder-list-item-" + employeeId} employee={employee} />
+                                    <EmployeePickerListItem key={"finder-list-item-" + employeeId} employee={employee} setPickedPerson={setPickedPerson} />
                                 );
                             }
                         }
                         else {
                             console.log("nie wybralam nic")
                             filteredEmployeeList.push(
-                                <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee}/>
+                                <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee} setPickedPerson={setPickedPerson}/>
                             )
                         }
                     }
@@ -89,13 +89,15 @@ const EmployeeSkillFinder = ({}) => {
 
                         if (hasAllPickedSkills) {
                             filteredEmployeeList.push(
-                                <EmployeePickerListItem key={"finder-list-item-" + employeeId} employee={employee} />
+                                <EmployeePickerListItem key={"finder-list-item-" + employeeId}
+                                    employee={employee} mode={mode} setPickedPerson={setPickedPerson}/>
                             );
                         }
                     }
                     else {
                         filteredEmployeeList.push(
-                            <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee}/>
+                            <EmployeePickerListItem id={"finder-list-item-" + employeeId}
+                                    employee={employee} mode={mode} setPickedPerson={setPickedPerson}/>
                         )
                     }
                 }
@@ -143,15 +145,21 @@ const EmployeeSkillFinder = ({}) => {
                                                           onChange={setFirstnameAndLastname}
                                     value={firstnameAndLastname}/>
                                 </div>
+                                {mode !== "grade" ?
+                                    <>
                                     <SkillsPicker id={"finder-skill-picker"}
                                                   loadAllSkills={loadAllSkills}
                                                   setSkills={setSkillsPicked}
                                                   setSkillsNotShows={setSkillsNotShows}/>
-                                <div className={"flex flex-row gap-2"}>
-                                    <div>{labelSkillPicked}</div>
-                                    <SkillsList id={"finder-skill-list"}
-                                                skillList={skillsPicked}/>
-                                </div>
+                                    <div className={"flex flex-row gap-2"}>
+                                        <div>{labelSkillPicked}</div>
+                                        <SkillsList id={"finder-skill-list"}
+                                                    skillList={skillsPicked}/>
+                                    </div>
+                                    </>
+                                    :
+                                    <></>
+                                }
 
                             </div>
 
@@ -175,8 +183,24 @@ const EmployeeSkillFinder = ({}) => {
                         <ReusableButton
                             id={"finder-close"}
                             value={labelClose} onClick={() => {
-                            navigate(-1)
+                                if(mode === "grade"){
+                                    setHideFinder(false)
+                                }
+                                else {
+                                    navigate(-1)
+                                }
                         }}/>
+                        {mode === "grade" ?
+                            <ReusableButton
+                                id={"finder-approve"}
+                                value={labelApprove} onClick={() => {
+                                if(mode === "grade"){
+                                    setHideFinder(false)
+                                }
+                            }}/>
+                            :
+                            <></>
+                        }
                     </div>
                 </div> :
                 <SkillPicker parent={"finder"}

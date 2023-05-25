@@ -28,9 +28,6 @@ const TeamWindow = ({id, mode, title}) => {
     document.title = dynamicTitle
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     // Ładowanie danych
     const [teamData, setTeamData] = useState(null);
@@ -41,6 +38,10 @@ const TeamWindow = ({id, mode, title}) => {
     const [employeeSkillDataLoad, setEmployeeSkillDataLoad] = useState(false)
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && ((mode === "edit" || mode === "create") &&
                 (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident))){
                 navigate("/teams");

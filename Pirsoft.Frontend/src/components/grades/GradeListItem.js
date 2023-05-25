@@ -3,21 +3,9 @@ import GradeRating from "./GradeRating";
 import {employeeGradedText, employeeGradeText} from "../../GlobalAppConfig";
 
 const GradeListItem = ({id, grade, setGradeMode, setPickedGradeData, setGradesVisible, mode}) => {
-    const[showHideButtons, setShowHideButtons] = useState(false);
-
-    const showOptions = () => {
-        setShowHideButtons(true);
-
-    }
-    const hideOptions = () => {
-        setShowHideButtons(false);
-    }
 
     return <li id={id} className={"flex flex-row m-2 p-2 gap-2 hover:bg-dayoffmonth hover:cursor-pointer hover:bg-opacity-80 rounded-md bg-brown-menu border-b-workday border-2"}
-            onMouseOver={showOptions} onMouseLeave={hideOptions} onClick={() => {
-                                            setPickedGradeData(grade);
-                                            setGradeMode("view");
-                                            setGradesVisible(false);}}>
+            onClick={() => {setPickedGradeData(grade);setGradeMode("view");setGradesVisible(false);}}>
                 <div>{grade.quarter_name}</div>
                 <div className={"flex flex-col"}>
                     <div className={"place-self-start"}>

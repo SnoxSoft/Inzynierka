@@ -26,9 +26,6 @@ function Employees(){
     document.title = pageNameEmployees;
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     // Wybrane wartości w filtrze
     const[firstnameAndLastnameNormal, setFirstnameAndLastnameNormal] = useState('');
@@ -44,6 +41,10 @@ function Employees(){
     const [employeesList, setEmployeesList] = useState();
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         // Załadowanie wszystkich zespołów do filtra
         if(teamsList === null) {
             setTeamsList(null);
