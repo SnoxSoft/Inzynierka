@@ -2,7 +2,7 @@
 
 public class PasswordService : IPasswordService
 {
-    private const int ResetCodeLength = 48;
+    private const int ResetCodeLength = 8;
 
     public string GenerateResetCode()
     {
