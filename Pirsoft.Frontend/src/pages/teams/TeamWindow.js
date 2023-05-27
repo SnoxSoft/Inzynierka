@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
 import {
-    accountHR, accountPresident, alertEmployeesStillInTeam, alertNoTeamName, alertProblemOccured,
+    accountHR, accountPresident, accountTeamLeader, alertEmployeesStillInTeam, alertNoTeamName, alertProblemOccured,
     labelClose,
     labelCreate, labelDelete, labelDisapprove,
     labelSave,
@@ -68,9 +68,9 @@ const TeamWindow = ({id, mode, title}) => {
                         let leaderListData = []
                         employeesList.map((employee) => {
                             if (employee.employee_department_id.toString() === id) {
-                                if (employee.employee_company_role_id.toString() !== "3") {
+                                if (employee.employee_company_role.role_name !== accountTeamLeader) {
                                     employeesListData.push(employee)
-                                } else if (employee.employee_company_role_id.toString() === "3") {
+                                } else if (employee.employee_company_role.role_name === accountTeamLeader) {
                                     leaderListData.push(employee)
                                 }
                             }
