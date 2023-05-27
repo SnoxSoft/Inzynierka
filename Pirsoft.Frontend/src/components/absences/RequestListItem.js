@@ -51,7 +51,6 @@ const RequestListItem = ({employeeAbsence, old = false,
         query.set("absenceStatusId", 3);
         query.set("endDateTime", new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
 
-        console.log(query)
         fetchPutEditAbsence(employeeAbsence.absence_id, query)
             .then(r => {
                 filtrRequests()
