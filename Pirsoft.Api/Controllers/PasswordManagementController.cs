@@ -52,9 +52,9 @@ public class PasswordManagementController : Controller
             if (passwordFirst != passwordSecond)
                 return BadRequest("New passwords do not match");
         
-            var currentUser = await _employeeCrudHandler.ReadEmployeeByIdAsync(resetToken.token_employee_id);
+            var currentUser = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.token_employee_id);
             currentUser.password = passwordFirst;
-            await _crudHandler.UpdateAsync<EmployeeModel>(currentUser);
+            await _crudHandler.UpdateAsync(currentUser);
         
             return Ok();
         }
@@ -65,7 +65,7 @@ public class PasswordManagementController : Controller
     //[Authorize(Roles = "Admin, Manager, Employee")]
     public async Task<ActionResult> ChangePasswordFromProfileView(string oldPassword, string newPasswordOnce, string newPasswordTwice, int employeeId)
     {
-        var currentUser = await _employeeCrudHandler.ReadEmployeeByIdAsync(employeeId); 
+        var currentUser = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
 
         if (currentUser.password != oldPassword)
             return BadRequest("Old password is incorrect");
@@ -74,7 +74,7 @@ public class PasswordManagementController : Controller
             return BadRequest("New passwords do not match");
         
         currentUser.password = newPasswordOnce;
-        await _crudHandler.UpdateAsync<EmployeeModel>(currentUser);
+        await _crudHandler.UpdateAsync(currentUser);
 
         return Ok();
     }
