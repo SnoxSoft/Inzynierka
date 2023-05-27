@@ -4,6 +4,7 @@ import Calendar from "../components/base/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {CgClose} from "react-icons/cg";
 import {
+    absent,
     accountHR,
     accountManagement,
     accountPresident,
@@ -26,7 +27,7 @@ import {
     labelRequestType,
     optionsForDateYYYY_MM_DD,
     pageNameAddEmployeeAnAbsence,
-    pageNameApprovalOrRejectionRequest
+    pageNameApprovalOrRejectionRequest, sick
 } from "../GlobalAppConfig";
 import {
     fetchGetAbsencesTypes, fetchGetAllEmployees,
@@ -103,9 +104,9 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                             if (requestData.type === absence.absence_type_name) {
                                 setAbsence(absence.absence_type_name)
                             }
-                            if(demandDays === 0 && absence.absence_type_category !== "demand" || demandDays > 0){
-                                if((employee.employee_company_role_id !== 2 && absence.absence_type_category !== "absent" && absence.absence_type_category !== "sick") ||
-                                    employee.employee_company_role_id === 2){
+                            if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && demandDays === 0 && absence.absence_type_category !== demand || demandDays > 0){
+                                if((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && absence.absence_type_category !== absent && absence.absence_type_category !== sick) ||
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR){
                                     loadAbsencesList.push(absence)
                                }
                             }
