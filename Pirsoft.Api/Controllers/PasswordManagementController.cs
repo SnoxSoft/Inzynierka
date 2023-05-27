@@ -23,7 +23,7 @@ public class PasswordManagementController : Controller
     }
 
     [HttpPost("/send/password/reset")]
-    public async Task<ActionResult> SendMailAsync(MailModel mailData, string email)
+    public async Task<ActionResult> SendMailAsync(string email)
     {
         var generatedResetCode = _passwordService.GenerateResetCode();
 
@@ -42,8 +42,9 @@ public class PasswordManagementController : Controller
             token_employee_id = employee.employee_id,
         };
 
-        mailData.ResetCode = generatedResetCode;
-        mailData.To = passwordToken.email;
+        MailModel mailData = new MailModel(email, generatedResetCode, "", "");
+        // mailData.ResetCode = generatedResetCode;
+        // mailData.To = passwordToken.email;
         
         await _crudHandler.CreateAsync(passwordToken);
         
@@ -89,7 +90,7 @@ public class PasswordManagementController : Controller
     //[Authorize(Roles = "Admin, Manager, Employee")]
     public async Task<ActionResult> ChangePasswordFromProfileView(string oldPassword, string newPasswordOnce, string newPasswordTwice, int employeeId)
     {
-        var currentUser = await _employeeCrudHandler.ReadEmployeeByIdAsync(employeeId); 
+        var currentUser = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
 
         if (currentUser == null)
         {
