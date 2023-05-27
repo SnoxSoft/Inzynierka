@@ -66,7 +66,6 @@ const EmployeeSkillFinder = ({mode = "", setHideFinder, setPickedPerson}) => {
                             }
                         }
                         else {
-                            console.log("nie wybralam nic")
                             filteredEmployeeList.push(
                                 <EmployeePickerListItem id={"finder-list-item-" + employeeId} employee={employee} setPickedPerson={setPickedPerson}/>
                             )

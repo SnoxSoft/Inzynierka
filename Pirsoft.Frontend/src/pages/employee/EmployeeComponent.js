@@ -107,7 +107,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // Tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
 
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
-    console.log(mode)
     let disableData = !
         (getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
             getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR || mode === 'create')
@@ -444,7 +443,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             setShowPopupWithProblems(true)
 
                             // Zapisanie umiejetnosci zaraz po tym
-                            console.log(skillsData)
                             clearWindowData();
                         } else {
                             setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
@@ -468,9 +466,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                                 {alertSaved}
                             </p>)
                             setShowPopupWithProblems(true)
-
-                            // Zapisanie umiejetnosci zaraz po tym
-                            console.log(skillsData)
                         } else {
                             setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
                                 {alertProblemOccured}

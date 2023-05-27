@@ -73,11 +73,11 @@ function redirectToMainWindow(navigate, logOut = false){
             localStorage.clear()
             window.location.reload();
         }
-    }, 3000);
+    }, 2000);
 }
 
 async function fetchPutEditOldPasswordInProfile(navigate, query){
-    return await axios.put(`${serverIpProd}/${endpointEmployeeChangePassword}?${query}`)
+    return await axios.put(`${serverIpProd}/${endpointEmployeeChangePassword}?${query}`, null,{headers: headers})
 }
 
 async function fetchPostSendEmailForPasswordChange(email) {
@@ -89,29 +89,29 @@ async function fetchPostSendEmailForPasswordChange(email) {
         "displayName": "string",
         "subject": "string",
         "body": "string"
-    })
+    }, {headers: headers})
 }
 
 async function fetchPutChangePassword(query) {
-    return await axios.put(`${serverIpProd}/${endpointPutChangePassword}?${query}`)
+    return await axios.put(`${serverIpProd}/${endpointPutChangePassword}?${query}`,null,{headers: headers})
 }
 
 async function fetchPostCreateTeam(params) {
-    return await axios.post(`${serverIpProd}/${endpointCreateTeam}?${params}`)
+    return await axios.post(`${serverIpProd}/${endpointCreateTeam}?${params}`,null,{headers: headers})
 }
 
 async function fetchPutEditTeam(id, body) {
-    return await axios.put(`${serverIpProd}/${endpointEditTeam}/${id}`, body)
+    return await axios.put(`${serverIpProd}/${endpointEditTeam}/${id}`, body,{headers: headers})
 }
 
 async function fetchDeleteTeam(id) {
-    return await axios.delete(`${serverIpProd}/${endpointDeleteTeam}/${id}`)
+    return await axios.delete(`${serverIpProd}/${endpointDeleteTeam}/${id}`,{headers: headers})
 }
 
 async function fetchGetEmployeeDataById(id, navigate) {
     if (id !== '-1') {
         try {
-            const response = await axios.get(`${serverIpProd}/${endpointGetEmployeeData}/${id}`)
+            const response = await axios.get(`${serverIpProd}/${endpointGetEmployeeData}/${id}`,{headers: headers})
             if (response && response.status === 200) {
                 return response.data;
             } else {
@@ -120,7 +120,7 @@ async function fetchGetEmployeeDataById(id, navigate) {
             }
         } catch (error) {
             console.error(error);
-            redirectToMainWindow(navigate);
+            redirectToMainWindow(navigate, isTokenExpiredMessageFromApi(error.response.data.Error));
         }
     } else return undefined
 
@@ -128,6 +128,7 @@ async function fetchGetEmployeeDataById(id, navigate) {
 
 async function fetchPostCreateEmployee(params, formData) {
     return await axios.post(`${serverIpProd}/${endpointPostCreateEmployee}?${params}`, formData, {
+        headers: headers,
         formData
     })
 }
@@ -168,7 +169,9 @@ async function fetchGetAllEmployees(navigate, sortForTeams = false, sortDirectio
 
 async function fetchGetTeamDataById(navigate, id) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetTeamData}/${id}`);
+        const response = await axios.get(`${serverIpProd}/${endpointGetTeamData}/${id}`, {
+            headers: headers
+        });
         if (response && response.status === 200) {
             return response.data;
         } else {
@@ -183,7 +186,9 @@ async function fetchGetTeamDataById(navigate, id) {
 
 async function fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, addRecord = true) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAllTeams}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetAllTeams}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             let newData = response.data;
             if (addRecord)
@@ -202,7 +207,9 @@ async function fetchGetAllTeamsAndAddZeroRecordAndSort(navigate, addRecord = tru
 
 async function fetchGetAllContractsAndAddZeroRecordAndSort(navigate) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAllContracts}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetAllContracts}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             let newData = response.data;
             newData.push({contract_id: 0, contract_type_name: contractAdditionalRow})
@@ -220,7 +227,9 @@ async function fetchGetAllContractsAndAddZeroRecordAndSort(navigate) {
 
 async function fetchGetAllPositionsAndAddZeroRecordAndSort(navigate) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAllPositions}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetAllPositions}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             let newData = response.data;
             newData.push({role_id: 0, role_name: positionAdditionalRow})
@@ -238,7 +247,9 @@ async function fetchGetAllPositionsAndAddZeroRecordAndSort(navigate) {
 
 async function fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAllPositionsLevels}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetAllPositionsLevels}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             let newData = response.data;
             newData.push({seniority_level_id: 0, seniority_level_name: positionLevelAdditionalRow})
@@ -256,7 +267,9 @@ async function fetchGetAllPositionsLevelsAndAddZeroRecordAndSort(navigate) {
 
 async function fetchGetAllSkillsAndSort(navigate) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAllSkills}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetAllSkills}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             let newData = response.data;
             newData.sort(FunctionForSortingJson("skill_name", "ascending"))
@@ -273,7 +286,9 @@ async function fetchGetAllSkillsAndSort(navigate) {
 
 async function fetchGetRequestsStatuses(navigate) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetRequestsStatuses}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetRequestsStatuses}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             return response.data;
         } else {
@@ -288,7 +303,9 @@ async function fetchGetRequestsStatuses(navigate) {
 
 async function fetchGetAbsencesTypes(navigate) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAbsencesTypes}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetAbsencesTypes}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             return response.data;
         } else {
@@ -303,7 +320,9 @@ async function fetchGetAbsencesTypes(navigate) {
 
 async function fetchPostCreateAbsence(params) {
     try {
-        return await axios.post(`${serverIpProd}/${endpointPostCreateAbsence}?${params}`)
+        return await axios.post(`${serverIpProd}/${endpointPostCreateAbsence}?${params}`, null,{
+            headers: headers
+        })
     } catch (error) {
         console.error(error);
         //redirectToMainWindow(navigate);
@@ -311,7 +330,7 @@ async function fetchPostCreateAbsence(params) {
 }
 
 async function fetchPutEditAbsence(id, query) {
-    return await axios.put(`${serverIpProd}/${endpointPutEditAbsence}/${id}?${query}`, {
+    return await axios.put(`${serverIpProd}/${endpointPutEditAbsence}/${id}?${query}`, null, {
         headers: headers
     })
 }
@@ -324,7 +343,9 @@ async function fetchDeleteAbsence(id) {
 
 async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, dateTo) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetOneEmployeeBetweenDatesDaysOff}/${id}/${dateFrom}/${dateTo}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetOneEmployeeBetweenDatesDaysOff}/${id}/${dateFrom}/${dateTo}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             const newData = await response.data;
             newData.sort(FunctionForSortingJson("absence_start_date", "descending"))
@@ -340,7 +361,9 @@ async function fetchGetOneEmployeeBetweenDatesDaysOff(navigate, id, dateFrom, da
 
 async function fetchGetAllEmployeesBetweenDatesDaysOff(navigate, dateFrom, dateTo) {
     try {
-        const response = await axios.get(`${serverIpProd}/${endpointGetAllEmployeesBetweenDatesDaysOff}/${dateFrom}/${dateTo}`)
+        const response = await axios.get(`${serverIpProd}/${endpointGetAllEmployeesBetweenDatesDaysOff}/${dateFrom}/${dateTo}`, {
+            headers: headers
+        })
         if (response && response.status === 200) {
             const newData = await response.data;
             newData.sort(FunctionForSortingJson("absence_start_date", "descending"))
