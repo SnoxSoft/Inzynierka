@@ -218,12 +218,10 @@ public class AbsenceController : ControllerBase
             await _crudHandler.DeleteAsync(absence);
             return Ok();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
-
-        return Conflict();
     }
 
     [HttpGet("get/employee/absences/{id}/{dateFrom}/{dateTo}")]
