@@ -42,9 +42,7 @@ public class PasswordManagementController : Controller
             token_employee_id = employee.employee_id,
         };
 
-        MailModel mailData = new MailModel(email, generatedResetCode, "", "");
-        // mailData.ResetCode = generatedResetCode;
-        // mailData.To = passwordToken.email;
+        MailModel mailData = new(email, generatedResetCode, "", "");
         
         await _crudHandler.CreateAsync(passwordToken);
         
