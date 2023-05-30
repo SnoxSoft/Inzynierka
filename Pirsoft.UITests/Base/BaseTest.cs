@@ -21,7 +21,7 @@ public class BaseTest
         var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = true,
+            Headless = false,
         });
         Page = await browser.NewPageAsync();
     }
@@ -37,8 +37,8 @@ public class BaseTest
     protected async Task Login()
     {
         await Page.GotoAsync(_pirsoftURL);
-        await Page.FillAsync("", _loginUserName);
-        await Page.FillAsync("", _loginPassword);
-        await Page.ClickAsync("");
+        await Page.FillAsync("#logging-email", _loginUserName);
+        await Page.FillAsync("#logging-password", _loginPassword);
+        await Page.ClickAsync("#logging-log-in");
     }
 }
