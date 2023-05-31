@@ -39,7 +39,7 @@ public class EmployeeController : Controller
     [HttpPost("create/new/employee")]
     public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber, string? skills,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
-            DateTime birthDate, DateTime employmentStartDate, string password_salt , ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
+            DateTime birthDate, DateTime employmentStartDate, string? password_salt , ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
         {
@@ -113,7 +113,7 @@ public class EmployeeController : Controller
         }
 
         EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, avatarFilePath,
-            departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,password_salt,
+            departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset, password_salt,
             birthDate, employmentStartDate, companyRole, contractType, seniorityLevel).CreateModel();
 
         IEnumerable<int> parsedSkillsIds = skills != null

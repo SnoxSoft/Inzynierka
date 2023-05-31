@@ -15,7 +15,7 @@ using Pirsoft.Api.Validators;
 
 namespace Pirsoft.UnitTests.Security
 {
-    internal class AuthenticationServiceTests
+    internal class HashPasswordManagerTests
     {
         private IHashPasswordManager _sut = null!;
 
@@ -43,7 +43,7 @@ namespace Pirsoft.UnitTests.Security
         public void HashPasswordShouldReturnNotEmptyHash()
         {
             //arrange
-            string password = "password";
+            string password = "Kadry123@konto";
             string salt = "salt";
 
             //Act

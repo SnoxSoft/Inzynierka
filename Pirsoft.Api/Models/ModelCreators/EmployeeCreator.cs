@@ -75,6 +75,7 @@ namespace Pirsoft.Api.Models.ModelCreators
             employee_company_role_id = (int)_companyRole,
             employee_contract_type_id = (int)_contractType,
             employee_seniority_level_id = (int)_seniorityLevel,
+            password_salt = _passwordSalt
         };
     }
 }
