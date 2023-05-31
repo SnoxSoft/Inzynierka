@@ -6,7 +6,7 @@ import RequestListItem from "../components/absences/RequestListItem";
 import RequestWindow from "./RequestWindow";
 import {
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
-    labelFilter, labelRequest, pageNameAbsences,
+    labelFilter, labelRequest, optionsForDateYYYY_MM_DD, pageNameAbsences,
     requestActionLabel,
     requestDescriptionLabel, requestStatusApprovedLabel, requestStatusDisapprovedLabel,
     requestStatusLabel, requestStatusWaitingLabel
@@ -23,16 +23,7 @@ function Absences(){
     document.title = pageNameAbsences;
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
-    // Opcje dla wyświetlenia daty w formacie tekstowym
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }
     const currentDate = new Date();
     currentDate.setDate(1);
     const previousThreeMonthsDate = new Date(currentDate.getFullYear(),currentDate.getMonth() - 3, currentDate.getDate())
@@ -43,6 +34,10 @@ function Absences(){
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         FunctionForResize("schedule-list", {setWantedHeightForList});
         FunctionForResize("schedule-month", {setWantedHeightForList});
     }, []);
@@ -53,8 +48,8 @@ function Absences(){
     const [checkApproved, setCheckApproved] = useState(true);
     const [checkRefused, setCheckRefused] = useState(true);
     // Gettery i settery dla filtra kalendarza
-    const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", options));
-    const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", options));
+    const [dateFrom, setDateFrom] = useState(previousThreeMonthsDate.toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
+    const [dateTo, setDateTo] = useState(futureThreeMonthsDate.toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
 
     const [demandDays, setDemandDays] = useState(0);
     const [leaveDays, setLeaveDays] = useState(0);
@@ -158,11 +153,9 @@ function Absences(){
                         }
 
                         if (addAbsence !== null) {
-                            console.log("abcences")
-                            console.log(addAbsence)
                             absencesListLoad.push(
                                 <RequestListItem id={"absences-list-item-" + row} key={row} employeeAbsence={addAbsence}
-                                                 old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", options) &&
+                                                 old={addAbsence.absence_start_date < new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD) &&
                                                      addAbsence.absence_status_id.toString() === "3"}
                                                  absencesTypes={absencesTypes}
                                                  requestsStatus={requestsStatus}

@@ -37,10 +37,10 @@ function RemindSendMail(){
         if (email !== undefined && email.toString().length > 0 && email.toString().includes('@') &&
             emailRegex.test(email)) {
 
-            const query = new URLSearchParams();
-            query.set("to", email);
+            const emailQuery = new URLSearchParams();
+            emailQuery.set("email", email);
 
-            fetchPostSendEmailForPasswordChange(email).then((response) => {
+            fetchPostSendEmailForPasswordChange(emailQuery).then((response) => {
                 if(response.status === 200){
                     setMailSentAlert(true);
                     setTimeout(() => {setMailSentAlert(false)}, 3000);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -13,95 +14,130 @@ using Pirsoft.Api.Services;
 namespace Pirsoft.UnitTests.ControllerMockTests;
 
 [TestFixture]
-    public class PasswordManagementControllerTests
+public class PasswordManagementControllerTests
+{
+    private Mock<ICrudHandler> _crudHandlerMock = null!;
+    private Mock<IEmployeeCrudHandler> _employeeCrudHandlerMock = null!;
+    private Mock<IMailService> _emailServiceMock = null!;
+    private Mock<IPasswordService> _passwordServiceMock = null!;
+
+    private PasswordManagementController _controller = null!;
+
+    [SetUp]
+    public void Setup()
     {
-        private PasswordManagementController _controller;
-        private Mock<ICrudHandler> _crudHandlerMock;
-        private Mock<IUserManager<EmployeeModel>> _userManagerMock;
-        private Mock<IMailService> _emailServiceMock;
-        private Mock<IPasswordService> _passwordServiceMock;
+        _crudHandlerMock = new Mock<ICrudHandler>();
+        _employeeCrudHandlerMock = new Mock<IEmployeeCrudHandler>();
+        _emailServiceMock = new Mock<IMailService>();
+        _passwordServiceMock = new Mock<IPasswordService>();
 
-        [SetUp]
-        public void Setup()
-        {
-            _crudHandlerMock = new Mock<ICrudHandler>();
-            _userManagerMock = new Mock<IUserManager<EmployeeModel>>();
-            _emailServiceMock = new Mock<IMailService>();
-            _passwordServiceMock = new Mock<IPasswordService>();
-
-            _controller = new PasswordManagementController(
-                _crudHandlerMock.Object,
-                _userManagerMock.Object,
-                _emailServiceMock.Object,
-                _passwordServiceMock.Object
-            );
-        }
-
-        [Test]
-        public async Task ChangePasswordWithResetCode_ExpiredToken_ReturnsNotFound()
-        {
-            // Arrange
-            var resetToken = new PasswordResetTokenModel
-            {
-                expiration_time = DateTime.Now.AddHours(-25) // Expired token
-            };
-
-            _crudHandlerMock.Setup(mock => mock.ReadAsync<PasswordResetTokenModel>(It.IsAny<int>()))
-                .ReturnsAsync(resetToken);
-
-            // Act
-            var result = await _controller.ChangePasswordWithResetCode(123, "password", "password");
-
-            // Assert
-            result.Should().BeOfType<NotFoundResult>();
-        }
-
-        [Test]
-        public async Task ChangePasswordWithResetCode_PasswordsDoNotMatch_ReturnsBadRequest()
-        {
-            // Arrange
-            var resetToken = new PasswordResetTokenModel
-            {
-                expiration_time = DateTime.Now.AddHours(1) // Valid token
-            };
-
-            _crudHandlerMock.Setup(mock => mock.ReadAsync<PasswordResetTokenModel>(It.IsAny<int>()))
-                .ReturnsAsync(resetToken);
-
-            // Act
-            var result = await _controller.ChangePasswordWithResetCode(123, "password1", "password2");
-
-            // Assert
-            result.Should().BeOfType<BadRequestObjectResult>()
-                .Which.Value.Should().Be("New passwords do not match");
-        }
-
-        [Test]
-        public async Task ChangePasswordWithResetCode_ValidRequest_ReturnsOk()
-        {
-            // Arrange
-            var resetToken = new PasswordResetTokenModel
-            {
-                expiration_time = DateTime.Now.AddHours(1), // Valid token
-                employee_id = 456
-            };
-
-            var employee = new EmployeeModel
-            {
-                employee_id = 456
-            };
-
-            _crudHandlerMock.Setup(mock => mock.ReadAsync<PasswordResetTokenModel>(It.IsAny<int>()))
-                .ReturnsAsync(resetToken);
-            _crudHandlerMock.Setup(mock => mock.ReadAsync<EmployeeModel>(It.IsAny<int>()))
-                .ReturnsAsync(employee);
-            _crudHandlerMock.Setup(mock => mock.UpdateAsync(It.IsAny<EmployeeModel>()))
-                .Returns(Task.CompletedTask);
-
-            // Act
-            var result = await _controller.ChangePasswordWithResetCode(123, "password", "password");
-
-            // Assert
-            result.Should().BeOfType<OkResult>();
-        }
+        _controller = new PasswordManagementController(
+            _crudHandlerMock.Object,
+            _emailServiceMock.Object,
+            _passwordServiceMock.Object,
+            _employeeCrudHandlerMock.Object
+        );
     }
+
+    [Test]
+    public async Task ChangePasswordWithResetCode_ShouldReturnBadRequest_WhenProvidedExpiredResetToken()
+    {
+        // Arrange
+        int fakeResetCode = 1;
+        string fakeFirstPassword  = "matchingPassword",
+               fakeSecondPassword = "matchingPassword";
+
+        PasswordResetTokenModel fakeExpiredResetToken = new()
+        {
+            reset_code = fakeResetCode,
+            expiration_time = new DateTime(1900, 1, 1, 1, 1, 1) // Expired token
+        };
+
+        IQueryable<PasswordResetTokenModel> fakeQueryResult = new PasswordResetTokenModel[]
+        {
+            fakeExpiredResetToken,
+        }.AsQueryable();
+
+        _crudHandlerMock
+            .Setup(m => m.ReadAllAsync<PasswordResetTokenModel>())
+            .ReturnsAsync(fakeQueryResult);
+
+        // Act
+        ActionResult result = await _controller.ChangePasswordWithResetCode(fakeResetCode, fakeFirstPassword, fakeSecondPassword);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.Value.Should().Be("Password reset token has expired.");
+    }
+
+    [Test]
+    public async Task ChangePasswordWithResetCode_ShouldReturnBadRequest_WhenPasswordsDoNotMatch()
+    {
+        // Arrange
+        int fakeResetCode = 1;
+        string fakeFirstPassword  = "notMatchingPassword_1",
+               fakeSecondPassword = "notMatchingPassword_2";
+
+        PasswordResetTokenModel fakeValidResetToken = new()
+        {
+            reset_code = fakeResetCode,
+            expiration_time = DateTime.Now.AddHours(1),
+        };
+
+        IQueryable<PasswordResetTokenModel> fakeQueryResult = new PasswordResetTokenModel[]
+        {
+            fakeValidResetToken,
+        }.AsQueryable();
+
+        _crudHandlerMock
+            .Setup(m => m.ReadAllAsync<PasswordResetTokenModel>())
+            .ReturnsAsync(fakeQueryResult);
+
+        // Act
+        var result = await _controller.ChangePasswordWithResetCode(fakeResetCode, fakeFirstPassword, fakeSecondPassword);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.Value.Should().Be("New passwords do not match");
+    }
+
+    [Test]
+    public async Task ChangePasswordWithResetCode_ShouldReturnOkResult_WhenProvidedValidInformation()
+    {
+        // Arrange
+        int fakeResetCode = 1,
+            fakeEmployeeId = 1;
+        string fakeFirstPassword  = "matchingPassword",
+               fakeSecondPassword = "matchingPassword";
+
+        EmployeeModel fakeEmployee = new() { employee_id = fakeEmployeeId };
+
+        PasswordResetTokenModel fakeValidResetToken = new()
+        {
+            reset_code = fakeResetCode,
+            expiration_time = DateTime.Now.AddHours(1),
+            token_employee_id = fakeEmployeeId,
+        };
+
+        IQueryable<PasswordResetTokenModel> fakeQueryResult = new PasswordResetTokenModel[]
+        {
+            fakeValidResetToken,
+        }.AsQueryable();
+
+        _crudHandlerMock
+            .Setup(m => m.ReadAllAsync<PasswordResetTokenModel>())
+            .ReturnsAsync(fakeQueryResult);
+        _crudHandlerMock
+            .Setup(m => m.ReadAsync<EmployeeModel>(It.IsAny<int>()))
+            .ReturnsAsync(fakeEmployee);
+        _crudHandlerMock
+            .Setup(m => m.UpdateAsync(It.IsAny<EmployeeModel>()))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _controller.ChangePasswordWithResetCode(fakeResetCode, fakeFirstPassword, fakeSecondPassword);
+
+        // Assert
+        result.Should().BeOfType<OkResult>();
+    }
+}

@@ -14,78 +14,142 @@ namespace Pirsoft.UnitTests.ControllerMockTests;
 public class AbsenceControllerTest
 {
     private Mock<ICrudHandler> _crudHandlerMock = null!;
-    private AbsenceController _absenceController = null!;
+
+    private AbsenceController _sut = null!;
 
     [SetUp]
     public void SetUp()
     {
         _crudHandlerMock = new Mock<ICrudHandler>();
-        _absenceController = new AbsenceController(_crudHandlerMock.Object);
-    }
-    
-    [Test]
-    public async Task UpdateAbsence_WithValidData_ShouldReturnOk()
-    {
-        // Arrange
-        var absenceId = 1;
-        var existingAbsence = new AbsenceModel
-        {
-            absence_start_date = new DateTime(2023,05,05), 
-            absence_end_date = new DateTime(2023,05,05),
-            absence_status_id = 1,
-            employee_owner_id = 1,
-            employee_approver_id = 1
-        };
-        _crudHandlerMock.Setup(x => x.ReadAsync<AbsenceModel>(absenceId)).ReturnsAsync(existingAbsence);
-
-        // Act
-        var result = await _absenceController.UpdateAbsence(absenceId, 1, 3);
-
-        // Assert
-        result.Should().BeOfType<OkResult>();
-        _crudHandlerMock.Verify(x => x.UpdateAsync(existingAbsence), Times.Once);
+        _sut = new AbsenceController(_crudHandlerMock.Object);
     }
 
     [Test]
-    public async Task DeleteAbsenceById_WhenAbsenceExist_ShouldReturnOk()
+    public async Task UpdateAbsence_ShouldReturnNotFoundResult_WhenAbsenceDoesNotExist()
     {
         // Arrange
-        var absenceId = 1;
-        var absence = new AbsenceModel() { ApiInternalId = absenceId };
-        _crudHandlerMock.Setup(x => x.ReadAsync<AbsenceModel>(absenceId)).ReturnsAsync(absence);
+        int fakeAbsenceId = 1,
+            fakeAbsenceApproverId = 1,
+            fakeToUpdateAbsenceStatusId = 3;
+
+        _crudHandlerMock
+            .Setup(m => m.ReadAsync<AbsenceModel>(fakeAbsenceId))
+            .ReturnsAsync((AbsenceModel)null!);
 
         // Act
-        var response = await _absenceController.DeleteAbsenceById(absenceId);
-
-        // Assert
-        response.Should().BeOfType<OkResult>();
-    }
-    
-    [Test]
-    public async Task UpdateAbsence_WithNonExistingAbsence_ShouldReturnNotFound()
-    {
-        // Arrange
-        var id = 1;
-        
-        _crudHandlerMock.Setup(x => x.ReadAsync<AbsenceModel>(id)).ReturnsAsync((AbsenceModel)null);
-
-        // Act
-        var result = await _absenceController.UpdateAbsence(id, 1, 3);
+        IActionResult result = await _sut.UpdateAbsence(fakeAbsenceId, fakeAbsenceApproverId, fakeToUpdateAbsenceStatusId, null);
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
     }
+
+    [Test]
+    public async Task UpdateAbsence_ShouldReturnOkResult_WhenProvidedValidInformation()
+    {
+        // Arrange
+        int fakeAbsenceId = 1,
+            fakeAbsenceTypeId = 1,
+            fakeAbsenceStatusId = 1,
+            fakeAbsenceOwnerId = 1,
+            fakeAbsenceApproverId = 1,
+            fakeToUpdateAbsenceStatusId = 3;
+
+        AbsenceModel fakeExistingAbsence = new()
+        {
+            absence_start_date = DateTime.Now.AddDays(1), 
+            absence_end_date = DateTime.Now.AddDays(1),
+            absence_status_id = fakeAbsenceStatusId,
+            absence_type_id = fakeAbsenceTypeId,
+            employee_owner_id = fakeAbsenceOwnerId,
+            employee_approver_id = fakeAbsenceApproverId,
+        };
+
+        AbsenceTypeModel fakeAbsenceType = new()
+        {
+            absence_type_id = fakeAbsenceTypeId,
+        };
+
+        IQueryable<AbsenceTypeModel> fakeQueryResult = new AbsenceTypeModel[]
+        {
+            fakeAbsenceType,
+        }.AsQueryable();
+
+        _crudHandlerMock
+            .Setup(m => m.ReadAsync<AbsenceModel>(fakeAbsenceId))
+            .ReturnsAsync(fakeExistingAbsence);
+        _crudHandlerMock
+            .Setup(m => m.ReadAllAsync<AbsenceTypeModel>())
+            .ReturnsAsync(fakeQueryResult);
+
+        // Act
+        IActionResult result = await _sut.UpdateAbsence(fakeAbsenceId, fakeAbsenceApproverId, fakeToUpdateAbsenceStatusId, null);
+
+        // Assert
+        _crudHandlerMock
+            .Verify(x => x.UpdateAsync(fakeExistingAbsence), Times.Once);
+        result.Should().BeOfType<OkResult>();
+    }
     
     [Test]
-    public async Task DeleteAbsenceById_WhenAbsenceDoesNotExist_ShouldReturnNotFound()
+    public async Task DeleteAbsenceById_ShouldReturnNotFoundResult_WhenAbsenceDoesNotExist()
     {
         // Arrange
         var absenceId = 1;
         
         // Act
-        var response = await _absenceController.DeleteAbsenceById(absenceId);
+        var response = await _sut.DeleteAbsenceById(absenceId);
 
         // Assert
         response.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Test]
+    public async Task DeleteAbsenceById_ShouldReturnOkResult_WhenDeletingExistingAbsence()
+    {
+        // Arrange
+        int fakeAbsenceId = 1,
+            fakeAbsenceTypeId = 1,
+            fakeAbsenceStatusId = 1,
+            fakeAbsenceOwnerId = 1,
+            fakeAbsenceApproverId = 1,
+            fakeAbsenceDuration = 1;
+
+        AbsenceModel fakeExistingAbsence = new()
+        {
+            absence_id = fakeAbsenceId,
+            absence_start_date = DateTime.Now.AddDays(1),
+            absence_end_date = DateTime.Now.AddDays(1),
+            absence_status_id = fakeAbsenceStatusId,
+            absence_type_id = fakeAbsenceTypeId,
+            employee_owner_id = fakeAbsenceOwnerId,
+            employee_approver_id = fakeAbsenceApproverId,
+            duration = fakeAbsenceDuration,
+        };
+
+        AbsenceTypeModel fakeAbsenceType = new()
+        {
+            absence_type_id = fakeAbsenceTypeId,
+        };
+
+        IQueryable<AbsenceTypeModel> fakeQueryResult = new AbsenceTypeModel[]
+        {
+            fakeAbsenceType,
+        }.AsQueryable();
+
+        _crudHandlerMock
+            .Setup(m => m.ReadAsync<AbsenceModel>(fakeAbsenceId))
+            .ReturnsAsync(fakeExistingAbsence);
+        _crudHandlerMock
+            .Setup(m => m.ReadAllAsync<AbsenceTypeModel>())
+            .ReturnsAsync(fakeQueryResult);
+
+        // Act
+        IActionResult response = await _sut.DeleteAbsenceById(fakeAbsenceId);
+
+        // Assert
+        _crudHandlerMock
+            .Verify(m => m.DeleteAsync(It.IsAny<AbsenceModel>()), Times.Once);
+
+        response.Should().BeOfType<OkResult>();
     }
 }

@@ -4,17 +4,30 @@ import Calendar from "../components/base/Calendar";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {CgClose} from "react-icons/cg";
 import {
-    accountEmployee,
-    accountHR, accountManagement, accountPresident, accountTeamLeader,
+    absent,
+    accountHR,
+    accountManagement,
+    accountPresident,
+    accountTeamLeader,
     alertAbsence,
-    alertAccepted,
-    alertCreated, alertDateFrom, alertDateFromBiggerThanDateTo, alertDateTo,
-    alertDeleted, alertProblemOccured, alertRefused, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand, demand,
-    labelApprove, labelCreate, labelDisapprove,
+    alertDateFrom,
+    alertDateFromBiggerThanDateTo,
+    alertDateTo,
+    alertProblemOccured,
+    alertTooManyDaysTaken,
+    alertTooManyDaysTakenOnDemand,
+    dayoff,
+    demand,
+    labelApprove,
+    labelCreate,
+    labelDisapprove,
     labelRequest,
     labelRequestApprovers,
     labelRequestNoPay,
-    labelRequestType, occasional, pageNameAddEmployeeAnAbsence, pageNameApprovalOrRejectionRequest
+    labelRequestType,
+    optionsForDateYYYY_MM_DD,
+    pageNameAddEmployeeAnAbsence,
+    pageNameApprovalOrRejectionRequest, sick
 } from "../GlobalAppConfig";
 import {
     fetchGetAbsencesTypes, fetchGetAllEmployees,
@@ -39,9 +52,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     // Lista rodzai urlopów
     const [absencesList, setAbsencesList] = useState(null)
@@ -59,6 +69,10 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     const [hideApproversListOnHierearchy, setHideApproversListOnHierearchy] = useState(true);
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         // Załadowanie danych pracownika, dla którego wystawiamy wniosek
         if (employee === null && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
             setEmployee(null);
@@ -90,11 +104,11 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                             if (requestData.type === absence.absence_type_name) {
                                 setAbsence(absence.absence_type_name)
                             }
-                            if(demandDays === 0 && absence.absence_type_category !== "demand" || demandDays > 0){
-                                if((employee.employee_company_role_id !== 2 && absence.absence_type_category !== "absent" && absence.absence_type_category !== "sick") ||
-                                    employee.employee_company_role_id === 2){
+                            if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && demandDays === 0 && absence.absence_type_category !== demand || demandDays > 0){
+                                if((getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && absence.absence_type_category !== absent && absence.absence_type_category !== sick) ||
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR){
                                     loadAbsencesList.push(absence)
-                                }
+                               }
                             }
                         })
                     }
@@ -124,7 +138,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                                 )
                                 approverId++;
                             }
-                            //console.log(approver)
                         })
                     }
                     setApproversList(approversListLoad)
@@ -132,19 +145,11 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         }
     })
 
-
-    // Opcje dla wyświetlenia daty w formacie tekstowym
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }
-
     // Gettery i settery dla filtra kalendarza
     const [dateFrom, setDateFrom] = useState(
-        requestData && mode !== 'create' ? requestData.absence_start_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
+        requestData && mode !== 'create' ? requestData.absence_start_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
     const [dateTo, setDateTo] = useState(
-        requestData && mode !== 'create' ? requestData.absence_end_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", options));
+        requestData && mode !== 'create' ? requestData.absence_end_date.toString().substring(0, 10) : new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
     const [absence, setAbsence] = useState(requestData ? requestData.absence_type_id : null)
     const [unpaid, setUnpaid] = useState(requestData && mode === "approval" ? requestData.unpaid : mode === "create" ? leaveDays === 0 : false)
     const disableChanges = mode === "approval"
@@ -178,9 +183,18 @@ const RequestWindow = ({setAbsencesVisible = undefined,
     }
 
     function createRequest(){
+        let absenceType = ""
+        if(absence !== undefined) {
+            absencesList.map((absenceFromList) => {
+                if (absenceFromList.absence_type_id.toString() === absence.toString()) {
+                    absenceType = absenceFromList.absence_type_category;
+                }
+            })
+        }
         const isAutoApprove = getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident ||
             getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountManagement ||
-            (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString());
+            (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
+            absenceType === demand;
 
         const query = new URLSearchParams();
         query.set("absenceStartDate", dateFrom);
@@ -226,14 +240,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
             }
             if(countingDays > leaveDays && !unpaid){
                 // Sprawdzenie czy jest to urlop okazjonalny
-
-                let absenceType = ""
-                absencesList.map((absenceFromList) => {
-                    if(absenceFromList.absence_type_id.toString() === absence.toString()){
-                        absenceType = absenceFromList.absence_type_category;
-                    }
-                })
-                if(absenceType !== occasional) {
+                if(absenceType === dayoff) {
                     alerts.push(<p className={"bg-red-700 rounded-md font-bold"}>
                         {alertTooManyDaysTaken}
                     </p>)
@@ -241,12 +248,6 @@ const RequestWindow = ({setAbsencesVisible = undefined,
             }
             if(countingDays > 1){
                 //Sprawdzam czy wziete dni na żądanie
-                let absenceType = ""
-                absencesList.map((absenceFromList) => {
-                    if(absenceFromList.absence_type_id.toString() === absence.toString()){
-                        absenceType = absenceFromList.absence_type_category;
-                    }
-                })
                 if(absenceType === demand){
                     alerts.push( <p className={"bg-red-700 rounded-md font-bold"}>
                         {alertTooManyDaysTakenOnDemand}
@@ -262,7 +263,7 @@ const RequestWindow = ({setAbsencesVisible = undefined,
         else {
             fetchPostCreateAbsence(query)
                 .then(r => {
-                    if (r.status === 200) {
+                    if (r !== undefined && r.status === 200) {
                             close()
                     } else {
                         setAlerts(<p className={"bg-red-700 rounded-md font-bold"}>
@@ -270,7 +271,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                         </p>)
                         setShowPopupWithProblems(true)
                     }
-                })
+                }).catch(e => {
+                setAlerts(<p className={"bg-red-700 rounded-md font-bold"}>
+                    {alertProblemOccured}
+                </p>)
+                setShowPopupWithProblems(true)
+            })
         }
     }
 
@@ -289,7 +295,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     </p>)
                     setShowPopupWithProblems(true)
                 }
-            })
+            }).catch(e => {
+            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertProblemOccured}
+            </p>)
+            setShowPopupWithProblems(true)
+        })
     }
 
     function approveRequest(){
@@ -307,7 +318,12 @@ const RequestWindow = ({setAbsencesVisible = undefined,
                     </p>)
                     setShowPopupWithProblems(true)
                 }
-            })
+            }).catch(e => {
+            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                {alertProblemOccured}
+            </p>)
+            setShowPopupWithProblems(true)
+        })
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);

@@ -1,47 +1,61 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Select from "react-select";
-import {labelFind, pageNameGivenGrades, serverIp, yearAdditionalRow} from "../../GlobalAppConfig";
+import {labelFind, pageNameGivenGrades} from "../../GlobalAppConfig";
 import GradeListItem from "../../components/grades/GradeListItem";
 import TeamsList from "../../components/employees/search/fields/TeamsList";
 import FirstNameAndLastName from "../../components/grades/FirstNameAndLastName";
 import ReusableButton from "../../components/base/ReusableButton";
 import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
+import {useNavigate} from "react-router-dom";
+import {fetchGetAllTeamsAndAddZeroRecordAndSort, fetchGetGivenGrades, fetchGetYears} from "../../DataFetcher";
 
 function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGradesVisible}){
     document.title = pageNameGivenGrades;
+
+    const navigate = useNavigate();
 
     // Dane do fitrowania listy ocen
     const[firstNameAndLastName, setFirstNameAndLastName] = useState()
     const[pickedTeam, setPickedTeam] = useState()
     const[pickedYear, setPickedYear] = useState();
+    const[teamsList, setTeamsList] = useState(null);
 
     const[years, setYears] = useState(undefined);
+    const[defaultYear, setDeafaultYear] = useState({ value: new Date().getFullYear(), label: new Date().getFullYear() })
     const[currentGradesList, setCurrentGradesList] = useState();
     const[loadedGrades, setLoadedGrades] = useState(undefined)
 
-    if(years === undefined) {
-        fetch(serverIp + "/getYears/" + getLocalStorageKeyWithExpiry("loggedEmployee").UserId)
-            .then((response) => {
-                response.json()
-                    .then((response) => {
-                        setYears(response)
-                    });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
-    }
+    useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
+        if(years === undefined && getLocalStorageKeyWithExpiry("loggedEmployee") !== null) {
+            fetchGetYears(getLocalStorageKeyWithExpiry("loggedEmployee").UserId)
+                .then((years) => setYears(years));
+
+            // Załadowanie wszystkich zespołów do filtra
+            if(teamsList === null) {
+                setTeamsList(null);
+                fetchGetAllTeamsAndAddZeroRecordAndSort(navigate)
+                    .then(teamsList => setTeamsList(teamsList));
+            }
+        }
+
+    },[])
+
 
     // Funkcja do rozszerzania widoczności okna z ocenami
-    const[wantedWidthForList, setWantedWidthForList] = useState(400);
+    const[wantedHeightForList, setWantedHeightForList] = useState(400);
 
     function FunctionForResizeGrades(){
-        const tabsComponent = document.getElementById("tabs-component");
+        const leftMenuComponent = document.getElementById("left-menu");
         const currentComponent = document.getElementById("given-grades-list");
-        if(tabsComponent != null && currentComponent != null){
-            const tabsComponentPosition = tabsComponent.getBoundingClientRect()
+        if(currentComponent != null && leftMenuComponent !== null){
             const currentComponentPosition = currentComponent.getBoundingClientRect();
-            setWantedWidthForList(tabsComponentPosition.height - (currentComponentPosition.y - tabsComponentPosition.y))
+            const leftMenuComponentPosition = leftMenuComponent.getBoundingClientRect();
+            let bottomY = leftMenuComponentPosition.height;
+            setWantedHeightForList(bottomY - (currentComponentPosition.y))
         }
     }
 
@@ -50,29 +64,22 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
         console.log(firstNameAndLastName)
         console.log(pickedTeam)
         // Pobranie listy ocen na podstawie wybranego roku
-        fetch(serverIp + "/getGivenGrades/" + getLocalStorageKeyWithExpiry("loggedEmployee").UserId + "/" + pickedYear)
-            .then((response) => {response.json()
-                .then((response) => {
-                    setCurrentGradesList(response)
-                });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })
+        fetchGetGivenGrades(getLocalStorageKeyWithExpiry("loggedEmployee").UserId, pickedYear)
+            .then((givenGrades) => {
 
-        let temporaryGradesList = []
-        if(currentGradesList !== undefined) {
-            let gradeId = 0;
-            for (const i of currentGradesList) {
-                temporaryGradesList.push(
-                    <GradeListItem id={"given-grade-list-item-" + gradeId} grade={i}
-                       setGradeMode={setGradeMode}
-                       setPickedGradeData={setPickedGradeData}
-                       setGradesVisible={setGradesVisible} mode={"given"}/>);
-                gradeId++;
-            }
-        }
-        setLoadedGrades(temporaryGradesList)
+                let temporaryGradesList = []
+                if(givenGrades !== undefined) {
+                    givenGrades.map((currentGrade, currentGradeId) => {
+                        temporaryGradesList.push(
+                            <GradeListItem id={"given-grade-list-item-" + currentGradeId} grade={currentGrade}
+                                           setGradeMode={setGradeMode}
+                                           setPickedGradeData={setPickedGradeData}
+                                           setGradesVisible={setGradesVisible} mode={"given"}/>);
+                    })
+                }
+                setLoadedGrades(temporaryGradesList)
+                setCurrentGradesList(givenGrades)
+            })
     }
 
     useEffect(() => {
@@ -85,11 +92,13 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
             style={{minWidth: 800, height:heightFromParent}}>
             <div className={"flex flex-row p-2 gap-4 place-content-evenly"}>
                 <div className={"flex flex-col items-center gap-2"}>
-                    <TeamsList id={"given-grades-teams-list"} onChange={setPickedTeam}/>
+                    <TeamsList id={"given-grades-teams-list"} className={""}
+                               value={pickedTeam}
+                               onChange={setPickedTeam} teams={teamsList}/>
                     <Select
                         id={"given-grades-years"}
                         className={"w-96 text-black"}
-                        defaultValue={{ value: 0, label: yearAdditionalRow }}
+                        defaultValue={defaultYear}
                         options={years}
                         onChange={(e) => setPickedYear(e.value)}/>
 
@@ -104,7 +113,7 @@ function GivenGrades({heightFromParent, setGradeMode, setPickedGradeData, setGra
             </div>
             <hr/>
             <div id={"given-grades-list"} className={"rounded-md overflow-y-auto flex flex-col place-content-between"}
-            style={{height:wantedWidthForList}}>
+            style={{height:wantedHeightForList}}>
                 {loadedGrades}
             </div>
         </div>

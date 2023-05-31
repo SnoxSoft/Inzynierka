@@ -1,8 +1,6 @@
 
 const SkillsList = ({skillList, id}) => {
 
-
-    console.log(skillList)
     let details = [];
     let row = 0;
 

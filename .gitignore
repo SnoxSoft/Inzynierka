@@ -354,3 +354,12 @@ MigrationBackup/
 Pirsoft.Api/appsettings.json
 Pirsoft.Frontend/src/GlobalAppConfig.js
 Pirsoft.Frontend/public/Resources/Avatars
+#Pirsoft.ValidationTools generated data
+Pirsoft.ValidationTools/DatabaseEntryGenerator/dane/haslo.txt
+Pirsoft.ValidationTools/DatabaseEntryGenerator/dane/pesel.txt
+Pirsoft.ValidationTools/DatabaseEntryGenerator/dane/bank_nr.txt
+/Pirsoft.ValidationTools/DatabaseEntryGenerator/wynik/employee_Ksiegowosc
+/Pirsoft.ValidationTools/DatabaseEntryGenerator/wynik/employee_Pracownik
+/Pirsoft.ValidationTools/DatabaseEntryGenerator/dane/start_date.txt
+/Pirsoft.ValidationTools/DatabaseEntryGenerator/wynik/departments.txt
+/Pirsoft.ValidationTools/DatabaseEntryGenerator/wynik/employee_Zarzad

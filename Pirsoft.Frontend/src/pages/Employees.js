@@ -26,12 +26,9 @@ function Employees(){
     document.title = pageNameEmployees;
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     // Wybrane wartości w filtrze
-    const[firstnameAndLastname, setFirstnameAndLastname] = useState('');
+    const[firstnameAndLastnameNormal, setFirstnameAndLastnameNormal] = useState('');
     const[team, setTeam] = useState();
     const[position, setPosition] = useState();
 
@@ -44,6 +41,10 @@ function Employees(){
     const [employeesList, setEmployeesList] = useState();
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         // Załadowanie wszystkich zespołów do filtra
         if(teamsList === null) {
             setTeamsList(null);
@@ -81,9 +82,10 @@ function Employees(){
                 let filteredEmployeeList = []
                 if(employeesList !== undefined) {
                     employeesList.map(employee => {
-                        const employeeName = employee.first_name + " " + employee.last_name
-
+                        let employeeName = employee.first_name + " " + employee.last_name
+                        employeeName = employeeName.toLowerCase();
                         // Duża Funkcja filtrująca
+                        let firstnameAndLastname = firstnameAndLastnameNormal;
 
                         // Jeśli tylko wpisana nazwa pracownika
                         if ((firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0 &&
@@ -186,7 +188,7 @@ function Employees(){
                             <div>
                                 <p className={""}>{labelFirstNameAndLastName}</p>
                                 <FirstnameAndLastname id={"employees-firstname-lastname"} className={""}
-                                                      onChange={setFirstnameAndLastname}/>
+                                                      onChange={setFirstnameAndLastnameNormal}/>
                             </div>
                             <div className={"flex flex-row gap-2 flex-wrap"}>
                                 <div>

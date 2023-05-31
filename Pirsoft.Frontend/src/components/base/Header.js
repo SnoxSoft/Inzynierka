@@ -5,6 +5,7 @@ import {appName} from "../../GlobalAppConfig";
 import {BsPersonCircle} from "react-icons/bs";
 import React from "react";
 import {getLocalStorageKeyWithExpiry} from "../jwt/LocalStorage";
+import {HiOutlineExclamationCircle} from "react-icons/hi";
 
 const Header = () => {
     const navigate = useNavigate();

@@ -61,7 +61,12 @@ import {
     accountPresident,
     accountTeamLeader,
     emailRegex,
-    alertStartDateFromFuture, alertBirthDateFromFuture, accountEmployee, accountAccountant, accountManagement
+    alertStartDateFromFuture,
+    alertBirthDateFromFuture,
+    accountEmployee,
+    accountAccountant,
+    accountManagement,
+    questionDoEndRequest, questionDoDeleteRequest, questionDoDeleteEmployee, peselRegex
 } from "../../GlobalAppConfig";
 import PositionsList from "../../components/employees/search/fields/PositionsList";
 import PositionLevel from "../../components/employee/fields/PositionLevel";
@@ -102,7 +107,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
     // Tylko konto zalogowane które jest PRACOWNIKIEM HR, MOŻE EDYTOWAĆ DANE, albo właściciel konta. W innym przypadku
 
     // Zmienna która wyłącza z użytku, dla podstawowego użycia, dane pracownika
-    console.log(mode)
     let disableData = !
         (getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
             getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR || mode === 'create')
@@ -232,11 +236,32 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </div>:
             <></>
     }
+
+    const buildPopupDelete = () => {
+        return(
+                <div className={"flex flex-col items-center justify-center text-workday gap-1 p-1 mb-2 w-44 rounded-md border-2 border-workday bg-blue-menu"}>
+                    <div className={"text-center cursor-default"}>{questionDoDeleteEmployee}</div>
+
+                    {showPopupWithProblems ?
+                    <div className={"flex flex-col items-center text-center text-workday gap-2 p-2"}>
+                        {alerts}
+                    </div>:
+                    <></>
+                    }
+
+                    <ReusableButton value={"Tak"} formatting={"border-2 border-b-workday min-w-min w-12 h-6"}
+                                    onClick={() => {
+                                        deleteEmployee()
+                                    }}/>
+                </div>
+        )
+    }
+
     function deleteEmployee(){
         fetchDeleteEmployee(id)
             .then(r => {
                 if (r.status === 200) {
-                    setAlerts( <p className={"bg-green-700 rounded-md font-bold"}>
+                    setAlerts( <p className={"bg-green-700 rounded-md border-workday border-2 font-bold pl-1 pr-1"}>
                         {alertDeleted}
                     </p>)
                     setShowPopupWithProblems(true)
@@ -246,13 +271,13 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                         navigate(-1);
                     }, 3000);
                 } else {
-                    setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+                    setAlerts( <p className={"bg-red-700 rounded-md border-workday border-2 font-bold pl-1 pr-1"}>
                         {alertProblemOccured}
                     </p>)
                     setShowPopupWithProblems(true)
                 }
             }).catch(e => {
-            setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
+            setAlerts( <p className={"bg-red-700 rounded-md border-workday border-2 font-bold pl-1 pr-1"}>
                 {alertProblemOccured}
             </p>)
             setShowPopupWithProblems(true)
@@ -268,9 +293,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
         const profilePicture = document.getElementById('employee-profile-picture');
         if(profilePicture !== null) {
-            console.log(profilePicture.naturalHeight)
-            console.log(profilePicture.naturalWidth)
-            if (profilePicture.naturalHeight > 301 || profilePicture.naturalWidth > 301) {
+            if (profilePicture.naturalHeight > 351 || profilePicture.naturalWidth > 351) {
                 alerts.push(
                     <p className={"bg-red-700 rounded-md font-bold"}>
                         {alertProfilePictureTooBig}
@@ -320,7 +343,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                 </p>
             )
         }
-        if(pesel.toString().trim().length !== 11 || Number(pesel) < 0){
+        if(pesel.toString().trim().length !== 11 || Number(pesel) < 0 || !peselRegex.test(pesel)){
             alerts.push(
                 <p className={"bg-red-700 rounded-md font-bold"}>
                     {alertWrongPESEL}
@@ -378,11 +401,18 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
         }
         setAlerts(alerts)
 
+        const skillsDataAsString = () => {
+            if (skillsData !== null && skillsData !== undefined) {
+                return skillsData.map((skill) => skill.skill_id);
+            }
+        }
+
         const query = new URLSearchParams();
         query.set("firstName", firstName);
         query.set("lastName", lastName);
         query.set("email", email);
         query.set("bankAccountNumber", bank);
+        query.set("skills", skillsDataAsString());
         query.set("birthDate", birth);
         query.set("password", "");
         query.set("pesel", pesel);
@@ -413,7 +443,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             setShowPopupWithProblems(true)
 
                             // Zapisanie umiejetnosci zaraz po tym
-                            console.log(skillsData)
                             clearWindowData();
                         } else {
                             setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
@@ -437,9 +466,6 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                                 {alertSaved}
                             </p>)
                             setShowPopupWithProblems(true)
-
-                            // Zapisanie umiejetnosci zaraz po tym
-                            console.log(skillsData)
                         } else {
                             setAlerts( <p className={"bg-red-700 rounded-md font-bold"}>
                                 {alertProblemOccured}
@@ -607,9 +633,12 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                                 {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
                                 getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
                                 getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== id ?
-                                <Popup content={buildPopup} position={"top center"}
+                                <Popup content={buildPopupDelete} position={"top center"}
                                        trigger={<ReusableButton id={"employee-delete"}
-                                                                value={labelDelete} onClick={() => deleteEmployee()}/>}
+                                                                value={labelDelete} onClick={() => {
+                                           setShowPopupWithProblems(false);
+                                           setAlerts(<></>)
+                                       }}/>}
                                 /> :
                                     <></>
                                 }

@@ -35,9 +35,7 @@ public class EmployeeModelValidator : IEmployeeModelValidator
 
     public bool IsPasswordValid(string password)
     {
-        var regex = new Regex("^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$");
-        //^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$
-        //"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{14,}$");
+        var regex = new Regex("^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^*]+)[0-9A-Za-z!@#$%^*]{14,}$");
 
         if(String.IsNullOrEmpty(password))
             return false;

@@ -5,12 +5,20 @@ import ReceivedGrades from "./ReceivedGrades";
 import GivenGrades from "./GivenGrades";
 import GiveGradesWindow from "./GiveGradesWindow";
 import {labelGivenGrades, labelReceivedGrades, pageNameGrades} from "../../GlobalAppConfig";
+import {useNavigate} from "react-router-dom";
+import {getLocalStorageKeyWithExpiry} from "../../components/jwt/LocalStorage";
 
 const Grades = () =>{
     document.title = pageNameGrades;
 
+    const navigate = useNavigate();
+
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         FunctionForResize("tabs-component", {setWantedHeightForList});
     }, []);
 

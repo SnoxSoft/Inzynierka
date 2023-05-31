@@ -6,7 +6,20 @@ const serverIpProd = "https://localhost:7120";
 
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
+const peselRegex = /^(?:(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1-2][0-9]|3[0-1]))|(?:[0-9]{2}(?:0[13-9]|1[0-2])(?:0[1-9]|[1-2][0-9]|30))|(?:[0-9]{2}02(?:0[1-9]|1[0-9]|2[0-8]))|(?:[0-9]{2}(?:02)(?:29)))(?:[0-9]{5})$/;
+
 const passwordRegex = /^(?=.*[0-9]+)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*]+)[0-9A-Za-z!@#$%^&*]{14,}$/;
+
+const optionsForDateYYYY_MM_DD = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+}
+
+const optionsForDateYYYY_MM = {
+    year: "numeric",
+    month: "2-digit"
+}
 
 // Nazwa aplikacji
 const appName = "PIRSOFT";
@@ -87,16 +100,17 @@ const positionLevelAdditionalRow = "Wybierz poziom stanowiska...";
 const absencesAdditionalRow = "Wybierz powód wniosku...";
 const contractAdditionalRow = "Wybierz rodzaj umowy...";
 
-const yearAdditionalRow = "Wybierz rok...";
-
 // Wybieranie wniosku urlopowego komponenty
 const labelRequestType = "Rodzaj";
 
 // Nieobecności/wnioski komponenty
 const labelRequest = "Wniosek";
 const labelFromTimeOfAbsence = "W terminie";
+const labelDaysTaken = "dni:";
 const labelFromTimeOfRequest = "w terminie";
 const labelShowProfile = "Pokaż profil";
+
+const labelEndRequest = "Zakończ";
 
 const alertCantGoFurther = "Nie możesz przejść poza zakres...";
 
@@ -235,7 +249,7 @@ const alertWrongTeam = pickFieldProperly + labelTeam;
 const alertWrongStartDate = pickFieldProperly + labelStartDate;
 
 const alertStartDateFromFuture = dateFromFuture + labelStartDate
-const alertProfilePictureTooBig = "Wybrane zdjęcie profilowe jest zbyt duże, maksymalny rozmiar to 300px szerokości i 300px wysokości";
+const alertProfilePictureTooBig = "Wybrane zdjęcie profilowe jest zbyt duże, maksymalny rozmiar to 350px szerokości i 350px wysokości";
 const alertProfilePicture = "Wybrane zdjęcie profilowe jest nieprawidłowe ";
 
 
@@ -248,8 +262,25 @@ const alertAbsence = "Wybierz prawidłowy rodzaj wniosku";
 const alertDateFromBiggerThanDateTo= "Data od nie może być większa od daty do";
 
 const alertTooManyDaysTaken= "Przekroczono liczbę dostępnych dni urlopowych";
-
 const alertTooManyDaysTakenOnDemand= "Nie można wziąć jednorazowo więcej niż 1 dzień na żądanie";
+
+const questionDoDeleteRequest = "Czy na pewno usunąć wniosek?";
+
+const questionDoDeleteEmployee = "Czy na pewno usunąć konto pracownika?";
+
+const questionDoEndRequest = "Czy zakończyć aktywny urlop z końcem dnia?";
+
+// Błędy przy tworzeniu oceny kwartalnej
+
+const alertPickAPerson = "Należy wybrać osobę, której dotyczy ocena kwartalna";
+
+const alertQuarter = "Należy wybrać kwartał";
+
+const alertTitle = "Należy wpisać tytuł";
+
+const alertMessage = "Należy wpisać wiadomość";
+
+const alertRating = "Należy wybrać ocenę kwartalną";
 
 // Odpowiedzi operacji
 const alertSaved = "Zapisano";
@@ -283,7 +314,7 @@ const accountAccountant = "Księgowość";
 const accountPresident = "Prezes";
 const accountManagement = "Zarząd";
 
-export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
+export {serverIp, serverIpProd, appName, emailRegex, peselRegex, passwordRegex,
 
     avatarAlterText, welcomeMessage, welcomeMessageShort, labelEmail, labelPassword, labelChangePassword, labelSave, labelCreate,
     labelFind, labelFilter, labelClose, labelApprove, labelDisapprove, labelDelete, labelPick, labelClear, labelChange, labelBack, labelLogIn, labelEdit,
@@ -296,6 +327,7 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     alertWrongPosition, alertWrongPositionLevel, alertWrongTeam, alertWrongStartDate, alertStartDateFromFuture, alertProfilePictureTooBig, alertProfilePicture,
 
     alertDateFrom, alertDateTo, alertAbsence, alertDateFromBiggerThanDateTo, alertTooManyDaysTaken, alertTooManyDaysTakenOnDemand,
+    questionDoDeleteRequest, questionDoEndRequest, questionDoDeleteEmployee,
 
     labelNotifications,
 
@@ -306,9 +338,9 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
     pagePasswordChange,
 
     calendarLabelFrom, calendarLabelTo,
-    labelRequest, labelShowProfile, alertCantGoFurther,
-    labelFromTimeOfAbsence, labelFromTimeOfRequest,
-    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, yearAdditionalRow, absencesAdditionalRow,
+    labelRequest, labelShowProfile, alertCantGoFurther, labelEndRequest,
+    labelFromTimeOfAbsence, labelFromTimeOfRequest, labelDaysTaken,
+    teamAdditionalRow, positionAdditionalRow, positionLevelAdditionalRow, contractAdditionalRow, absencesAdditionalRow,
     employeesMenu,
     employeeRegisterMenu,
     scheduleMenu,
@@ -361,5 +393,9 @@ export {serverIp, serverIpProd, appName, emailRegex, passwordRegex,
 
     labelStrongSkills, labelTeamManager, labelTeamMembers, labelTeamName,
     labelCreateTeam, labelSkillFinder,
-    absent, sick, dayoff, demand, occasional
+    absent, sick, dayoff, demand, occasional,
+
+    optionsForDateYYYY_MM_DD, optionsForDateYYYY_MM,
+
+    alertPickAPerson, alertQuarter ,alertTitle, alertMessage, alertRating
 };

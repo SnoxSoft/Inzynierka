@@ -3,6 +3,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Pirsoft.Api.Configurators;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 using IMailService = Pirsoft.Api.Security.Interfaces.IMailService;
 
@@ -28,15 +29,14 @@ public class MailService : IMailService
             mail.Sender = new MailboxAddress(mailModel.DisplayName ?? _settings.DisplayName, mailModel.From ?? _settings.From);
 
             // Receiver
-            foreach (string mailAddress in mailModel.To)
-                mail.To.Add(MailboxAddress.Parse(mailAddress));
+            mail.To.Add(MailboxAddress.Parse(mailModel.To));
                 
 
 
             // Add Content to Mime Message
             var body = new BodyBuilder();
             mail.Subject = mailModel.Subject;
-            body.HtmlBody = mailModel.Body;
+            body.HtmlBody = mailModel.ResetCode;
             mail.Body = body.ToMessageBody();
                 
             using var smtp = new SmtpClient();

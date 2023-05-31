@@ -3,8 +3,9 @@
     public enum EContractType
     {
         B2B                  = 1,
-        ContractOfEmployment = 2,
-        ContratcOfMandate    = 3,
-        Unassigned           = 4,
+        Unassigned           = 2,
+        ContractOfCommission = 3,
+        ContractOfEmployment = 4,
+        ContratcOfMandate    = 5,
     }
 }

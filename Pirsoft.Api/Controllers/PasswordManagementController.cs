@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Security.Interfaces;
@@ -11,43 +10,76 @@ namespace Pirsoft.Api.Controllers;
 public class PasswordManagementController : Controller
 {
     private readonly ICrudHandler _crudHandler;
-    private readonly IUserManager<EmployeeModel> _userManager;
+    private readonly IEmployeeCrudHandler _employeeCrudHandler;
     private readonly IMailService _emailService;
     private readonly IPasswordService _passwordService;
 
-    public PasswordManagementController(ICrudHandler crudHandler, IUserManager<EmployeeModel> userManager, IMailService emailService, IPasswordService passwordService)
+    public PasswordManagementController(ICrudHandler crudHandler, IMailService emailService, IPasswordService passwordService, IEmployeeCrudHandler employeeCrudHandler)
     {
         _crudHandler = crudHandler;
-        _userManager = userManager;
         _emailService = emailService;
         _passwordService = passwordService;
+        _employeeCrudHandler = employeeCrudHandler;
     }
 
     [HttpPost("/send/password/reset")]
-    public async Task<ActionResult> SendMailAsync(MailModel mailData)
+    public async Task<ActionResult> SendMailAsync(string email)
     {
-        bool result = await _emailService.SendEmailAsync(mailData, new CancellationToken());
+        var generatedResetCode = _passwordService.GenerateResetCode();
 
+        EmployeeModel? employee = await _crudHandler.ReadAsync<EmployeeModel>(1);
+
+        if (employee == null)
+        {
+            return NotFound("Unable to find employee with provided e-mail address.");
+        }
+
+        var passwordToken = new PasswordResetTokenModel()
+        {
+            expiration_time = DateTime.Now.AddHours(24),
+            reset_code = Convert.ToInt32(generatedResetCode),
+            email = email,
+            token_employee_id = employee.employee_id,
+        };
+
+        MailModel mailData = new(email, generatedResetCode, "", "");
+        
+        await _crudHandler.CreateAsync(passwordToken);
+        
+        bool result = await _emailService.SendEmailAsync(mailData, new CancellationToken());
         if (result)
             return StatusCode(StatusCodes.Status200OK, "Mail has successfully been sent.");
 
         return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
     }
-    
+
     [HttpPut("/reset/code/change/password")]
-    //[Authorize(Roles = "Admin, Manager, Employee")]
-    public async Task<ActionResult> ChangePasswordWithResetCode(int resetCode, string passwordFirst, string passwordSecond)
+    public async Task<ActionResult> ChangePasswordWithResetCode(int resetCode, string passwordFirst,
+        string passwordSecond)
     {
-        var resetToken = await _crudHandler.ReadAsync<PasswordResetTokenModel>(resetCode);
-        if (resetToken.expiration_time < DateTime.Now.AddHours(-24))
-            return NotFound();
-        
+        var query = await _crudHandler.ReadAllAsync<PasswordResetTokenModel>();
+        var resetToken = query.FirstOrDefault(tokens => tokens.reset_code == resetCode);
+
+        if (resetToken == null)
+        {
+            return NotFound("Unable to find given password reset token in database.");
+        }
+
+        if (resetToken.expiration_time < DateTime.Now)
+            return BadRequest("Password reset token has expired.");
+
         if (passwordFirst != passwordSecond)
             return BadRequest("New passwords do not match");
-        
-        var employee = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.employee_id);
-        employee.password = passwordFirst;
-        await _crudHandler.UpdateAsync(employee);
+
+        var currentUser = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.token_employee_id);
+
+        if (currentUser == null)
+        {
+            return NotFound("Unable to find user to change password.");
+        }
+
+        currentUser.password = passwordFirst;
+        await _crudHandler.UpdateAsync(currentUser);
 
         return Ok();
     }
@@ -56,29 +88,21 @@ public class PasswordManagementController : Controller
     //[Authorize(Roles = "Admin, Manager, Employee")]
     public async Task<ActionResult> ChangePasswordFromProfileView(string oldPassword, string newPasswordOnce, string newPasswordTwice, int employeeId)
     {
-        // Get the current user from the database using the employeeId parameter
-        var user = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
-        if (user == null)
+        var currentUser = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
+
+        if (currentUser == null)
         {
-            return NotFound();
+            return NotFound("Unable to find user to change password.");
         }
 
-        // Ensure the current user is authorized to update their own password
-        var currentUser = await _userManager.GetUserAsync(User.Identity.Name, oldPassword);
-        if (currentUser == null || currentUser.employee_id != user.employee_id)
-            return Unauthorized();
-
-        // Validate old password
-        if (user.password != oldPassword)
+        if (currentUser.password != oldPassword)
             return BadRequest("Old password is incorrect");
-
-        // Validate new password
+        
         if (newPasswordOnce != newPasswordTwice)
             return BadRequest("New passwords do not match");
-
-        // Update password and save changes
-        user.password = newPasswordOnce;
-        await _crudHandler.UpdateAsync<EmployeeModel>(user);
+        
+        currentUser.password = newPasswordOnce;
+        await _crudHandler.UpdateAsync(currentUser);
 
         return Ok();
     }

@@ -14,9 +14,6 @@ function Teams(){
     document.title = pageNameTeams;
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
 
@@ -29,6 +26,10 @@ function Teams(){
     const [employees, setEmployees] = useState(null);
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         // Ładowanie raz zespołów po załadowaniu okna a nie na bieżąco
         if(teams === null) {
             setTeams(null);

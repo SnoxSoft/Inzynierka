@@ -3,7 +3,7 @@ import {
     absencesMenu, accountHR, accountPresident, accountTeamLeader,
     companyScheduleMenu,
     employeeRegisterMenu,
-    employeesMenu,
+    employeesMenu, gradesMenu,
     requestsMenu,
     scheduleMenu,
     teamsMenu

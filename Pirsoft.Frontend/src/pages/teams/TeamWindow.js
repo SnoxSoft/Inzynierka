@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import TeamMembersSkills from "../../components/teamsModifcation/TeamMembersSkills";
 import {
-    accountHR, accountPresident, alertEmployeesStillInTeam, alertNoTeamName, alertProblemOccured,
+    accountHR, accountPresident, accountTeamLeader, alertEmployeesStillInTeam, alertNoTeamName, alertProblemOccured,
     labelClose,
     labelCreate, labelDelete, labelDisapprove,
     labelSave,
@@ -28,9 +28,6 @@ const TeamWindow = ({id, mode, title}) => {
     document.title = dynamicTitle
 
     const navigate = useNavigate();
-    if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
-        navigate("/");
-    }
 
     // Ładowanie danych
     const [teamData, setTeamData] = useState(null);
@@ -41,6 +38,10 @@ const TeamWindow = ({id, mode, title}) => {
     const [employeeSkillDataLoad, setEmployeeSkillDataLoad] = useState(false)
 
     useEffect(() => {
+        if(getLocalStorageKeyWithExpiry("loggedEmployee") === null){
+            navigate("/");
+        }
+
         if(getLocalStorageKeyWithExpiry("loggedEmployee") !== null && ((mode === "edit" || mode === "create") &&
                 (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountHR && getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountPresident))){
                 navigate("/teams");
@@ -67,9 +68,9 @@ const TeamWindow = ({id, mode, title}) => {
                         let leaderListData = []
                         employeesList.map((employee) => {
                             if (employee.employee_department_id.toString() === id) {
-                                if (employee.employee_company_role_id.toString() !== "3") {
+                                if (employee.employee_company_role.role_name !== accountTeamLeader) {
                                     employeesListData.push(employee)
-                                } else if (employee.employee_company_role_id.toString() === "3") {
+                                } else if (employee.employee_company_role.role_name === accountTeamLeader) {
                                     leaderListData.push(employee)
                                 }
                             }

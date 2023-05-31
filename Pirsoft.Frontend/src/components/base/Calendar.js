@@ -1,12 +1,6 @@
 import React from "react";
-import {calendarLabelFrom, calendarLabelTo} from "../../GlobalAppConfig";
+import {calendarLabelFrom, calendarLabelTo, optionsForDateYYYY_MM_DD} from "../../GlobalAppConfig";
 const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false, id, doValidate = false}) => {
-
-    const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }
 
     function validateDate(pickedDateText, method){
         if(!doValidate){
@@ -25,18 +19,18 @@ const Calendar= ({setDateTo,setDateFrom,from,to, disabled = false, id, doValidat
             && (pickedDate.getFullYear().toString().substring(0, 2) !== "19" ||
                 pickedDate.getFullYear().toString().substring(0, 2) !== "20")){
             if(method === "from") {
-                setDateFrom(new Date().toLocaleDateString("sv", options))
+                setDateFrom(new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
             }else {
-                setDateTo(new Date().toLocaleDateString("sv", options))
+                setDateTo(new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
             }
         }
 
         if(pickedDate.getFullYear().toString().length > 4 ||
         pickedDate.getFullYear().toString().length < 4){
             if(method === "from") {
-                setDateFrom(new Date().toLocaleDateString("sv", options))
+                setDateFrom(new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
             }else {
-                setDateTo(new Date().toLocaleDateString("sv", options))
+                setDateTo(new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
             }
         }
     }
