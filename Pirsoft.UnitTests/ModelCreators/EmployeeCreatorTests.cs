@@ -28,6 +28,7 @@ namespace Pirsoft.UnitTests.ModelCreators
             bool fakeIsActive = true;
             bool fakeLeaveIsSeniorityThreshold = true;
             bool fakePasswordReset = true;
+            string fakePasswordSalt = "testSalt";
             DateTime fakeEmploymentStartDate = DateTime.MinValue;
             DateTime fakeDateOfBirth = DateTime.MinValue;
             ECompanyRole fakeCompanyRole = ECompanyRole.Employee;
@@ -37,7 +38,7 @@ namespace Pirsoft.UnitTests.ModelCreators
             EmployeeCreator sut = new (
                 fakeFirstName, fakeLastName, fakeEmail, fakePassword, fakePesel, fakeBankAccountNumber, fakeAvatarFilePath,
                 fakeDepartmentId, fakeLeaveBaseDays, fakeLeaveDemandDays, fakeSeniorityInMonths, fakeGrossSalary,
-                fakeIsActive, fakeLeaveIsSeniorityThreshold, fakePasswordReset,
+                fakeIsActive, fakeLeaveIsSeniorityThreshold, fakePasswordReset, fakePasswordSalt,
                 fakeDateOfBirth, fakeEmploymentStartDate,
                 fakeCompanyRole, fakeContractType, fakeSeniorityLevel);
 
