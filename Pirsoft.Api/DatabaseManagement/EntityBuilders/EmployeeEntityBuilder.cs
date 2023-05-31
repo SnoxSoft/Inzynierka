@@ -29,6 +29,7 @@ namespace Pirsoft.Api.DatabaseManagement.EntityBuilders
                 entity.Property(e => e.last_name).HasMaxLength(50);
                 entity.Property(e => e.password).HasMaxLength(120);
                 entity.Property(e => e.pesel).HasMaxLength(11);
+                entity.Property(e => e.password_salt).HasMaxLength(200);
 
                 entity.HasOne(d => d.employee_company_role).WithMany(p => p.employees)
                     .HasForeignKey(d => d.employee_company_role_id)
