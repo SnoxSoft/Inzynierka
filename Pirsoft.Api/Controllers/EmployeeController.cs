@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Filesystem;
 using System.Text.RegularExpressions;
+using Pirsoft.Api.Security.Interfaces;
 
 namespace Pirsoft.Api.Controllers;
 
@@ -19,23 +20,26 @@ public class EmployeeController : Controller
     private readonly ICrudHandler _crudHandler;
     private readonly IEmployeeCrudHandler _employeeCrudHandler;
     private readonly IEmployeeModelValidator _validator;
+    private readonly IHashPasswordManager _hashPasswordManager;
 
     public EmployeeController(
         IAvatarFileUploadHandler avatarFileUploadHandler,
         ICrudHandler crudHandler,
         IEmployeeCrudHandler employeeCrudHandler,
-        IEmployeeModelValidator validator)
+        IEmployeeModelValidator validator,
+        IHashPasswordManager hashPasswordManager)
     {
         _avatarFileUploadHandler = avatarFileUploadHandler;
         _crudHandler = crudHandler;
         _employeeCrudHandler = employeeCrudHandler;
         _validator = validator;
+        _hashPasswordManager = hashPasswordManager;
     }
 
     [HttpPost("create/new/employee")]
     public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber, string? skills,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
-            DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
+            DateTime birthDate, DateTime employmentStartDate, string password_salt , ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
     {
         if (!_validator.IsPeselValid(pesel))
         {
@@ -87,6 +91,8 @@ public class EmployeeController : Controller
             }
             password = generatedPassword.ToString();
         }
+        password_salt = _hashPasswordManager.GenerateSalt();
+        password = _hashPasswordManager.HashPassword(password, password_salt);
 
         string avatarFilePath = string.Empty;
 
@@ -107,7 +113,7 @@ public class EmployeeController : Controller
         }
 
         EmployeeModel newEmployee = (EmployeeModel)new EmployeeCreator(firstName, lastName, email, password, pesel, bankAccountNumber, avatarFilePath,
-            departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,
+            departmentId, leaveBaseDays, leaveDemandDays, seniorityInMonths, grossSalary, isActive, leaveIsSeniorityThreshold, passwordReset,password_salt,
             birthDate, employmentStartDate, companyRole, contractType, seniorityLevel).CreateModel();
 
         IEnumerable<int> parsedSkillsIds = skills != null

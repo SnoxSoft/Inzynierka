@@ -30,6 +30,7 @@ public class EmployeeModel : IApiModel
     public int employee_department_id { get; set; }
     public int employee_seniority_level_id { get; set; }
     public int employee_company_role_id { get; set; }
+    public string password_salt { get; set; }
 
     public virtual CompanyRoleModel employee_company_role { get; set; } = null!;
     public virtual ContractTypeModel employee_contract_type { get; set; } = null!;

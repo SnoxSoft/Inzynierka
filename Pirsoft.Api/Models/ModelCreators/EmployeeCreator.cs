@@ -19,6 +19,7 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly bool _isActive;
         private readonly bool _leaveIsSeniorityThreshold;
         private readonly bool _passwordReset;
+        private readonly string _passwordSalt;
         private readonly DateTime _birthDate;
         private readonly DateTime _employmentStartDate;
         private readonly ECompanyRole _companyRole;
@@ -26,7 +27,7 @@ namespace Pirsoft.Api.Models.ModelCreators
         private readonly ESeniorityLevel _seniorityLevel;
 
         public EmployeeCreator(string firstName, string lastName, string email, string password, string pesel, string bankAccountNumber, string avatarFilePath,
-            int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
+            int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset, string passwordSalt,
             DateTime birthDate, DateTime employmentStartDate, ECompanyRole companyRole, EContractType contractType, ESeniorityLevel seniorityLevel)
         {
             _firstName = firstName;
@@ -49,6 +50,7 @@ namespace Pirsoft.Api.Models.ModelCreators
             _companyRole = companyRole;
             _contractType = contractType;
             _seniorityLevel = seniorityLevel;
+            _passwordSalt = passwordSalt;
         }
 
         public override IApiModel CreateModel() => new EmployeeModel
