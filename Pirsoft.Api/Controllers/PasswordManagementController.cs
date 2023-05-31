@@ -13,13 +13,15 @@ public class PasswordManagementController : Controller
     private readonly IEmployeeCrudHandler _employeeCrudHandler;
     private readonly IMailService _emailService;
     private readonly IPasswordService _passwordService;
+    private readonly IHashPasswordManager _hashPasswordManager;
 
-    public PasswordManagementController(ICrudHandler crudHandler, IMailService emailService, IPasswordService passwordService, IEmployeeCrudHandler employeeCrudHandler)
+    public PasswordManagementController(ICrudHandler crudHandler, IMailService emailService, IPasswordService passwordService, IEmployeeCrudHandler employeeCrudHandler, IHashPasswordManager hashPasswordManager)
     {
         _crudHandler = crudHandler;
         _emailService = emailService;
         _passwordService = passwordService;
         _employeeCrudHandler = employeeCrudHandler;
+        _hashPasswordManager = hashPasswordManager;
     }
 
     [HttpPost("/send/password/reset")]
@@ -27,7 +29,7 @@ public class PasswordManagementController : Controller
     {
         var generatedResetCode = _passwordService.GenerateResetCode();
 
-        EmployeeModel? employee = await _crudHandler.ReadAsync<EmployeeModel>(1);
+        EmployeeModel? employee = await _employeeCrudHandler.ReadEmployeeByEmailAsync(email);
 
         if (employee == null)
         {
@@ -78,7 +80,11 @@ public class PasswordManagementController : Controller
             return NotFound("Unable to find user to change password.");
         }
 
-        currentUser.password = passwordFirst;
+        var passwordSalt = _hashPasswordManager.GenerateSalt();
+        var hashedPassword = _hashPasswordManager.HashPassword(passwordFirst, passwordSalt);
+
+        currentUser.password = hashedPassword;
+        currentUser.password_salt = passwordSalt;
         await _crudHandler.UpdateAsync(currentUser);
 
         return Ok();
@@ -100,8 +106,12 @@ public class PasswordManagementController : Controller
         
         if (newPasswordOnce != newPasswordTwice)
             return BadRequest("New passwords do not match");
-        
-        currentUser.password = newPasswordOnce;
+
+        var passwordSalt = _hashPasswordManager.GenerateSalt();
+        var hashedPassword = _hashPasswordManager.HashPassword(newPasswordOnce, passwordSalt);
+
+        currentUser.password = hashedPassword;
+        currentUser.password_salt = passwordSalt;
         await _crudHandler.UpdateAsync(currentUser);
 
         return Ok();

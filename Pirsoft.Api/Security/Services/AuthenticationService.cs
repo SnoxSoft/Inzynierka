@@ -19,12 +19,14 @@ namespace Pirsoft.Api.Security.Services
         private IUserManager<EmployeeModel> _userManager;
         private readonly JSONWebTokensSettings _jwtSettings;
         private readonly IEmployeeModelValidator _employeeModelValidator;
+        private readonly IHashPasswordManager _hashPasswordManager;
         
-        public AuthenticationService(IUserManager<EmployeeModel> userManager, IOptions<JSONWebTokensSettings> jwtSettings, IEmployeeModelValidator employeeModelValidator)
+        public AuthenticationService(IUserManager<EmployeeModel> userManager, IOptions<JSONWebTokensSettings> jwtSettings, IEmployeeModelValidator employeeModelValidator, IHashPasswordManager hashPasswordManager)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
             _employeeModelValidator = employeeModelValidator;
+            _hashPasswordManager = hashPasswordManager;
         }
 
         public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
@@ -33,12 +35,16 @@ namespace Pirsoft.Api.Security.Services
                 return new AuthenticationResponse(){ StatusCode = ESecurityResponse.InvalidEmail};
 
             var user = await _userManager.FindByEmailAsync(request.Email);
+            var passwordSalt = user.password_salt;
 
             if (user == null)
                 return new AuthenticationResponse(){ StatusCode = ESecurityResponse.EmailNotFound };
             if(!_employeeModelValidator.IsPasswordValid(request.Password))
                 return new AuthenticationResponse(){ StatusCode = ESecurityResponse.InvalidPassword};
-            if (request.Password != user.password)
+
+            string requestHashedPassword = _hashPasswordManager.HashPassword(request.Password, passwordSalt);
+
+            if (requestHashedPassword != user.password)
                 return new AuthenticationResponse() { StatusCode = ESecurityResponse.BadPassword };
 
             JwtSecurityToken jwtSecurityToken = await GenerateToken(user);

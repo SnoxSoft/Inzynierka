@@ -20,6 +20,7 @@ namespace Pirsoft.Api.Configurators
 
             builder.Services.AddSingleton<IUserManager<EmployeeModel>, UserManager>();
             builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddSingleton<IHashPasswordManager, HashPasswordManager>();
 
             builder.Services.AddAuthentication(authenticationOptions =>
             {
