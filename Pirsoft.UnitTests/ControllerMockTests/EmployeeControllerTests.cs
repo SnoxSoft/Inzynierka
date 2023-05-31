@@ -10,6 +10,7 @@ using Pirsoft.Api.Controllers;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Filesystem;
 using Pirsoft.Api.Models;
+using Pirsoft.Api.Security.Interfaces;
 using Pirsoft.Api.Validators;
 
 namespace Pirsoft.UnitTests.ControllerMockTests;
@@ -19,6 +20,7 @@ public class EmployeeControllerTests
 {
     private Mock<ICrudHandler> _crudHandlerMock = null!;
     private Mock<IEmployeeCrudHandler> _employeeCrudHandlerMock = null!;
+    private Mock<IHashPasswordManager> _hashPasswordManagerMock = null!;
 
     private EmployeeController _employeeController = null!;
 
@@ -27,12 +29,14 @@ public class EmployeeControllerTests
     {
         _crudHandlerMock = new Mock<ICrudHandler>();
         _employeeCrudHandlerMock = new Mock<IEmployeeCrudHandler>();
+        _hashPasswordManagerMock = new Mock<IHashPasswordManager>();
 
         _employeeController = new EmployeeController(
             Mock.Of<IAvatarFileUploadHandler>(),
             _crudHandlerMock.Object,
             _employeeCrudHandlerMock.Object,
-            Mock.Of<IEmployeeModelValidator>());
+            Mock.Of<IEmployeeModelValidator>(),
+            _hashPasswordManagerMock.Object);
     }
 
     [Test]

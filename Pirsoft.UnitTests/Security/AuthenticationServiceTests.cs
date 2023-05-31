@@ -8,6 +8,7 @@ using Moq;
 using NUnit.Framework;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Security.Interfaces;
+using Pirsoft.Api.Security.Managers;
 using Pirsoft.Api.Security.Models;
 using Pirsoft.Api.Security.Services;
 using Pirsoft.Api.Validators;
@@ -16,17 +17,12 @@ namespace Pirsoft.UnitTests.Security
 {
     internal class AuthenticationServiceTests
     {
-        private AuthenticationService _sut = null!;
+        private IHashPasswordManager _sut = null!;
 
         [SetUp]
         public void SetUp()
         {
-            var userManagerMock = new Mock<IUserManager<EmployeeModel>>();
-            var jwtSettingsMock = new Mock<IOptions<JSONWebTokensSettings>>();
-            var employeeModelValidatorMock = new Mock<IEmployeeModelValidator>();
-
-            _sut = new AuthenticationService(userManagerMock.Object, jwtSettingsMock.Object,
-                employeeModelValidatorMock.Object);
+            _sut = new HashPasswordManager();
         }
 
         [Test]
