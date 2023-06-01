@@ -12,7 +12,7 @@ import {BsPersonCircle} from "react-icons/bs";
 import axios from "axios";
 import {getLocalStorageKeyWithExpiry} from "../jwt/LocalStorage";
 
-const EmployeeListItem = ({employee, action, showRequest, id, teams, positions, positionLevels}) => {
+const EmployeeListItem = ({employee, action, showRequest, id}) => {
     const[showHideButtons, setShowHideButtons] = useState(false);
 
     const showOptions = () => {
