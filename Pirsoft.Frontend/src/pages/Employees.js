@@ -227,10 +227,9 @@ function Employees(){
                     </div>
                     <div id={"employee-list"} className={"rounded-md overflow-y-auto"}
                         style={{height: wantedHeightsForList}}>
-                        {employeesList && teamsList && positionsList ?
+                        {employeesList ?
                             <EmployeesList values={[employeesList][0]} action={setPickedEmployeeData}
-                                           showRequest={setShowAddEmployeeAnAbsence}
-                                           teams={teamsList} positions={positionsList} positionLevels={positionLevelList}/> : <p/>}
+                                           showRequest={setShowAddEmployeeAnAbsence}/> : <p/>}
                     </div>
                 </div> :
                 <div id={"employees-load"}
