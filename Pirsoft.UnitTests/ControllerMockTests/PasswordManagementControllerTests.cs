@@ -20,6 +20,7 @@ public class PasswordManagementControllerTests
     private Mock<IEmployeeCrudHandler> _employeeCrudHandlerMock = null!;
     private Mock<IMailService> _emailServiceMock = null!;
     private Mock<IPasswordService> _passwordServiceMock = null!;
+    private Mock<IHashPasswordManager> _hashPasswordManagerMock = null!;
 
     private PasswordManagementController _controller = null!;
 
@@ -30,12 +31,14 @@ public class PasswordManagementControllerTests
         _employeeCrudHandlerMock = new Mock<IEmployeeCrudHandler>();
         _emailServiceMock = new Mock<IMailService>();
         _passwordServiceMock = new Mock<IPasswordService>();
+        _hashPasswordManagerMock = new Mock<IHashPasswordManager>();
 
         _controller = new PasswordManagementController(
             _crudHandlerMock.Object,
             _emailServiceMock.Object,
             _passwordServiceMock.Object,
-            _employeeCrudHandlerMock.Object
+            _employeeCrudHandlerMock.Object,
+            _hashPasswordManagerMock.Object
         );
     }
 
