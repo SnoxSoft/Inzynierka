@@ -21,7 +21,7 @@ public class BaseTest
         var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = false,
+            Headless = true,
         });
         Page = await browser.NewPageAsync();
     }
