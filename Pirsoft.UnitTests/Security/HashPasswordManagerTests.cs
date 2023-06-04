@@ -15,7 +15,7 @@ using Pirsoft.Api.Validators;
 
 namespace Pirsoft.UnitTests.Security
 {
-    internal class HashPasswordManagerTests
+    public class HashPasswordManagerTests
     {
         private IHashPasswordManager _sut = null!;
 
@@ -28,8 +28,6 @@ namespace Pirsoft.UnitTests.Security
         [Test]
         public void GenerateSaltShouldReturnValidSalt()
         {
-            //Arrange
-
             //Act
             string salt = _sut.GenerateSalt();
 
@@ -42,14 +40,14 @@ namespace Pirsoft.UnitTests.Security
         [Test]
         public void HashPasswordShouldReturnNotEmptyHash()
         {
-            //arrange
+            //Arrange
             string password = "Kadry123@konto";
             string salt = "salt";
 
             //Act
             string hashedPassword = _sut.HashPassword(password, salt);
 
-            //assert
+            //Assert
             Assert.NotNull(hashedPassword);
             Assert.IsNotEmpty(hashedPassword);
         }
