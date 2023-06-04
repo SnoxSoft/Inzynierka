@@ -18,9 +18,6 @@ public class ProfileViewPage : PageTest
     
     public ProfileViewPage(IPage page) => _page = page;
     
-    //actions
-    
-    
     //assertions
     public async Task EmployeeFirstNameIsVisible() => await Expect(_employeeFirstName).ToBeVisibleAsync();
     public async Task EmployeeLastNameIsVisible() => await Expect(_employeeLastName).ToBeVisibleAsync();
