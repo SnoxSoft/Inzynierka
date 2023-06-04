@@ -89,5 +89,15 @@ namespace Pirsoft.Api.Security.Services
 
             return jwtSecurityToken;
         }
+
+        public string GenerateSalt()
+        {
+            return "";
+        }
+
+        public string HashPassword(string password, string salt)
+        {
+            return "";
+        }
     }
 }
