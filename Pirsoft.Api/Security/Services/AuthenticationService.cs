@@ -6,7 +6,6 @@ using Pirsoft.Api.Security.Interfaces;
 using Pirsoft.Api.Security.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using Pirsoft.Api.Enums;
 using Pirsoft.Api.Validators;

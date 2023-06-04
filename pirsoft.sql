@@ -236,7 +236,7 @@ CREATE TABLE `employees` (
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-INSERT INTO `employees` VALUES (1,'Kadry','Start','kadry.start@gmail.com','T3oKxILOyXZHN9Skex7f9Cd7KExVOhQeOmrpAVktQGQ=','00010113547','00000000000000000000000000',0,'1900-01-02',0,0,'1900-01-01',0,2,2,1,1,0,0,0,'','zpXkOG/FMG1YqbHcMUOfE8qo93vpQKzbQnRRQa9mMCs=');
+INSERT INTO `employees` VALUES INSERT INTO `employees` VALUES (1,'Kadry','Start','kadry.start@gmail.com','LaLFcGSqB8hHYkdfW4byoGNTq901tW24bDcGUsu5iIw=','00010113547','00000000000000000000000000',0,'1900-01-02',0,0,'1900-01-01',0,2,2,1,1,0,0,0,'','zpXkOG/FMG1YqbHcMUOfE8qo93vpQKzbQnRRQa9mMCs=');
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
