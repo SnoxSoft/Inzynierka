@@ -77,9 +77,12 @@ function CompanySchedule(){
         if(companyMonthDaysOff !== undefined && companyMonthDaysOff !== null) {
             companyMonthDaysOff.map((companyMonthDays) => {
                 if(companyMonthDays.absence_status_id === 3){
-                    let absenceDateStart = new Date(companyMonthDays.absence_start_date)
-                    let absenceDateEnd = new Date(companyMonthDays.absence_end_date)
-                    let dayDifference = absenceDateEnd.getDate() - absenceDateStart.getDate()
+                    let absenceDateStart = new Date(companyMonthDays.absence_start_date);
+                    let absenceDateEnd = new Date(companyMonthDays.absence_end_date);
+
+                    let timeDifference = absenceDateEnd.getTime() - absenceDateStart.getTime();
+
+                    let dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
 
                     let daysForCurrentEmployee = []
                     for(let day = 0; day <= dayDifference; day++){
