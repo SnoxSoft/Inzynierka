@@ -229,7 +229,7 @@ public class AbsenceController : ControllerBase
     {
         var query = await _crudHandler.ReadAllAsync<AbsenceModel>();
         return query.AsQueryable().Where(absence => absence.employee_owner_id == id).
-            Where(absence => absence.absence_start_date >= dateFrom && absence.absence_end_date<=dateTo).ToList();
+            Where(absence => absence.absence_start_date <= dateTo && absence.absence_end_date>=dateFrom).ToList();
         
     }
     
@@ -238,7 +238,7 @@ public class AbsenceController : ControllerBase
     {
         var query = await _crudHandler.ReadAllAsync<AbsenceModel>();
         return query.AsQueryable().
-            Where(absence => absence.absence_start_date >= dateFrom && absence.absence_end_date<=dateTo).ToList();
+            Where(absence => absence.absence_start_date <= dateTo && absence.absence_end_date>=dateFrom).ToList();
         
     }
 }

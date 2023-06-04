@@ -144,7 +144,6 @@ function Schedule(){
         // Ładowanie dni wolnych po załadowaniu okna a nie na bieżąco
         fetchGetOneEmployeeBetweenDatesDaysOff(navigate, getLocalStorageKeyWithExpiry("loggedEmployee").UserId, firstDayOfMonthForEndpoint, lastDayOfMonthForEndpoint)
             .then(monthDaysOff => {
-
                 let monthDaysOfff = []
                 // Tutaj tworzę jsona do pokazania dni wolnych na kalendarzu
                 if(monthDaysOff !== undefined && monthDaysOff !== null) {
@@ -161,7 +160,10 @@ function Schedule(){
                             })
                             let absenceDateStart = new Date(days.absence_start_date)
                             let absenceDateEnd = new Date(days.absence_end_date)
-                            let dayDifference = absenceDateEnd.getDate() - absenceDateStart.getDate()
+
+                            let timeDifference = absenceDateEnd.getTime() - absenceDateStart.getTime();
+
+                            let dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
 
                             for(let day = 0; day <= dayDifference; day++){
                                let dayData =  {
@@ -225,7 +227,8 @@ function Schedule(){
             border = 'outline-dashed outline-4'
         }
 
-        return <div className={'flex flex-col h-20 border-workday border-2 hover:cursor-default '+color+' m-2 rounded-md text-black '+border+' '}>
+        return <div className={'flex flex-col h-20 border-workday border-2 hover:cursor-default '
+            +color+' m-2 rounded-md text-black '+border+' '}>
             <div className={"bg-dayoffmonth bg-opacity-50 text-center self-stretch"}>{day.dayOfMonth}</div>
             <div className={"text-center text-xs"}>{day.name} </div>
         </div>

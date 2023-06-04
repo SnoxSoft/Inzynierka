@@ -58,18 +58,6 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
     let allTeamsDataLoad = [];
 
     if(isSchedule) {
-        console.clear()
-        let colTeam = 2
-        // days.forEach((day, dayId) => {
-        //     // Dodanie pustego wiersza
-        //     allTeamsDataLoad.push(
-        //         <div id={id} key={id}
-        //              className={"row-start-"+row+" col-start-"+colTeam+" text-workday"}>
-        //         </div>
-        //     )
-        //     colTeam = colTeam + 1
-        // });
-
         employees.forEach((employee, employeeId) => {
             if (employee.employee_department_id === team.department_id) {
                 row = row + 1
@@ -79,8 +67,6 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
                 // szukanie dni wolnych danego pracownika
                 let daysOffOfThisEmployee = []
                 currentMonthDaysOff.forEach((e) => {
-                    // console.log(e)
-                    // console.log(employee.employee_id)
                     if (e.employee === employee.employee_id) {
                         e.daysoff.map((day) => {
                             daysOffOfThisEmployee.push(day)
@@ -90,7 +76,6 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
                 // dodawanie komponentów dni pracownika
                 let col = 2
                 days.forEach((day, dayId) => {
-                    //console.log(day)
                     allTeamsDataLoad.push(
                         appendDay(day, row, col, daysOffOfThisEmployee, employeeId, dayId)
                     )
