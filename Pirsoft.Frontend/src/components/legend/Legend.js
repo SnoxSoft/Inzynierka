@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {fetchGetAbsencesTypes} from "../../DataFetcher";
 import {useNavigate} from "react-router-dom";
-import {absent, dayoff, demand, occasional} from "../../GlobalAppConfig";
+import {absent, dayoff, demand, occasional, pendingDay, weekendText, workingDay} from "../../GlobalAppConfig";
 
 function Legend({bigLegend = false, id}){
 
@@ -25,13 +25,20 @@ function Legend({bigLegend = false, id}){
         legendComponent.push(
             <div key={"legend-item-" + 0} className={"flex flex-row gap-1"}>
                 <div className={"h-6 w-6 bg-workday rounded-md border-2"}></div>
-            <div>Dzień pracujący</div>
+            <div>{workingDay}</div>
         </div>)
         legendComponent.push(
             <div key={"legend-item-" + 1} className={"flex flex-row gap-1"}>
                 <div className={"h-6 w-6 bg-weekend rounded-md border-2"}></div>
-                <div>Weekend</div>
+                <div>{weekendText}</div>
             </div>)
+        if(!bigLegend){
+            legendComponent.push(
+                <div key={"legend-item-pending"} className={"flex flex-row gap-1"}>
+                    <div className={"h-6 w-6 bg-orange-400 rounded-md border-2"}></div>
+                    <div>{pendingDay}</div>
+                </div>)
+        }
         legendItems.forEach((l, lId) => {
             if(bigLegend || bigLegend === false && l.absence_type_category === absent) {
                 legendComponent.push(

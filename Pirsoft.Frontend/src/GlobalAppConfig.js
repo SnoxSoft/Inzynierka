@@ -295,6 +295,11 @@ const alertAccepted = "Zaakceptowano";
 const alertRefused = "Odrzucono";
 const alertChanged = "Zmieniono;"
 
+// Dodatkowo zmienne
+
+const weekendText = "Weekend";
+const workingDay = "Dzień pracujący";
+const pendingDay = "Oczekujący"
 
 // Rodzaje nieobecnosci - muszą zgadzać
 
@@ -313,6 +318,12 @@ const accountTeamLeader = "Kierownik";
 const accountAccountant = "Księgowość";
 const accountPresident = "Prezes";
 const accountManagement = "Zarząd";
+
+// Rodzaje statusów nieobecności - musza mieć odpowiedniki w bazie z id
+
+const absencePending = 1;
+const absenceRejected = 2;
+const absenceApproved = 3;
 
 export {serverIp, serverIpProd, appName, emailRegex, peselRegex, passwordRegex,
 
@@ -397,5 +408,9 @@ export {serverIp, serverIpProd, appName, emailRegex, peselRegex, passwordRegex,
 
     optionsForDateYYYY_MM_DD, optionsForDateYYYY_MM,
 
-    alertPickAPerson, alertQuarter ,alertTitle, alertMessage, alertRating
+    alertPickAPerson, alertQuarter ,alertTitle, alertMessage, alertRating,
+
+    absencePending, absenceApproved, absenceRejected,
+
+    weekendText, workingDay, pendingDay
 };

@@ -38,9 +38,13 @@ const TeamRow = ({team, row, setEmployeesVisible, id,
         let color = 'bg-workday'
 
         daysOff.forEach((d) => {
-            if(day.date === d){
+            if(d.pending && day.date === d.date){
+                color = 'bg-orange-400'
+            }
+            if(day.date === d.date && !d.pending){
                 color = 'bg-absent'
             }
+
         })
 
         if(day.weekend !== undefined && day.weekend){

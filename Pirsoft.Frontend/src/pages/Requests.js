@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import FunctionForResize from "../components/base/FunctionForResize";
 import {
+    absenceApproved,
+    absencePending, absenceRejected,
     accountEmployee,
     accountHR, accountManagement, accountPresident, accountTeamLeader, optionsForDateYYYY_MM_DD,
     pageNameRequests,
@@ -140,97 +142,97 @@ function Requests(){
                             addRequest = request
                         }else {
                             // Opcje dla oczekujace
-                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === 1 &&
+                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === absencePending &&
                                 checkCreatedByCurrent && !checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === 1 &&
+                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === absencePending &&
                                 !checkCreatedByCurrent && checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === 1 &&
+                            if ((checkWaiting && !checkRefused && !checkApproved) && request.absence_status_id === absencePending &&
                                 checkCreatedByCurrent && checkNotCreatedByCurrent) {
                                 addRequest = request
                             }
 
                             // Opcje dla odrzucone
-                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === 2 &&
+                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === absenceRejected &&
                                 checkCreatedByCurrent && !checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === 2 &&
+                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === absenceRejected &&
                                 !checkCreatedByCurrent && checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === 2 &&
+                            if ((!checkWaiting && checkRefused && !checkApproved) && request.absence_status_id === absenceRejected &&
                                 checkCreatedByCurrent && checkNotCreatedByCurrent) {
                                 addRequest = request
                             }
 
                             // Opcje dla zatwierdzone
-                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === 3 &&
+                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === absenceApproved &&
                                 checkCreatedByCurrent && !checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === 3 &&
+                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === absenceApproved &&
                                 !checkCreatedByCurrent && checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === 3 &&
+                            if ((!checkWaiting && !checkRefused && checkApproved) && request.absence_status_id === absenceApproved &&
                                 checkCreatedByCurrent && checkNotCreatedByCurrent) {
                                 addRequest = request
                             }
 
                             // Opcje dla oczekujace i odrzucone
-                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === 1 || request.absence_status_id === 2) &&
+                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === absencePending || request.absence_status_id === absenceRejected) &&
                                 checkCreatedByCurrent && !checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === 1 || request.absence_status_id === 2) &&
+                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === absencePending || request.absence_status_id === absenceRejected) &&
                                 !checkCreatedByCurrent && checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === 1 || request.absence_status_id === 2) &&
+                            if ((checkWaiting && checkRefused && !checkApproved) && (request.absence_status_id === absencePending || request.absence_status_id === absenceRejected) &&
                                 checkCreatedByCurrent && checkNotCreatedByCurrent) {
                                 addRequest = request
                             }
 
                             // Opcje za odrzucone i zatwierdzone
-                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === 2 || request.absence_status_id === 3) &&
+                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === absenceRejected || request.absence_status_id === absenceApproved) &&
                                 checkCreatedByCurrent && !checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === 2 || request.absence_status_id === 3) &&
+                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === absenceRejected || request.absence_status_id === absenceApproved) &&
                                 !checkCreatedByCurrent && checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === 2 || request.absence_status_id === 3) &&
+                            if ((!checkWaiting && checkRefused && checkApproved) && (request.absence_status_id === absenceRejected || request.absence_status_id === absenceApproved) &&
                                 checkCreatedByCurrent && checkNotCreatedByCurrent) {
                                 addRequest = request
                             }
 
                             // Opcje dla zatwierdzone i oczekujace
-                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 2) &&
+                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === absenceApproved || request.absence_status_id === absenceRejected) &&
                                 checkCreatedByCurrent && !checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() === request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 2) &&
+                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === absenceApproved || request.absence_status_id === absenceRejected) &&
                                 !checkCreatedByCurrent && checkNotCreatedByCurrent &&
                                 currentUserId.toString().trim() !== request.employee_approver_id.toString().trim()) {
                                 addRequest = request
                             }
-                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === 3 || request.absence_status_id === 1) &&
+                            if ((checkWaiting && !checkRefused && checkApproved) && (request.absence_status_id === absenceApproved || request.absence_status_id === absencePending) &&
                                 checkCreatedByCurrent && checkNotCreatedByCurrent) {
                                 addRequest = request
                             }

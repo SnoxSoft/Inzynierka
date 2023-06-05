@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import ReusableButton from "../base/ReusableButton";
 import {
+    absenceApproved, absencePending,
     labelCreate,
     labelDaysTaken,
     labelDelete, labelEndRequest,
@@ -48,7 +49,7 @@ const RequestListItem = ({employeeAbsence, old = false,
     function endAbsence() {
         const query = new URLSearchParams();
         query.set("employeeApproverId", getLocalStorageKeyWithExpiry("loggedEmployee").UserId);
-        query.set("absenceStatusId", 3);
+        query.set("absenceStatusId", absenceApproved);
         query.set("endDateTime", new Date().toLocaleDateString("sv", optionsForDateYYYY_MM_DD));
 
         fetchPutEditAbsence(employeeAbsence.absence_id, query)
@@ -65,14 +66,6 @@ const RequestListItem = ({employeeAbsence, old = false,
     }
 
     const [showQuestion, setShowQuestion] = useState(false)
-
-    const buildPopup = () => {
-        return <div className={"bg-brown-menu flex flex-col items-center text-workday gap-2 p-1 mr-2 hover:bg-brown-menu hover:border-2 hover:border-workday hover:rounded-md "}>
-            <div className={"text-center cursor-default"}>Czy chcesz dzisiaj przerwać urlop?</div>
-            <div className={"text-center cursor-default"}>Od jutra nastąpi zwolnienie pozostałych dni</div>
-            <ReusableButton value={"Tak"} formatting={"border-2 border-b-workday min-w-min w-12 h-6"}/>
-            </div>
-    }
 
     // Obliczennie daty to zakończenia urlopu
     const today = new Date()
@@ -115,7 +108,7 @@ const RequestListItem = ({employeeAbsence, old = false,
                         {!old ?
                             <>
                                 {window === "absences" ?
-                                    employeeAbsence.absence_status_id.toString().trim() !== "3" ?
+                                    employeeAbsence.absence_status_id.toString().trim() !== absenceApproved.toString() ?
                                         <>
                                         {showQuestion ?
                                                 <div className={"flex flex-col items-center justify-center text-workday gap-1 p-1 mr-2  h-28 "}>
@@ -135,7 +128,7 @@ const RequestListItem = ({employeeAbsence, old = false,
                                     <></> :
                                     <>
 
-                                        {employeeAbsence.absence_status_id.toString().trim() !== "1" ?
+                                        {employeeAbsence.absence_status_id.toString().trim() !== absencePending.toString() ?
                                             <>
                                                 {showQuestion ?
                                                     <div className={"flex flex-col items-center justify-center text-workday gap-1 p-1 mr-2  h-28 "}>
@@ -161,7 +154,7 @@ const RequestListItem = ({employeeAbsence, old = false,
                                             <></>
                                         }
 
-                                        {employeeAbsence.absence_status_id === 1 &&
+                                        {employeeAbsence.absence_status_id === absencePending &&
                                             <>
                                             <ReusableButton id={id + "-request"} value={labelRequest}
                                             onClick={() => {
@@ -191,7 +184,7 @@ const RequestListItem = ({employeeAbsence, old = false,
                                     <></>
                                 }
                                 {employeeAbsence.absence_end_date <= tomorrow.toLocaleDateString("sv", optionsForDateYYYY_MM_DD) && window !== "absences" &&
-                                    employeeAbsence.absence_status_id === 3?
+                                    employeeAbsence.absence_status_id === absenceApproved?
                                     <>
                                         {showQuestion ?
                                             <div className={"flex flex-col items-center justify-center text-workday gap-1 p-1 mr-2  h-28 "}>

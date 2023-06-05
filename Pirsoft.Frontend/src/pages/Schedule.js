@@ -5,6 +5,7 @@ import ScheduleListItem from "../components/schedule/ScheduleListItem";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
 import {
+    absenceApproved,
     absent,
     alertCantGoFurther,
     calendarLabelFrom,
@@ -148,7 +149,7 @@ function Schedule(){
                 // Tutaj tworzę jsona do pokazania dni wolnych na kalendarzu
                 if(monthDaysOff !== undefined && monthDaysOff !== null) {
                     monthDaysOff.map((days) => {
-                        if(days.absence_status_id === 3){
+                        if(days.absence_status_id === absenceApproved){
                             let absenceTypeForDay = "absent"
                             let absenceNameForDay = ""
 
