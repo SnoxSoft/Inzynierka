@@ -5,6 +5,8 @@ import FunctionForResize from "../components/base/FunctionForResize";
 import RequestListItem from "../components/absences/RequestListItem";
 import RequestWindow from "./RequestWindow";
 import {
+    absenceApproved,
+    absencePending, absenceRejected,
     headerAbsencesDaysNoPayLeft, headerAbsencesEndOfDaysOff,
     labelFilter, labelRequest, optionsForDateYYYY_MM_DD, pageNameAbsences,
     requestActionLabel,
@@ -132,17 +134,17 @@ function Absences(){
                         let addAbsence = null
                         if (checkWaiting && checkRefused && checkApproved) {
                             addAbsence = absence
-                        } else if ((checkWaiting && !checkRefused && !checkApproved) && absence.absence_status_id === 1) {
+                        } else if ((checkWaiting && !checkRefused && !checkApproved) && absence.absence_status_id === absencePending) {
                             addAbsence = absence
-                        } else if ((!checkWaiting && checkRefused && !checkApproved) && absence.absence_status_id === 2) {
+                        } else if ((!checkWaiting && checkRefused && !checkApproved) && absence.absence_status_id === absenceRejected) {
                             addAbsence = absence
-                        } else if ((!checkWaiting && !checkRefused && checkApproved) && absence.absence_status_id === 3) {
+                        } else if ((!checkWaiting && !checkRefused && checkApproved) && absence.absence_status_id === absenceApproved) {
                             addAbsence = absence
-                        } else if ((checkWaiting && checkRefused && !checkApproved) && (absence.absence_status_id === 1 || absence.absence_status_id === 2)) {
+                        } else if ((checkWaiting && checkRefused && !checkApproved) && (absence.absence_status_id === absencePending || absence.absence_status_id === absenceRejected)) {
                             addAbsence = absence
-                        } else if ((!checkWaiting && checkRefused && checkApproved) && (absence.absence_status_id === 2 || absence.absence_status_id === 3)) {
+                        } else if ((!checkWaiting && checkRefused && checkApproved) && (absence.absence_status_id === absenceRejected || absence.absence_status_id === absenceApproved)) {
                             addAbsence = absence
-                        } else if ((checkWaiting && !checkRefused && checkApproved) && (absence.absence_status_id === 3 || absence.absence_status_id === 1)) {
+                        } else if ((checkWaiting && !checkRefused && checkApproved) && (absence.absence_status_id === absenceApproved || absence.absence_status_id === absencePending)) {
                             addAbsence = absence
                         }
 

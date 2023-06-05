@@ -4,6 +4,7 @@ import ReusableButton from "../components/base/ReusableButton";
 import {MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos} from "react-icons/md";
 import dayjs from "dayjs";
 import {
+    absenceApproved, absencePending,
     legendLabel,
     legendToday,
     months, optionsForDateYYYY_MM,
@@ -76,7 +77,7 @@ function CompanySchedule(){
         // Tutaj tworzę jsona do pokazania dni wolnych na kalendarzu firmowym
         if(companyMonthDaysOff !== undefined && companyMonthDaysOff !== null) {
             companyMonthDaysOff.map((companyMonthDays) => {
-                if(companyMonthDays.absence_status_id === 3){
+                if(companyMonthDays.absence_status_id === absenceApproved || companyMonthDays.absence_status_id === absencePending){
                     let absenceDateStart = new Date(companyMonthDays.absence_start_date);
                     let absenceDateEnd = new Date(companyMonthDays.absence_end_date);
 
@@ -86,7 +87,11 @@ function CompanySchedule(){
 
                     let daysForCurrentEmployee = []
                     for(let day = 0; day <= dayDifference; day++){
-                        daysForCurrentEmployee.push(absenceDateStart.toLocaleDateString("sv", optionsForDateYYYY_MM_DD))
+                        daysForCurrentEmployee.push(
+                            {
+                                date: absenceDateStart.toLocaleDateString("sv", optionsForDateYYYY_MM_DD),
+                                pending: companyMonthDays.absence_status_id === absencePending
+                            })
                         absenceDateStart.setDate(absenceDateStart.getDate() + 1)
                     }
                     preparedMonthDaysOff.push({
