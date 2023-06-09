@@ -1,6 +1,6 @@
 import {
     alertNewPasswordsAreIncompatible,
-    alertOldPasswordIsMissing, alertPasswordChanged, alertPasswordIsIncompatible,
+    alertOldPasswordIsMissing, alertPasswordChanged, alertPasswordIsIncompatible, alertPasswordIsWrong,
     alertPutNewPasswords, alertUnexpectedError,
     headerPasswordChange, labelApprove, labelClose,
     labelGiveNewPassword,
@@ -27,6 +27,7 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
     const [passwordChangedSuccesfully, setPasswordChangedSuccesfully] = useState(false)
     const [problemOccured, setProblemOccured] = useState(false)
     const [passwordIncorrect, setPasswordIncorrect] = useState(false)
+    const [passwordWrong, setPasswordWrong] = useState(false)
     const [missingOldPassword, setMissingOldPassword] = useState(false)
     const [wrongNewPassword, setWrongNewPassword] = useState(false)
     const [notTheSame, setNotTheSame] = useState(false)
@@ -67,7 +68,10 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                             }
                         })
                         .catch((err) => {
-                            console.log(err.message);
+                            setPasswordWrong(true);
+                            setTimeout(() => {
+                                setPasswordWrong(false)
+                            }, 3000);
                         })
                     } else {
                         setPasswordIncorrect(true);
@@ -173,6 +177,10 @@ function EditPasswordWindow({setShowPasswordChangeFrame,
                     {passwordIncorrect ?
                         <p className={"bg-red-700 rounded-md font-bold"}>
                             {alertPasswordIsIncompatible}
+                        </p> : <></> }
+                    {passwordWrong ?
+                        <p className={"bg-red-700 rounded-md font-bold"}>
+                            {alertPasswordIsWrong}
                         </p> : <></> }
                 </div>
             </div>
