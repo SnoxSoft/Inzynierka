@@ -519,7 +519,8 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                             <BankAccountNumber id={"employee-bank-number"} value={bank} onChange={setBank} disableChange={disableData}/>
                         </div>
 
-                        {getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountAccountant ?
+                        {getLocalStorageKeyWithExpiry("loggedEmployee").Role_name !== accountAccountant ||
+                            getLocalStorageKeyWithExpiry("loggedEmployee").UserId === id ?
                             <>
                             <div className={"flex flex-row justify-between text-right gap-4"}>
                                 <label className={"basis-1/3"}> {labelBirthDate} </label>
