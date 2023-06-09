@@ -188,7 +188,7 @@ const labelCreateTeam = "Dodaj zespoł";
 const labelSkillFinder = "Wyszukiwarka umiejętności";
 
 // Przypomnienie hasła
-const labelRemindPassword = "Przypomnij hasło";
+const labelRemindPassword = "Zresetuj hasło";
 const labelGiveEmail = "Podaj e-mail";
 const labelVerificationCode = "Kod weryfikacyjny";
 const labelGiveOldPassword = "Podaj stare hasło";
