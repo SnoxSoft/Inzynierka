@@ -226,6 +226,7 @@ const alertNewPasswordsAreIncompatible = "Wpisane nowe hasła są niezgodne";
 const alertPasswordIsIncompatible = "Nowe hasło powinno mieć co najmniej 14 znaków, jeden znak Duży i jeden znak specjalny oraz znaki małe";
 const alertOldPasswordIsMissing = "Wpisz stare hasło";
 
+const alertPasswordIsWrong = "Hasło jest niepoprawne";
 
 // Błędy w tworzeniu użytkownika
 
@@ -393,6 +394,7 @@ export {serverIp, serverIpProd, appName, emailRegex, peselRegex, passwordRegex,
     alertNewPasswordsAreIncompatible,
     alertPasswordIsIncompatible,
     alertOldPasswordIsMissing,
+    alertPasswordIsWrong,
 
     labelReceivedGrades, labelGivenGrades, labelQuarter,
 
