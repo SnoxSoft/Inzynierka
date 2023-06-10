@@ -14,7 +14,7 @@ public class ProfileViewPage : PageTest
     private ILocator _employeeBirthDate => _page.Locator("#employee-birth-date");
     private ILocator _employeePesel => _page.Locator("#employee-pesel");
     private ILocator _employeeSalary => _page.Locator("#employee-salary");
-    private ILocator _employeePasswordChangeButton => _page.Locator("employee-password-change");
+    private ILocator _employeePasswordChangeButton => _page.Locator("#employee-password-change");
     
     public ProfileViewPage(IPage page) => _page = page;
     
