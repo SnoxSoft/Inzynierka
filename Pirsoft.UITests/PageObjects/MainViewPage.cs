@@ -22,6 +22,13 @@ public class MainViewPage : PageTest
     
     //actions
     public async Task GoToProfilePage() => await _profileButton.ClickAsync();
+    public async Task GoToEmployeesMenu() => await _employeesMenuButton.ClickAsync();
+    public async Task GoToEmployeesRegisterView() => await _employeesRegisterButton.ClickAsync();
+    public async Task GoToScheduleView() => await _employeeScheduleButton.ClickAsync();
+    public async Task GoToCompanyScheduleView() => await _companyScheduleButton.ClickAsync();
+    public async Task GoToCompanyTeamsView() => await _companyTeamsButton.ClickAsync();
+    public async Task GoToAbsencesView() => await _absencesButton.ClickAsync();
+    public async Task GoToEmployeesRequests() => await _employeesRequestsButton.ClickAsync();
     
     //assertions
     public async Task HomePageButtonIsVisibleAndEnabled()
