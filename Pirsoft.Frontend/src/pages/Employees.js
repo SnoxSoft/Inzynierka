@@ -85,7 +85,7 @@ function Employees(){
                         let employeeName = employee.first_name + " " + employee.last_name
                         employeeName = employeeName.toLowerCase();
                         // Duża Funkcja filtrująca
-                        let firstnameAndLastname = firstnameAndLastnameNormal;
+                        let firstnameAndLastname = firstnameAndLastnameNormal.toLowerCase().trim();
 
                         // Jeśli tylko wpisana nazwa pracownika
                         if ((firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0 &&
