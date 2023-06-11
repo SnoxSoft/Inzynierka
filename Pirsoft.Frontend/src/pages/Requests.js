@@ -264,7 +264,7 @@ function Requests(){
                             employeeName = employeeName.toString().toLowerCase();
                         }
 
-                        let firstNameAndLastName = firstNameAndLastNameNormal !== undefined ? firstNameAndLastNameNormal.toString().toLowerCase() : "";
+                        let firstNameAndLastName = firstNameAndLastNameNormal !== undefined ? firstNameAndLastNameNormal.toString().toLowerCase().trim() : "";
 
                         // ostatni etap filtra - szukanie nazwy i zespolu
                         if(addRequest !== null && employeeName !== null && employeeTeam !== null) {

@@ -45,7 +45,7 @@ const EmployeeSkillFinder = ({mode = "", setHideFinder, setPickedPerson}) => {
                 const employeeName = employee.first_name + " " + employee.last_name
                 // Jeśli tylko wpisana nazwa pracownika
                 if (firstnameAndLastname !== undefined && firstnameAndLastname.toString().length !== 0) {
-                    if (employeeName.toLowerCase().includes(firstnameAndLastname.toString().toLowerCase())) {
+                    if (employeeName.toLowerCase().includes(firstnameAndLastname.toString().toLowerCase().trim())) {
                         if(skillsPicked.length !== 0){
                             let hasAllPickedSkills = true;
 
