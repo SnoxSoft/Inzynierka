@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
 using Pirsoft.Api.Security.Interfaces;
@@ -91,7 +92,7 @@ public class PasswordManagementController : Controller
     }
 
     [HttpPut("/change/password")]
-    //[Authorize(Roles = "Admin, Manager, Employee")]
+    [Authorize]
     public async Task<ActionResult> ChangePasswordFromProfileView(string oldPassword, string newPasswordOnce, string newPasswordTwice, int employeeId)
     {
         var currentUser = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);

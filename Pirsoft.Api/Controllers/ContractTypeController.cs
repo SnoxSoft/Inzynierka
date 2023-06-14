@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
@@ -12,6 +13,7 @@ public class ContractTypeController : Controller
     
     public ContractTypeController(ICrudHandler crudHandler) => _crudHandler = crudHandler;
 
+    [Authorize]
     [HttpGet("/get/contracts")]
     public async Task<IEnumerable<ContractTypeModel>> GetListOfAllContracts()
     {
@@ -19,6 +21,7 @@ public class ContractTypeController : Controller
         return await query.OrderBy(contractTypeModel => contractTypeModel.contract_id).ToListAsync();
     }
 
+    [Authorize]
     [HttpGet("/get/contract/{contractId}")]
     public async Task<ContractTypeModel> GetContractTypeById(int contractId)
     {

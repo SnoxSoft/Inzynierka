@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Enums;
@@ -14,6 +15,7 @@ public class AbsenceController : ControllerBase
     
     public AbsenceController(ICrudHandler crudHandler) => _crudHandler = crudHandler;
     
+    [Authorize]
     [HttpGet("get/absence/statuses")]
     public async Task<IEnumerable<AbsenceStatusModel>> GetListOfAllAbsenceStatuses()
     {
@@ -21,6 +23,7 @@ public class AbsenceController : ControllerBase
         return await query.OrderBy(absenceStatus => absenceStatus.absence_status_id).ToListAsync();
     }
     
+    [Authorize]
     [HttpGet("get/absence/types")]
     public async Task<IEnumerable<AbsenceTypeModel>> GetListOfAllAbsenceTypes()
     {
@@ -28,6 +31,7 @@ public class AbsenceController : ControllerBase
         return await query.OrderBy(absenceType => absenceType.absence_type_id).ToListAsync();
     }
     
+    [Authorize]
     [HttpPost("create/new/absence")]
     public async Task<IActionResult> CreateNewAbsence(DateTime absenceStartDate, DateTime absenceEndDate, 
         sbyte unpaid, int absenceTypeId, int employeeApproverId, int employeeOwnerId, int absenceStatusId)
@@ -89,7 +93,7 @@ public class AbsenceController : ControllerBase
         }
     }
     
-    //[Authorize(Roles = "Kadry")]
+    [Authorize]
     [HttpPut("edit/absence/{id}")]
     public async Task<IActionResult> UpdateAbsence(int id, int employeeApproverId, int absenceStatusId, DateTime? endDateTime)
     {
@@ -168,6 +172,7 @@ public class AbsenceController : ControllerBase
         }
     }
     
+    [Authorize]
     [HttpDelete("delete/absence/{id}")]
     public async Task<IActionResult> DeleteAbsenceById(int id)
     {
@@ -224,6 +229,7 @@ public class AbsenceController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("get/employee/absences/{id}/{dateFrom}/{dateTo}")]
     public async Task<IEnumerable<AbsenceModel>> GetEmployeeAbsences(int id, DateTime dateFrom, DateTime dateTo)
     {
@@ -233,6 +239,7 @@ public class AbsenceController : ControllerBase
         
     }
     
+    [Authorize]
     [HttpGet("get/all/employee/absences/{dateFrom}/{dateTo}")]
     public async Task<IEnumerable<AbsenceModel>> GetAllEmployeeAbsences(DateTime dateFrom, DateTime dateTo)
     {

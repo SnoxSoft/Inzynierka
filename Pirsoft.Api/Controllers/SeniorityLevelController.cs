@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
@@ -13,6 +14,7 @@ public class SeniorityLevelController : Controller
     
     public SeniorityLevelController(ICrudHandler crudHandler) => _crudHandler = crudHandler;
 
+    [Authorize]
     [HttpGet("/get/seniority/levels")]
     public async Task<IEnumerable<SeniorityLevelModel>> GetListOfAllSeniorityLevels()
     {
@@ -25,6 +27,7 @@ public class SeniorityLevelController : Controller
         return JsonSerializer.Deserialize<IEnumerable<SeniorityLevelModel>>(json, options)!;
     }
 
+    [Authorize]
     [HttpGet("/get/seniority/level/{seniorityLevelId}")]
     public async Task<SeniorityLevelModel> GetSeniorityLevelById(int seniorityLevelId)
     {
