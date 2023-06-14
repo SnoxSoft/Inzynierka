@@ -1,4 +1,4 @@
-const TIME_TO_EXPIRY = 1000*60*15; //ms*s*m
+const TIME_TO_EXPIRY = 1000*60*60; //ms*s*m
 
 export function getLocalStorageKeyWithExpiry(key) {
     const localStr = localStorage.getItem(key)
