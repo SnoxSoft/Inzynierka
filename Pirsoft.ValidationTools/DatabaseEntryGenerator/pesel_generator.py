@@ -8,7 +8,7 @@ def generate(amount):
     for x in range(amount):
         while True:
             weights = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 7]
-            year = random.randint(1900, 2004)
+            year = random.randint(1960, 2004)
             month = random.randint(1, 12)
 
             if month == 2:

@@ -3,6 +3,7 @@ import os
 import numpy as np
 import random
 from helper_functions import removeAccents, check_if_wynik_folder_exists, clear_console
+from hash_password import hash_password, generate_salt
 
 
 def date_of_birth_from_pesel(pesel):
@@ -24,7 +25,7 @@ class Employee:
                  bank_account_number, seniority_in_month, employment_start_date,
                  is_active, password_reset, birth_date, salary_gross, leave_base_days,
                  leave_demand_days, leave_is_seniority_threshold, employee_contract_type_id,
-                 employee_department_id, employee_seniority_level_id, employee_company_role_id):
+                 employee_department_id, employee_seniority_level_id, employee_company_role_id, password_salt, password_decoded):
         self.employee_company_role_id = employee_company_role_id
         self.employee_seniority_level_id = employee_seniority_level_id
         self.employee_department_id = employee_department_id
@@ -44,6 +45,8 @@ class Employee:
         self.email_address = email_address
         self.first_name = first_name
         self.last_name = last_name
+        self.password_salt = password_salt
+        self.password_decoded = password_decoded
 
 
 def generate():
@@ -83,7 +86,7 @@ def generate():
         for i in range(int(employee_count)):
             imie = imiona_array[random.randint(0, len(imiona_array)-1)]
             nazwisko = nazwiska_array[random.randint(0, len(nazwiska_array)-1)]
-            email = removeAccents(imie) + "." + removeAccents(nazwisko) + "@pirsoft.com"
+            email = removeAccents(imie.lower()) + "." + removeAccents(nazwisko.lower()) + "@pirsoft.com"
             pesel = pesel_array[random.randint(0, len(pesel_array)-1)]
             data_urodzenia = date_of_birth_from_pesel(pesel)
             bank_nr = bank_nr_array[random.randint(0, len(bank_nr_array)-1)]
@@ -91,7 +94,7 @@ def generate():
             start_date = start_date_array[random.randint(0, len(start_date_array)-1)]
             seniority_id = seniority_array[random.randint(0, len(seniority_array)-1)]
             contract_type_id = contract_type_array[random.randint(0, len(contract_type_array)-1)]
-            department_id = random.randint(1, 10)
+            department_id = random.randint(1, 4)
             seniority_threshold = random.randint(0, 1)
             if seniority_threshold == 0:
                 leave_base_days = 20
@@ -102,12 +105,14 @@ def generate():
             password_reset = 0
             is_active = 1
             seniority_in_months = random.randint(1, 30)
+            password_salt = generate_salt()
+            hash_pw = hash_password(haslo, password_salt)
 
             employee_list.append(Employee(
                 first_name=imie,
                 last_name=nazwisko,
                 email_address=email,
-                password=haslo,
+                password=hash_pw,
                 pesel=pesel,
                 bank_account_number=bank_nr,
                 seniority_in_month=seniority_in_months,
@@ -122,11 +127,13 @@ def generate():
                 employee_contract_type_id=contract_type_id,
                 employee_department_id=department_id,
                 employee_seniority_level_id=seniority_id,
-                employee_company_role_id=employee_role
+                employee_company_role_id=employee_role,
+                password_salt=password_salt,
+                password_decoded=haslo
             ))
         check_if_wynik_folder_exists()
         f = open("wynik/employee_{}".format(employee_role_name), "w", encoding="utf-8")
-        f.write('insert into pirsoft.employees(first_name, last_name, email_address, password, pesel, bank_account_number, seniority_in_months, employment_start_date,is_active, password_reset, birth_date, salary_gross, leave_base_days,leave_demand_days, leave_is_seniority_threshold, employee_contract_type_id,employee_department_id, employee_seniority_level_id, employee_company_role_id) values\n')
+        f.write('insert into pirsoft.employees(first_name, last_name, email_address, password, pesel, bank_account_number, seniority_in_months, employment_start_date,is_active, password_reset, birth_date, salary_gross, leave_base_days,leave_demand_days, leave_is_seniority_threshold, employee_contract_type_id,employee_department_id, employee_seniority_level_id, employee_company_role_id, password_salt) values\n')
         counter = 0
         for e in employee_list:
             counter = counter+1
@@ -149,11 +156,16 @@ def generate():
             f.write(str(e.employee_contract_type_id) + ", ")
             f.write(str(e.employee_department_id) + ", ")
             f.write(str(e.employee_seniority_level_id) + ", ")
-            f.write(str(e.employee_company_role_id))
+            f.write(str(e.employee_company_role_id) + ", ")
+            f.write('\"' + e.password_salt + '\"')
             if counter == len(employee_list):
-                f.write(")")
+                f.write(");")
             else:
                 f.write("),\n")
+
+        for e in employee_list:
+            f.write("\n")
+            f.write(e.password_decoded)
         f.close()
 
     else:
