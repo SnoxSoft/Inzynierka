@@ -669,7 +669,8 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
                                 (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR &&
                                     getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString()) ||
 
-                                getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident)) ?
+                                (getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountPresident) &&
+                                    getLocalStorageKeyWithExpiry("loggedEmployee").UserId !== employee.employee_id.toString())) ?
                                 <ReusableButton id={"employee-request"} value={labelRequest} onClick={() => {
                                     setShowAddEmployeeAnAbsence(true);
                                     setEmployeeDataShow(false);
