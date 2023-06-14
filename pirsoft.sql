@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
--- Host: localhost    Database: pirsoft
+-- Host: 127.0.0.1    Database: pirsoft
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -95,7 +95,7 @@ CREATE TABLE `absences` (
   CONSTRAINT `fk_absence_absence_status` FOREIGN KEY (`absence_status_id`) REFERENCES `absence_statuses` (`absence_status_id`),
   CONSTRAINT `fk_absence_absence_type` FOREIGN KEY (`absence_type_id`) REFERENCES `absence_types` (`absence_type_id`),
   CONSTRAINT `fk_absence_employee_owner` FOREIGN KEY (`employee_owner_id`) REFERENCES `employees` (`employee_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,7 +227,7 @@ CREATE TABLE `employees` (
   CONSTRAINT `fk_employee_contract_type` FOREIGN KEY (`employee_contract_type_id`) REFERENCES `contract_types` (`contract_id`),
   CONSTRAINT `fk_employee_department` FOREIGN KEY (`employee_department_id`) REFERENCES `departments` (`department_id`),
   CONSTRAINT `fk_employee_seniority_level` FOREIGN KEY (`employee_seniority_level_id`) REFERENCES `seniority_levels` (`seniority_level_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=cp1250;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -236,7 +236,7 @@ CREATE TABLE `employees` (
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-INSERT INTO `employees` VALUES INSERT INTO `employees` VALUES (1,'Kadry','Start','kadry.start@gmail.com','LaLFcGSqB8hHYkdfW4byoGNTq901tW24bDcGUsu5iIw=','00010113547','00000000000000000000000000',0,'1900-01-02',0,0,'1900-01-01',0,2,2,1,1,0,0,0,'','zpXkOG/FMG1YqbHcMUOfE8qo93vpQKzbQnRRQa9mMCs=');
+INSERT INTO `employees` VALUES (1,'Kadry','Start','kadry.start@gmail.com','LaLFcGSqB8hHYkdfW4byoGNTq901tW24bDcGUsu5iIw=','00010113547','00000000000000000000000000',1,'1900-01-02',1,1,'1900-01-01',1,2,2,1,1,1,1,1,'','zpXkOG/FMG1YqbHcMUOfE8qo93vpQKzbQnRRQa9mMCs=');
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -252,6 +252,7 @@ DELIMITER ;;
 	DELETE FROM employees_skills WHERE employee_id = OLD.employee_id;
     UPDATE absences SET employee_approver_id = '0' WHERE employee_approver_id = OLD.employee_id;
     DELETE FROM absences WHERE employee_owner_id = OLD.employee_id;   
+    DELETE FROM password_reset_tokens WHERE token_employee_id = OLD.employee_id; 
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -304,7 +305,7 @@ CREATE TABLE `password_reset_tokens` (
   UNIQUE KEY `reset_code_UNIQUE` (`reset_code`),
   KEY `fk_token_employee_id_idx` (`token_employee_id`),
   CONSTRAINT `fk_token_employee_id` FOREIGN KEY (`token_employee_id`) REFERENCES `employees` (`employee_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -377,4 +378,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-20 20:34:21
+-- Dump completed on 2023-06-14 18:09:36
