@@ -7,6 +7,7 @@ using Pirsoft.Api.Security.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Enums;
 using Pirsoft.Api.Validators;
 using IAuthenticationService = Pirsoft.Api.Security.Interfaces.IAuthenticationService;
@@ -19,13 +20,15 @@ namespace Pirsoft.Api.Security.Services
         private readonly JSONWebTokensSettings _jwtSettings;
         private readonly IEmployeeModelValidator _employeeModelValidator;
         private readonly IHashPasswordManager _hashPasswordManager;
+        private readonly IEmployeeCrudHandler _employeeCrudHandler;
         
-        public AuthenticationService(IUserManager<EmployeeModel> userManager, IOptions<JSONWebTokensSettings> jwtSettings, IEmployeeModelValidator employeeModelValidator, IHashPasswordManager hashPasswordManager)
+        public AuthenticationService(IUserManager<EmployeeModel> userManager, IOptions<JSONWebTokensSettings> jwtSettings, IEmployeeModelValidator employeeModelValidator, IHashPasswordManager hashPasswordManager, IEmployeeCrudHandler employeeCrudHandler)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
             _employeeModelValidator = employeeModelValidator;
             _hashPasswordManager = hashPasswordManager;
+            _employeeCrudHandler = employeeCrudHandler;
         }
 
         public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
@@ -34,6 +37,7 @@ namespace Pirsoft.Api.Security.Services
                 return new AuthenticationResponse(){ StatusCode = ESecurityResponse.InvalidEmail};
 
             var user = await _userManager.FindByEmailAsync(request.Email);
+            EmployeeModel existingEmployee = await _employeeCrudHandler.ReadEmployeeByIdAsync(user.employee_id);
             var passwordSalt = user.password_salt;
 
             if (user == null)
@@ -42,8 +46,8 @@ namespace Pirsoft.Api.Security.Services
                 return new AuthenticationResponse(){ StatusCode = ESecurityResponse.InvalidPassword};
 
             string requestHashedPassword = _hashPasswordManager.HashPassword(request.Password, passwordSalt);
-
-            if (requestHashedPassword != user.password)
+            
+            if (requestHashedPassword != existingEmployee.password)
                 return new AuthenticationResponse() { StatusCode = ESecurityResponse.BadPassword };
 
             JwtSecurityToken jwtSecurityToken = await GenerateToken(user);

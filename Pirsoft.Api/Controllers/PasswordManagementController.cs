@@ -80,7 +80,7 @@ public class PasswordManagementController : Controller
             return NotFound("Unable to find user to change password.");
         }
 
-        var passwordSalt = _hashPasswordManager.GenerateSalt();
+        var passwordSalt = currentUser.password_salt;
         var hashedPassword = _hashPasswordManager.HashPassword(passwordFirst, passwordSalt);
 
         currentUser.password = hashedPassword;
@@ -100,18 +100,21 @@ public class PasswordManagementController : Controller
         {
             return NotFound("Unable to find user to change password.");
         }
-
-        if (currentUser.password != oldPassword)
+        
+        var passwordSalt = currentUser.password_salt;
+        var hashedPassword = _hashPasswordManager.HashPassword(oldPassword, passwordSalt);
+        
+        if (currentUser.password != hashedPassword)
             return BadRequest("Old password is incorrect");
         
         if (newPasswordOnce != newPasswordTwice)
             return BadRequest("New passwords do not match");
-
-        var passwordSalt = _hashPasswordManager.GenerateSalt();
-        var hashedPassword = _hashPasswordManager.HashPassword(newPasswordOnce, passwordSalt);
-
-        currentUser.password = hashedPassword;
-        currentUser.password_salt = passwordSalt;
+        
+        var newPasswordSalt = _hashPasswordManager.GenerateSalt();
+        var newHashedPassword = _hashPasswordManager.HashPassword(newPasswordOnce, newPasswordSalt);
+        
+        currentUser.password = newHashedPassword;
+        currentUser.password_salt = newPasswordSalt;
         await _crudHandler.UpdateAsync(currentUser);
 
         return Ok();
