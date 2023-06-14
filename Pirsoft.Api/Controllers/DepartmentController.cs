@@ -20,6 +20,7 @@ public class DepartmentController : Controller
         return await query.OrderBy(departmentModel => departmentModel.department_id).ToListAsync();
     }
 
+    [Authorize]
     [HttpGet("/get/department/{departmentId}")]
     public async Task<DepartmentModel> GetDepartmentById(int departmentId)
     {
@@ -31,6 +32,7 @@ public class DepartmentController : Controller
             return null;
     }
 
+    [Authorize]
     [HttpPost("/create/department")]
     public async Task CreateNewDepartment(string departmentName)
     {
@@ -43,8 +45,8 @@ public class DepartmentController : Controller
         //_crudHandler.PushChangesToDatabase();
     }
 
+    [Authorize(Roles = "Kadry")] 
     [HttpDelete("/delete/department/{id}")]
-    //[Authorize(Roles = "Kadry")] 
     public async Task<ActionResult> DeleteDepartmentById(int id)
     {
 
@@ -63,8 +65,8 @@ public class DepartmentController : Controller
         }
     }
 
+    [Authorize(Roles = "Kadry")]
     [HttpPut("edit/department/{id}")]
-    //[Authorize(Roles = "Kadry")]
     public async Task<ActionResult> UpdateDepartment(int id, DepartmentModel departmentModel)
     {
         var existingDepartment = await _crudHandler.ReadAsync<DepartmentModel>(id);

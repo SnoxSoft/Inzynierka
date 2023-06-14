@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pirsoft.Api.DatabaseManagement.CrudHandlers;
 using Pirsoft.Api.Models;
@@ -12,6 +13,7 @@ public class SkillController : ControllerBase
     
     public SkillController(ICrudHandler crudHandler) => _crudHandler = crudHandler;
     
+    [Authorize]
     [HttpGet("/get/skills")]
     public async Task<IEnumerable<SkillModel>> GetListOfAllSkills()
     {

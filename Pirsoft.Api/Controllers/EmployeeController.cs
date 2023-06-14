@@ -36,6 +36,7 @@ public class EmployeeController : Controller
         _hashPasswordManager = hashPasswordManager;
     }
 
+    [Authorize]
     [HttpPost("create/new/employee")]
     public async Task<IActionResult> CreateNewEmployee(string firstName, string lastName, string email, string? password, string pesel, string bankAccountNumber, string? skills,
             int departmentId, int leaveBaseDays, int leaveDemandDays, int seniorityInMonths, double grossSalary, bool isActive, bool leaveIsSeniorityThreshold, bool passwordReset,
@@ -150,6 +151,7 @@ public class EmployeeController : Controller
         return await employees.Select(employeeModel => new employeeDTO(employeeModel)).ToListAsync();
     }
 
+    [Authorize]
     [HttpGet("/get/filtered/employees/{name?}/{departmentId?}/{positionId?}")]
     public async Task<IEnumerable<EmployeeModel>> GetFilteredEmployees(string? name, int? departmentId, int? positionId)
     {
@@ -172,6 +174,7 @@ public class EmployeeController : Controller
         }
     }
 
+    [Authorize]
     [HttpGet("/get/employee/{employeeId}")]
     public async Task<EmployeeModel> GetEmployeeById(int employeeId)
     {
@@ -187,8 +190,8 @@ public class EmployeeController : Controller
         }
     }
 
+    [Authorize(Roles = "Kadry")] 
     [HttpDelete("delete/employee/{id}")]
-    //[Authorize(Roles = "Kadry")] 
     public async Task<IActionResult> DeleteEmployeeById(int id)
     {
         // Check if the employee exists
@@ -207,7 +210,7 @@ public class EmployeeController : Controller
         }
     }
     
-    //[Authorize(Roles = "Kadry")]
+    [Authorize]
     [HttpPut("edit/employee/{id}")]
     public async Task<IActionResult> UpdateEmployee(int id, string firstName, string lastName, string pesel, string bankAccountNumber, string? skills,
         int departmentId, int leaveBaseDays, int leaveDemandDays, double grossSalary, byte leaveIsSeniorityThreshold,

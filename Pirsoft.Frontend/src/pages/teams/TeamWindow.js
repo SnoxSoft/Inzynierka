@@ -167,7 +167,7 @@ const TeamWindow = ({id, mode, title}) => {
 
     function deleteTeam(){
         setAlerts(<></>)
-        if(leaderData.length === 0 && employeeData === 0) {
+        if(leaderData.length === 0 && employeeData.length === 0) {
             fetchDeleteTeam(id)
                 .then(r => {
                     navigate(-1);
