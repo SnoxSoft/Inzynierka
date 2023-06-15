@@ -28,7 +28,7 @@ public class PasswordManagementController : Controller
     [HttpPost("/send/password/reset")]
     public async Task<ActionResult> SendMailAsync(string email)
     {
-        var generatedResetCode = _passwordService.GenerateResetCode();
+        string generatedResetCode = _passwordService.GenerateResetCode();
 
         EmployeeModel? employee = await _employeeCrudHandler.ReadEmployeeByEmailAsync(email);
 
@@ -50,15 +50,14 @@ public class PasswordManagementController : Controller
         await _crudHandler.CreateAsync(passwordToken);
         
         bool result = await _emailService.SendEmailAsync(mailData, new CancellationToken());
-        if (result)
-            return StatusCode(StatusCodes.Status200OK, "Mail has successfully been sent.");
 
-        return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
+        return result
+            ? StatusCode(StatusCodes.Status200OK, "Mail has successfully been sent.")
+            : StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
     }
 
     [HttpPut("/reset/code/change/password")]
-    public async Task<ActionResult> ChangePasswordWithResetCode(int resetCode, string passwordFirst,
-        string passwordSecond)
+    public async Task<ActionResult> ChangePasswordWithResetCode(int resetCode, string passwordFirst, string passwordSecond)
     {
         var query = await _crudHandler.ReadAllAsync<PasswordResetTokenModel>();
         var resetToken = query.FirstOrDefault(tokens => tokens.reset_code == resetCode);
@@ -69,24 +68,29 @@ public class PasswordManagementController : Controller
         }
 
         if (resetToken.expiration_time < DateTime.Now)
+        {
             return BadRequest("Password reset token has expired.");
+        }
 
         if (passwordFirst != passwordSecond)
+        {
             return BadRequest("New passwords do not match");
+        }
 
-        var currentUser = await _crudHandler.ReadAsync<EmployeeModel>(resetToken.token_employee_id);
+        EmployeeModel? currentUser = await _employeeCrudHandler.ReadEmployeeByIdAsync(resetToken.token_employee_id);
 
         if (currentUser == null)
         {
             return NotFound("Unable to find user to change password.");
         }
 
-        var passwordSalt = currentUser.password_salt;
-        var hashedPassword = _hashPasswordManager.HashPassword(passwordFirst, passwordSalt);
+        string newPasswordSalt = _hashPasswordManager.GenerateSalt();
+        string newPasswordHash = _hashPasswordManager.HashPassword(passwordFirst, newPasswordSalt);
 
-        currentUser.password = hashedPassword;
-        currentUser.password_salt = passwordSalt;
-        await _crudHandler.UpdateAsync(currentUser);
+        currentUser.password_salt = newPasswordSalt;
+        currentUser.password = newPasswordHash;
+
+        await _employeeCrudHandler.UpdateAsync(currentUser);
 
         return Ok();
     }
@@ -95,28 +99,33 @@ public class PasswordManagementController : Controller
     [Authorize]
     public async Task<ActionResult> ChangePasswordFromProfileView(string oldPassword, string newPasswordOnce, string newPasswordTwice, int employeeId)
     {
-        var currentUser = await _crudHandler.ReadAsync<EmployeeModel>(employeeId);
+        EmployeeModel? currentUser = await _employeeCrudHandler.ReadEmployeeByIdAsync(employeeId);
 
         if (currentUser == null)
         {
             return NotFound("Unable to find user to change password.");
         }
         
-        var passwordSalt = currentUser.password_salt;
-        var hashedPassword = _hashPasswordManager.HashPassword(oldPassword, passwordSalt);
+        string currentPasswordSalt = currentUser.password_salt;
+        string currentPasswordHash = _hashPasswordManager.HashPassword(oldPassword, currentPasswordSalt);
         
-        if (currentUser.password != hashedPassword)
+        if (currentUser.password != currentPasswordHash)
+        {
             return BadRequest("Old password is incorrect");
+        }
         
         if (newPasswordOnce != newPasswordTwice)
+        {
             return BadRequest("New passwords do not match");
-        
-        var newPasswordSalt = _hashPasswordManager.GenerateSalt();
-        var newHashedPassword = _hashPasswordManager.HashPassword(newPasswordOnce, newPasswordSalt);
-        
-        currentUser.password = newHashedPassword;
+        }
+
+        string newPasswordSalt = _hashPasswordManager.GenerateSalt();
+        string newPasswordHash = _hashPasswordManager.HashPassword(newPasswordOnce, newPasswordSalt);
+
         currentUser.password_salt = newPasswordSalt;
-        await _crudHandler.UpdateAsync(currentUser);
+        currentUser.password = newPasswordHash;
+
+        await _employeeCrudHandler.UpdateAsync(currentUser);
 
         return Ok();
     }

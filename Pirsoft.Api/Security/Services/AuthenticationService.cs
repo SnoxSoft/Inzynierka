@@ -33,25 +33,41 @@ namespace Pirsoft.Api.Security.Services
 
         public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
         {
-            if(!_employeeModelValidator.IsEmailAddressValid(request.Email))
-                return new AuthenticationResponse(){ StatusCode = ESecurityResponse.InvalidEmail};
+            if (!_employeeModelValidator.IsEmailAddressValid(request.Email))
+            {
+                return new AuthenticationResponse() { StatusCode = ESecurityResponse.InvalidEmail };
+            }
 
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            EmployeeModel existingEmployee = await _employeeCrudHandler.ReadEmployeeByIdAsync(user.employee_id);
-            var passwordSalt = user.password_salt;
+            EmployeeModel? user = await _userManager.FindByEmailAsync(request.Email);
 
             if (user == null)
-                return new AuthenticationResponse(){ StatusCode = ESecurityResponse.EmailNotFound };
-            if(!_employeeModelValidator.IsPasswordValid(request.Password))
-                return new AuthenticationResponse(){ StatusCode = ESecurityResponse.InvalidPassword};
+            {
+                return new AuthenticationResponse() { StatusCode = ESecurityResponse.EmailNotFound };
+            }
+
+            EmployeeModel? existingEmployee = await _employeeCrudHandler.ReadEmployeeByIdAsync(user.employee_id);
+
+            if (existingEmployee == null)
+            {
+                return new AuthenticationResponse() { StatusCode = ESecurityResponse.EmailNotFound };
+            }
+
+            var passwordSalt = user.password_salt;
+
+            if (!_employeeModelValidator.IsPasswordValid(request.Password))
+            {
+                return new AuthenticationResponse() { StatusCode = ESecurityResponse.InvalidPassword };
+            }
 
             string requestHashedPassword = _hashPasswordManager.HashPassword(request.Password, passwordSalt);
             
             if (requestHashedPassword != existingEmployee.password)
+            {
                 return new AuthenticationResponse() { StatusCode = ESecurityResponse.BadPassword };
+            }
 
             JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
-            AuthenticationResponse response = new AuthenticationResponse()
+            AuthenticationResponse response = new()
             {
                 Id = user.employee_id,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
