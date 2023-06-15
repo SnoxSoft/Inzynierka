@@ -424,13 +424,16 @@ function Schedule(){
     }
 
     const[wantedHeightsForList, setWantedHeightForList] = useState(0);
+    // const[wantedHeightsForScheduleList, setWantedHeightForList] = useState(0);
 
     useEffect(() => {
-        FunctionForResize("schedule-month-list", {setWantedHeightForList});
+        FunctionForResize("schedule-list", {setWantedHeightForList});
+
     }, [pickedMonthText, calendarDays]);
 
     useEffect(() => {
-        FunctionForResize("schedule-month-list", {setWantedHeightForList});
+        FunctionForResize("schedule-list", {setWantedHeightForList});
+
     }, []);
 
     return(
@@ -542,13 +545,12 @@ function Schedule(){
                     </div>
                 </div>
                 <hr/>
-                <div id={"schedule-list"} className={"rounded-md overflow-y-auto h-full"}>
-                    <ul>
+                <div id={"schedule-list"} className={"rounded-md overflow-y-auto h-full"}
+                     style={{ height: wantedHeightsForList } }>
                         {monthList.map((p, id) =>
                             <ScheduleListItem key={p.value} text={p.text} date={p.date}
                                               loadWholeMonthData={loadWholeMonthData} listId={id}/>
                         )}
-                    </ul>
                 </div>
             </div>
         }
