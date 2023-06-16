@@ -92,8 +92,8 @@ async function fetchPostCreateTeam(params) {
     return await axios.post(`${serverIpProd}/${endpointCreateTeam}?${params}`,null,{headers: headers})
 }
 
-async function fetchPutEditTeam(id, body) {
-    return await axios.put(`${serverIpProd}/${endpointEditTeam}/${id}`, body,{headers: headers})
+async function fetchPutEditTeam(id, params) {
+    return await axios.put(`${serverIpProd}/${endpointEditTeam}/${id}?${params}`, null,{headers: headers})
 }
 
 async function fetchDeleteTeam(id) {

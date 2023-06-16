@@ -89,12 +89,12 @@ public class DepartmentControllerTests
     {
         // Arrange
         var departmentId = 1;
-        var department = new DepartmentModel { department_name = "Team A"};
+        var department_name = "Team A";
         var existingDepartment = new DepartmentModel { department_name = "Team ABC" };
         _crudHandlerMock.Setup(x => x.ReadAsync<DepartmentModel>(departmentId)).ReturnsAsync(existingDepartment);
 
         // Act
-        var result = await _departmentController.UpdateDepartment(departmentId, department);
+        var result = await _departmentController.UpdateDepartment(departmentId, department_name);
 
         // Assert
         result.Should().BeOfType<OkResult>();
@@ -106,11 +106,11 @@ public class DepartmentControllerTests
     {
         // Arrange
         var id = 1;
-        var employee = new DepartmentModel() { department_name = "Team A" };
+        var department_name = "Team A";
         _crudHandlerMock.Setup(x => x.ReadAsync<EmployeeModel>(id)).ReturnsAsync((EmployeeModel)null);
 
         // Act
-        var result = await _departmentController.UpdateDepartment(id, employee);
+        var result = await _departmentController.UpdateDepartment(id, department_name);
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
