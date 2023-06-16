@@ -126,12 +126,9 @@ const TeamWindow = ({id, mode, title}) => {
 
     function saveTeam(){
         setAlerts(<></>)
-        let bodyEditTeam = {
-                apiInternalId: fullTeamData.apiInternalId,
-                department_id: fullTeamData.department_id,
-                department_name: teamData
-        }
-        fetchPutEditTeam(id, bodyEditTeam)
+        const query = new URLSearchParams();
+        query.set("departmentName", teamData);
+        fetchPutEditTeam(id, query)
             .then(r => {
                 navigate(-1);
         }).catch(e => {

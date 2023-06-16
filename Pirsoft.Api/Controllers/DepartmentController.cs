@@ -67,15 +67,14 @@ public class DepartmentController : Controller
 
     [Authorize(Roles = "Kadry")]
     [HttpPut("edit/department/{id}")]
-    public async Task<ActionResult> UpdateDepartment(int id, DepartmentModel departmentModel)
+    public async Task<ActionResult> UpdateDepartment(int id, string departmentName)
     {
         var existingDepartment = await _crudHandler.ReadAsync<DepartmentModel>(id);
 
         if (existingDepartment == null)
             return NotFound();
-
-        existingDepartment.department_id = departmentModel.department_id;
-        existingDepartment.department_name = departmentModel.department_name;
+        
+        existingDepartment.department_name = departmentName;
         
         try
         {
