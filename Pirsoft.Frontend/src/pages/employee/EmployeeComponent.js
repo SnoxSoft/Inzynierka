@@ -597,7 +597,7 @@ function EmployeeComponent({id, mode, employee, teams, contracts, positions, pos
 
                 <div className={"flex flex-col p-4"}>
                     <ProfilePicture id={"employee-profile-picture"} picture={avatarData} avatarData={avatarData}
-                                    fileToUpload={fileToUpload} setFileToUpload={setFileToUpload} employeeId={id}/>
+                                    fileToUpload={fileToUpload} setFileToUpload={setFileToUpload} employeeId={id} mode={mode}/>
                     <SkillsList id={"employee-skill-list"} skillList={skillsData} />
                     <div className={"flex justify-center"}>
                         {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
