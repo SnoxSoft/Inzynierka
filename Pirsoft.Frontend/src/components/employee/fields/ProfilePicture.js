@@ -1,23 +1,23 @@
 import {BsPersonCircle} from "react-icons/bs";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {
     accountHR,
-    accountPresident,
-    alertProblemOccured,
     alertProfilePicture,
     labelCreate
 } from "../../../GlobalAppConfig";
 import ReusableButton from "../../base/ReusableButton";
-import {Popup} from "semantic-ui-react";
 import axios from "axios";
 import {getLocalStorageKeyWithExpiry} from "../../jwt/LocalStorage";
 
-const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload, employeeId}) => {
+const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload, employeeId, mode}) => {
 
-    const [ picture, setPicture] = useState("")
+    const [picture, setPicture] = useState("")
+    const [pictureName, setPictureName] = useState("")
 
     const [showPopupWithProblems, setShowPopupWithProblems] = useState(false);
     const [alerts, setAlerts] = useState(<></>)
+
+    const hiddenFileInput = React.useRef(null);
 
     const onImageChange = (event) => {
         setAlerts(<></>)
@@ -34,6 +34,7 @@ const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload, employe
                     case "jpg":
                         {setFileToUpload(event.target.files[0])
                         setPicture(URL.createObjectURL(event.target.files[0]))}
+                        setPictureName(event.target.files[0].name)
                         break;
 
                     default: {
@@ -95,10 +96,22 @@ const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload, employe
             {getLocalStorageKeyWithExpiry("loggedEmployee") !== null &&
             (getLocalStorageKeyWithExpiry("loggedEmployee").UserId === employeeId ||
                 getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR) ?
-            <input name="" type="file" accept="image/png, image/jpeg"
-                className={"rounded-md"}
-                onChange={onImageChange}
-            /> :
+                <>
+                <div className={"flex flex-row"}>
+                    <ReusableButton value={"Wybierz plik"} color={"bg-workday text-black"}
+                    hover={"hover:cursor-default hover:bg-gray-200"} formatting={"w-24 h-7"}
+                    onClick={() =>hiddenFileInput.current.click()}/>
+                    <p className={"pl-2"}> {fileToUpload ? pictureName.length > 20 ? pictureName.slice(0, 20) + ".." : pictureName : mode === 'create' ? 'Nie wybrano pliku' : ''}</p>
+
+
+                </div>
+                    <input name="" type="file" accept="image/png, image/jpeg" style={{display:'none'}}
+                           className={"rounded-md"}
+                           ref={hiddenFileInput}
+                           onChange={onImageChange}
+                    />
+                </>
+            :
                 <></>
             }
 
