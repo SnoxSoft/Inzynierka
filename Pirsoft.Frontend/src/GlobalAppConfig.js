@@ -165,6 +165,10 @@ const labelSalary = "Wynagrodzenie brutto";
 const labelContractType = "Typ umowy";
 const labelPosition = "Stanowisko";
 
+const labelPickFile = "Wybierz plik";
+
+const labelFileNotPicked = "Nie wybrano pliku";
+
 const labelPositionLevel = "Poziom stanowiska";
 const labelStartDate = "Rozpoczęcie pracy";
 
@@ -363,7 +367,7 @@ export {serverIp, serverIpProd, appName, emailRegex, peselRegex, passwordRegex,
     gradesMenu,
     gradeMenu,
 
-    labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition, labelPositionLevel,labelBankAccount,labelContractType,
+    labelBirthDate,labelPESEL,labelStartDate,labelSalary,labelPosition, labelPositionLevel,labelBankAccount,labelContractType, labelFileNotPicked, labelPickFile,
 
     skillsLabel, labelFirstNameAndLastName, gradeMessageLabel, gradeTitleLabel, gradePersonLabel, labelSkillPicked,
     employeeGradeText, employeeGradedText,

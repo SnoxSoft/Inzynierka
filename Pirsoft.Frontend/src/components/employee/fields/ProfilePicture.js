@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {
     accountHR,
     alertProfilePicture,
-    labelCreate
+    labelCreate, labelFileNotPicked, labelPickFile
 } from "../../../GlobalAppConfig";
 import ReusableButton from "../../base/ReusableButton";
 import axios from "axios";
@@ -98,12 +98,11 @@ const ProfilePicture = ({id, avatarData , fileToUpload, setFileToUpload, employe
                 getLocalStorageKeyWithExpiry("loggedEmployee").Role_name === accountHR) ?
                 <>
                 <div className={"flex flex-row"}>
-                    <ReusableButton value={"Wybierz plik"} color={"bg-workday text-black"}
+                    <ReusableButton value={labelPickFile} color={"bg-workday text-black"}
                     hover={"hover:cursor-default hover:bg-gray-200"} formatting={"w-24 h-7"}
                     onClick={() =>hiddenFileInput.current.click()}/>
-                    <p className={"pl-2"}> {fileToUpload ? pictureName.length > 20 ? pictureName.slice(0, 20) + ".." : pictureName : mode === 'create' ? 'Nie wybrano pliku' : ''}</p>
-
-
+                    <p className={"pl-2"}> {fileToUpload ? pictureName.length > 20 ? pictureName.slice(0, 20) + ".." : pictureName : mode === 'create' ? labelFileNotPicked : ''}</p>
+                    
                 </div>
                     <input name="" type="file" accept="image/png, image/jpeg" style={{display:'none'}}
                            className={"rounded-md"}
