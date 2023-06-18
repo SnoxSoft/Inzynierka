@@ -2,7 +2,7 @@
 // Adres ip aplikacji
 const serverIp = "http://127.0.0.1:3001";
 
-const serverIpProd = "https://localhost:7120";
+const serverIpProd = "https://localhost:5001";
 
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
